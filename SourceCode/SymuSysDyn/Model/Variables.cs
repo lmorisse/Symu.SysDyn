@@ -19,35 +19,35 @@ using System.Linq;
 namespace Symu.SysDyn.Model
 {
     /// <summary>
-    ///     Base class for nodes of the graph
+    ///     List of the variables of the model
     /// </summary>
-    public class Nodes
+    public class Variables : IEnumerable<Variable>
     {
-        private readonly List<Node> _nodes = new List<Node>();
-        public IEnumerable<Node> GetNotUpdated => _nodes.Where(x => !x.Updated);
+        private readonly List<Variable> _nodes = new List<Variable>();
+        public IEnumerable<Variable> GetNotUpdated => _nodes.Where(x => !x.Updated);
 
         /// <summary>
         ///     Gets or sets the node with the specified name
         /// </summary>
         /// <param name="nodeId"></param>
         /// <returns></returns>
-        public Node this[string nodeId]
+        public Variable this[string nodeId]
         {
             get => GetNode(nodeId);
             //set => GetNode(nodeId).Value = value;
         }
 
-        public void Add(Node node)
+        public void Add(Variable node)
         {
             _nodes.Add(node);
         }
 
-        public void AddRange(IEnumerable<Node> nodes)
+        public void AddRange(IEnumerable<Variable> nodes)
         {
             _nodes.AddRange(nodes);
         }
 
-        public Node GetNode(string nodeId)
+        public Variable GetNode(string nodeId)
         {
             return _nodes.Find(x => x.Name == nodeId);
         }
@@ -98,5 +98,25 @@ namespace Symu.SysDyn.Model
         {
             return _nodes.OfType<Stock>();
         }
+
+        #region IEnumerator members
+
+
+        /// <summary>Returns an enumerator that iterates through the collection.</summary>
+        /// <returns>An enumerator that can be used to iterate through the collection.</returns>
+        public IEnumerator<Variable> GetEnumerator()
+        {
+            return _nodes.GetEnumerator();
+        }
+
+        /// <summary>Returns an enumerator that iterates through a collection.</summary>
+        /// <returns>An object that can be used to iterate through the collection.</returns>
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return _nodes.GetEnumerator();
+        }
+
+        #endregion
+
     }
 }

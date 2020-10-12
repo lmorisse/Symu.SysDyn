@@ -1,6 +1,6 @@
 ﻿namespace SymuSysDynApp
 {
-    partial class Form1
+    partial class Home
     {
         /// <summary>
         /// Variable nécessaire au concepteur.
@@ -32,12 +32,14 @@
             this.Variables = new System.Windows.Forms.ListView();
             this.button2 = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.cbVariables = new System.Windows.Forms.ComboBox();
+            this.label1 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(505, -3);
+            this.button1.Location = new System.Drawing.Point(591, 27);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 0;
@@ -48,7 +50,7 @@
             // Variables
             // 
             this.Variables.HideSelection = false;
-            this.Variables.Location = new System.Drawing.Point(505, 26);
+            this.Variables.Location = new System.Drawing.Point(591, 74);
             this.Variables.Name = "Variables";
             this.Variables.Size = new System.Drawing.Size(320, 400);
             this.Variables.TabIndex = 1;
@@ -73,19 +75,41 @@
             this.pictureBox1.TabIndex = 3;
             this.pictureBox1.TabStop = false;
             // 
-            // Form1
+            // cbVariables
+            // 
+            this.cbVariables.Enabled = false;
+            this.cbVariables.FormattingEnabled = true;
+            this.cbVariables.Location = new System.Drawing.Point(790, 26);
+            this.cbVariables.Name = "cbVariables";
+            this.cbVariables.Size = new System.Drawing.Size(121, 24);
+            this.cbVariables.TabIndex = 4;
+            this.cbVariables.SelectedIndexChanged += new System.EventHandler(this.cbVariables_SelectedIndexChanged);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(693, 30);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(55, 17);
+            this.label1.TabIndex = 5;
+            this.label1.Text = "Results";
+            // 
+            // Home
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(975, 503);
+            this.ClientSize = new System.Drawing.Size(989, 500);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.cbVariables);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.Variables);
             this.Controls.Add(this.button1);
-            this.Name = "Form1";
-            this.Text = "Form1";
+            this.Name = "Home";
+            this.Text = "Symu.SysDyn : system dynamics";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -95,6 +119,8 @@
         private System.Windows.Forms.ListView Variables;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.ComboBox cbVariables;
+        private System.Windows.Forms.Label label1;
     }
 }
 

@@ -19,12 +19,12 @@ using System.Linq;
 namespace Symu.SysDyn.Model
 {
     /// <summary>
-    ///     Base class for nodes of the graph
+    ///     Base class for the variable of the model
     /// </summary>
-    public class Node
+    public class Variable
     {
         private readonly List<string> _operators = new List<string> { " ", "+", "-", "*", "/" };
-        public Node(string name)
+        public Variable(string name)
         {
             if (name == null)
             {
@@ -34,14 +34,14 @@ namespace Symu.SysDyn.Model
             Name = name.Replace(' ', '_');
         }
 
-        public Node(string name, string eqn) : this(name)
+        public Variable(string name, string eqn) : this(name)
         {
             Value = CheckInitialValue(eqn);
             Equation = eqn;
             Children = FindChildren();
         }
 
-        public Node(string name, string eqn, GraphicalFunction graph) : this(name, eqn)
+        public Variable(string name, string eqn, GraphicalFunction graph) : this(name, eqn)
         {
             Function = graph;
         }

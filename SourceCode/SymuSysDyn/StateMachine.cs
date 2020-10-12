@@ -17,6 +17,7 @@ using System.Linq;
 using NCalc2;
 using Symu.SysDyn.Model;
 using Symu.SysDyn.QuickGraph;
+using Symu.SysDyn.Results;
 
 #endregion
 
@@ -24,13 +25,14 @@ namespace Symu.SysDyn
 {
     public class StateMachine
     {
-        private readonly Nodes _nodes;
-        private readonly Parser xmlParser;
+        private readonly Variables _variables;
+        private readonly Parser _xmlParser;
+        private readonly ResultCollection _results =new ResultCollection();
 
         public StateMachine(string xmlFile, bool validate = true)
         {
-            xmlParser = new Parser(xmlFile, validate);
-            _nodes = xmlParser.Parse();
+            _xmlParser = new Parser(xmlFile, validate);
+            _variables = _xmlParser.Parse();
             Process(); // Initialize the model
         }
 
@@ -39,33 +41,36 @@ namespace Symu.SysDyn
         /// </summary>
         /// <param name="nodeId"></param>
         /// <returns></returns>
-        public float GetVariable(string nodeId)
+        public float GetValue(string nodeId)
         {
-            return _nodes[nodeId].Value;
+            return _variables[nodeId].Value;
         }
 
         public void Process()
         {
-            _nodes.Initialize();
+            _variables.Initialize();
 
-            List<Node> waitingParents;
+            List<Variable> waitingParents;
             do
             {
-                waitingParents = new List<Node>();
-                foreach (var variable in _nodes.GetNotUpdated)
+                waitingParents = new List<Variable>();
+                foreach (var variable in _variables.GetNotUpdated)
                 {
                     var withChildren = waitingParents;
                     withChildren.AddRange(UpdateChildren(variable));
                     waitingParents = withChildren.Distinct().ToList(); //no duplicates
                 }
             } while (waitingParents.Count > 0);
+
+            _results.Add(Result.CreateInstance(_variables));
+
         }
         /// <summary>
         /// Takes a variable and updates all variables listed as children. 
         /// </summary>
         /// <param name="parent"></param>
         /// <returns></returns>
-        public List<Node> UpdateChildren(Node parent)
+        public List<Variable> UpdateChildren(Variable parent)
         {
             if (parent == null)
             {
@@ -80,16 +85,16 @@ namespace Symu.SysDyn
             }
 
             var readyToUpdate = true;
-            var waitingParents = new List<Node>();
+            var waitingParents = new List<Variable>();
             var children = parent.Children.ToArray();
             for (var index = 0; index < parent.Children.Count; index++) //check to see if children are busy
             {
-                if (_nodes[children[index]] == null)
+                if (_variables[children[index]] == null)
                 {
                     continue;
                 }
 
-                var child = _nodes[children[index]];
+                var child = _variables[children[index]];
 
                 switch (child.Updated)
                 {
@@ -117,7 +122,7 @@ namespace Symu.SysDyn
         /// Take a node and update the value of that node
         /// </summary>
         /// <param name="node"></param>
-        public void UpdateNode(Node node)
+        public void UpdateNode(Variable node)
         {
             if (node == null)
             {
@@ -168,7 +173,7 @@ namespace Symu.SysDyn
                 }
 
                 //convert it to the value in table
-                var target = _nodes[words[counter]];
+                var target = _variables[words[counter]];
                 if (target != null)
                 {
                     words[counter] = target.Value.ToString(CultureInfo.InvariantCulture);
@@ -211,7 +216,17 @@ namespace Symu.SysDyn
         public Graph GetGraph()
         {
             //todo => parse header.Name
-            return xmlParser.CreateGraph("[GLOBAL]", _nodes);
+            return _xmlParser.CreateGraph("[GLOBAL]", _variables);
+        }
+
+        public IEnumerable<string> GetVariables()
+        {
+            return _variables.GetStocks().Select(x => x.Name);
+        }
+
+        public IEnumerable<float> GetResults(string name)
+        {
+            return _results.GetResults(name);
         }
     }
 }

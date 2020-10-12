@@ -20,9 +20,9 @@ namespace Symu.SysDyn.QuickGraph
     ///     Flow Represents the flow of the system being analyzed.
     ///     Flow is defined as an edge of stocks
     /// </summary>
-    public sealed class FlowEdge : IEdge<Node>
+    public sealed class FlowEdge : IEdge<Variable>
     {
-        public FlowEdge(string name, Node source, Node target)
+        public FlowEdge(string name, Variable source, Variable target)
         {
             Name = name;
             Source = source;
@@ -36,12 +36,12 @@ namespace Symu.SysDyn.QuickGraph
         /// <summary>
         ///     Source stock is the outflow property of a stock
         /// </summary>
-        public Node Source { get; }
+        public Variable Source { get; }
 
         /// <summary>
         ///     Target stock is the inflow property of a stock
         /// </summary>
-        public Node Target { get; }
+        public Variable Target { get; }
 
         #endregion
 

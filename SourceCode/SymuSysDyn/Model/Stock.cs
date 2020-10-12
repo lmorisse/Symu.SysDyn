@@ -16,7 +16,7 @@ using System.Collections.Generic;
 
 namespace Symu.SysDyn.Model
 {
-    public class Stock : Node, IComparable
+    public class Stock : Variable, IComparable
     {
         public Stock(string name, string eqn, List<string> inflow, List<string> outflow) : base(name, eqn)
         {
@@ -38,7 +38,7 @@ namespace Symu.SysDyn.Model
 
         public override bool Equals(object that)
         {
-            if (that is Node stock)
+            if (that is Variable stock)
             {
                 return Name.Equals(stock.Name);
             }
@@ -53,7 +53,7 @@ namespace Symu.SysDyn.Model
 
         public int CompareTo(object obj)
         {
-            var that = obj as Node;
+            var that = obj as Variable;
             return string.Compare(Name, that?.Name, StringComparison.Ordinal);
         }
 

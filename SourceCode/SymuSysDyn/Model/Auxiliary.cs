@@ -9,7 +9,7 @@
 
 namespace Symu.SysDyn.Model
 {
-    public class Auxiliary : Node
+    public class Auxiliary : Variable
     {
         public Auxiliary(string name, string eqn, GraphicalFunction graph) : base(name, eqn, graph)
         {

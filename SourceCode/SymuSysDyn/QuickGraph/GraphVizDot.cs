@@ -25,7 +25,7 @@ namespace Symu.SysDyn.QuickGraph
     {
         public static string GenerateDotString(Graph graph)
         {
-            var viz = new GraphvizAlgorithm<Node, FlowEdge>(graph);
+            var viz = new GraphvizAlgorithm<Variable, FlowEdge>(graph);
 
             viz.FormatVertex += VizFormatVertex;
             // TODO no edge viz.FormatEdge += edgeFormatter; param FormatEdgeAction<Node, FlowEdge> edgeFormatter

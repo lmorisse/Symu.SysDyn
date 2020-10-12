@@ -73,7 +73,7 @@ namespace Symu.SysDyn
             }
         }
 
-        public Nodes Parse()
+        public Variables Parse()
         {
             if (_xDoc.Root == null)
             {
@@ -83,7 +83,7 @@ namespace Symu.SysDyn
             XNamespace ns = _xDoc.Root.Attributes("xmlns").First().Value;
             var xElements = _xDoc.Root.Descendants(ns + "variables");
 
-            var nodes = new Nodes();
+            var nodes = new Variables();
             foreach (var xElement in xElements)
             {
                 ParseStocks(xElement, ns, nodes);
@@ -93,7 +93,7 @@ namespace Symu.SysDyn
             return nodes;
         }
 
-        public Graph CreateGraph(string defaultStockName, Nodes nodes)
+        public Graph CreateGraph(string defaultStockName, Variables nodes)
         {
             // Select flux as Edges
             // Prenez les tables INFLOWS et OUTFLOWS avec les colonnes STOCK_ID, FLOW_ID et joignez-les par FLOW_ID.
@@ -117,7 +117,7 @@ namespace Symu.SysDyn
 
             var outflows = nodes.GetOutflows();
 
-            var defaultStock = new Node(defaultStockName);
+            var defaultStock = new Variable(defaultStockName);
 
             //FULL OUTER JOIN des tables INFLOWS et OUTFLOWS par STOCK_ID
             var leftOuter =
@@ -138,14 +138,14 @@ namespace Symu.SysDyn
 
             var flows = leftOuter.Union(rightOuter);
 
-            var graph = new Graph(true, defaultStock);
+            var graph = new Graph(true);
             graph.AddVertex(defaultStock);
             graph.AddVertexRange(nodes.GetStocks());
             graph.AddEdgeRange(flows);
             return graph;
         }
 
-        private static void ParseAuxiliaries(XContainer xContainer, XNamespace ns, Nodes nodes)
+        private static void ParseAuxiliaries(XContainer xContainer, XNamespace ns, Variables nodes)
         {
             var auxiliaries = xContainer.Descendants(ns + "aux")
                 .Select(q => new Auxiliary(
@@ -156,7 +156,7 @@ namespace Symu.SysDyn
             nodes.AddRange(auxiliaries);
         }
 
-        private static void ParseFlows(XContainer xContainer, XNamespace ns, Nodes nodes)
+        private static void ParseFlows(XContainer xContainer, XNamespace ns, Variables nodes)
         {
             var flows = xContainer.Descendants(ns + "flow")
                 .Select(q => new Flow(
@@ -166,7 +166,7 @@ namespace Symu.SysDyn
             nodes.AddRange(flows);
         }
 
-        private static void ParseStocks(XContainer xContainer, XNamespace ns, Nodes nodes)
+        private static void ParseStocks(XContainer xContainer, XNamespace ns, Variables nodes)
         {
             var stocks = xContainer.Descendants(ns + "stock")
                 .Select(q => new Stock(

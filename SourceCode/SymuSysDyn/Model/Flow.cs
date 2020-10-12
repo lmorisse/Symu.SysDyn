@@ -9,7 +9,7 @@
 
 namespace Symu.SysDyn.Model
 {
-    public class Flow : Node
+    public class Flow : Variable
     {
         public Flow(string name, string eqn) : base(name, eqn)
         {
