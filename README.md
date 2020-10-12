@@ -49,6 +49,10 @@ To build Symu you have to add the Symu.Common.dll as a dependency. You find this
 
 #### External dependencies
 
+* NCalc2 (Nugget)
+* QuickGraph (Nugget)
+* GraphViz (Nugget) for SymuSysDynApp
+
 ### Running
 
 As it is a core library, you can't run ``Symu.OrgMod`` as is.

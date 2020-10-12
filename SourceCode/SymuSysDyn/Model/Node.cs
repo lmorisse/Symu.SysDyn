@@ -102,5 +102,12 @@ namespace Symu.SysDyn.Model
             var equation = inflows.Aggregate(name, (current, inflow) => current + plus + inflow);
             return outflows.Aggregate(equation, (current, outflow) => current + minus + outflow);
         }
+
+        /// <summary>Returns a string that represents the current object.</summary>
+        /// <returns>A string that represents the current object.</returns>
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }

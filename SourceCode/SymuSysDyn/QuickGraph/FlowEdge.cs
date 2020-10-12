@@ -14,7 +14,7 @@ using Symu.SysDyn.Model;
 
 #endregion
 
-namespace Symu.SysDyn.Graph
+namespace Symu.SysDyn.QuickGraph
 {
     /// <summary>
     ///     Flow Represents the flow of the system being analyzed.

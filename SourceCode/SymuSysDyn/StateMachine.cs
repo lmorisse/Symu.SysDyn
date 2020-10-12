@@ -15,8 +15,8 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using NCalc2;
-using Symu.SysDyn.Graph;
 using Symu.SysDyn.Model;
+using Symu.SysDyn.QuickGraph;
 
 #endregion
 
@@ -25,10 +25,11 @@ namespace Symu.SysDyn
     public class StateMachine
     {
         private readonly Nodes _nodes;
+        private readonly Parser xmlParser;
 
         public StateMachine(string xmlFile, bool validate = true)
         {
-            var xmlParser = new Parser(xmlFile, validate);
+            xmlParser = new Parser(xmlFile, validate);
             _nodes = xmlParser.Parse();
             Process(); // Initialize the model
         }
@@ -205,6 +206,12 @@ namespace Symu.SysDyn
             }
 
             return output;
+        }
+
+        public Graph GetGraph()
+        {
+            //todo => parse header.Name
+            return xmlParser.CreateGraph("[GLOBAL]", _nodes);
         }
     }
 }

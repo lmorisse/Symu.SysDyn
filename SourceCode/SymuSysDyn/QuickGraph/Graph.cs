@@ -16,7 +16,7 @@ using Symu.SysDyn.Model;
 
 #endregion
 
-namespace Symu.SysDyn.Graph
+namespace Symu.SysDyn.QuickGraph
 {
     public class Graph : BidirectionalGraph<Node, FlowEdge>
     {

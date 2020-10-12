@@ -15,8 +15,8 @@ using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
-using Symu.SysDyn.Graph;
 using Symu.SysDyn.Model;
+using Symu.SysDyn.QuickGraph;
 
 #endregion
 
@@ -90,15 +90,10 @@ namespace Symu.SysDyn
                 ParseFlows(xElement, ns, nodes);
                 ParseAuxiliaries(xElement, ns, nodes);
             }
-
-            // Edges
-            //todo => parse header.Name
-            CreateGraph("[GLOBAL]", nodes);
-
             return nodes;
         }
 
-        public Graph.Graph CreateGraph(string defaultStockName, Nodes nodes)
+        public Graph CreateGraph(string defaultStockName, Nodes nodes)
         {
             // Select flux as Edges
             // Prenez les tables INFLOWS et OUTFLOWS avec les colonnes STOCK_ID, FLOW_ID et joignez-les par FLOW_ID.
@@ -143,7 +138,7 @@ namespace Symu.SysDyn
 
             var flows = leftOuter.Union(rightOuter);
 
-            var graph = new Graph.Graph(true, defaultStock);
+            var graph = new Graph(true, defaultStock);
             graph.AddVertex(defaultStock);
             graph.AddVertexRange(nodes.GetStocks());
             graph.AddEdgeRange(flows);
