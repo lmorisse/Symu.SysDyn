@@ -13,11 +13,10 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using Symu.SysDyn.XmlParser;
 
 #endregion
 
-namespace Symu.SysDyn.Graph
+namespace Symu.SysDyn.Model
 {
     /// <summary>
     ///     Base class for nodes of the graph

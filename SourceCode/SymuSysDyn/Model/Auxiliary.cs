@@ -7,9 +7,7 @@
 
 #endregion
 
-using Symu.SysDyn.XmlParser;
-
-namespace Symu.SysDyn.Graph
+namespace Symu.SysDyn.Model
 {
     public class Auxiliary : Node
     {

@@ -10,6 +10,7 @@
 #region using directives
 
 using QuickGraph;
+using Symu.SysDyn.Model;
 
 #endregion
 

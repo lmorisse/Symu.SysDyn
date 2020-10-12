@@ -16,10 +16,11 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
 using Symu.SysDyn.Graph;
+using Symu.SysDyn.Model;
 
 #endregion
 
-namespace Symu.SysDyn.XmlParser
+namespace Symu.SysDyn
 {
     public class Parser
     {

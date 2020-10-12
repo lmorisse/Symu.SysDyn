@@ -15,7 +15,7 @@ using System.Globalization;
 
 #endregion
 
-namespace Symu.SysDyn.XmlParser
+namespace Symu.SysDyn.Model
 {
     public class GraphicalFunction
     {
@@ -48,8 +48,6 @@ namespace Symu.SysDyn.XmlParser
             {
                 _points[counter, 0] = xTable[counter];
                 _points[counter, 1] = yTable[counter];
-
-                //Console.WriteLine(points[counter, 0] + ", " + points[counter, 1]);
             }
         }
 
@@ -69,7 +67,6 @@ namespace Symu.SysDyn.XmlParser
 
             for (var counter = 0; counter < words.Length; counter++)
             {
-                //Console.WriteLine(words[counter]);
                 outputTable[counter] = float.Parse(words[counter], CultureInfo.InvariantCulture);
             }
 
@@ -87,7 +84,6 @@ namespace Symu.SysDyn.XmlParser
             for (var counter = 0; counter < divisions; counter++)
             {
                 xTable[counter] = bounds[0] + increment * counter;
-                //Console.WriteLine(xTable[counter]);
             }
 
             return xTable;
@@ -122,6 +118,21 @@ namespace Symu.SysDyn.XmlParser
             var output = m * x + intercept;
 
             return output;
+        }
+
+        public float GraphicalOutput(float input)
+        {
+            var output = input;
+            if (input > XMax)
+            {
+                output = XMax;
+            }
+            else if (input < XMin)
+            {
+                output = XMin;
+            }
+
+            return GetOutput(output);
         }
     }
 }

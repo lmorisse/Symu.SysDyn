@@ -16,7 +16,7 @@ using System.Linq;
 
 #endregion
 
-namespace Symu.SysDyn.Graph
+namespace Symu.SysDyn.Model
 {
     /// <summary>
     ///     Base class for nodes of the graph
@@ -25,6 +25,17 @@ namespace Symu.SysDyn.Graph
     {
         private readonly List<Node> _nodes = new List<Node>();
         public IEnumerable<Node> GetNotUpdated => _nodes.Where(x => !x.Updated);
+
+        /// <summary>
+        ///     Gets or sets the node with the specified name
+        /// </summary>
+        /// <param name="nodeId"></param>
+        /// <returns></returns>
+        public Node this[string nodeId]
+        {
+            get => GetNode(nodeId);
+            //set => GetNode(nodeId).Value = value;
+        }
 
         public void Add(Node node)
         {

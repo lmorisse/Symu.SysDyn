@@ -7,7 +7,7 @@
 
 #endregion
 
-namespace Symu.SysDyn.Graph
+namespace Symu.SysDyn.Model
 {
     public class Flow : Node
     {

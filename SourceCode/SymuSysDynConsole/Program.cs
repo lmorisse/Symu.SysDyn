@@ -19,7 +19,7 @@ namespace SymuSysDynConsole
                 //These can be found in the .stmx model file
                 Console.WriteLine("Fish = " + testModel.GetVariable("Fish"));
                 //Console.WriteLine("Difference = " + testModel.getDifference("Fish"));
-                testModel.Simulate();
+                testModel.Process();
             }
         }
 

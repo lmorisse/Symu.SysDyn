@@ -10,13 +10,13 @@
 #region using directives
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using NCalc2;
 using Symu.SysDyn.Graph;
-using Symu.SysDyn.XmlParser;
+using Symu.SysDyn.Model;
 
 #endregion
 
@@ -24,44 +24,26 @@ namespace Symu.SysDyn
 {
     public class StateMachine
     {
-        private readonly Hashtable _hashtable;
         private readonly Nodes _nodes;
 
         public StateMachine(string xmlFile, bool validate = true)
         {
             var xmlParser = new Parser(xmlFile, validate);
             _nodes = xmlParser.Parse();
-            _hashtable = _nodes.GetHashTable();
-
-            Simulate(); //prime the model with zeroth values
+            Process(); // Initialize the model
         }
 
-        //public float GetDifference(string variable)
-        //{
-        //    var target = (Node) _hashtable[variable];
-        //    return target.Value - target.OldValue;
-        //}
-
-        //returns current value
-        public float GetVariable(string variable)
+        /// <summary>
+        /// returns current value of a node
+        /// </summary>
+        /// <param name="nodeId"></param>
+        /// <returns></returns>
+        public float GetVariable(string nodeId)
         {
-            return ((Node) _hashtable[variable]).Value;
+            return _nodes[nodeId].Value;
         }
 
-        //sets next value
-        public int SetVariable(string variable, float value)
-        {
-            if (_hashtable[variable] == null)
-            {
-                return 0;
-            }
-
-            _hashtable[variable] = value;
-            return 1;
-
-        }
-
-        public void Simulate()
+        public void Process()
         {
             _nodes.Initialize();
 
@@ -71,30 +53,28 @@ namespace Symu.SysDyn
                 waitingParents = new List<Node>();
                 foreach (var variable in _nodes.GetNotUpdated)
                 {
-                    var withDupes = waitingParents;
-                    withDupes.AddRange(UpdateChildren(variable, _hashtable));
-                    waitingParents = withDupes.Distinct().ToList(); //no duplicates
+                    var withChildren = waitingParents;
+                    withChildren.AddRange(UpdateChildren(variable));
+                    waitingParents = withChildren.Distinct().ToList(); //no duplicates
                 }
             } while (waitingParents.Count > 0);
         }
-
-        //takes a variable and updates all variables listed as children. 
-        public List<Node> UpdateChildren(Node parent, Hashtable table)
+        /// <summary>
+        /// Takes a variable and updates all variables listed as children. 
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <returns></returns>
+        public List<Node> UpdateChildren(Node parent)
         {
             if (parent == null)
             {
                 throw new ArgumentNullException(nameof(parent));
             }
 
-            if (table == null)
-            {
-                throw new ArgumentNullException(nameof(table));
-            }
-
             parent.InUse = true;
             if (parent is Stock)
             {
-                UpdateVariable(parent, table);
+                UpdateNode(parent);
                 parent.InUse = false;
             }
 
@@ -103,12 +83,12 @@ namespace Symu.SysDyn
             var children = parent.Children.ToArray();
             for (var index = 0; index < parent.Children.Count; index++) //check to see if children are busy
             {
-                if (table[children[index]] == null)
+                if (_nodes[children[index]] == null)
                 {
                     continue;
                 }
 
-                var child = (Node) table[children[index]];
+                var child = _nodes[children[index]];
 
                 switch (child.Updated)
                 {
@@ -118,53 +98,59 @@ namespace Symu.SysDyn
                         readyToUpdate = false;
                         break;
                     case false:
-                        waitingParents.AddRange(UpdateChildren(child, table));
+                        waitingParents.AddRange(UpdateChildren(child));
                         break;
                 }
             }
 
             if (readyToUpdate && !(parent is Stock))
             {
-                UpdateVariable(parent, table);
+                UpdateNode(parent);
             }
 
             parent.InUse = false;
             return waitingParents;
         }
+
         /// <summary>
-        /// Take a variable and a hashtable of current variable results and update the value of that variable
+        /// Take a node and update the value of that node
         /// </summary>
-        /// <param name="variable"></param>
-        /// <param name="table"></param>
-        public void UpdateVariable(Node variable, Hashtable table)
+        /// <param name="node"></param>
+        public void UpdateNode(Node node)
         {
-            if (variable == null)
+            if (node == null)
             {
-                throw new ArgumentNullException(nameof(variable));
+                throw new ArgumentNullException(nameof(node));
             }
 
-            var value = CalculateEquation(variable.Equation, table);
+            var value = CalculateEquation(node.Equation);
 
-            variable.Value = variable.Function == null ? value : GraphicalOutput(value, variable.Function);
+            node.Value = node.Function?.GraphicalOutput(value) ?? value;
 
-            variable.Updated = true;
+            node.Updated = true;
         }
+
         /// <summary>
         /// Takes equation and hashtable of current variable values returns the result of the equation as the float
         /// </summary>
         /// <param name="equation"></param>
-        /// <param name="table"></param>
         /// <returns></returns>
-        private float CalculateEquation(string equation, Hashtable table)
+        private float CalculateEquation(string equation)
         {
-            var explicitEquation = MakeExplicitEquation(equation, table);
-            var e = new Expression(explicitEquation);
-            var value = float.Parse(e.Evaluate().ToString(), CultureInfo.InvariantCulture);
-
-            return value;
+            try
+            {
+                var explicitEquation = MakeExplicitEquation(equation);
+                var e = new Expression(explicitEquation);
+                return float.Parse(e.Evaluate().ToString(), CultureInfo.InvariantCulture);
+            }
+            catch (ArgumentException ex)
+            {
+                throw new ArgumentException(nameof(equation) +  " : the internal details for this exception are as follows: \r\n" + ex.Message);
+            }
+            //todo Trace.WriteLineIf(World.LoggingSwitch.TraceVerbose, equation + "was calculate");
         }
 
-        private static string MakeExplicitEquation(string equation, IDictionary table)
+        private string MakeExplicitEquation(string equation)
         {
             var operators = new List<string> {"+", "-", "*", "/"};
             equation = AddSpacesToString(equation);
@@ -181,7 +167,7 @@ namespace Symu.SysDyn
                 }
 
                 //convert it to the value in table
-                var target = (Node) table[words[counter]];
+                var target = _nodes[words[counter]];
                 if (target != null)
                 {
                     words[counter] = target.Value.ToString(CultureInfo.InvariantCulture);
@@ -189,8 +175,7 @@ namespace Symu.SysDyn
             }
 
             //remake the string and return it
-            var concat = string.Join(" ", words);
-            return concat;
+            return string.Join(" ", words);
         }
 
         private static string AddSpacesToString(string input)
@@ -207,33 +192,18 @@ namespace Symu.SysDyn
         {
             var words = input.Split(separator);
 
-            if (words.Length > 1)
+            if (words.Length <= 1)
             {
-                output = words[0];
-
-                for (var counter = 1; counter < words.Length; counter++)
-                {
-                    output = output + replace + words[counter];
-                }
+                return output;
             }
 
-            return output;
-        }
+            output = words[0];
 
-
-        private static float GraphicalOutput(float input, GraphicalFunction function)
-        {
-            var output = input;
-            if (input > function.XMax)
+            for (var counter = 1; counter < words.Length; counter++)
             {
-                output = function.XMax;
-            }
-            else if (input < function.XMin)
-            {
-                output = function.XMin;
+                output += replace + words[counter];
             }
 
-            output = function.GetOutput(output);
             return output;
         }
     }

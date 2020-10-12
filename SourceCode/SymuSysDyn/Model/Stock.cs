@@ -14,7 +14,7 @@ using System.Collections.Generic;
 
 #endregion
 
-namespace Symu.SysDyn.Graph
+namespace Symu.SysDyn.Model
 {
     public class Stock : Node, IComparable
     {
