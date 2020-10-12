@@ -1,0 +1,50 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30406.217
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{60243253-434A-4F6A-A673-613C1A208D9A}"
+	ProjectSection(SolutionItems) = preProject
+		..\CHANGELOG.md = ..\CHANGELOG.md
+		..\CODE_OF_CONDUCT.md = ..\CODE_OF_CONDUCT.md
+		..\CONTRIBUTING.md = ..\CONTRIBUTING.md
+		..\CONTRIBUTORS.md = ..\CONTRIBUTORS.md
+		..\FAQ.md = ..\FAQ.md
+		..\LICENSE = ..\LICENSE
+		..\README.md = ..\README.md
+		..\RELEASENOTES.md = ..\RELEASENOTES.md
+		..\ROADMAP.md = ..\ROADMAP.md
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SymuSysDyn", "SymuSysDyn\SymuSysDyn.csproj", "{DDBC6982-9D12-4726-9B42-A5446AA0DFFD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SymuSysDynConsole", "SymuSysDynConsole\SymuSysDynConsole.csproj", "{AC3E31E1-3BC4-4A96-A366-0F2109060E94}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SymuSysDynTests", "SymuSysDynTests\SymuSysDynTests.csproj", "{3EC1CD4D-1CA8-4743-BD48-6A3649612C3C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DDBC6982-9D12-4726-9B42-A5446AA0DFFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DDBC6982-9D12-4726-9B42-A5446AA0DFFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DDBC6982-9D12-4726-9B42-A5446AA0DFFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DDBC6982-9D12-4726-9B42-A5446AA0DFFD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC3E31E1-3BC4-4A96-A366-0F2109060E94}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC3E31E1-3BC4-4A96-A366-0F2109060E94}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC3E31E1-3BC4-4A96-A366-0F2109060E94}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC3E31E1-3BC4-4A96-A366-0F2109060E94}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3EC1CD4D-1CA8-4743-BD48-6A3649612C3C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3EC1CD4D-1CA8-4743-BD48-6A3649612C3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3EC1CD4D-1CA8-4743-BD48-6A3649612C3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3EC1CD4D-1CA8-4743-BD48-6A3649612C3C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {90BEB16E-AE42-4A1E-978B-0459239FBF6F}
+	EndGlobalSection
+EndGlobal
