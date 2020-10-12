@@ -1,12 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-using Symu.SysDyn;
-
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Symu.SysDyn.Tests
+namespace SymuSysDynTests.XmlParser
 {
     [TestClass()]
     public class ParserTests
