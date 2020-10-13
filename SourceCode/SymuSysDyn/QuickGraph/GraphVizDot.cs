@@ -11,15 +11,14 @@
 
 using QuickGraph;
 using QuickGraph.Graphviz;
-using Symu.SysDyn.Model;
 
 #endregion
 
 namespace Symu.SysDyn.QuickGraph
 {
     /// <summary>
-    /// Use to generate dotString a format used by GraphViz to generate graphics
-    /// GraphViz is implemented in SymuSysDynApp
+    ///     Use to generate dotString a format used by GraphViz to generate graphics
+    ///     GraphViz is implemented in SymuSysDynApp
     /// </summary>
     public static class GraphVizDot
     {
@@ -39,7 +38,7 @@ namespace Symu.SysDyn.QuickGraph
             // noop
         }
 
-        private static string ToDotNotation<TVertex, TEdge>(this IVertexAndEdgeListGraph<TVertex, TEdge> graph)
+        private static string ToDotNotation<TVertex, TEdge>(this IEdgeListGraph<TVertex, TEdge> graph)
             where TEdge : IEdge<TVertex>
         {
             var viz = new GraphvizAlgorithm<TVertex, TEdge>(graph);

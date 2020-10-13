@@ -1,32 +1,54 @@
-﻿using System;
+﻿#region Licence
+
+// Description: SymuSysDyn - SymuSysDynApp
+// Website: https://symu.org
+// Copyright: (c) 2020 laurent morisseau
+// License : the program is distributed under the terms of the GNU General Public License
+
+#endregion
+
+#region using directives
+
+using System;
 using System.Drawing;
 using System.IO;
 using System.Runtime.InteropServices;
+
+#endregion
 
 namespace SymuSysDynApp.Graph
 {
     public static class GraphViz
     {
         public const int Success = 0;
+
         public static Image RenderImage(string source, string format)
         {
             // Create a Graphviz context
             var gvc = NativeMethods.gvContext();
             if (gvc == IntPtr.Zero)
+            {
                 throw new Exception("Failed to create Graphviz context.");
+            }
 
             // Load the DOT data into a graph
             var g = NativeMethods.agmemread(source);
             if (g == IntPtr.Zero)
+            {
                 throw new Exception("Failed to create graph from source. Check for syntax errors.");
+            }
 
             // Apply a layout
             if (NativeMethods.gvLayout(gvc, g, "dot") != Success)
+            {
                 throw new Exception("Layout failed.");
+            }
 
             // Render the graph
             if (NativeMethods.gvRenderData(gvc, g, format, out var result, out var length) != Success)
+            {
                 throw new Exception("Render failed.");
+            }
 
             // Create an array to hold the rendered graph
             var bytes = new byte[length];

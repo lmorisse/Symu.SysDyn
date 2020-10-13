@@ -7,20 +7,28 @@
 
 #endregion
 
+#region using directives
+
 using QuickGraph.Graphviz;
 using QuickGraph.Graphviz.Dot;
+
+#endregion
 
 namespace Symu.SysDyn.QuickGraph
 {
     /// <summary>
-    /// Implementation of IDotEngine to use QuickGraph.GraphViz
-    /// Generate a dotString
+    ///     Implementation of IDotEngine to use QuickGraph.GraphViz
+    ///     Generate a dotString
     /// </summary>
     public sealed class DotPrinter : IDotEngine
     {
+        #region IDotEngine Members
+
         public string Run(GraphvizImageType imageType, string dot, string outputFileName)
         {
             return dot;
         }
+
+        #endregion
     }
 }

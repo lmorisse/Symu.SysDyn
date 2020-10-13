@@ -23,7 +23,8 @@ namespace Symu.SysDyn.Model
     /// </summary>
     public class Variable
     {
-        private readonly List<string> _operators = new List<string> { " ", "+", "-", "*", "/" };
+        private readonly List<string> _operators = new List<string> {" ", "+", "-", "*", "/"};
+
         public Variable(string name)
         {
             if (name == null)
@@ -38,7 +39,7 @@ namespace Symu.SysDyn.Model
         {
             Value = CheckInitialValue(eqn);
             Equation = eqn;
-            Children = FindChildren();
+            FindChildren();
         }
 
         public Variable(string name, string eqn, GraphicalFunction graph) : this(name, eqn)
@@ -62,29 +63,37 @@ namespace Symu.SysDyn.Model
 
         public float OldValue { get; set; }
 
+        /// <summary>
+        ///     The variable has been updated
+        /// </summary>
         public bool Updated { get; set; }
 
-        public bool InUse { get; set; }
+        /// <summary>
+        ///     The variable is being updating
+        /// </summary>
+        public bool Updating { get; set; }
 
-        //public bool isStock { get; }
-
+        /// <summary>
+        ///     Children are items from Equation that are not numbers, operators, blanks nor itself
+        /// </summary>
         public List<string> Children { get; protected set; }
 
         /// <summary>
-        /// Children are items from Equation that are not numbers, operators, blanks nor itself
+        ///     Find all children of a variable
         /// </summary>
         /// <returns></returns>
-        protected List<string> FindChildren()
+        public void FindChildren()
         {
             var words = Equation?.Split(' ', '+', '-', '*', '/');
 
-            return words?.Where(word => !_operators.Contains(word) && 
-                                        !float.TryParse(word, NumberStyles.Any, CultureInfo.InvariantCulture, out _) && 
-                                        word.Length > 0 
-                                        && !word.Equals(Name)).ToList();
+            Children = words?.Where(word => !_operators.Contains(word) &&
+                                            !float.TryParse(word, NumberStyles.Any, CultureInfo.InvariantCulture,
+                                                out _) &&
+                                            word.Length > 0
+                                            && !word.Equals(Name)).ToList();
         }
 
-        protected static float CheckInitialValue(string equation)
+        public static float CheckInitialValue(string equation)
         {
             if (!float.TryParse(equation, out var n))
             {
@@ -92,15 +101,6 @@ namespace Symu.SysDyn.Model
             }
 
             return n;
-        }
-
-        protected static string SetStockEquation(string name, IReadOnlyList<string> inflows,
-            IReadOnlyList<string> outflows)
-        {
-            const string plus = " + ";
-            const string minus = " - ";
-            var equation = inflows.Aggregate(name, (current, inflow) => current + plus + inflow);
-            return outflows.Aggregate(equation, (current, outflow) => current + minus + outflow);
         }
 
         /// <summary>Returns a string that represents the current object.</summary>

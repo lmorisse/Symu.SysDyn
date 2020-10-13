@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<xmile version="1.0" xmlns="http://docs.oasis-open.org/xmile/ns/XMILE/v1.0">
+  <header>
+    <name>Test</name>
+  </header>
+  <sim_specs method="Euler" time_units="Time">
+    <start>0</start>
+    <stop>10</stop>
+    <dt>1</dt>
+  </sim_specs>
+  <model>
+    <variables>
+      <stock name="stock1">
+        <eqn>1</eqn>
+        <inflow>inflow1</inflow>
+        <outflow>outflow1</outflow>
+        <non_negative />
+      </stock>
+      <flow name="inflow1">
+        <eqn>stock2/2</eqn>
+        <non_negative />
+      </flow>
+      <flow name="outflow1">
+        <eqn>stock2*2</eqn>
+        <non_negative />
+      </flow>
+      <stock name="stock2">
+        <eqn>2</eqn>
+        <non_negative />
+      </stock>
+      <aux name="aux1">
+        <eqn>2</eqn>
+        <gf>
+          <xscale min="0" max="1" />
+          <yscale min="0" max="1" />
+          <ypts>0,1</ypts>
+        </gf>
+      </aux>
+    </variables>
+  </model>
+</xmile>

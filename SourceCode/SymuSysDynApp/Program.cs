@@ -1,24 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Resources;
-using System.Threading.Tasks;
+﻿#region Licence
+
+// Description: SymuSysDyn - SymuSysDynApp
+// Website: https://symu.org
+// Copyright: (c) 2020 laurent morisseau
+// License : the program is distributed under the terms of the GNU General Public License
+
+#endregion
+
+#region using directives
+
+using System;
 using System.Windows.Forms;
 using SymuSysDynApp.Properties;
+using Syncfusion.Licensing;
+
+#endregion
 
 namespace SymuSysDynApp
 {
-    static class Program
+    internal static class Program
     {
         /// <summary>
-        /// Point d'entrée principal de l'application.
+        ///     Point d'entrée principal de l'application.
         /// </summary>
         [STAThread]
-        static void Main()
+        private static void Main()
         {
             // Get you own SyncFusionKey
-            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense(Settings.Default.SyncFusionKey);
-            
+            SyncfusionLicenseProvider.RegisterLicense(Settings.Default.SyncFusionKey);
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Home());

@@ -1,10 +1,21 @@
-﻿using System;
+﻿#region Licence
+
+// Description: SymuSysDyn - SymuSysDynApp
+// Website: https://symu.org
+// Copyright: (c) 2020 laurent morisseau
+// License : the program is distributed under the terms of the GNU General Public License
+
+#endregion
+
+#region using directives
+
+using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.IO;
-using System.Runtime.InteropServices;
 using Syncfusion.Drawing;
 using Syncfusion.Windows.Forms.Chart;
+
+#endregion
 
 namespace SymuSysDynApp.Graph
 {

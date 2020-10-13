@@ -11,52 +11,61 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using NCalc2;
 using Symu.SysDyn.Model;
+using Symu.SysDyn.Parser;
 using Symu.SysDyn.QuickGraph;
 using Symu.SysDyn.Results;
-using Symu.SysDyn.Simulation;
 
 #endregion
 
-namespace Symu.SysDyn
+namespace Symu.SysDyn.Simulation
 {
     public class StateMachine
     {
-        public readonly SimSpecs Simulation;
-        private readonly Variables _variables;
-        private readonly ResultCollection _results =new ResultCollection();
-
         public StateMachine(string xmlFile, bool validate = true)
         {
-            var xmlParser = new Parser(xmlFile, validate);
-            _variables = xmlParser.ParseVariables();
+            var xmlParser = new XmlParser(xmlFile, validate);
+            Variables = xmlParser.ParseVariables();
             Simulation = xmlParser.ParseSimSpecs();
             Process(); // Initialize the model
         }
 
+        public SimSpecs Simulation { get; }
+        public Variables Variables { get; }
+        public ResultCollection Results { get; } = new ResultCollection();
+
         /// <summary>
-        /// returns current value of a node
+        ///     returns current value of a node
         /// </summary>
-        /// <param name="nodeId"></param>
+        /// <param name="name"></param>
         /// <returns></returns>
-        public float GetValue(string nodeId)
+        public float GetValue(string name)
         {
-            return _variables[nodeId].Value;
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
+            if (!Variables.Exists(name))
+            {
+                throw new NullReferenceException(nameof(name));
+            }
+
+            return Variables[name].Value;
         }
 
         public void Process()
         {
-            _variables.Initialize();
+            Variables.Initialize();
 
             List<Variable> waitingParents;
             do
             {
                 waitingParents = new List<Variable>();
-                foreach (var variable in _variables.GetNotUpdated)
+                foreach (var variable in Variables.GetNotUpdated)
                 {
                     var withChildren = waitingParents;
                     withChildren.AddRange(UpdateChildren(variable));
@@ -64,11 +73,11 @@ namespace Symu.SysDyn
                 }
             } while (waitingParents.Count > 0);
 
-            _results.Add(Result.CreateInstance(_variables));
-
+            Results.Add(Result.CreateInstance(Variables));
         }
+
         /// <summary>
-        /// Takes a variable and updates all variables listed as children. 
+        ///     Takes a variable and updates all variables listed as children.
         /// </summary>
         /// <param name="parent"></param>
         /// <returns></returns>
@@ -79,11 +88,11 @@ namespace Symu.SysDyn
                 throw new ArgumentNullException(nameof(parent));
             }
 
-            parent.InUse = true;
+            parent.Updating = true;
             if (parent is Stock)
             {
-                UpdateNode(parent);
-                parent.InUse = false;
+                UpdateVariable(parent);
+                parent.Updating = false;
             }
 
             var readyToUpdate = true;
@@ -91,17 +100,17 @@ namespace Symu.SysDyn
             var children = parent.Children.ToArray();
             for (var index = 0; index < parent.Children.Count; index++) //check to see if children are busy
             {
-                if (_variables[children[index]] == null)
+                if (Variables[children[index]] == null)
                 {
                     continue;
                 }
 
-                var child = _variables[children[index]];
+                var child = Variables[children[index]];
 
                 switch (child.Updated)
                 {
                     //parent who needs to wait for children 
-                    case false when child.InUse:
+                    case false when child.Updating:
                         waitingParents.Add(parent);
                         readyToUpdate = false;
                         break;
@@ -113,33 +122,33 @@ namespace Symu.SysDyn
 
             if (readyToUpdate && !(parent is Stock))
             {
-                UpdateNode(parent);
+                UpdateVariable(parent);
             }
 
-            parent.InUse = false;
+            parent.Updating = false;
             return waitingParents;
         }
 
         /// <summary>
-        /// Take a node and update the value of that node
+        ///     Take a node and update the value of that node
         /// </summary>
-        /// <param name="node"></param>
-        public void UpdateNode(Variable node)
+        /// <param name="variable"></param>
+        public void UpdateVariable(Variable variable)
         {
-            if (node == null)
+            if (variable == null)
             {
-                throw new ArgumentNullException(nameof(node));
+                throw new ArgumentNullException(nameof(variable));
             }
 
-            var value = CalculateEquation(node.Equation);
+            var value = CalculateEquation(variable.Equation);
 
-            node.Value = node.Function?.GraphicalOutput(value) ?? value;
+            variable.Value = variable.Function?.GetOutputWithBounds(value) ?? value;
 
-            node.Updated = true;
+            variable.Updated = true;
         }
 
         /// <summary>
-        /// Takes equation and hashtable of current variable values returns the result of the equation as the float
+        ///     Takes equation and hashtable of current variable values returns the result of the equation as the float
         /// </summary>
         /// <param name="equation"></param>
         /// <returns></returns>
@@ -153,14 +162,18 @@ namespace Symu.SysDyn
             }
             catch (ArgumentException ex)
             {
-                throw new ArgumentException(nameof(equation) +  " : the internal details for this exception are as follows: \r\n" + ex.Message);
+                throw new ArgumentException(nameof(equation) +
+                                            " : the internal details for this exception are as follows: \r\n" +
+                                            ex.Message);
             }
+
             //todo Trace.WriteLineIf(World.LoggingSwitch.TraceVerbose, equation + "was calculate");
         }
 
         private string MakeExplicitEquation(string equation)
         {
-            var operators = new List<string> {"+", "-", "*", "/"};
+            var operators = new List<string>
+                {XmlConstants.Multiplication, XmlConstants.Division, XmlConstants.Plus, XmlConstants.Minus};
             equation = AddSpacesToString(equation);
             //break equation into pieces
             var words = equation.Split(' ');
@@ -175,7 +188,7 @@ namespace Symu.SysDyn
                 }
 
                 //convert it to the value in table
-                var target = _variables[words[counter]];
+                var target = Variables[words[counter]];
                 if (target != null)
                 {
                     words[counter] = target.Value.ToString(CultureInfo.InvariantCulture);
@@ -189,10 +202,10 @@ namespace Symu.SysDyn
         private static string AddSpacesToString(string input)
         {
             var output = input;
-            output = AddSPaceToStringBySeparator(input, '*', " * ", output);
-            output = AddSPaceToStringBySeparator(input, '/', " / ", output);
-            output = AddSPaceToStringBySeparator(input, '-', " - ", output);
-            output = AddSPaceToStringBySeparator(input, '+', " + ", output);
+            output = AddSPaceToStringBySeparator(input, '*', XmlConstants.SpaceMultiplication, output);
+            output = AddSPaceToStringBySeparator(input, '/', XmlConstants.SpaceDivision, output);
+            output = AddSPaceToStringBySeparator(input, '-', XmlConstants.SpaceMinus, output);
+            output = AddSPaceToStringBySeparator(input, '+', XmlConstants.SpacePlus, output);
             return output;
         }
 
@@ -215,20 +228,12 @@ namespace Symu.SysDyn
             return output;
         }
 
+        /// <summary>
+        ///     Create Graph of variables using QuickGraph
+        /// </summary>
         public Graph GetGraph()
         {
-            //todo => parse header.Name
-            return Parser.CreateGraph(_variables);
-        }
-
-        public IEnumerable<string> GetVariables()
-        {
-            return _variables.GetStocks().Select(x => x.Name);
-        }
-
-        public IEnumerable<float> GetResults(string name)
-        {
-            return _results.GetResults(name);
+            return Graph.CreateInstance(Variables);
         }
     }
 }

@@ -9,7 +9,6 @@
 
 #region using directives
 
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,100 +22,78 @@ namespace Symu.SysDyn.Model
     /// </summary>
     public class Variables : IEnumerable<Variable>
     {
-        private readonly List<Variable> _nodes = new List<Variable>();
-        public IEnumerable<Variable> GetNotUpdated => _nodes.Where(x => !x.Updated);
+        private readonly List<Variable> _variables = new List<Variable>();
+        public IEnumerable<Variable> GetNotUpdated => _variables.Where(x => !x.Updated);
+
+        public IEnumerable<string> Names => _variables.Select(x => x.Name);
 
         /// <summary>
         ///     Gets or sets the node with the specified name
         /// </summary>
-        /// <param name="nodeId"></param>
+        /// <param name="name"></param>
         /// <returns></returns>
-        public Variable this[string nodeId]
-        {
-            get => GetNode(nodeId);
-            //set => GetNode(nodeId).Value = value;
-        }
+        public Variable this[string name] => Get(name);
 
-        public void Add(Variable node)
-        {
-            _nodes.Add(node);
-        }
+        /// <summary>
+        ///     Gets or sets the node with the specified index
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public Variable this[int index] => _variables[index];
 
-        public void AddRange(IEnumerable<Variable> nodes)
+        public void Add(Variable variable)
         {
-            _nodes.AddRange(nodes);
-        }
-
-        public Variable GetNode(string nodeId)
-        {
-            return _nodes.Find(x => x.Name == nodeId);
-        }
-
-        public Hashtable GetHashTable()
-        {
-            var hashtable = new Hashtable();
-            foreach (var node in _nodes)
+            if (!Contains(variable))
             {
-                hashtable.Add(node.Name, node);
+                _variables.Add(variable);
             }
+        }
 
-            return hashtable;
+        public void AddRange(IEnumerable<Variable> variables)
+        {
+            _variables.AddRange(variables);
+        }
+
+        public bool Contains(Variable variable)
+        {
+            return _variables.Contains(variable);
+        }
+
+        public bool Exists(string name)
+        {
+            return _variables.Exists(x => x.Name == name);
+        }
+
+        public Variable Get(string name)
+        {
+            return _variables.Find(x => x.Name == name);
         }
 
         public void Initialize()
         {
-            foreach (var node in _nodes)
+            foreach (var variable in _variables)
             {
-                node.Updated = false;
-                node.OldValue = node.Value;
+                variable.Updated = false;
+                variable.OldValue = variable.Value;
             }
-        }
-
-        public List<Tuple<Stock, string>> GetInflows()
-        {
-            var nodeInflows = new List<Tuple<Stock, string>>();
-            foreach (var node in _nodes.OfType<Stock>())
-            {
-                nodeInflows.AddRange(node.Inflow.Select(inflow => new Tuple<Stock, string>(node, inflow)));
-            }
-
-            return nodeInflows;
-        }
-
-        public List<Tuple<Stock, string>> GetOutflows()
-        {
-            var nodeOutflows = new List<Tuple<Stock, string>>();
-            foreach (var node in GetStocks())
-            {
-                nodeOutflows.AddRange(node.Outflow.Select(outflow => new Tuple<Stock, string>(node, outflow)));
-            }
-
-            return nodeOutflows;
-        }
-
-        public IEnumerable<Stock> GetStocks()
-        {
-            return _nodes.OfType<Stock>();
         }
 
         #region IEnumerator members
-
 
         /// <summary>Returns an enumerator that iterates through the collection.</summary>
         /// <returns>An enumerator that can be used to iterate through the collection.</returns>
         public IEnumerator<Variable> GetEnumerator()
         {
-            return _nodes.GetEnumerator();
+            return _variables.GetEnumerator();
         }
 
         /// <summary>Returns an enumerator that iterates through a collection.</summary>
         /// <returns>An object that can be used to iterate through the collection.</returns>
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return _nodes.GetEnumerator();
+            return _variables.GetEnumerator();
         }
 
         #endregion
-
     }
 }

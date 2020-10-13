@@ -11,6 +11,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using Symu.SysDyn.Parser;
 
 #endregion
 
@@ -23,8 +25,14 @@ namespace Symu.SysDyn.Model
             Eqn = eqn;
             Inflow = inflow;
             Outflow = outflow;
-            Equation = SetStockEquation(Name, inflow, outflow);
-            Children = FindChildren();
+            Equation = SetStockEquation();
+            FindChildren();
+        }
+
+        public string SetStockEquation()
+        {
+            var equation = Inflow.Aggregate(Name, (current, inflow) => current + XmlConstants.SpacePlus + inflow);
+            return Outflow.Aggregate(equation, (current, outflow) => current + XmlConstants.SpaceMinus + outflow);
         }
 
         #region Xml attributes

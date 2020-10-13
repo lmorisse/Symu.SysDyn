@@ -23,11 +23,11 @@ namespace Symu.SysDyn.Model
         private readonly float[] _xBounds = new float [2];
         private readonly float[] _yBounds = new float [2];
 
-        public GraphicalFunction(string stringTable, IReadOnlyList<string> bounds)
+        public GraphicalFunction(string ypts, IReadOnlyList<string> bounds)
         {
-            if (stringTable == null)
+            if (ypts == null)
             {
-                throw new ArgumentNullException(nameof(stringTable));
+                throw new ArgumentNullException(nameof(ypts));
             }
 
             if (bounds == null)
@@ -40,7 +40,7 @@ namespace Symu.SysDyn.Model
             _yBounds[0] = float.Parse(bounds[2], CultureInfo.InvariantCulture);
             _yBounds[1] = float.Parse(bounds[3], CultureInfo.InvariantCulture);
 
-            var yTable = ParseStringTable(stringTable);
+            var yTable = ParseStringTable(ypts);
             var xTable = CreateXTable(_xBounds, yTable.Length);
             _points = new float[yTable.Length, 2];
 
@@ -89,20 +89,20 @@ namespace Symu.SysDyn.Model
             return xTable;
         }
 
-        public float GetOutput(float x)
+        private float GetOutput(float x)
         {
-            //Console.WriteLine(x);
             var target = 0;
 
             //find which line segment our x fits into 
             //TODO: currently n time, need faster implementation to protect against very high resolution graphical functions. 
-            for (var counter = 0; counter < _points.Length; counter++)
+            for (var counter = 0; counter < _points.GetLongLength(0); counter++)
             {
                 if (x < _points[counter, 0])
                 {
                     target = counter;
                     break;
                 }
+
                 //todo use Symu.Common Tolerance
                 if (Math.Abs(x - _points[counter, 0]) < 0.0001)
                 {
@@ -115,12 +115,10 @@ namespace Symu.SysDyn.Model
             var m = a / b; //slope
             var intercept = _points[target, 1] - m * _points[target, 0]; //b
 
-            var output = m * x + intercept;
-
-            return output;
+            return m * x + intercept;
         }
 
-        public float GraphicalOutput(float input)
+        public float GetOutputWithBounds(float input)
         {
             var output = input;
             if (input > XMax)

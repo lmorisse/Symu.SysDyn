@@ -10,7 +10,6 @@
 #region using directives
 
 using QuickGraph;
-using Symu.SysDyn.Model;
 
 #endregion
 
@@ -28,7 +27,7 @@ namespace Symu.SysDyn.QuickGraph
             Target = target;
         }
 
-        #region IEdge<Node> Members
+        #region IEdge<string> Members
 
         /// <summary>
         ///     Source stock is the outflow property of a stock
@@ -46,27 +45,5 @@ namespace Symu.SysDyn.QuickGraph
         {
             return string.Concat(Source, " -> ", Target);
         }
-
-        public override bool Equals(object that)
-        {
-            if (that is VariableEdge flow)
-            {
-                return Source.Equals(flow.Source) &&
-                       Target.Equals(flow.Target);
-            }
-
-            return ReferenceEquals(this, that);
-        }
-
-        //public override int GetHashCode()
-        //{
-        //    unchecked
-        //    {
-        //        //var hashCode = Name != null ? Name.GetHashCode() : 0;
-        //        var hashCode = (hashCode * 397) ^ (Source != null ? Source.GetHashCode() : 0);
-        //        hashCode = (hashCode * 397) ^ (Target != null ? Target.GetHashCode() : 0);
-        //        return hashCode;
-        //    }
-        //}
     }
 }

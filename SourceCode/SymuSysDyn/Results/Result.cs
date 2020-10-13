@@ -21,11 +21,6 @@ namespace Symu.SysDyn.Results
     {
         private readonly Hashtable _result = new Hashtable();
 
-        public static Result CreateInstance(Variables variables)
-        {
-            return new Result(variables);
-        }
-
         public Result(Variables variables)
         {
             if (variables == null)
@@ -39,6 +34,13 @@ namespace Symu.SysDyn.Results
             }
         }
 
+        public int Count => _result.Count;
+
+        public static Result CreateInstance(Variables variables)
+        {
+            return new Result(variables);
+        }
+
         public void Add(string name, float value)
         {
             _result.Add(name, value);
@@ -46,7 +48,7 @@ namespace Symu.SysDyn.Results
 
         public float GetValue(string name)
         {
-            return (float)_result[name];
+            return (float) _result[name];
         }
     }
 }

@@ -1,24 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
+﻿#region Licence
+
+// Description: SymuSysDyn - SymuSysDynApp
+// Website: https://symu.org
+// Copyright: (c) 2020 laurent morisseau
+// License : the program is distributed under the terms of the GNU General Public License
+
+#endregion
+
+#region using directives
+
+using System;
 using System.Drawing;
 using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using Symu.SysDyn;
 using Symu.SysDyn.QuickGraph;
+using Symu.SysDyn.Simulation;
 using SymuSysDynApp.Graph;
 using Syncfusion.Windows.Forms.Chart;
+
+#endregion
 
 namespace SymuSysDynApp
 {
     public partial class Home : Form
     {
         private StateMachine _stateMachine;
+
         public Home()
         {
             InitializeComponent();
@@ -47,7 +55,10 @@ namespace SymuSysDynApp
         {
             _stateMachine = new StateMachine(openFileDialog1.FileName, false);
             cbVariables.Items.Clear();
-            cbVariables.Items.AddRange(_stateMachine.GetVariables().ToArray());
+            if (_stateMachine.Variables.Names != null)
+            {
+                cbVariables.Items.AddRange(_stateMachine.Variables.Names.ToArray());
+            }
 
             tbStart.Text = _stateMachine.Simulation.Start.ToString(CultureInfo.InvariantCulture);
             tbStop.Text = _stateMachine.Simulation.Stop.ToString(CultureInfo.InvariantCulture);
@@ -59,9 +70,9 @@ namespace SymuSysDynApp
         private void cbVariables_SelectedIndexChanged(object sender, EventArgs e)
         {
             var variableName = cbVariables.SelectedItem.ToString();
-            var items = _stateMachine.GetResults(variableName).ToArray();
-            var chartSerie = new ChartSeries { Name = variableName };
-            for (var i = 0; i < items.Count(); i++)
+            var items = _stateMachine.Results.GetResults(variableName).ToArray();
+            var chartSerie = new ChartSeries {Name = variableName};
+            for (var i = 0; i < items.Length; i++)
             {
                 chartSerie.Points.Add(i, items[i]);
             }
@@ -116,7 +127,6 @@ namespace SymuSysDynApp
 
         private void label4_Click(object sender, EventArgs e)
         {
-
         }
     }
 }

@@ -1,14 +1,16 @@
 ﻿#region Licence
-
 // Description: SymuSysDyn - SymuSysDynApp
 // Website: https://symu.org
 // Copyright: (c) 2020 laurent morisseau
 // License : the program is distributed under the terms of the GNU General Public License
-
 #endregion
+
+#region using directives
 
 using System;
 using System.Runtime.InteropServices;
+
+#endregion
 
 namespace SymuSysDynApp.Graph
 {
@@ -16,6 +18,7 @@ namespace SymuSysDynApp.Graph
     {
         public const string LibGvc = @".\external\gvc.dll";
         public const string LibGraph = @".\external\cgraph.dll";
+
         /// 
         /// Creates a new Graphviz context.
         /// 
