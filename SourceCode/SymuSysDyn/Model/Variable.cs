@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using Symu.SysDyn.Parser;
 
 #endregion
 
@@ -23,8 +24,6 @@ namespace Symu.SysDyn.Model
     /// </summary>
     public class Variable
     {
-        private readonly List<string> _operators = new List<string> {" ", "+", "-", "*", "/"};
-
         public Variable(string name)
         {
             if (name == null)
@@ -86,7 +85,7 @@ namespace Symu.SysDyn.Model
         {
             var words = Equation?.Split(' ', '+', '-', '*', '/');
 
-            Children = words?.Where(word => !_operators.Contains(word) &&
+            Children = words?.Where(word => !XmlConstants.Operators.Contains(word) &&
                                             !float.TryParse(word, NumberStyles.Any, CultureInfo.InvariantCulture,
                                                 out _) &&
                                             word.Length > 0

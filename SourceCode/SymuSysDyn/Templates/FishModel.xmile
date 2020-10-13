@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xmile version="1.0" xmlns="http://docs.oasis-open.org/xmile/ns/XMILE/v1.0">
+  <header>
+    <name>FishModel</name>
+    <options>
+      <uses_outputs />
+    </options>
+    <product version="1.0">Hand Coded XMILE from Strategic Modelling and Business Dynamics book</product>
+  </header>
+  <sim_specs time_units="Years">
+    <stop>40.0</stop>
+    <start>0.0</start>
+    <dt>1</dt>
+  </sim_specs>
+  <model>
+    <variables>
+      <stock name="Fish_Stock">
+        <inflow>New_Fish_Per_Year</inflow>
+        <eqn>200</eqn>
+      </stock>
+      <flow name="New_Fish_Per_Year">
+        <doc>Net number of new fish per year (births - deaths)</doc>
+        <eqn>Net_Regeneration</eqn>
+      </flow>
+      <aux name="Net_Regeneration">
+        <doc>Non linear function of fish density</doc>
+        <eqn>Fish_Density</eqn>
+        <gf>
+          <xscale min="0" max="1" />
+          <yscale min="0" max="600" />
+          <ypts>0,40,100,200,320,500, 550, 480, 260, 150, 0</ypts>
+        </gf>
+      </aux>
+      <aux name="Fish_Density">
+        <eqn>Fish_Stock/Maximum_Fishery_Size</eqn>
+      </aux>
+      <aux name="Maximum_Fishery_Size">
+        <eqn>4000</eqn>
+      </aux>
+    </variables>
+  </model>
+</xmile>

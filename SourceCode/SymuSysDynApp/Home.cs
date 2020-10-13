@@ -34,12 +34,7 @@ namespace SymuSysDynApp
 
         private void button1_Click(object sender, EventArgs e)
         {
-            // implement _stateMachine.Simulation.DeltaTime
-            for (var i = _stateMachine.Simulation.Start; i < _stateMachine.Simulation.Stop; i++)
-            {
-                _stateMachine.Process();
-            }
-
+            _stateMachine.Process();
             cbVariables.Enabled = true;
         }
 

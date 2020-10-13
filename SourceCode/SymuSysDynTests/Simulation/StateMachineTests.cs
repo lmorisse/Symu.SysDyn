@@ -32,7 +32,7 @@ namespace SymuSysDynTests.Simulation
         [TestMethod]
         public void ProcessTest()
         {
-            Machine.Process();
+            Machine.Compute();
             Assert.AreEqual(2, Machine.Results.Count);
             foreach (var result in Machine.Results)
             {

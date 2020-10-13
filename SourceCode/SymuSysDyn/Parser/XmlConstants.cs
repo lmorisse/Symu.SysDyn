@@ -11,6 +11,8 @@
 
 #endregion
 
+using System.Collections.Generic;
+
 namespace Symu.SysDyn.Parser
 {
     public static class XmlConstants
@@ -27,5 +29,8 @@ namespace Symu.SysDyn.Parser
         public const string Minus = "-";
         public const string Division = "/";
         public const string Multiplication = "*";
+        public const string Blank = " ";
+
+        public static List<string> Operators { get; }= new List<string> { Blank, Plus, Minus, Division, Multiplication };
     }
 }

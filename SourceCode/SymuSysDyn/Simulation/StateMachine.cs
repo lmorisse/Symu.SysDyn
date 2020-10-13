@@ -30,14 +30,29 @@ namespace Symu.SysDyn.Simulation
             var xmlParser = new XmlParser(xmlFile, validate);
             Variables = xmlParser.ParseVariables();
             Simulation = xmlParser.ParseSimSpecs();
-            Process(); // Initialize the model
+            Compute(); // Initialize the model
         }
 
         public SimSpecs Simulation { get; }
         public Variables Variables { get; }
         public ResultCollection Results { get; } = new ResultCollection();
 
+        /// <summary>
+        /// Process compute all iterations from Simulation.Start to Simulation.Stop
+        /// </summary>
         public void Process()
+        {
+            // TODO : implement _stateMachine.Simulation.DeltaTime
+            for (var i = Simulation.Start; i < Simulation.Stop; i++)
+            {
+                Compute();
+            }
+        }
+
+        /// <summary>
+        /// Compute one iteration
+        /// </summary>
+        public void Compute()
         {
             Variables.Initialize();
 
@@ -138,7 +153,8 @@ namespace Symu.SysDyn.Simulation
             {
                 var explicitEquation = MakeExplicitEquation(equation);
                 var e = new Expression(explicitEquation);
-                return float.Parse(e.Evaluate().ToString(), CultureInfo.InvariantCulture);
+                return Convert.ToSingle(e.Evaluate());
+                //return float.Parse(e.Evaluate().ToString(), CultureInfo.InvariantCulture);
             }
             catch (ArgumentException ex)
             {
@@ -176,7 +192,7 @@ namespace Symu.SysDyn.Simulation
             }
 
             //remake the string and return it
-            return string.Join(" ", words);
+            return string.Join(XmlConstants.Blank, words);
         }
 
         private static string AddSpacesToString(string input)
