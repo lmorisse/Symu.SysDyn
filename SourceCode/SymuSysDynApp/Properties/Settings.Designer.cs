@@ -32,5 +32,17 @@ namespace SymuSysDynApp.Properties {
                 return ((string)(this["SyncFusionKey"]));
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("d")]
+        public string ToRemove {
+            get {
+                return ((string)(this["ToRemove"]));
+            }
+            set {
+                this["ToRemove"] = value;
+            }
+        }
     }
 }
