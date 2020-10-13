@@ -30,15 +30,6 @@ namespace SymuSysDynTests.Simulation
         }
 
         [TestMethod]
-        public void GetValueTest()
-        {
-            Assert.ThrowsException<ArgumentNullException>(() => Machine.GetValue(null));
-            Assert.ThrowsException<ArgumentNullException>(() => Machine.GetValue(string.Empty));
-            Assert.ThrowsException<NullReferenceException>(() => Machine.GetValue("noVariableName"));
-            Assert.AreEqual(1, Machine.GetValue("stock1"));
-        }
-
-        [TestMethod]
         public void ProcessTest()
         {
             Machine.Process();

@@ -9,6 +9,7 @@
 
 #region using directives
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -68,6 +69,39 @@ namespace Symu.SysDyn.Model
         {
             return _variables.Find(x => x.Name == name);
         }
+        /// <summary>
+        ///     returns current value of a node
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public float GetValue(string name)
+        {
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
+            if (!Exists(name))
+            {
+                throw new NullReferenceException(nameof(name));
+            }
+
+            return Get(name).Value;
+        }
+
+        public void SetValue(string name, float value)
+        {
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+            if (!Exists(name))
+            {
+                throw new NullReferenceException(nameof(name));
+            }
+
+            Get(name).Value = value;
+        }
 
         public void Initialize()
         {
@@ -95,5 +129,6 @@ namespace Symu.SysDyn.Model
         }
 
         #endregion
+
     }
 }

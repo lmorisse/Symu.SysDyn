@@ -9,6 +9,7 @@
 
 #region using directives
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -102,5 +103,40 @@ namespace SymuSysDynTests.Model
             Assert.AreEqual(_variable.Name, _variables.Names.ElementAt(0));
             Assert.AreEqual(_variable1.Name, _variables.Names.ElementAt(1));
         }
+        /// <summary>
+        /// Passing test
+        /// </summary>
+        [TestMethod]
+        public void GetValueTest()
+        {
+            _variables.AddRange(_variableList);
+            Assert.AreEqual(_variable.Value, _variables.GetValue(_variable.Name));
+        }
+        /// <summary>
+        /// Non passing tests
+        /// </summary>
+        [TestMethod]
+        public void GetValueTest1()
+        {
+            Assert.ThrowsException<ArgumentNullException>(() => _variables.GetValue(null));
+            Assert.ThrowsException<ArgumentNullException>(() => _variables.GetValue(string.Empty));
+            Assert.ThrowsException<NullReferenceException>(() => _variables.GetValue("noVariableName"));
+        }
+        [TestMethod]
+        public void SetValueTest()
+        {
+            _variables.Add(_variable);
+            _variables.SetValue(_variable.Name, 2);
+            Assert.AreEqual(2, _variable.Value);
+        }
+
+        [TestMethod]
+        public void SetValueTest1()
+        {
+            Assert.ThrowsException<ArgumentNullException>(() => _variables.SetValue(null, 0));
+            Assert.ThrowsException<ArgumentNullException>(() => _variables.SetValue(string.Empty, 0));
+            Assert.ThrowsException<NullReferenceException>(() => _variables.SetValue("noVariableName", 0));
+        }
+        
     }
 }

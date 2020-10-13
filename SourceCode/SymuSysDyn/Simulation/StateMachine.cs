@@ -37,26 +37,6 @@ namespace Symu.SysDyn.Simulation
         public Variables Variables { get; }
         public ResultCollection Results { get; } = new ResultCollection();
 
-        /// <summary>
-        ///     returns current value of a node
-        /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        public float GetValue(string name)
-        {
-            if (string.IsNullOrEmpty(name))
-            {
-                throw new ArgumentNullException(nameof(name));
-            }
-
-            if (!Variables.Exists(name))
-            {
-                throw new NullReferenceException(nameof(name));
-            }
-
-            return Variables[name].Value;
-        }
-
         public void Process()
         {
             Variables.Initialize();
