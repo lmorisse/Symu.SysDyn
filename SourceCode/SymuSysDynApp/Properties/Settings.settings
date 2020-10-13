@@ -5,8 +5,5 @@
     <Setting Name="SyncFusionKey" Type="System.String" Scope="Application">
       <Value Profile="(Default)">MzMzNzc2QDMxMzgyZTMzMmUzMERDYWRVaDJOSUhHeDdoOFhnb0Y3NWhhM3MyRHRpZmVVRVJpbEtyYkJNdEk9</Value>
     </Setting>
-    <Setting Name="ToRemove" Type="System.String" Scope="User">
-      <Value Profile="(Default)">d</Value>
-    </Setting>
   </Settings>
 </SettingsFile>
