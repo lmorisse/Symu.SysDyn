@@ -10,7 +10,7 @@
 *.userosscache
 *.sln.docstates
 # SPecific for this repo
-*.settings
+Properties/*.settings
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
