@@ -11,8 +11,8 @@
 *.sln.docstates
 
 # SPecific for this repo
-App.config
-Properties/Settings.*
+*.config
+Properties/
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
