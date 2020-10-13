@@ -1,0 +1,12 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="SymuSysDynApp.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="SyncFusionKey" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">MzMzNzc2QDMxMzgyZTMzMmUzMERDYWRVaDJOSUhHeDdoOFhnb0Y3NWhhM3MyRHRpZmVVRVJpbEtyYkJNdEk9</Value>
+    </Setting>
+    <Setting Name="ToRemove" Type="System.String" Scope="User">
+      <Value Profile="(Default)">d</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

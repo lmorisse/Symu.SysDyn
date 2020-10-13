@@ -9,6 +9,7 @@
 *.user
 *.userosscache
 *.sln.docstates
+
 # SPecific for this repo
 Properties/Settings.*
 
