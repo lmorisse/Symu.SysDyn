@@ -10,6 +10,7 @@
 #region using directives
 
 using System;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Xml;
@@ -17,6 +18,7 @@ using System.Xml.Linq;
 using System.Xml.Schema;
 using Symu.SysDyn.Model;
 using Symu.SysDyn.QuickGraph;
+using Symu.SysDyn.Simulation;
 
 #endregion
 
@@ -73,7 +75,7 @@ namespace Symu.SysDyn
             }
         }
 
-        public Variables Parse()
+        public Variables ParseVariables()
         {
             if (_xDoc.Root == null)
             {
@@ -92,56 +94,40 @@ namespace Symu.SysDyn
             }
             return nodes;
         }
-
-        public Graph CreateGraph(string defaultStockName, Variables nodes)
+        public SimSpecs ParseSimSpecs()
         {
-            // Select flux as Edges
-            // Prenez les tables INFLOWS et OUTFLOWS avec les colonnes STOCK_ID, FLOW_ID et joignez-les par FLOW_ID.
-            //var inflows = xmlStocks.SelectMany(stock =>
-            //    from e in stock.Elements(ns + "inflow")
-            //    select new
-            //    {
-            //        StockID = stock.Attribute("name").Value,
-            //        FlowID = e.Value
-            //    });
+            if (_xDoc.Root == null)
+            {
+                throw new NullReferenceException(nameof(_xDoc.Root));
+            }
 
-            //var outflows = xmlStocks.SelectMany(stock =>
-            //    from e in stock.Elements(ns + "outflow")
-            //    select new
-            //    {
-            //        StockID = stock.Attribute("name").Value,
-            //        FlowID = e.Value
-            //    });
+            XNamespace ns = _xDoc.Root.Attributes("xmlns").First().Value;
+            var sim = _xDoc.Root.Element(ns + "sim_specs");
+            if (sim == null)
+            {
+                return new SimSpecs(0, 0, 1);
+            }
+            var start = float.Parse(sim.Element(ns + "start")?.Value ?? "0", CultureInfo.InvariantCulture);
+            var stop = float.Parse(sim.Element(ns + "stop")?.Value ?? "0", CultureInfo.InvariantCulture);
+            var dt = float.Parse(sim.Element(ns + "dt")?.Value ?? "1", CultureInfo.InvariantCulture);
+            return new SimSpecs(start, stop, dt);
+        }
 
-            var inflows = nodes.GetInflows();
-
-            var outflows = nodes.GetOutflows();
-
-            var defaultStock = new Variable(defaultStockName);
-
-            //FULL OUTER JOIN des tables INFLOWS et OUTFLOWS par STOCK_ID
-            var leftOuter =
-                from outflow in outflows
-                join inflow in inflows on outflow.Item2 equals inflow.Item2 into subflows
-                from subflow in subflows.DefaultIfEmpty()
-                select new FlowEdge(outflow.Item2,
-                    outflow.Item1,
-                    subflow?.Item1 ?? defaultStock);
-
-            var rightOuter =
-                from inflow in inflows
-                join outflow in outflows on inflow.Item2 equals outflow.Item2 into subflows
-                from subflow in subflows.DefaultIfEmpty()
-                select new FlowEdge(inflow.Item2,
-                    subflow?.Item1 ?? defaultStock,
-                    inflow.Item1);
-
-            var flows = leftOuter.Union(rightOuter);
-
+        public static Graph CreateGraph(Variables variables)
+        {
+            if (variables == null)
+            {
+                throw new ArgumentNullException(nameof(variables));
+            }
             var graph = new Graph(true);
-            graph.AddVertex(defaultStock);
-            graph.AddVertexRange(nodes.GetStocks());
-            graph.AddEdgeRange(flows);
+            graph.AddVertexRange(variables.Select(x => x.Name).ToList());
+            foreach (var variable in variables)
+            {
+                foreach (var edge in variable.Children.Select(child => new VariableEdge(child, variable.Name)))
+                {
+                    graph.AddEdge(edge);
+                }
+            }
             return graph;
         }
 

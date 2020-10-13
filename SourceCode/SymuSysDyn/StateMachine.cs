@@ -18,6 +18,7 @@ using NCalc2;
 using Symu.SysDyn.Model;
 using Symu.SysDyn.QuickGraph;
 using Symu.SysDyn.Results;
+using Symu.SysDyn.Simulation;
 
 #endregion
 
@@ -25,14 +26,15 @@ namespace Symu.SysDyn
 {
     public class StateMachine
     {
+        public readonly SimSpecs Simulation;
         private readonly Variables _variables;
-        private readonly Parser _xmlParser;
         private readonly ResultCollection _results =new ResultCollection();
 
         public StateMachine(string xmlFile, bool validate = true)
         {
-            _xmlParser = new Parser(xmlFile, validate);
-            _variables = _xmlParser.Parse();
+            var xmlParser = new Parser(xmlFile, validate);
+            _variables = xmlParser.ParseVariables();
+            Simulation = xmlParser.ParseSimSpecs();
             Process(); // Initialize the model
         }
 
@@ -216,7 +218,7 @@ namespace Symu.SysDyn
         public Graph GetGraph()
         {
             //todo => parse header.Name
-            return _xmlParser.CreateGraph("[GLOBAL]", _variables);
+            return Parser.CreateGraph(_variables);
         }
 
         public IEnumerable<string> GetVariables()

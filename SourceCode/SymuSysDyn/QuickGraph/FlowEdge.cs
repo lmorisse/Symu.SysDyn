@@ -20,57 +20,53 @@ namespace Symu.SysDyn.QuickGraph
     ///     Flow Represents the flow of the system being analyzed.
     ///     Flow is defined as an edge of stocks
     /// </summary>
-    public sealed class FlowEdge : IEdge<Variable>
+    public sealed class VariableEdge : IEdge<string>
     {
-        public FlowEdge(string name, Variable source, Variable target)
+        public VariableEdge(string source, string target)
         {
-            Name = name;
             Source = source;
             Target = target;
         }
-
-        public string Name { get; }
 
         #region IEdge<Node> Members
 
         /// <summary>
         ///     Source stock is the outflow property of a stock
         /// </summary>
-        public Variable Source { get; }
+        public string Source { get; }
 
         /// <summary>
         ///     Target stock is the inflow property of a stock
         /// </summary>
-        public Variable Target { get; }
+        public string Target { get; }
 
         #endregion
 
         public override string ToString()
         {
-            return string.Concat(Name, ": ", Source.Name, " -> ", Target.Name);
+            return string.Concat(Source, " -> ", Target);
         }
 
         public override bool Equals(object that)
         {
-            if (that is FlowEdge flow)
+            if (that is VariableEdge flow)
             {
-                return Name.Equals(flow.Name) &&
-                       Source.Equals(flow.Source) &&
+                return Source.Equals(flow.Source) &&
                        Target.Equals(flow.Target);
             }
 
             return ReferenceEquals(this, that);
         }
 
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                var hashCode = Name != null ? Name.GetHashCode() : 0;
-                hashCode = (hashCode * 397) ^ (Source != null ? Source.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ (Target != null ? Target.GetHashCode() : 0);
-                return hashCode;
-            }
-        }
+        //public override int GetHashCode()
+        //{
+        //    unchecked
+        //    {
+        //        //var hashCode = Name != null ? Name.GetHashCode() : 0;
+        //        var hashCode = (hashCode * 397) ^ (Source != null ? Source.GetHashCode() : 0);
+        //        hashCode = (hashCode * 397) ^ (Target != null ? Target.GetHashCode() : 0);
+        //        return hashCode;
+        //    }
+        //}
     }
 }
