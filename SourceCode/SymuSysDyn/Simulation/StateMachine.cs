@@ -84,6 +84,7 @@ namespace Symu.SysDyn.Simulation
             }
 
             parent.Updating = true;
+            // Update stocks before other variables
             if (parent is Stock)
             {
                 UpdateVariable(parent);
@@ -92,16 +93,8 @@ namespace Symu.SysDyn.Simulation
 
             var readyToUpdate = true;
             var waitingParents = new List<Variable>();
-            var children = parent.Children.ToArray();
-            for (var index = 0; index < parent.Children.Count; index++) //check to see if children are busy
+            foreach (var child in parent.Children.Select(childName => Variables[childName]))
             {
-                if (Variables[children[index]] == null)
-                {
-                    continue;
-                }
-
-                var child = Variables[children[index]];
-
                 switch (child.Updated)
                 {
                     //parent who needs to wait for children 
@@ -115,6 +108,7 @@ namespace Symu.SysDyn.Simulation
                 }
             }
 
+            // Update other variables
             if (readyToUpdate && !(parent is Stock))
             {
                 UpdateVariable(parent);
@@ -154,7 +148,6 @@ namespace Symu.SysDyn.Simulation
                 var explicitEquation = MakeExplicitEquation(equation);
                 var e = new Expression(explicitEquation);
                 return Convert.ToSingle(e.Evaluate());
-                //return float.Parse(e.Evaluate().ToString(), CultureInfo.InvariantCulture);
             }
             catch (ArgumentException ex)
             {
