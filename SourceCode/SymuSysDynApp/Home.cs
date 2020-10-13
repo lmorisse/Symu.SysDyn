@@ -12,6 +12,7 @@ using System.Windows.Forms;
 using Symu.SysDyn;
 using Symu.SysDyn.QuickGraph;
 using SymuSysDynApp.Graph;
+using Syncfusion.Windows.Forms.Chart;
 
 namespace SymuSysDynApp
 {
@@ -50,12 +51,18 @@ namespace SymuSysDynApp
 
         private void cbVariables_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Variables.Items.Clear();
-            var items = _stateMachine.GetResults(cbVariables.SelectedItem.ToString());
-            foreach (var item in items)
+            var variableName = cbVariables.SelectedItem.ToString();
+            var items = _stateMachine.GetResults(variableName).ToArray();
+            var chartSerie = new ChartSeries { Name = variableName };
+            for (var i = 0; i < items.Count(); i++)
             {
-                Variables.Items.Add(item.ToString(CultureInfo.InvariantCulture));
+                chartSerie.Points.Add(i, items[i]);
             }
+
+            chartControl1.Series.Clear();
+            chartControl1.Series.Add(chartSerie);
+
+            //ChartAppearance.ApplyChartStyles(chartControl2);
         }
     }
 }
