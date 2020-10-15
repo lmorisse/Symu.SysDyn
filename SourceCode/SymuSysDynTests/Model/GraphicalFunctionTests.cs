@@ -86,5 +86,10 @@ namespace SymuSysDynTests.Model
             Assert.AreEqual(2, _gf.GetOutputWithBounds(1));
             Assert.AreEqual(2, _gf.GetOutputWithBounds(2));
         }
+        [TestMethod()]
+        public void ChecksRangeTest()
+        {
+
+        }
     }
 }

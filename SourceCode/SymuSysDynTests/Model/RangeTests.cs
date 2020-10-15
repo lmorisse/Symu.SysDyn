@@ -1,0 +1,49 @@
+﻿#region Licence
+
+// Description: SymuSysDyn - SymuSysDynTests
+// Website: https://symu.org
+// Copyright: (c) 2020 laurent morisseau
+// License : the program is distributed under the terms of the GNU General Public License
+
+#endregion
+
+#region using directives
+
+using System.Collections.Generic;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Symu.SysDyn.Model;
+using Symu.SysDyn.Parser;
+
+#endregion
+
+namespace SymuSysDynTests.Model
+{
+    [TestClass]
+    public class RangeTests
+    {
+        private Range _range = new Range(0, 10);
+        private readonly float[] _okPoints = { 0, 1, 2, 3 };
+        private readonly float[] _koPoints = { 0, 1, -1, 3, 12 };
+
+        [TestMethod]
+        public void CheckTest()
+        {
+            _range = new Range(0, 10, false);
+            Assert.IsTrue(_range.Check(_okPoints));
+            Assert.IsTrue(_range.Check(_koPoints));
+        }
+        [TestMethod]
+        public void CheckTest1()
+        {
+            Assert.IsTrue(_range.Check(_okPoints));
+            Assert.IsFalse(_range.Check(_koPoints));
+        }
+        [TestMethod]
+        public void GetOutputInsideRangeTest()
+        {
+            Assert.AreEqual(0, _range.GetOutputInsideRange(-1));
+            Assert.AreEqual(5, _range.GetOutputInsideRange(5));
+            Assert.AreEqual(10, _range.GetOutputInsideRange(15));
+        }
+    }
+}

@@ -43,6 +43,13 @@ namespace Symu.SysDyn.Model
             SetChildren();
         }
 
+        public Variable(string name, string eqn, GraphicalFunction graph, Range range, Range scale) : this(name, eqn)
+        {
+            Function = graph;
+            Range = range;
+            Scale = scale;
+        }
+
         #region Xml attributes
 
         public string Eqn { get; set; }

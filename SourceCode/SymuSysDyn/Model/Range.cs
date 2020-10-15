@@ -13,6 +13,9 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.Globalization;
+using System.Linq;
+
+using static Symu.Common.Constants;
 
 #endregion
 
@@ -26,7 +29,7 @@ namespace Symu.SysDyn.Model
         /// <summary>
         /// True if the range is specified
         /// </summary>
-        private readonly bool _ranged;
+        public bool Ranged { get; }
         public float Min { get; } 
 
         public float Max { get; } 
@@ -40,14 +43,27 @@ namespace Symu.SysDyn.Model
             {
                 Min = float.Parse(stringScale[0], CultureInfo.InvariantCulture);
                 Max = float.Parse(stringScale[1], CultureInfo.InvariantCulture);
-                _ranged = true;
+                Ranged = true;
             }
             else
             {
                 Min = 0;
                 Max = 1;
-                _ranged = false;
+                Ranged = false;
             }
+            Check();
+        }
+
+        /// <summary>
+        /// Constructor based on string values
+        /// </summary>
+        /// <param name="min"></param>
+        /// <param name="max"></param>
+        public Range(string min, string max)
+        {
+            Min = float.Parse(min, CultureInfo.InvariantCulture);
+            Max = float.Parse(max, CultureInfo.InvariantCulture);
+            Ranged = true;
             Check();
         }
         /// <summary>
@@ -55,11 +71,12 @@ namespace Symu.SysDyn.Model
         /// </summary>
         /// <param name="min"></param>
         /// <param name="max"></param>
-        public Range(float min, float max)
+        /// <param name="ranged"></param>
+        public Range(float min, float max, bool ranged = true)
         {
             Min = min;
             Max = max;
-            _ranged = true;
+            Ranged = ranged;
             Check();
         }
         private void Check()
@@ -68,6 +85,15 @@ namespace Symu.SysDyn.Model
             {
                 throw new ArgumentOutOfRangeException();
             }
+        }
+        /// <summary>
+        /// Check if a serie of points is in the range
+        /// </summary>
+        /// <param name="points"></param>
+        /// <returns></returns>
+        public bool Check(float[] points)
+        {
+            return !Ranged || (Min <= points.Min() && Max >= points.Max());
         }
 
         public float GetOutputInsideRange(string input)
@@ -78,7 +104,7 @@ namespace Symu.SysDyn.Model
 
         public float GetOutputInsideRange(float input)
         {
-            if (!_ranged)
+            if (!Ranged)
             {
                 return input;
             }

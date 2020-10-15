@@ -12,7 +12,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-
+using static Symu.Common.Constants;
 #endregion
 
 namespace Symu.SysDyn.Model
@@ -26,8 +26,6 @@ namespace Symu.SysDyn.Model
     /// </summary>
     public class GraphicalFunction
     {
-        //todo use Symu.Common Tolerance
-        private const float Tolerance = 0.0001F;
 
         public float[] XPoints { get; }
         public float[] YPoints { get; }
@@ -71,14 +69,18 @@ namespace Symu.SysDyn.Model
                 YPoints[counter] = yTable[counter];
             }
 
-            Checks();
+            ChecksRange();
         }
-
-        private void Checks()
+        /// <summary>
+        /// Check that Range and Points are 
+        /// </summary>
+        public void ChecksRange()
         {
-            var xCheck = Math.Abs(XRange.Min - XPoints[0]) < Tolerance && Math.Abs(XRange.Max - XPoints[XPoints.Length - 1]) < Tolerance;
-            var yCheck = YRange.Min <= YPoints[0] && YRange.Max >= YPoints[YPoints.Length - 1];
-            if (!xCheck || !yCheck)
+            if (!XRange.Check(XPoints) || !YRange.Check(YPoints))
+            {
+                throw new ArgumentOutOfRangeException();
+            }
+            if (!XRange.Check(XPoints) || !YRange.Check(YPoints))
             {
                 throw new ArgumentOutOfRangeException();
             }

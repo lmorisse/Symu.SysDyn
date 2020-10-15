@@ -40,10 +40,21 @@ namespace Symu.SysDyn.QuickGraph
             graph.AddVertexRange(variables.Select(x => x.Name).ToList());
             foreach (var variable in variables)
             {
-                foreach (var edge in variable.Children.Select(child => new VariableEdge(child, variable.Name)))
+                foreach (var child in variable.Children)
                 {
+                    VariableEdge edge;
+                    // particular case : stock outflow
+                    if (variable is Stock stock && stock.Outflow.Contains(child))
+                    {
+                        edge = new VariableEdge(variable.Name, child);
+                    }
+                    else
+                    {
+                        edge = new VariableEdge(child, variable.Name);
+                    }
                     graph.AddEdge(edge);
                 }
+
             }
 
             return graph;

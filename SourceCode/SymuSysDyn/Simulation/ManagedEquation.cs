@@ -28,7 +28,6 @@ namespace Symu.SysDyn.Simulation
 
         #region Built In Functions
         public const string Dt = "Dt";
-        //TODO implement TIME
         public const string Time = "Time";
         /// <summary>
         /// Built-in functions
@@ -43,9 +42,9 @@ namespace Symu.SysDyn.Simulation
         /// </summary>
         /// <param name="variable">The variable that contains the equation to prepare</param>
         /// <param name="variables"></param>
-        /// <param name="deltaTime"></param>
+        /// <param name="sim"></param>
         /// <returns></returns>
-        public static float Compute(Variable variable, Variables variables, float deltaTime)
+        public static float Compute(Variable variable, Variables variables, SimSpecs sim)
         {
             if (variable?.Equation == null)
             {
@@ -59,7 +58,7 @@ namespace Symu.SysDyn.Simulation
 
             try
             {
-                var explicitEquation = Prepare(variable, variables, deltaTime);
+                var explicitEquation = Prepare(variable, variables, sim);
                 var e = new Expression(explicitEquation);
                 return Convert.ToSingle(e.Evaluate());
             }
@@ -79,9 +78,9 @@ namespace Symu.SysDyn.Simulation
         /// </summary>
         /// <param name="variable">The variable that contains the equation to prepare</param>
         /// <param name="variables"></param>
-        /// <param name="deltaTime"></param>
+        /// <param name="sim"></param>
         /// <returns></returns>
-        private static string Prepare(Variable variable, Variables variables, float deltaTime)
+        private static string Prepare(Variable variable, Variables variables, SimSpecs sim)
         {
             var words = variable.Equation.Split(' ');
 
@@ -94,13 +93,7 @@ namespace Symu.SysDyn.Simulation
                 }
                 if (Functions.Contains(word))
                 {
-                    switch (word)
-                    {
-                        case Dt:
-                            words[counter] = deltaTime.ToString(CultureInfo.InvariantCulture);
-                            break;
-                    }
-
+                    BuiltInFunctions(sim, word, words, counter);
                     continue;
                 }
 
@@ -115,6 +108,19 @@ namespace Symu.SysDyn.Simulation
             }
 
             return string.Join(Blank, words);
+        }
+
+        private static void BuiltInFunctions(SimSpecs sim, string word, IList<string> words, int counter)
+        {
+            switch (word)
+            {
+                case Dt:
+                    words[counter] = sim.DeltaTime.ToString(CultureInfo.InvariantCulture);
+                    break;
+                case Time:
+                    words[counter] = sim.Time.ToString(CultureInfo.InvariantCulture);
+                    break;
+            }
         }
 
         /// <summary>

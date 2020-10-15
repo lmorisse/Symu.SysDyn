@@ -10,6 +10,7 @@
 #region using directives
 
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -138,8 +139,10 @@ namespace Symu.SysDyn.Parser
             var auxiliaries = xContainer.Descendants(_ns + "aux")
                 .Select(q => new Auxiliary(
                     q.FirstAttribute.Value,
-                    q.Element(_ns + "eqn")?.Value,
-                    ParseGraphicalFunction(q)));
+                    ParseEquation(q),
+                    ParseGraphicalFunction(q),
+                    ParseRange(q),
+                    ParseScale(q)));
 
             variables.AddRange(auxiliaries);
         }
@@ -159,7 +162,10 @@ namespace Symu.SysDyn.Parser
             var flows = xContainer.Descendants(_ns + "flow")
                 .Select(q => new Flow(
                     q.FirstAttribute.Value,
-                    q.Element(_ns + "eqn")?.Value));
+                    ParseEquation(q),
+                    ParseGraphicalFunction(q),
+                    ParseRange(q),
+                    ParseScale(q)));
 
             variables.AddRange(flows);
         }
@@ -179,9 +185,12 @@ namespace Symu.SysDyn.Parser
             var stocks = xContainer.Descendants(_ns + "stock")
                 .Select(q => new Stock(
                     q.FirstAttribute.Value,
-                    q.Element(_ns + "eqn")?.Value,
-                    q.Elements(_ns + "inflow").Select(el => el.Value).ToList(),
-                    q.Elements(_ns + "outflow").Select(el => el.Value).ToList()
+                    ParseEquation(q),
+                    ParseInflow(q),
+                    ParseOutflow(q),
+                    ParseGraphicalFunction(q),
+                    ParseRange(q),
+                    ParseScale(q)
                 ));
 
             variables.AddRange(stocks);
@@ -205,6 +214,71 @@ namespace Symu.SysDyn.Parser
 
             return gf.Select(value => new GraphicalFunction(value.xpts, value.ypts, value.xscale, value.yscale)).FirstOrDefault();
         }
+
+        public List<string> ParseInflow(XContainer xContainer)
+        {
+            if (xContainer == null)
+            {
+                throw new ArgumentNullException(nameof(xContainer));
+            }
+
+            return xContainer.Elements(_ns + "inflow").Select(el => el.Value).ToList();
+        }
+
+        public List<string> ParseOutflow(XContainer xContainer)
+        {
+            if (xContainer == null)
+            {
+                throw new ArgumentNullException(nameof(xContainer));
+            }
+
+            return xContainer.Elements(_ns + "outflow").Select(el => el.Value).ToList();
+        }
+
+        public string ParseEquation(XContainer xContainer)
+        {
+            if (xContainer == null)
+            {
+                throw new ArgumentNullException(nameof(xContainer));
+            }
+
+            return xContainer.Element(_ns + "eqn")?.Value;
+        }
+
+        public Range ParseRange(XContainer xContainer)
+        {
+            if (xContainer == null)
+            {
+                throw new ArgumentNullException(nameof(xContainer));
+            }
+
+            var gf = from q in xContainer.Descendants(_ns + "range")
+                select new
+                {
+                    min = q.Attribute("min")?.Value,
+                    max = q.Attribute("max")?.Value
+                };
+
+            return gf.Select(value => new Range(value.min, value.max)).FirstOrDefault();
+        }
+
+        public Range ParseScale(XContainer xContainer)
+        {
+            if (xContainer == null)
+            {
+                throw new ArgumentNullException(nameof(xContainer));
+            }
+
+            var gf = from q in xContainer.Descendants(_ns + "scale")
+                select new
+                {
+                    min = q.Attribute("min")?.Value,
+                    max = q.Attribute("max")?.Value
+                };
+
+            return gf.Select(value => new Range(value.min, value.max)).FirstOrDefault();
+        }
+
 
         private string[] GetScale(XContainer xContainer, string scale)
         {

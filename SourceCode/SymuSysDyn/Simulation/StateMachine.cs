@@ -147,7 +147,7 @@ namespace Symu.SysDyn.Simulation
                 throw new ArgumentNullException(nameof(variable));
             }
 
-            var value = ManagedEquation.Compute(variable, Variables, Simulation.DeltaTime);
+            var value = ManagedEquation.Compute(variable, Variables, Simulation);
 
             variable.Value = variable.Function?.GetOutputWithBounds(value) ?? value;
 

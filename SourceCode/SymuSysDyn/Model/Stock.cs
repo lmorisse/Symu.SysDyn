@@ -20,13 +20,21 @@ using Symu.SysDyn.Simulation;
 namespace Symu.SysDyn.Model
 {
     /// <summary>
-    ///     Core building block of a model, also called level or state. Stocks accumulate.
+    ///     Core building block of a model, also called level or state. Stocks accumulate change.
+    ///     Use Stock when past event influence present event. Stocks are a kind of memory, storing the results of past actions.
     ///     Their value at the start of the simulation must be set as either a constant or with an initial equation.
     ///     The initial equation is evaluated only once, at the beginning of the simulation.
     /// </summary>
     public class Stock : Variable, IComparable
     {
         public Stock(string name, string eqn, List<string> inflow, List<string> outflow) : base(name, eqn)
+        {
+            Eqn = eqn;
+            Inflow = StringUtils.CleanNames(inflow);
+            Outflow = StringUtils.CleanNames(outflow);
+            SetChildren();
+        }
+        public Stock(string name, string eqn, List<string> inflow, List<string> outflow, GraphicalFunction graph, Range range, Range scale) : base(name, eqn, graph, range, scale)
         {
             Eqn = eqn;
             Inflow = StringUtils.CleanNames(inflow);

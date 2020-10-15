@@ -10,6 +10,8 @@
 using System;
 using System.Globalization;
 
+using static Symu.Common.Constants;
+
 
 namespace Symu.SysDyn.Simulation
 {
@@ -137,8 +139,7 @@ namespace Symu.SysDyn.Simulation
         public void TimeManagement()
         {
             Time = (ushort) Math.Floor(Step * DeltaTime);
-            //TODO use Symu.Common.Constants
-            if (Math.Abs(Step * DeltaTime % 1) < 0.0001)
+            if (!OnPause && Math.Abs(Step * DeltaTime % 1) < Tolerance)
             {
                 OnTimer?.Invoke(this, new EventArgs());
             }
