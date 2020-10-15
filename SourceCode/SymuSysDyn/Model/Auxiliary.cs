@@ -9,10 +9,15 @@
 
 namespace Symu.SysDyn.Model
 {
+    /// <summary>
+    /// Auxiliaries allow the isolation of any algebraic function that is used. They can both clarify a model and
+    /// factor out important or repeated calculations
+    /// </summary>
     public class Auxiliary : Variable
     {
-        public Auxiliary(string name, string eqn, GraphicalFunction graph) : base(name, eqn, graph)
+        public Auxiliary(string name, string eqn, GraphicalFunction graph) : base(name, eqn)
         {
+            Function = graph;
         }
     }
 }

@@ -7,35 +7,85 @@
     </options>
     <product version="1.0">Hand Coded XMILE from Strategic Modelling and Business Dynamics book</product>
   </header>
-  <sim_specs time_units="Years">
-    <stop>40.0</stop>
-    <start>0.0</start>
-    <dt>1</dt>
+  <sim_specs method="Euler" time_units="Years" pause="5" >
+    <start>0</start>
+    <stop>40</stop>
+    <dt>0.25</dt>
   </sim_specs>
   <model>
     <variables>
-      <stock name="Fish_Stock">
-        <inflow>New_Fish_Per_Year</inflow>
-        <eqn>200</eqn>
+        <stock name="Fish_stock">
+        <eqn>500  {fish}</eqn>
+        <scale min="0" max="4000" />
+        <inflow>New_fish_per_year</inflow>
+        <outflow>Harvest_rate</outflow>
+        <non_negative />
       </stock>
-      <flow name="New_Fish_Per_Year">
+      <flow name="New_fish_per_year">
         <doc>Net number of new fish per year (births - deaths)</doc>
-        <eqn>Net_Regeneration</eqn>
+        <eqn>Net_regeneration  {fish/year}</eqn>
+        <scale min="0" max="4000" />
+        <non_negative />
       </flow>
-      <aux name="Net_Regeneration">
+      <aux name="Net_regeneration">
         <doc>Non linear function of fish density</doc>
-        <eqn>Fish_Density</eqn>
+        <eqn>Fish_density  {fish/year}</eqn>
         <gf>
           <xscale min="0" max="1" />
           <yscale min="0" max="600" />
-          <ypts>0,40,100,200,320,500, 550, 480, 260, 150, 0</ypts>
+          <xpts>0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1</xpts>
+          <ypts>0,50,100,200,320,500,550,480,300,180,0</ypts>
         </gf>
       </aux>
-      <aux name="Fish_Density">
-        <eqn>Fish_Stock/Maximum_Fishery_Size</eqn>
+      <flow name="Harvest_rate">
+        <doc>Equal to the catch, which itself depends on the number ​of ships at sea and the catch per ship</doc>
+        <eqn>Catch  {fish/year}</eqn>
+        <non_negative />
+      </flow>
+      <aux name="Maximum_fishery_size">
+        <eqn>4000  {fish}</eqn>
       </aux>
-      <aux name="Maximum_Fishery_Size">
-        <eqn>4000</eqn>
+      <stock name="Ships_at_sea">
+        <eqn>0  {ships}</eqn>
+        <scale min="0" max="80" />
+        <inflow>Purchase_of_new_ships_this_year</inflow>
+        <outflow>Ships_moved_to_harbour_this_year</outflow>
+        <non_negative />
+      </stock>
+      <aux name="Catch">
+        <eqn>Ships_at_sea*Catch_per_ship  {fish/year}</eqn>
+        <scale min="0" max="4000" />
+      </aux>
+      <aux name="Catch_per_ship">
+        <eqn>Effect_of_fish_density_on_catch_per_ship*Normal_catch_per_ship {fish per ship/year}</eqn>
+      </aux>
+      <aux name="Normal_catch_per_ship">
+        <eqn>25  {fish per ship/year}</eqn>
+      </aux>
+      <flow name="Purchase_of_new_ships_this_year">
+        <eqn>2  {ships/year}</eqn>
+        <non_negative />
+      </flow>
+      <flow name="Ships_moved_to_harbour_this_year">
+        <eqn>1  {ships/year}</eqn>
+        <non_negative />
+      </flow>
+      <stock name="Ships_in_harbour">
+        <eqn>0  {ships}</eqn>
+        <range min="0" max="10"/>
+        <inflow>Ships_moved_to_harbour_this_year</inflow>
+        <non_negative />
+      </stock>
+      <aux name="Fish_density">
+        <eqn>Fish_stock/Maximum_fishery_size  {dimensionless}</eqn>
+      </aux>
+      <aux name="Effect_of_fish_density_on_catch_per_ship">
+        <eqn>Fish_density  {dimensionless}</eqn>
+        <gf>
+          <yscale min="0" max="1" />
+          <xpts>0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1</xpts>
+          <ypts>0,0.4,0.68,0.8,0.88,0.96,1,1,1,1,1</ypts>
+        </gf>
       </aux>
     </variables>
   </model>

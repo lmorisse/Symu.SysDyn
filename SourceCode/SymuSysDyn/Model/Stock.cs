@@ -13,26 +13,67 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Symu.SysDyn.Parser;
+using Symu.SysDyn.Simulation;
 
 #endregion
 
 namespace Symu.SysDyn.Model
 {
+    /// <summary>
+    ///     Core building block of a model, also called level or state. Stocks accumulate.
+    ///     Their value at the start of the simulation must be set as either a constant or with an initial equation.
+    ///     The initial equation is evaluated only once, at the beginning of the simulation.
+    /// </summary>
     public class Stock : Variable, IComparable
     {
         public Stock(string name, string eqn, List<string> inflow, List<string> outflow) : base(name, eqn)
         {
             Eqn = eqn;
-            Inflow = inflow;
-            Outflow = outflow;
-            Equation = SetStockEquation();
-            FindChildren();
+            Inflow = StringUtils.CleanNames(inflow);
+            Outflow = StringUtils.CleanNames(outflow);
+            SetChildren();
         }
 
-        public string SetStockEquation()
+        /// <summary>
+        /// stock(t) = stock(t - dt) + dt*(inflows(t - dt) – outflows(t - dt))
+        /// Re compute SetChildren with the new equation
+        /// </summary>
+        public void SetStockEquation()
         {
-            var equation = Inflow.Aggregate(Name, (current, inflow) => current + XmlConstants.SpacePlus + inflow);
-            return Outflow.Aggregate(equation, (current, outflow) => current + XmlConstants.SpaceMinus + outflow);
+            var equation = Name ;
+            var inflows = AggregateFlows(Inflow, Simulation.ManagedEquation.Plus);
+            var outflows = AggregateFlows(Outflow, Simulation.ManagedEquation.Minus);
+            if (inflows.Length > 0 || outflows.Length > 0)
+            {
+                equation += Simulation.ManagedEquation.Plus + "DT" + Simulation.ManagedEquation.Multiplication + Simulation.ManagedEquation.LParenthesis + inflows;
+                if (outflows.Length > 0)
+                {
+                    equation += Simulation.ManagedEquation.Minus + outflows;
+                }
+                equation += Simulation.ManagedEquation.RParenthesis;
+            }
+
+            Equation = ManagedEquation.Initialize(equation);
+
+            SetChildren();
+        }
+
+        private static string AggregateFlows(IReadOnlyList<string> list, string @operator)
+        {
+            var flow = string.Empty;
+            for (var i = 0; i < list.Count; i++)
+            {
+                if (i == 0)
+                {
+                    flow += list[i];
+                }
+                else
+                {
+                    flow += @operator + list[i];
+                }
+            }
+
+            return flow;
         }
 
         #region Xml attributes

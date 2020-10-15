@@ -1,10 +1,10 @@
 # ROADMAP
 
 ## FRAMEWORK
-* Directed graph of orgaizational artefacts 
+* Implement XMile standard
 
 ## GUI Mode
-* Application to use this framework and vizualize the organization
+* Application to model and process system dynamics
 
 ## EXAMPLES
 * To do

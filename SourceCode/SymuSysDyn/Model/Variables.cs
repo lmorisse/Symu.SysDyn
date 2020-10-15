@@ -27,6 +27,7 @@ namespace Symu.SysDyn.Model
         public IEnumerable<Variable> GetNotUpdated => _variables.Where(x => !x.Updated);
 
         public IEnumerable<string> Names => _variables.Select(x => x.Name);
+        public IEnumerable<Stock> Stocks => _variables.OfType<Stock>();
 
         /// <summary>
         ///     Gets or sets the node with the specified name

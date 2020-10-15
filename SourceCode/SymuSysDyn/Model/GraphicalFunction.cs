@@ -17,50 +17,85 @@ using System.Globalization;
 
 namespace Symu.SysDyn.Model
 {
+    /// <summary>
+    /// Graphical functions are alternately called lookup functions and table functions. They are used to describe
+    /// an arbitrary relationship between one input variable and one output variable.The domain of these
+    /// functions is consistently referred to as x and the range is consistently referred to as y.
+    /// A graphical function MUST be defined either with an x-axis scale and a set of y-values(evenly spaced
+    /// across the given x-axis scale) or with a set of x-y pairs.
+    /// </summary>
     public class GraphicalFunction
     {
-        private readonly float[,] _points;
-        private readonly float[] _xBounds = new float [2];
-        private readonly float[] _yBounds = new float [2];
+        //todo use Symu.Common Tolerance
+        private const float Tolerance = 0.0001F;
 
-        public GraphicalFunction(string ypts, IReadOnlyList<string> bounds)
+        public float[] XPoints { get; }
+        public float[] YPoints { get; }
+
+        public Range XRange { get; }
+        public Range YRange { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="xPts">Optional</param>
+        /// <param name="yPts"></param>
+        /// <param name="xRange">Optional</param>
+        /// <param name="yRange"></param>
+        public GraphicalFunction(string xPts, string yPts, IReadOnlyList<string> xRange, IReadOnlyList<string> yRange)
         {
-            if (ypts == null)
+            if (yPts == null)
             {
-                throw new ArgumentNullException(nameof(ypts));
+                throw new ArgumentNullException(nameof(yPts));
             }
 
-            if (bounds == null)
+            if (yRange == null)
             {
-                throw new ArgumentNullException(nameof(bounds));
+                throw new ArgumentNullException(nameof(yRange));
             }
 
-            _xBounds[0] = float.Parse(bounds[0], CultureInfo.InvariantCulture);
-            _xBounds[1] = float.Parse(bounds[1], CultureInfo.InvariantCulture);
-            _yBounds[0] = float.Parse(bounds[2], CultureInfo.InvariantCulture);
-            _yBounds[1] = float.Parse(bounds[3], CultureInfo.InvariantCulture);
+            XRange = new Range(xRange);
+            YRange = new Range(yRange);
 
-            var yTable = ParseStringTable(ypts);
-            var xTable = CreateXTable(_xBounds, yTable.Length);
-            _points = new float[yTable.Length, 2];
+            var yTable = ParseStringTable(yPts);
+            var xTable = xPts == null? CreateXTable(yTable.Length) : ParseStringTable(xPts);
 
+            XPoints = new float[xTable.Length];
+            for (var counter = 0; counter < xTable.Length; counter++)
+            {
+                XPoints[counter] = xTable[counter];
+            }
+            YPoints = new float[yTable.Length];
             for (var counter = 0; counter < yTable.Length; counter++)
             {
-                _points[counter, 0] = xTable[counter];
-                _points[counter, 1] = yTable[counter];
+                YPoints[counter] = yTable[counter];
+            }
+
+            Checks();
+        }
+
+        private void Checks()
+        {
+            var xCheck = Math.Abs(XRange.Min - XPoints[0]) < Tolerance && Math.Abs(XRange.Max - XPoints[XPoints.Length - 1]) < Tolerance;
+            var yCheck = YRange.Min <= YPoints[0] && YRange.Max >= YPoints[YPoints.Length - 1];
+            if (!xCheck || !yCheck)
+            {
+                throw new ArgumentOutOfRangeException();
             }
         }
 
-        public float XMin => _xBounds[0];
-
-        public float XMax => _xBounds[1];
-
-        public float YMin => _yBounds[0];
-
-        public float YMax => _yBounds[1];
-
-        private static float[] ParseStringTable(string inputTable)
+        public static float[] ParseStringTable(string inputTable)
         {
+            if (inputTable == null)
+            {
+                throw new ArgumentNullException(nameof(inputTable));
+            }
+
+            if (inputTable.Length == 0)
+            {
+                return new float[0];
+            }
+
             var words = inputTable.Split(',');
 
             var outputTable = new float[words.Length];
@@ -73,19 +108,25 @@ namespace Symu.SysDyn.Model
             return outputTable;
         }
 
-        private static float[] CreateXTable(IReadOnlyList<float> bounds, int divisions)
+        public float[] CreateXTable(int divisions)
         {
-            var difference = bounds[1] - bounds[0];
-
-            var increment = difference / (divisions - 1);
-
+            var difference = XRange.Max - XRange.Min;
             var xTable = new float[divisions];
-
-            for (var counter = 0; counter < divisions; counter++)
+            if (divisions > 1)
             {
-                xTable[counter] = bounds[0] + increment * counter;
-            }
 
+                var increment = difference / (divisions - 1);
+
+                for (var counter = 0; counter < divisions; counter++)
+                {
+                    xTable[counter] = XRange.Min + increment * counter;
+                }
+            }
+            else
+            {
+                xTable[0] = XRange.Min;
+                xTable[1] = XRange.Max;
+            }
             return xTable;
         }
 
@@ -95,42 +136,31 @@ namespace Symu.SysDyn.Model
 
             //find which line segment our x fits into 
             //TODO: currently n time, need faster implementation to protect against very high resolution graphical functions. 
-            for (var counter = 0; counter < _points.GetLongLength(0); counter++)
+            for (var counter = 0; counter < XPoints.Length; counter++)
             {
-                if (x < _points[counter, 0])
+                if (x < XPoints[counter])
                 {
                     target = counter;
                     break;
                 }
 
-                //todo use Symu.Common Tolerance
-                if (Math.Abs(x - _points[counter, 0]) < 0.0001)
+                if (Math.Abs(x - XPoints[counter]) < Tolerance)
                 {
-                    return _points[counter, 1];
+                    return YPoints[counter];
                 }
             }
 
-            var a = _points[target, 1] - _points[target - 1, 1]; //y2-y1
-            var b = _points[target, 0] - _points[target - 1, 0]; //x2-x1
+            var a = YPoints[target] - YPoints[target - 1]; //y2-y1
+            var b = XPoints[target] - XPoints[target - 1]; //x2-x1
             var m = a / b; //slope
-            var intercept = _points[target, 1] - m * _points[target, 0]; //b
+            var intercept = YPoints[target] - m * XPoints[target]; //b
 
             return m * x + intercept;
         }
 
         public float GetOutputWithBounds(float input)
         {
-            var output = input;
-            if (input > XMax)
-            {
-                output = XMax;
-            }
-            else if (input < XMin)
-            {
-                output = XMin;
-            }
-
-            return GetOutput(output);
+            return GetOutput(XRange.GetOutputInsideRange(input));
         }
     }
 }

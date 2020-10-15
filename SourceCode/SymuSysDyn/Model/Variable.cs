@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Symu.SysDyn.Parser;
+using Symu.SysDyn.Simulation;
 
 #endregion
 
@@ -31,30 +32,41 @@ namespace Symu.SysDyn.Model
                 throw new ArgumentNullException(nameof(name));
             }
 
-            Name = name.Replace(' ', '_');
+            Name = StringUtils.CleanName(name);
         }
 
         public Variable(string name, string eqn) : this(name)
         {
             Value = CheckInitialValue(eqn);
-            Equation = eqn;
-            FindChildren();
-        }
-
-        public Variable(string name, string eqn, GraphicalFunction graph) : this(name, eqn)
-        {
-            Function = graph;
+            Equation = ManagedEquation.Initialize(eqn);
+            Units = Units.CreateInstanceFromEquation(eqn);
+            SetChildren();
         }
 
         #region Xml attributes
 
         public string Eqn { get; set; }
+        public Units Units { get; set; }
+        /// <summary>
+        /// Input range
+        /// </summary>
+        public Range Range{ get; set; }
+        /// <summary>
+        /// Output scale
+        /// </summary>
+        public Range Scale { get; set; }
 
         #endregion
 
         public string Name { get; }
 
-        public float Value { get; set; }
+        private float _value;
+
+        public float Value
+        {
+            get => _value;
+            set => _value = Scale.GetOutputInsideRange(value);
+        }
 
         public string Equation { get; set; }
 
@@ -81,11 +93,12 @@ namespace Symu.SysDyn.Model
         ///     Find all children of a variable
         /// </summary>
         /// <returns></returns>
-        public void FindChildren()
+        protected void SetChildren()
         {
-            var words = Equation?.Split(' ', '+', '-', '*', '/');
+            var words = Equation?.Split(' ', '+', '-', '*', '/', '(', ')');
 
-            Children = words?.Where(word => !XmlConstants.Operators.Contains(word) &&
+            Children = words?.Where(word => !Simulation.ManagedEquation.Functions.Contains(word) &&
+                                            !Simulation.ManagedEquation.Operators.Contains(word) &&
                                             !float.TryParse(word, NumberStyles.Any, CultureInfo.InvariantCulture,
                                                 out _) &&
                                             word.Length > 0

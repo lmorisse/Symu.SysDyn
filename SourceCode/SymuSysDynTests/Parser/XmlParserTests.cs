@@ -34,6 +34,8 @@ namespace SymuSysDynTests.Parser
             Assert.AreEqual(0, sim.Start);
             Assert.AreEqual(10, sim.Stop);
             Assert.AreEqual(1, sim.DeltaTime);
+            Assert.IsTrue(sim.Pause);
+            Assert.AreEqual(10, sim.PauseInterval);
         }
 
         [TestMethod]
@@ -41,7 +43,7 @@ namespace SymuSysDynTests.Parser
         {
             Parser.ParseAuxiliaries(XElement, Variables);
             Assert.AreEqual(1, Variables.Count());
-            Assert.AreEqual("aux1", Variables[0].Name);
+            Assert.AreEqual("Aux1", Variables[0].Name);
             Assert.AreEqual(2, Variables[0].Value);
         }
 
@@ -50,9 +52,9 @@ namespace SymuSysDynTests.Parser
         {
             Parser.ParseFlows(XElement, Variables);
             Assert.AreEqual(2, Variables.Count());
-            Assert.IsTrue(Variables.Exists("inflow1"));
-            Assert.IsTrue(Variables.Exists("outflow1"));
-            Assert.AreEqual("stock2/2", Variables[0].Equation);
+            Assert.IsTrue(Variables.Exists("Inflow1"));
+            Assert.IsTrue(Variables.Exists("Outflow1"));
+            Assert.AreEqual("Stock2 / 2", Variables[0].Equation);
         }
 
         [TestMethod]
@@ -60,8 +62,8 @@ namespace SymuSysDynTests.Parser
         {
             Parser.ParseStocks(XElement, Variables);
             Assert.AreEqual(2, Variables.Count());
-            Assert.IsTrue(Variables.Exists("stock1"));
-            Assert.IsTrue(Variables.Exists("stock2"));
+            Assert.IsTrue(Variables.Exists("Stock1"));
+            Assert.IsTrue(Variables.Exists("Stock2"));
             var stock = (Stock) Variables[0];
             Assert.AreEqual(1, stock.Value);
             Assert.AreEqual(1, stock.Inflow.Count);
@@ -77,10 +79,10 @@ namespace SymuSysDynTests.Parser
         {
             XElement = XElement.Descendants(Ns + "aux").First();
             var gf = Parser.ParseGraphicalFunction(XElement);
-            Assert.AreEqual(0, gf.XMin);
-            Assert.AreEqual(1, gf.XMax);
-            Assert.AreEqual(0, gf.YMin);
-            Assert.AreEqual(1, gf.YMax);
+            Assert.AreEqual(0, gf.XRange.Min);
+            Assert.AreEqual(1, gf.XRange.Max);
+            Assert.AreEqual(0, gf.YRange.Min);
+            Assert.AreEqual(1, gf.YRange.Max);
         }
     }
 }

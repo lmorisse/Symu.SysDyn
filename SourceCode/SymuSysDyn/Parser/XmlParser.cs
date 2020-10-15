@@ -23,10 +23,19 @@ using Symu.SysDyn.Simulation;
 
 namespace Symu.SysDyn.Parser
 {
+    /// <summary>
+    /// Parser for XML file following the XMILE standard for system dynamics
+    /// </summary>
+    /// <remarks>http://docs.oasis-open.org/xmile/xmile/v1.0/xmile-v1.0.html</remarks>
     public class XmlParser
     {
         //todo put in a resource
-        private readonly string[] _fileExtensions = {".xmile", ".xml", ".stmx"};
+
+        public const string SchemaLocation =
+            @"C:\Users\laure\Dropbox\Symu\SourceCode\Symu.SysDyn\Github\SourceCode\SymuSysDyn\Templates\schema.xsd";
+
+        //todo put in a resource
+        private readonly string[] _fileExtensions = {".xmile", ".xml", ".stmx", ".itmx"};
         private readonly XNamespace _ns;
         private readonly XDocument _xDoc;
 
@@ -40,7 +49,7 @@ namespace Symu.SysDyn.Parser
 
             if (!_fileExtensions.Contains(file.Extension))
             {
-                throw new ArgumentException("File extension must be .xmile, .xml or .stmx");
+                throw new ArgumentException("File extension must be .xmile, .xml, .stmx or .itmx");
             }
 
             _xDoc = XDocument.Load(xmlFile);
@@ -54,7 +63,7 @@ namespace Symu.SysDyn.Parser
             }
 
             //todo: check if schema exists
-            using (var reader = new StreamReader(XmlConstants.SchemaLocation))
+            using (var reader = new StreamReader(SchemaLocation))
             using (var xmlReader = XmlReader.Create(reader))
             {
                 var schemas = new XmlSchemaSet();
@@ -107,10 +116,11 @@ namespace Symu.SysDyn.Parser
                 return new SimSpecs(0, 0, 1);
             }
 
-            var start = float.Parse(sim.Element(_ns + "start")?.Value ?? "0", CultureInfo.InvariantCulture);
-            var stop = float.Parse(sim.Element(_ns + "stop")?.Value ?? "0", CultureInfo.InvariantCulture);
-            var dt = float.Parse(sim.Element(_ns + "dt")?.Value ?? "1", CultureInfo.InvariantCulture);
-            return new SimSpecs(start, stop, dt);
+            var start = sim.Element(_ns + "start")?.Value;
+            var stop = sim.Element(_ns + "stop")?.Value;
+            var dt = sim.Element(_ns + "dt")?.Value;
+            var pause = sim.Attribute("pause")?.Value;
+            return new SimSpecs(start, stop, dt, pause);
         }
 
         public void ParseAuxiliaries(XContainer xContainer, Variables variables)
@@ -184,37 +194,32 @@ namespace Symu.SysDyn.Parser
                 throw new ArgumentNullException(nameof(xContainer));
             }
 
-            var ypts = from q in xContainer.Descendants(_ns + "gf")
+            var gf = from q in xContainer.Descendants(_ns + "gf")
                 select new
                 {
-                    list = q.Element(_ns + "ypts")?.Value,
-                    bounds = GetBounds(q)
+                    xpts = q.Element(_ns + "xpts")?.Value,
+                    ypts = q.Element(_ns + "ypts")?.Value,
+                    xscale = GetScale(q, "xscale"),
+                    yscale = GetScale(q, "yscale")
                 };
 
-            return ypts.Select(value => new GraphicalFunction(value.list, value.bounds)).FirstOrDefault();
+            return gf.Select(value => new GraphicalFunction(value.xpts, value.ypts, value.xscale, value.yscale)).FirstOrDefault();
         }
 
-        private static string[] GetBounds(XContainer xContainer)
+        private string[] GetScale(XContainer xContainer, string scale)
         {
-            var bounds = new string[4];
-            if (xContainer == null)
+            var element = xContainer?.Element(_ns + scale);
+
+            if (element == null)
             {
-                return bounds;
+                return null;
             }
+            var getScale = new string[2];
 
-            var elements = xContainer.Elements().ToList();
+            getScale[0] = element.Attribute("min")?.Value;
+            getScale[1] = element.Attribute("max")?.Value;
 
-            var xLower = elements.First().Attribute("min")?.Value;
-            var xUpper = elements.First().Attribute("max")?.Value;
-            var yLower = elements.ElementAt(1).Attribute("min")?.Value;
-            var yUpper = elements.ElementAt(1).Attribute("max")?.Value;
-
-            bounds[0] = xLower;
-            bounds[1] = xUpper;
-            bounds[2] = yLower;
-            bounds[3] = yUpper;
-
-            return bounds;
+            return getScale;
         }
     }
 }

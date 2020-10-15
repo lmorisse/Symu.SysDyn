@@ -11,6 +11,8 @@
 
 using System;
 using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
@@ -36,6 +38,7 @@ namespace SymuSysDynApp
         {
             _stateMachine.Process();
             cbVariables.Enabled = true;
+            lblTime.Text = _stateMachine.Simulation.Time.ToString(CultureInfo.InvariantCulture);
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -58,8 +61,10 @@ namespace SymuSysDynApp
             tbStart.Text = _stateMachine.Simulation.Start.ToString(CultureInfo.InvariantCulture);
             tbStop.Text = _stateMachine.Simulation.Stop.ToString(CultureInfo.InvariantCulture);
             tbDt.Text = _stateMachine.Simulation.DeltaTime.ToString(CultureInfo.InvariantCulture);
+            tbPause.Text = _stateMachine.Simulation.PauseInterval.ToString(CultureInfo.InvariantCulture);
             var dotString = GraphVizDot.GenerateDotString(_stateMachine.GetGraph());
-            pictureBox1.Image = GraphViz.RenderImage(dotString, "jpg");
+            picImage.Image = GraphViz.RenderImage(dotString, "jpg");
+
         }
 
         private void cbVariables_SelectedIndexChanged(object sender, EventArgs e)
@@ -78,12 +83,30 @@ namespace SymuSysDynApp
             //ChartAppearance.ApplyChartStyles(chartControl2);
         }
 
+        private void tbPause_TextChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                _stateMachine.Simulation.PauseInterval =
+                    ushort.Parse(tbPause.Text, CultureInfo.InvariantCulture);
+                tbPause.BackColor = SystemColors.Window;
+            }
+            catch (FormatException)
+            {
+                tbPause.BackColor = Color.Red;
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                tbPause.BackColor = Color.Red;
+            }
+        }
+
         private void tbStart_TextChanged(object sender, EventArgs e)
         {
             try
             {
                 _stateMachine.Simulation.Start =
-                    float.Parse(tbStart.Text, CultureInfo.InvariantCulture);
+                    ushort.Parse(tbStart.Text, CultureInfo.InvariantCulture);
                 tbStart.BackColor = SystemColors.Window;
             }
             catch (FormatException)
@@ -97,7 +120,7 @@ namespace SymuSysDynApp
             try
             {
                 _stateMachine.Simulation.Stop =
-                    float.Parse(tbStop.Text, CultureInfo.InvariantCulture);
+                    ushort.Parse(tbStop.Text, CultureInfo.InvariantCulture);
                 tbStop.BackColor = SystemColors.Window;
             }
             catch (FormatException)
@@ -118,10 +141,6 @@ namespace SymuSysDynApp
             {
                 tbDt.BackColor = Color.Red;
             }
-        }
-
-        private void label4_Click(object sender, EventArgs e)
-        {
         }
     }
 }

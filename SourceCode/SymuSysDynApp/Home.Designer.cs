@@ -37,7 +37,6 @@
             Syncfusion.Windows.Forms.Chart.ChartCustomShapeInfo chartCustomShapeInfo3 = new Syncfusion.Windows.Forms.Chart.ChartCustomShapeInfo();
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.cbVariables = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.chartControl1 = new Syncfusion.Windows.Forms.Chart.ChartControl();
@@ -49,13 +48,18 @@
             this.tbDt = new System.Windows.Forms.TextBox();
             this.Simulation = new System.Windows.Forms.GroupBox();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.picImage = new System.Windows.Forms.PictureBox();
+            this.tbPause = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.lblTime = new System.Windows.Forms.Label();
             this.Simulation.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picImage)).BeginInit();
             this.SuspendLayout();
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(283, 21);
+            this.button1.Location = new System.Drawing.Point(312, 21);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 0;
@@ -65,22 +69,13 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(12, 28);
+            this.button2.Location = new System.Drawing.Point(869, 36);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(123, 23);
             this.button2.TabIndex = 2;
             this.button2.Text = "Open xmile File";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Location = new System.Drawing.Point(12, 118);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(468, 480);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox1.TabIndex = 3;
-            this.pictureBox1.TabStop = false;
             // 
             // cbVariables
             // 
@@ -111,9 +106,9 @@
             // 
             // 
             // 
-            this.chartControl1.Legend.Location = new System.Drawing.Point(531, 81);
+            this.chartControl1.Legend.Location = new System.Drawing.Point(505, 81);
             this.chartControl1.Localize = null;
-            this.chartControl1.Location = new System.Drawing.Point(496, 118);
+            this.chartControl1.Location = new System.Drawing.Point(889, 211);
             this.chartControl1.Name = "chartControl1";
             this.chartControl1.PrimaryXAxis.LogLabelsDisplayMode = Syncfusion.Windows.Forms.Chart.LogLabelsDisplayMode.Default;
             this.chartControl1.PrimaryXAxis.Margin = true;
@@ -171,7 +166,7 @@
             this.chartControl1.Series.Add(chartSeries1);
             this.chartControl1.Series.Add(chartSeries2);
             this.chartControl1.Series.Add(chartSeries3);
-            this.chartControl1.Size = new System.Drawing.Size(654, 480);
+            this.chartControl1.Size = new System.Drawing.Size(628, 480);
             this.chartControl1.TabIndex = 6;
             this.chartControl1.Text = "chartControl1";
             // 
@@ -207,7 +202,6 @@
             this.label4.Size = new System.Drawing.Size(37, 17);
             this.label4.TabIndex = 9;
             this.label4.Text = "Stop";
-            this.label4.Click += new System.EventHandler(this.label4_Click);
             // 
             // tbStop
             // 
@@ -235,6 +229,10 @@
             // 
             // Simulation
             // 
+            this.Simulation.Controls.Add(this.lblTime);
+            this.Simulation.Controls.Add(this.label6);
+            this.Simulation.Controls.Add(this.tbPause);
+            this.Simulation.Controls.Add(this.label5);
             this.Simulation.Controls.Add(this.tbStart);
             this.Simulation.Controls.Add(this.tbDt);
             this.Simulation.Controls.Add(this.label3);
@@ -244,7 +242,7 @@
             this.Simulation.Controls.Add(this.tbStop);
             this.Simulation.Controls.Add(this.label4);
             this.Simulation.Controls.Add(this.button1);
-            this.Simulation.Location = new System.Drawing.Point(496, 12);
+            this.Simulation.Location = new System.Drawing.Point(869, 88);
             this.Simulation.Name = "Simulation";
             this.Simulation.Size = new System.Drawing.Size(654, 100);
             this.Simulation.TabIndex = 13;
@@ -255,26 +253,71 @@
             // 
             this.openFileDialog1.DefaultExt = "xmile";
             this.openFileDialog1.FileName = "openFileDialog1";
-            this.openFileDialog1.Filter = "xmile files (*.xmile)|*.xmile|stmx files (*.stmx)|*.stmx";
+            this.openFileDialog1.Filter = "xmile files (*.xmile)|*.xmile|stmx files (*.stmx)|*.stmx|itmx files (*.itmx)|*.it" +
+    "mx|xml files (*.xml)|*.xml|All files (*.*)|*.*";
             this.openFileDialog1.InitialDirectory = "C:\\Users\\laure\\Dropbox\\Symu\\SourceCode\\Symu.SysDyn\\Github\\SourceCode\\SymuSysDyn\\T" +
     "emplates\\";
             this.openFileDialog1.RestoreDirectory = true;
             this.openFileDialog1.Title = "Xmile file";
             // 
+            // picImage
+            // 
+            this.picImage.Location = new System.Drawing.Point(12, 12);
+            this.picImage.Name = "picImage";
+            this.picImage.Size = new System.Drawing.Size(815, 673);
+            this.picImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.picImage.TabIndex = 15;
+            this.picImage.TabStop = false;
+            // 
+            // tbPause
+            // 
+            this.tbPause.Location = new System.Drawing.Point(238, 69);
+            this.tbPause.Name = "tbPause";
+            this.tbPause.Size = new System.Drawing.Size(47, 22);
+            this.tbPause.TabIndex = 14;
+            this.tbPause.TextChanged += new System.EventHandler(this.tbPause_TextChanged);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(173, 72);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(60, 21);
+            this.label5.TabIndex = 13;
+            this.label5.Text = "Pause";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(414, 58);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(49, 21);
+            this.label6.TabIndex = 15;
+            this.label6.Text = "Time";
+            // 
+            // lblTime
+            // 
+            this.lblTime.AutoSize = true;
+            this.lblTime.Location = new System.Drawing.Point(501, 58);
+            this.lblTime.Name = "lblTime";
+            this.lblTime.Size = new System.Drawing.Size(20, 21);
+            this.lblTime.TabIndex = 16;
+            this.lblTime.Text = "0";
+            // 
             // Home
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1176, 623);
+            this.ClientSize = new System.Drawing.Size(1529, 708);
+            this.Controls.Add(this.picImage);
             this.Controls.Add(this.Simulation);
-            this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.chartControl1);
             this.Controls.Add(this.button2);
             this.Name = "Home";
             this.Text = "Symu.SysDyn : system dynamics";
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.Simulation.ResumeLayout(false);
             this.Simulation.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picImage)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -283,7 +326,6 @@
 
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.ComboBox cbVariables;
         private System.Windows.Forms.Label label1;
         private Syncfusion.Windows.Forms.Chart.ChartControl chartControl1;
@@ -295,6 +337,11 @@
         private System.Windows.Forms.TextBox tbDt;
         private System.Windows.Forms.GroupBox Simulation;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.PictureBox picImage;
+        private System.Windows.Forms.TextBox tbPause;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label lblTime;
+        private System.Windows.Forms.Label label6;
     }
 }
 

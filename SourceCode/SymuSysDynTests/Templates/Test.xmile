@@ -4,7 +4,7 @@
   <header>
     <name>Test</name>
   </header>
-  <sim_specs method="Euler" time_units="Time">
+  <sim_specs method="Euler" time_units="Time" pause="10">
     <start>0</start>
     <stop>10</stop>
     <dt>1</dt>

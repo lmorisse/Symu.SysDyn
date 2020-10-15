@@ -26,14 +26,14 @@ namespace SymuSysDynTests.Simulation
             Assert.IsNotNull(Machine.Simulation);
             Assert.IsNotNull(Machine.Results);
             Assert.IsNotNull(Machine.Variables);
-            Assert.AreEqual(1, Machine.Results.Count);
+            Assert.AreEqual(0, Machine.Results.Count);
         }
 
         [TestMethod]
         public void ProcessTest()
         {
-            Machine.Compute();
-            Assert.AreEqual(2, Machine.Results.Count);
+            Machine.Process();
+            Assert.AreEqual(11, Machine.Results.Count);
             foreach (var result in Machine.Results)
             {
                 Assert.AreEqual(5, result.Count);
@@ -43,7 +43,7 @@ namespace SymuSysDynTests.Simulation
         [TestMethod]
         public void UpdateVariableTest()
         {
-            var stock = Machine.Variables["stock1"];
+            var stock = Machine.Variables["Stock1"];
             Machine.UpdateVariable(stock);
             Assert.AreEqual(-2, stock.Value);
             Assert.IsTrue(stock.Updated);
@@ -53,7 +53,7 @@ namespace SymuSysDynTests.Simulation
         public void UpdateVariableTest1()
         {
             Machine.Variables.Initialize();
-            var flow = Machine.Variables["outflow1"];
+            var flow = Machine.Variables["Outflow1"];
             Machine.UpdateVariable(flow);
             Assert.AreEqual(4, flow.Value);
             Assert.IsTrue(flow.Updated);
@@ -63,7 +63,7 @@ namespace SymuSysDynTests.Simulation
         public void UpdateChildrenTest()
         {
             Machine.Variables.Initialize();
-            var stock = Machine.Variables["stock1"];
+            var stock = Machine.Variables["Stock1"];
             var waiting = Machine.UpdateChildren(stock);
             Assert.AreEqual(0, waiting.Count);
             Assert.AreEqual(1, Machine.Variables.GetNotUpdated.Count());
