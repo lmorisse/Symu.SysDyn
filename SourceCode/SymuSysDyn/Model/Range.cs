@@ -24,15 +24,36 @@ namespace Symu.SysDyn.Model
     /// <summary>
     /// Class for Range, scale, bounds, with a min and a max
     /// </summary>
-    public readonly struct Range
+    public class Range
     {
-        /// <summary>
-        /// True if the range is specified
-        /// </summary>
-        public bool Ranged { get; }
-        public float Min { get; } 
+        public float Min { get; } = float.NegativeInfinity;
 
-        public float Max { get; } 
+        public float Max { get; } = float.PositiveInfinity;
+        
+        /// <summary>
+        /// Constructor based on float values
+        /// </summary>
+        public Range(bool nonNegative)
+        {
+            if (nonNegative)
+            {
+                // Value must be positive
+                Min = Math.Max(Min, 0);
+            }
+        }
+
+        /// <summary>
+        /// Constructor based on float values
+        /// </summary>
+        /// <param name="min"></param>
+        /// <param name="max"></param>
+        public Range(float min, float max)
+        {
+            Min = min;
+            Max = max;
+            Check();
+        }
+
         /// <summary>
         /// Constructor based on string scale
         /// </summary>
@@ -41,15 +62,14 @@ namespace Symu.SysDyn.Model
         {
             if (stringScale != null && stringScale.Count == 2)
             {
-                Min = float.Parse(stringScale[0], CultureInfo.InvariantCulture);
-                Max = float.Parse(stringScale[1], CultureInfo.InvariantCulture);
-                Ranged = true;
-            }
-            else
-            {
-                Min = 0;
-                Max = 1;
-                Ranged = false;
+                if (!string.IsNullOrEmpty(stringScale[0]))
+                {
+                    Min = float.Parse(stringScale[0], CultureInfo.InvariantCulture);
+                }
+                if (!string.IsNullOrEmpty(stringScale[1]))
+                {
+                    Max = float.Parse(stringScale[1], CultureInfo.InvariantCulture);
+                }
             }
             Check();
         }
@@ -59,26 +79,25 @@ namespace Symu.SysDyn.Model
         /// </summary>
         /// <param name="min"></param>
         /// <param name="max"></param>
-        public Range(string min, string max)
+        /// <param name="nonNegative"></param>
+        public Range(string min, string max, bool nonNegative)
         {
-            Min = float.Parse(min, CultureInfo.InvariantCulture);
-            Max = float.Parse(max, CultureInfo.InvariantCulture);
-            Ranged = true;
+            if (!string.IsNullOrEmpty(min))
+            {
+                Min = float.Parse(min, CultureInfo.InvariantCulture);
+            }
+            if (!string.IsNullOrEmpty(max))
+            {
+                Max = float.Parse(max, CultureInfo.InvariantCulture);
+            }
+            if (nonNegative)
+            {
+                // Value must be positive
+                Min = Math.Max(Min, 0);
+            }
             Check();
         }
-        /// <summary>
-        /// Constructor based on float values
-        /// </summary>
-        /// <param name="min"></param>
-        /// <param name="max"></param>
-        /// <param name="ranged"></param>
-        public Range(float min, float max, bool ranged = true)
-        {
-            Min = min;
-            Max = max;
-            Ranged = ranged;
-            Check();
-        }
+
         private void Check()
         {
             if (Min > Max)
@@ -93,7 +112,7 @@ namespace Symu.SysDyn.Model
         /// <returns></returns>
         public bool Check(float[] points)
         {
-            return !Ranged || (Min <= points.Min() && Max >= points.Max());
+            return Min <= points.Min() && Max >= points.Max();
         }
 
         public float GetOutputInsideRange(string input)
@@ -104,10 +123,6 @@ namespace Symu.SysDyn.Model
 
         public float GetOutputInsideRange(float input)
         {
-            if (!Ranged)
-            {
-                return input;
-            }
             if (input > Max)
             {
                 return Max;

@@ -21,19 +21,12 @@ namespace SymuSysDynTests.Model
     [TestClass]
     public class RangeTests
     {
-        private Range _range = new Range(0, 10);
+        private readonly Range _range = new Range(0, 10);
         private readonly float[] _okPoints = { 0, 1, 2, 3 };
         private readonly float[] _koPoints = { 0, 1, -1, 3, 12 };
 
         [TestMethod]
         public void CheckTest()
-        {
-            _range = new Range(0, 10, false);
-            Assert.IsTrue(_range.Check(_okPoints));
-            Assert.IsTrue(_range.Check(_koPoints));
-        }
-        [TestMethod]
-        public void CheckTest1()
         {
             Assert.IsTrue(_range.Check(_okPoints));
             Assert.IsFalse(_range.Check(_koPoints));

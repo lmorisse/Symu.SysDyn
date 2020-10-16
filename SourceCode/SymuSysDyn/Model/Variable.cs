@@ -57,11 +57,11 @@ namespace Symu.SysDyn.Model
         /// <summary>
         /// Input range
         /// </summary>
-        public Range Range{ get; set; }
+        public Range Range{ get; set; } = new Range(false);
         /// <summary>
         /// Output scale
         /// </summary>
-        public Range Scale { get; set; }
+        public Range Scale { get; set; } = new Range(false);
 
         #endregion
 

@@ -15,14 +15,19 @@
         <eqn>1</eqn>
         <inflow>inflow1</inflow>
         <outflow>outflow1</outflow>
+        <range min="-1" max="10"/>
+        <scale min="-1" max="10"/>
         <non_negative />
       </stock>
       <flow name="inflow1">
         <eqn>stock2/2</eqn>
-        <non_negative />
+        <range min="-1" max="10"/>
+        <scale min="-1" max="10"/>
       </flow>
       <flow name="outflow1">
         <eqn>stock2*2</eqn>
+        <range max="10"/>
+        <scale min="-1"/>
         <non_negative />
       </flow>
       <stock name="stock2">

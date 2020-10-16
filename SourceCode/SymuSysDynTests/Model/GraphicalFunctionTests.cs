@@ -9,6 +9,7 @@
 
 #region using directives
 
+using System;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Symu.SysDyn.Model;
@@ -55,13 +56,7 @@ namespace SymuSysDynTests.Model
         [TestMethod]
         public void GraphicalFunctionTest1()
         {
-            _gf = new GraphicalFunction(null, Ypts, new List<string>(), _yScaleList);
-            Assert.AreEqual(2, _gf.XPoints.Length);
-            Assert.AreEqual(0, _gf.XRange.Min);
-            Assert.AreEqual(1, _gf.XRange.Max);
-            Assert.AreEqual(2, _gf.YPoints.Length);
-            Assert.AreEqual(1, _gf.YRange.Min);
-            Assert.AreEqual(2, _gf.YRange.Max);
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() => new GraphicalFunction(null, Ypts, new List<string>(), _yScaleList));
         }
 
         [TestMethod]

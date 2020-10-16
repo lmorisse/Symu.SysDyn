@@ -45,7 +45,7 @@ namespace SymuSysDynTests.Simulation
         {
             var stock = Machine.Variables["Stock1"];
             Machine.UpdateVariable(stock);
-            Assert.AreEqual(-2, stock.Value);
+            Assert.AreEqual(0, stock.Value);
             Assert.IsTrue(stock.Updated);
         }
 

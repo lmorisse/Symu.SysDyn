@@ -80,10 +80,6 @@ namespace Symu.SysDyn.Model
             {
                 throw new ArgumentOutOfRangeException();
             }
-            if (!XRange.Check(XPoints) || !YRange.Check(YPoints))
-            {
-                throw new ArgumentOutOfRangeException();
-            }
         }
 
         public static float[] ParseStringTable(string inputTable)
@@ -113,6 +109,10 @@ namespace Symu.SysDyn.Model
         public float[] CreateXTable(int divisions)
         {
             var difference = XRange.Max - XRange.Min;
+            if (float.IsInfinity(difference))
+            {
+                throw new ArgumentOutOfRangeException();
+            }
             var xTable = new float[divisions];
             if (divisions > 1)
             {

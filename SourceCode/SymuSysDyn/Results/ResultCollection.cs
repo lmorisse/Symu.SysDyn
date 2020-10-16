@@ -66,5 +66,10 @@ namespace Symu.SysDyn.Results
         }
 
         #endregion
+
+        public void Clear()
+        {
+            _result.Clear();
+        }
     }
 }

@@ -252,14 +252,8 @@ namespace Symu.SysDyn.Parser
                 throw new ArgumentNullException(nameof(xContainer));
             }
 
-            var gf = from q in xContainer.Descendants(_ns + "range")
-                select new
-                {
-                    min = q.Attribute("min")?.Value,
-                    max = q.Attribute("max")?.Value
-                };
-
-            return gf.Select(value => new Range(value.min, value.max)).FirstOrDefault();
+            var range = xContainer.Descendants(_ns + "range").FirstOrDefault();
+            return range == null ? new Range(false) : new Range(range.Attribute("min")?.Value, range.Attribute("max")?.Value, false);
         }
 
         public Range ParseScale(XContainer xContainer)
@@ -269,14 +263,9 @@ namespace Symu.SysDyn.Parser
                 throw new ArgumentNullException(nameof(xContainer));
             }
 
-            var gf = from q in xContainer.Descendants(_ns + "scale")
-                select new
-                {
-                    min = q.Attribute("min")?.Value,
-                    max = q.Attribute("max")?.Value
-                };
-
-            return gf.Select(value => new Range(value.min, value.max)).FirstOrDefault();
+            var range = xContainer.Descendants(_ns + "scale").FirstOrDefault();
+            var nonNegative = xContainer.Descendants(_ns + "non_negative").FirstOrDefault();
+            return range == null ? new Range(nonNegative != null) : new Range(range.Attribute("min")?.Value, range.Attribute("max")?.Value, nonNegative != null);
         }
 
 

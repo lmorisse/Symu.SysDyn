@@ -89,7 +89,8 @@ namespace Symu.SysDyn.Simulation
         /// Pause, default false, PauseInterval can be ignored
         /// </summary>
         public bool Pause { get; set; }
-        private void Reset()
+
+        public void Clear()
         {
             Step = 0;
         }
