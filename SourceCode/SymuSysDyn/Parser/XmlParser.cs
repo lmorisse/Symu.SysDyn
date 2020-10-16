@@ -121,7 +121,8 @@ namespace Symu.SysDyn.Parser
             var stop = sim.Element(_ns + "stop")?.Value;
             var dt = sim.Element(_ns + "dt")?.Value;
             var pause = sim.Attribute("pause")?.Value;
-            return new SimSpecs(start, stop, dt, pause);
+            var timeUnits = sim.Attribute("time_units")?.Value;
+            return new SimSpecs(start, stop, dt, pause, timeUnits);
         }
 
         public void ParseAuxiliaries(XContainer xContainer, Variables variables)

@@ -9,7 +9,7 @@
 
 using System;
 using System.Globalization;
-
+using Symu.Common.Classes;
 using static Symu.Common.Constants;
 
 
@@ -27,11 +27,15 @@ namespace Symu.SysDyn.Simulation
             Stop = ushort.Parse(stop ?? "0", CultureInfo.InvariantCulture);
             DeltaTime = float.Parse(deltaTime ?? "1", CultureInfo.InvariantCulture);
         }
-        public SimSpecs(string start, string stop, string deltaTime, string pause): this(start, stop, deltaTime)
+        public SimSpecs(string start, string stop, string deltaTime, string pause, string timeUnits): this(start, stop, deltaTime)
         {
             if (!string.IsNullOrEmpty(pause))
             {
                 PauseInterval = ushort.Parse(pause, CultureInfo.InvariantCulture);
+            }
+            if (!string.IsNullOrEmpty(timeUnits))
+            {
+                TimeUnits = TimeStepTypeService.GetValue(timeUnits);
             }
         }
         public SimSpecs(ushort start, ushort stop)
@@ -64,6 +68,7 @@ namespace Symu.SysDyn.Simulation
             }
         }
 
+        public TimeStepType TimeUnits { get; set; }
         private ushort _pauseInterval;
 
         /// <summary>
