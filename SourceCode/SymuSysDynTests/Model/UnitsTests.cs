@@ -1,30 +1,44 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿#region Licence
+
+// Description: SymuSysDyn - SymuSysDynTests
+// Website: https://symu.org
+// Copyright: (c) 2020 laurent morisseau
+// License : the program is distributed under the terms of the GNU General Public License
+
+#endregion
+
+#region using directives
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Symu.SysDyn.Model;
+
+#endregion
 
 namespace SymuSysDynTests.Model
 {
-    [TestClass()]
+    [TestClass]
     public class UnitsTests
     {
         /// <summary>
-        /// Non passing tests
+        ///     Non passing tests
         /// </summary>
-        [TestMethod()]
+        [TestMethod]
         public void CreateInstanceFromEquationTest()
         {
             Assert.IsNull(Units.CreateInstanceFromEquation(null));
             Assert.IsNull(Units.CreateInstanceFromEquation(string.Empty));
             Assert.IsNull(Units.CreateInstanceFromEquation("test"));
         }
+
         /// <summary>
-        /// Passing test
+        ///     Passing test
         /// </summary>
-        [TestMethod()]
+        [TestMethod]
         public void CreateInstanceFromEquationTest1()
         {
             var test = Units.CreateInstanceFromEquation("test {unit1/unit2}");
             Assert.IsNotNull(test);
-            Assert.AreEqual("Unit1 / Unit2", test.Eqn);
+            Assert.AreEqual("unit1/unit2", test.Eqn);
         }
     }
 }

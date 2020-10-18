@@ -23,11 +23,11 @@ namespace SymuSysDynTests.Model
     {
         private const string Xpts = "0.0, 1.0";
         private const string Ypts = "1.0, 2.0";
-        private readonly List<string> _xScaleList = new List<string> { "0.0", "1.0" };
-        private readonly List<string> _yScaleList = new List<string> { "1.0", "2.0" };
+        private readonly List<string> _xScaleList = new List<string> {"0.0", "1.0"};
+        private readonly List<string> _yScaleList = new List<string> {"1.0", "2.0"};
         private GraphicalFunction _gf;
 
-        [TestMethod()]
+        [TestMethod]
         public void ParseStringTableTest()
         {
             var result = GraphicalFunction.ParseStringTable(string.Empty);
@@ -56,7 +56,8 @@ namespace SymuSysDynTests.Model
         [TestMethod]
         public void GraphicalFunctionTest1()
         {
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => new GraphicalFunction(null, Ypts, new List<string>(), _yScaleList));
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() =>
+                new GraphicalFunction(null, Ypts, new List<string>(), _yScaleList));
         }
 
         [TestMethod]
@@ -81,10 +82,10 @@ namespace SymuSysDynTests.Model
             Assert.AreEqual(2, _gf.GetOutputWithBounds(1));
             Assert.AreEqual(2, _gf.GetOutputWithBounds(2));
         }
-        [TestMethod()]
+
+        [TestMethod]
         public void ChecksRangeTest()
         {
-
         }
     }
 }

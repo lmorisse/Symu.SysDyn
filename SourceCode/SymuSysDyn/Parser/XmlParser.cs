@@ -11,7 +11,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Xml;
@@ -25,7 +24,7 @@ using Symu.SysDyn.Simulation;
 namespace Symu.SysDyn.Parser
 {
     /// <summary>
-    /// Parser for XML file following the XMILE standard for system dynamics
+    ///     Parser for XML file following the XMILE standard for system dynamics
     /// </summary>
     /// <remarks>http://docs.oasis-open.org/xmile/xmile/v1.0/xmile-v1.0.html</remarks>
     public class XmlParser
@@ -99,6 +98,7 @@ namespace Symu.SysDyn.Parser
                 ParseStocks(xElement, variables);
                 ParseFlows(xElement, variables);
                 ParseAuxiliaries(xElement, variables);
+                ParseGroups(xElement, variables);
             }
 
             return variables;
@@ -187,8 +187,8 @@ namespace Symu.SysDyn.Parser
                 .Select(q => new Stock(
                     q.FirstAttribute.Value,
                     ParseEquation(q),
-                    ParseInflow(q),
-                    ParseOutflow(q),
+                    ParseInflows(q),
+                    ParseOutflows(q),
                     ParseGraphicalFunction(q),
                     ParseRange(q),
                     ParseScale(q)
@@ -213,10 +213,11 @@ namespace Symu.SysDyn.Parser
                     yscale = GetScale(q, "yscale")
                 };
 
-            return gf.Select(value => new GraphicalFunction(value.xpts, value.ypts, value.xscale, value.yscale)).FirstOrDefault();
+            return gf.Select(value => new GraphicalFunction(value.xpts, value.ypts, value.xscale, value.yscale))
+                .FirstOrDefault();
         }
 
-        public List<string> ParseInflow(XContainer xContainer)
+        public List<string> ParseInflows(XContainer xContainer)
         {
             if (xContainer == null)
             {
@@ -226,7 +227,7 @@ namespace Symu.SysDyn.Parser
             return xContainer.Elements(_ns + "inflow").Select(el => el.Value).ToList();
         }
 
-        public List<string> ParseOutflow(XContainer xContainer)
+        public List<string> ParseOutflows(XContainer xContainer)
         {
             if (xContainer == null)
             {
@@ -254,7 +255,9 @@ namespace Symu.SysDyn.Parser
             }
 
             var range = xContainer.Descendants(_ns + "range").FirstOrDefault();
-            return range == null ? new Range(false) : new Range(range.Attribute("min")?.Value, range.Attribute("max")?.Value, false);
+            return range == null
+                ? new Range(false)
+                : new Range(range.Attribute("min")?.Value, range.Attribute("max")?.Value, false);
         }
 
         public Range ParseScale(XContainer xContainer)
@@ -266,7 +269,9 @@ namespace Symu.SysDyn.Parser
 
             var range = xContainer.Descendants(_ns + "scale").FirstOrDefault();
             var nonNegative = xContainer.Descendants(_ns + "non_negative").FirstOrDefault();
-            return range == null ? new Range(nonNegative != null) : new Range(range.Attribute("min")?.Value, range.Attribute("max")?.Value, nonNegative != null);
+            return range == null
+                ? new Range(nonNegative != null)
+                : new Range(range.Attribute("min")?.Value, range.Attribute("max")?.Value, nonNegative != null);
         }
 
 
@@ -278,12 +283,44 @@ namespace Symu.SysDyn.Parser
             {
                 return null;
             }
+
             var getScale = new string[2];
 
             getScale[0] = element.Attribute("min")?.Value;
             getScale[1] = element.Attribute("max")?.Value;
 
             return getScale;
+        }
+
+        public void ParseGroups(XContainer xContainer, Variables variables)
+        {
+            if (xContainer == null)
+            {
+                throw new ArgumentNullException(nameof(xContainer));
+            }
+
+            if (variables == null)
+            {
+                throw new ArgumentNullException(nameof(variables));
+            }
+
+            var groups = xContainer.Descendants(_ns + "group")
+                .Select(q => new Group(
+                    q.FirstAttribute.Value,
+                    ParseEntities(q)
+                ));
+
+            variables.Groups.AddRange(groups);
+        }
+
+        public List<string> ParseEntities(XContainer xContainer)
+        {
+            if (xContainer == null)
+            {
+                throw new ArgumentNullException(nameof(xContainer));
+            }
+
+            return xContainer.Elements(_ns + "entity").Select(entity => entity.Attribute("name")?.Value).ToList();
         }
     }
 }

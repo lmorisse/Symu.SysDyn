@@ -9,13 +9,7 @@
 
 #region using directives
 
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text.RegularExpressions;
 using Symu.SysDyn.Parser;
-using Symu.SysDyn.Simulation;
 
 #endregion
 
@@ -23,19 +17,13 @@ namespace Symu.SysDyn.Model
 {
     /// <summary>
     ///     Class for units
-    /// Each variable OPTIONALLY has its own units of measure, which are specified by combining other units
-    /// defined in the units namespace
+    ///     Each variable OPTIONALLY has its own units of measure, which are specified by combining other units
+    ///     defined in the units namespace
     /// </summary>
     public class Units
     {
-        #region Xml attributes
-        public string Name { get; }
-
-        public string Eqn { get; set; }
-
-        #endregion
         /// <summary>
-        /// In some case, equation are defined as = Some_Value  {units}
+        ///     In some cases, equation are defined as = Some_Value  {units}
         /// </summary>
         /// <param name="eqn"></param>
         /// <returns></returns>
@@ -47,7 +35,15 @@ namespace Symu.SysDyn.Model
             }
 
             var units = StringUtils.GetStringInBraces(eqn);
-            return string.IsNullOrEmpty(units) ? null : new Units {Eqn = ManagedEquation.Initialize(units)};
+            return string.IsNullOrEmpty(units) ? null : new Units {Eqn = units};
         }
+
+        #region Xml attributes
+
+        public string Name { get; }
+
+        public string Eqn { get; set; }
+
+        #endregion
     }
 }

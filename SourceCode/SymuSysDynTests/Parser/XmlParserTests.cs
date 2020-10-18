@@ -9,9 +9,22 @@
 
 #region using directives
 
+#region Licence
+
+// Description: SymuSysDyn - SymuSysDynTests
+// Website: https://symu.org
+// Copyright: (c) 2020 laurent morisseau
+// License : the program is distributed under the terms of the GNU General Public License
+
+#endregion
+
+#region using directives
+
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Symu.SysDyn.Model;
+
+#endregion
 
 #endregion
 
@@ -54,7 +67,7 @@ namespace SymuSysDynTests.Parser
             Assert.AreEqual(2, Variables.Count());
             Assert.IsTrue(Variables.Exists("Inflow1"));
             Assert.IsTrue(Variables.Exists("Outflow1"));
-            Assert.AreEqual("Stock2 / 2", Variables[0].Equation);
+            Assert.AreEqual("Stock2 / 2", Variables[0].Equation.ToString());
         }
 
         [TestMethod]
@@ -111,6 +124,7 @@ namespace SymuSysDynTests.Parser
             Assert.AreEqual(float.NegativeInfinity, range.Min);
             Assert.AreEqual(float.PositiveInfinity, range.Max);
         }
+
         [TestMethod]
         public void ParseScaleTest()
         {
@@ -136,6 +150,21 @@ namespace SymuSysDynTests.Parser
             var range = Parser.ParseScale(XElement);
             Assert.AreEqual(0, range.Min);
             Assert.AreEqual(float.PositiveInfinity, range.Max);
+        }
+
+        [TestMethod]
+        public void ParseGroupsTest()
+        {
+            Parser.ParseGroups(XElement, Variables);
+            Assert.AreEqual(2, Variables.Groups.Count());
+            Assert.IsTrue(Variables.Groups.Exists("Group1"));
+            var group1 = Variables.Groups.Get("Group1").Entities;
+            Assert.AreEqual(2, group1.Count);
+            Assert.AreEqual("Stock1", group1[0]);
+            Assert.AreEqual("Aux1", group1[1]);
+            Assert.IsTrue(Variables.Groups.Exists("Group2"));
+            var group2 = Variables.Groups.Get("Group2").Entities;
+            Assert.AreEqual("Stock2", group2[0]);
         }
     }
 }

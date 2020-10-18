@@ -25,12 +25,14 @@ namespace SymuSysDynTests.Model
         private readonly Variable _variable = new Variable("0");
         private readonly Variable _variable1 = new Variable("1");
         private readonly Variables _variables = new Variables();
+        private Group _group;
         private List<Variable> _variableList;
 
         [TestInitialize]
         public void Initialize()
         {
             _variableList = new List<Variable> {_variable, _variable1};
+            _group = new Group("0", new List<string> {_variable.Name});
         }
 
         [TestMethod]
@@ -103,8 +105,9 @@ namespace SymuSysDynTests.Model
             Assert.AreEqual(_variable.Name, _variables.Names.ElementAt(0));
             Assert.AreEqual(_variable1.Name, _variables.Names.ElementAt(1));
         }
+
         /// <summary>
-        /// Passing test
+        ///     Passing test
         /// </summary>
         [TestMethod]
         public void GetValueTest()
@@ -112,8 +115,9 @@ namespace SymuSysDynTests.Model
             _variables.AddRange(_variableList);
             Assert.AreEqual(_variable.Value, _variables.GetValue(_variable.Name));
         }
+
         /// <summary>
-        /// Non passing tests
+        ///     Non passing tests
         /// </summary>
         [TestMethod]
         public void GetValueTest1()
@@ -122,6 +126,7 @@ namespace SymuSysDynTests.Model
             Assert.ThrowsException<ArgumentNullException>(() => _variables.GetValue(string.Empty));
             Assert.ThrowsException<NullReferenceException>(() => _variables.GetValue("noVariableName"));
         }
+
         [TestMethod]
         public void SetValueTest()
         {
@@ -137,6 +142,12 @@ namespace SymuSysDynTests.Model
             Assert.ThrowsException<ArgumentNullException>(() => _variables.SetValue(string.Empty, 0));
             Assert.ThrowsException<NullReferenceException>(() => _variables.SetValue("noVariableName", 0));
         }
-        
+
+        [TestMethod]
+        public void GetGroupVariablesTest()
+        {
+            var groupVariables = _variables.GetGroupVariables(_group);
+            Assert.AreEqual(1, groupVariables.Count());
+        }
     }
 }

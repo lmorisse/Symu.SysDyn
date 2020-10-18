@@ -23,6 +23,13 @@ namespace Symu.SysDyn.Simulation
 {
     public class StateMachine
     {
+        public StateMachine()
+        {
+            Variables = new Variables();
+            Simulation = new SimSpecs();
+            Simulation.OnTimer += OnTimer;
+        }
+
         public StateMachine(string xmlFile, bool validate = true)
         {
             var xmlParser = new XmlParser(xmlFile, validate);
@@ -38,7 +45,7 @@ namespace Symu.SysDyn.Simulation
         public ResultCollection Results { get; } = new ResultCollection();
 
         /// <summary>
-        /// Process compute all iterations from Simulation.Start to Simulation.Stop
+        ///     Process compute all iterations from Simulation.Start to Simulation.Stop
         /// </summary>
         public void Process()
         {
@@ -49,7 +56,7 @@ namespace Symu.SysDyn.Simulation
         }
 
         /// <summary>
-        /// Once stock value is evaluated with initial equation, the real equation based on inflows and outflows is setted
+        ///     Once stock value is evaluated with initial equation, the real equation based on inflows and outflows is setted
         /// </summary>
         private void SetStocksEquations()
         {
@@ -60,7 +67,7 @@ namespace Symu.SysDyn.Simulation
         }
 
         /// <summary>
-        /// Compute one iteration
+        ///     Compute one iteration
         /// </summary>
         public void Compute()
         {
@@ -77,10 +84,10 @@ namespace Symu.SysDyn.Simulation
                     waitingParents = withChildren.Distinct().ToList(); //no duplicates
                 }
             } while (waitingParents.Count > 0);
-
         }
+
         /// <summary>
-        /// Timer has a new value, we store the results
+        ///     Timer has a new value, we store the results
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -147,7 +154,7 @@ namespace Symu.SysDyn.Simulation
                 throw new ArgumentNullException(nameof(variable));
             }
 
-            var value = ManagedEquation.Compute(variable, Variables, Simulation);
+            var value = variable.Equation.Compute(Variables, Simulation);
 
             variable.Value = variable.Function?.GetOutputWithBounds(value) ?? value;
 
@@ -160,6 +167,14 @@ namespace Symu.SysDyn.Simulation
         public Graph GetGraph()
         {
             return Graph.CreateInstance(Variables);
+        }
+
+        /// <summary>
+        ///     Create a SubGraph of variables via a group name using QuickGraph
+        /// </summary>
+        public Graph GetSubGraph(string groupName)
+        {
+            return Graph.CreateInstance(Variables.GetGroupVariables(groupName));
         }
     }
 }

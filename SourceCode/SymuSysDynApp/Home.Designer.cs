@@ -28,13 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
-            Syncfusion.Windows.Forms.Chart.ChartSeries chartSeries1 = new Syncfusion.Windows.Forms.Chart.ChartSeries();
-            Syncfusion.Windows.Forms.Chart.ChartCustomShapeInfo chartCustomShapeInfo1 = new Syncfusion.Windows.Forms.Chart.ChartCustomShapeInfo();
-            Syncfusion.Windows.Forms.Chart.ChartLineInfo chartLineInfo1 = new Syncfusion.Windows.Forms.Chart.ChartLineInfo();
-            Syncfusion.Windows.Forms.Chart.ChartSeries chartSeries2 = new Syncfusion.Windows.Forms.Chart.ChartSeries();
-            Syncfusion.Windows.Forms.Chart.ChartCustomShapeInfo chartCustomShapeInfo2 = new Syncfusion.Windows.Forms.Chart.ChartCustomShapeInfo();
-            Syncfusion.Windows.Forms.Chart.ChartSeries chartSeries3 = new Syncfusion.Windows.Forms.Chart.ChartSeries();
-            Syncfusion.Windows.Forms.Chart.ChartCustomShapeInfo chartCustomShapeInfo3 = new Syncfusion.Windows.Forms.Chart.ChartCustomShapeInfo();
+            Syncfusion.Windows.Forms.Chart.ChartSeries chartSeries4 = new Syncfusion.Windows.Forms.Chart.ChartSeries();
+            Syncfusion.Windows.Forms.Chart.ChartCustomShapeInfo chartCustomShapeInfo4 = new Syncfusion.Windows.Forms.Chart.ChartCustomShapeInfo();
+            Syncfusion.Windows.Forms.Chart.ChartLineInfo chartLineInfo2 = new Syncfusion.Windows.Forms.Chart.ChartLineInfo();
+            Syncfusion.Windows.Forms.Chart.ChartSeries chartSeries5 = new Syncfusion.Windows.Forms.Chart.ChartSeries();
+            Syncfusion.Windows.Forms.Chart.ChartCustomShapeInfo chartCustomShapeInfo5 = new Syncfusion.Windows.Forms.Chart.ChartCustomShapeInfo();
+            Syncfusion.Windows.Forms.Chart.ChartSeries chartSeries6 = new Syncfusion.Windows.Forms.Chart.ChartSeries();
+            Syncfusion.Windows.Forms.Chart.ChartCustomShapeInfo chartCustomShapeInfo6 = new Syncfusion.Windows.Forms.Chart.ChartCustomShapeInfo();
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.cbVariables = new System.Windows.Forms.ComboBox();
@@ -47,12 +47,14 @@
             this.tbStart = new System.Windows.Forms.TextBox();
             this.tbDt = new System.Windows.Forms.TextBox();
             this.Simulation = new System.Windows.Forms.GroupBox();
-            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.picImage = new System.Windows.Forms.PictureBox();
+            this.lblTime = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
             this.tbPause = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.lblTime = new System.Windows.Forms.Label();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.picImage = new System.Windows.Forms.PictureBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.cbGroups = new System.Windows.Forms.ComboBox();
             this.Simulation.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picImage)).BeginInit();
             this.SuspendLayout();
@@ -116,56 +118,56 @@
             this.chartControl1.PrimaryYAxis.LogLabelsDisplayMode = Syncfusion.Windows.Forms.Chart.LogLabelsDisplayMode.Default;
             this.chartControl1.PrimaryYAxis.Margin = true;
             this.chartControl1.PrimaryYAxis.TitleColor = System.Drawing.SystemColors.ControlText;
-            chartSeries1.FancyToolTip.ResizeInsideSymbol = true;
-            chartSeries1.Name = "Default0";
-            chartSeries1.Resolution = 0D;
-            chartSeries1.StackingGroup = "Default Group";
-            chartSeries1.Style.AltTagFormat = "";
-            chartSeries1.Style.Border.Width = 2F;
-            chartSeries1.Style.DisplayShadow = true;
-            chartSeries1.Style.DrawTextShape = false;
-            chartLineInfo1.Alignment = System.Drawing.Drawing2D.PenAlignment.Center;
-            chartLineInfo1.Color = System.Drawing.SystemColors.ControlText;
-            chartLineInfo1.DashPattern = null;
-            chartLineInfo1.DashStyle = System.Drawing.Drawing2D.DashStyle.Solid;
-            chartLineInfo1.Width = 1F;
-            chartCustomShapeInfo1.Border = chartLineInfo1;
-            chartCustomShapeInfo1.Color = System.Drawing.SystemColors.HighlightText;
-            chartCustomShapeInfo1.Type = Syncfusion.Windows.Forms.Chart.ChartCustomShape.Square;
-            chartSeries1.Style.TextShape = chartCustomShapeInfo1;
-            chartSeries1.Text = "Default0";
-            chartSeries1.Type = Syncfusion.Windows.Forms.Chart.ChartSeriesType.Spline;
-            chartSeries2.FancyToolTip.ResizeInsideSymbol = true;
-            chartSeries2.Name = "Default1";
-            chartSeries2.Resolution = 0D;
-            chartSeries2.StackingGroup = "Default Group";
-            chartSeries2.Style.AltTagFormat = "";
-            chartSeries2.Style.Border.Width = 2F;
-            chartSeries2.Style.DisplayShadow = true;
-            chartSeries2.Style.DrawTextShape = false;
-            chartCustomShapeInfo2.Border = chartLineInfo1;
-            chartCustomShapeInfo2.Color = System.Drawing.SystemColors.HighlightText;
-            chartCustomShapeInfo2.Type = Syncfusion.Windows.Forms.Chart.ChartCustomShape.Square;
-            chartSeries2.Style.TextShape = chartCustomShapeInfo2;
-            chartSeries2.Text = "Default1";
-            chartSeries2.Type = Syncfusion.Windows.Forms.Chart.ChartSeriesType.Spline;
-            chartSeries3.FancyToolTip.ResizeInsideSymbol = true;
-            chartSeries3.Name = "Default2";
-            chartSeries3.Resolution = 0D;
-            chartSeries3.StackingGroup = "Default Group";
-            chartSeries3.Style.AltTagFormat = "";
-            chartSeries3.Style.Border.Width = 2F;
-            chartSeries3.Style.DisplayShadow = true;
-            chartSeries3.Style.DrawTextShape = false;
-            chartCustomShapeInfo3.Border = chartLineInfo1;
-            chartCustomShapeInfo3.Color = System.Drawing.SystemColors.HighlightText;
-            chartCustomShapeInfo3.Type = Syncfusion.Windows.Forms.Chart.ChartCustomShape.Square;
-            chartSeries3.Style.TextShape = chartCustomShapeInfo3;
-            chartSeries3.Text = "Default2";
-            chartSeries3.Type = Syncfusion.Windows.Forms.Chart.ChartSeriesType.Spline;
-            this.chartControl1.Series.Add(chartSeries1);
-            this.chartControl1.Series.Add(chartSeries2);
-            this.chartControl1.Series.Add(chartSeries3);
+            chartSeries4.FancyToolTip.ResizeInsideSymbol = true;
+            chartSeries4.Name = "Default0";
+            chartSeries4.Resolution = 0D;
+            chartSeries4.StackingGroup = "Default Group";
+            chartSeries4.Style.AltTagFormat = "";
+            chartSeries4.Style.Border.Width = 2F;
+            chartSeries4.Style.DisplayShadow = true;
+            chartSeries4.Style.DrawTextShape = false;
+            chartLineInfo2.Alignment = System.Drawing.Drawing2D.PenAlignment.Center;
+            chartLineInfo2.Color = System.Drawing.SystemColors.ControlText;
+            chartLineInfo2.DashPattern = null;
+            chartLineInfo2.DashStyle = System.Drawing.Drawing2D.DashStyle.Solid;
+            chartLineInfo2.Width = 1F;
+            chartCustomShapeInfo4.Border = chartLineInfo2;
+            chartCustomShapeInfo4.Color = System.Drawing.SystemColors.HighlightText;
+            chartCustomShapeInfo4.Type = Syncfusion.Windows.Forms.Chart.ChartCustomShape.Square;
+            chartSeries4.Style.TextShape = chartCustomShapeInfo4;
+            chartSeries4.Text = "Default0";
+            chartSeries4.Type = Syncfusion.Windows.Forms.Chart.ChartSeriesType.Spline;
+            chartSeries5.FancyToolTip.ResizeInsideSymbol = true;
+            chartSeries5.Name = "Default1";
+            chartSeries5.Resolution = 0D;
+            chartSeries5.StackingGroup = "Default Group";
+            chartSeries5.Style.AltTagFormat = "";
+            chartSeries5.Style.Border.Width = 2F;
+            chartSeries5.Style.DisplayShadow = true;
+            chartSeries5.Style.DrawTextShape = false;
+            chartCustomShapeInfo5.Border = chartLineInfo2;
+            chartCustomShapeInfo5.Color = System.Drawing.SystemColors.HighlightText;
+            chartCustomShapeInfo5.Type = Syncfusion.Windows.Forms.Chart.ChartCustomShape.Square;
+            chartSeries5.Style.TextShape = chartCustomShapeInfo5;
+            chartSeries5.Text = "Default1";
+            chartSeries5.Type = Syncfusion.Windows.Forms.Chart.ChartSeriesType.Spline;
+            chartSeries6.FancyToolTip.ResizeInsideSymbol = true;
+            chartSeries6.Name = "Default2";
+            chartSeries6.Resolution = 0D;
+            chartSeries6.StackingGroup = "Default Group";
+            chartSeries6.Style.AltTagFormat = "";
+            chartSeries6.Style.Border.Width = 2F;
+            chartSeries6.Style.DisplayShadow = true;
+            chartSeries6.Style.DrawTextShape = false;
+            chartCustomShapeInfo6.Border = chartLineInfo2;
+            chartCustomShapeInfo6.Color = System.Drawing.SystemColors.HighlightText;
+            chartCustomShapeInfo6.Type = Syncfusion.Windows.Forms.Chart.ChartCustomShape.Square;
+            chartSeries6.Style.TextShape = chartCustomShapeInfo6;
+            chartSeries6.Text = "Default2";
+            chartSeries6.Type = Syncfusion.Windows.Forms.Chart.ChartSeriesType.Spline;
+            this.chartControl1.Series.Add(chartSeries4);
+            this.chartControl1.Series.Add(chartSeries5);
+            this.chartControl1.Series.Add(chartSeries6);
             this.chartControl1.Size = new System.Drawing.Size(628, 480);
             this.chartControl1.TabIndex = 6;
             this.chartControl1.Text = "chartControl1";
@@ -249,6 +251,41 @@
             this.Simulation.TabStop = false;
             this.Simulation.Text = "Simulation";
             // 
+            // lblTime
+            // 
+            this.lblTime.AutoSize = true;
+            this.lblTime.Location = new System.Drawing.Point(501, 58);
+            this.lblTime.Name = "lblTime";
+            this.lblTime.Size = new System.Drawing.Size(16, 17);
+            this.lblTime.TabIndex = 16;
+            this.lblTime.Text = "0";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(414, 58);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(39, 17);
+            this.label6.TabIndex = 15;
+            this.label6.Text = "Time";
+            // 
+            // tbPause
+            // 
+            this.tbPause.Location = new System.Drawing.Point(238, 69);
+            this.tbPause.Name = "tbPause";
+            this.tbPause.Size = new System.Drawing.Size(47, 22);
+            this.tbPause.TabIndex = 14;
+            this.tbPause.TextChanged += new System.EventHandler(this.tbPause_TextChanged);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(173, 72);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(48, 17);
+            this.label5.TabIndex = 13;
+            this.label5.Text = "Pause";
+            // 
             // openFileDialog1
             // 
             this.openFileDialog1.DefaultExt = "xmile";
@@ -269,46 +306,31 @@
             this.picImage.TabIndex = 15;
             this.picImage.TabStop = false;
             // 
-            // tbPause
+            // label7
             // 
-            this.tbPause.Location = new System.Drawing.Point(238, 69);
-            this.tbPause.Name = "tbPause";
-            this.tbPause.Size = new System.Drawing.Size(47, 22);
-            this.tbPause.TabIndex = 14;
-            this.tbPause.TextChanged += new System.EventHandler(this.tbPause_TextChanged);
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(1042, 36);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(69, 21);
+            this.label7.TabIndex = 17;
+            this.label7.Text = "Groups";
             // 
-            // label5
+            // cbGroups
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(173, 72);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(60, 21);
-            this.label5.TabIndex = 13;
-            this.label5.Text = "Pause";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(414, 58);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(49, 21);
-            this.label6.TabIndex = 15;
-            this.label6.Text = "Time";
-            // 
-            // lblTime
-            // 
-            this.lblTime.AutoSize = true;
-            this.lblTime.Location = new System.Drawing.Point(501, 58);
-            this.lblTime.Name = "lblTime";
-            this.lblTime.Size = new System.Drawing.Size(20, 21);
-            this.lblTime.TabIndex = 16;
-            this.lblTime.Text = "0";
+            this.cbGroups.FormattingEnabled = true;
+            this.cbGroups.Location = new System.Drawing.Point(1117, 33);
+            this.cbGroups.Name = "cbGroups";
+            this.cbGroups.Size = new System.Drawing.Size(121, 24);
+            this.cbGroups.TabIndex = 18;
+            this.cbGroups.SelectedIndexChanged += new System.EventHandler(this.cbGroups_SelectedIndexChanged);
             // 
             // Home
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1529, 708);
+            this.Controls.Add(this.cbGroups);
+            this.Controls.Add(this.label7);
             this.Controls.Add(this.picImage);
             this.Controls.Add(this.Simulation);
             this.Controls.Add(this.chartControl1);
@@ -319,6 +341,7 @@
             this.Simulation.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picImage)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -342,6 +365,8 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label lblTime;
         private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.ComboBox cbGroups;
     }
 }
 

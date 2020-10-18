@@ -1,102 +1,145 @@
-﻿using System;
+﻿#region Licence
+
+// Description: SymuSysDyn - SymuSysDynTests
+// Website: https://symu.org
+// Copyright: (c) 2020 laurent morisseau
+// License : the program is distributed under the terms of the GNU General Public License
+
+#endregion
+
+#region using directives
+
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Symu.SysDyn.Simulation;
 
+#endregion
 
 namespace SymuSysDynTests.Simulation
 {
-    [TestClass()]
+    [TestClass]
     public class SimSpecsTests
     {
-        private SimSpecs _sim = new SimSpecs(0,10);
+        private SimSpecs _sim = new SimSpecs(0, 10);
         private bool _triggered;
-        
+
         /// <summary>
-        /// DT = 1, no pause
+        ///     DT = 1, no pause
         /// </summary>
-        [TestMethod()]
+        [TestMethod]
         public void RunTest()
         {
-            while (_sim.Run()) {}
+            while (_sim.Run())
+            {
+            }
+
             Assert.AreEqual(10, _sim.Time);
         }
+
         /// <summary>
-        /// DT = 1, pause 5
+        ///     DT = 1, pause 5
         /// </summary>
-        [TestMethod()]
+        [TestMethod]
         public void RunTest1()
         {
             _sim.Pause = true;
             _sim.PauseInterval = 5;
-            while (_sim.Run()) { }
+            while (_sim.Run())
+            {
+            }
+
             Assert.AreEqual(5, _sim.Time);
             Assert.AreEqual(5, _sim.Step);
-            while (_sim.Run()) { }
+            while (_sim.Run())
+            {
+            }
+
             Assert.AreEqual(10, _sim.Time);
             Assert.AreEqual(10, _sim.Step);
         }
+
         /// <summary>
-        /// DT > 1
+        ///     DT > 1
         /// </summary>
-        [TestMethod()]
+        [TestMethod]
         public void RunTest2()
         {
             Assert.ThrowsException<ArgumentOutOfRangeException>(() => _sim.DeltaTime = 2);
             Assert.ThrowsException<ArgumentOutOfRangeException>(() => _sim.DeltaTime = 0);
-        }       
+        }
+
         /// <summary>
-        /// DT < 1, no pause
+        ///     DT < 1, no pause
         /// </summary>
-        [TestMethod()]
+        [TestMethod]
         public void RunTest3()
         {
             _sim.DeltaTime = 0.25F;
-            while (_sim.Run()) { }
+            while (_sim.Run())
+            {
+            }
+
             Assert.AreEqual(10, _sim.Time);
             Assert.AreEqual(40, _sim.Step);
-        }        
+        }
+
         /// <summary>
-        /// DT < 1, pause 5
+        ///     DT < 1, pause 5
         /// </summary>
-        [TestMethod()]
+        [TestMethod]
         public void RunTest4()
         {
             _sim.Pause = true;
             _sim.PauseInterval = 5;
             _sim.DeltaTime = 0.25F;
-            while (_sim.Run()) { }
+            while (_sim.Run())
+            {
+            }
+
             Assert.AreEqual(5, _sim.Time);
             Assert.AreEqual(20, _sim.Step);
-            while (_sim.Run()) { }
+            while (_sim.Run())
+            {
+            }
+
             Assert.AreEqual(10, _sim.Time);
             Assert.AreEqual(40, _sim.Step);
         }
+
         /// <summary>
-        /// Start = stop 
+        ///     Start = stop
         /// </summary>
-        [TestMethod()]
+        [TestMethod]
         public void RunTest5()
         {
             _sim = new SimSpecs(0, 0);
-            while (_sim.Run()) { }
+            while (_sim.Run())
+            {
+            }
+
             Assert.AreEqual(0, _sim.Time);
             Assert.AreEqual(0, _sim.Step);
         }
+
         /// <summary>
-        /// Start = stop , DT < 1
+        ///     Start = stop , DT < 1
         /// </summary>
-        [TestMethod()]
+        [TestMethod]
         public void RunTest6()
         {
             _sim = new SimSpecs(0, 0) {DeltaTime = 0.25F};
-            while (_sim.Run()) { }
+            while (_sim.Run())
+            {
+            }
+
             Assert.AreEqual(0, _sim.Time);
             Assert.AreEqual(0, _sim.Step);
         }
+
         /// <summary>
-        /// DT == 1
+        ///     DT == 1
         /// </summary>
-        [TestMethod()]
+        [TestMethod]
         public void TimeManagementTest()
         {
             _sim.OnTimer += OnTimer;
@@ -104,10 +147,11 @@ namespace SymuSysDynTests.Simulation
             _sim.TimeManagement();
             Assert.IsTrue(_triggered);
         }
+
         /// <summary>
-        /// DT < 1
+        ///     DT < 1
         /// </summary>
-        [TestMethod()]
+        [TestMethod]
         public void TimeManagementTest1()
         {
             _sim.OnTimer += OnTimer;
@@ -119,8 +163,9 @@ namespace SymuSysDynTests.Simulation
             _sim.TimeManagement();
             Assert.IsTrue(_triggered);
         }
+
         /// <summary>
-        /// Timer has a new value, we store the results
+        ///     Timer has a new value, we store the results
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>

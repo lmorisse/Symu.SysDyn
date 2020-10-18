@@ -12,7 +12,6 @@
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Symu.SysDyn.Model;
-using Symu.SysDyn.Parser;
 
 #endregion
 
@@ -33,7 +32,7 @@ namespace SymuSysDynTests.Model
             Assert.AreEqual("Name", _stock.Name);
             CollectionAssert.AreEqual(_inflows, _stock.Inflow);
             CollectionAssert.AreEqual(_outflows, _stock.Outflow);
-            Assert.AreEqual("1", _stock.Equation);
+            Assert.AreEqual("1", _stock.Equation.ToString());
             Assert.AreEqual(1, _stock.Value);
             Assert.AreEqual(0, _stock.Children.Count);
         }
@@ -46,7 +45,7 @@ namespace SymuSysDynTests.Model
         {
             _stock = new Stock("name", Equation1, new List<string>(), new List<string>());
             _stock.SetStockEquation();
-            Assert.AreEqual(_stock.Name, _stock.Equation);
+            Assert.AreEqual(_stock.Name, _stock.Equation.ToString());
             Assert.AreEqual(0, _stock.Children.Count);
         }
 
@@ -58,7 +57,7 @@ namespace SymuSysDynTests.Model
         {
             _stock = new Stock("name", Equation1, _inflows, new List<string>());
             _stock.SetStockEquation();
-            Assert.AreEqual("Name + Dt * ( Inflow1 + Inflow2 )", _stock.Equation);
+            Assert.AreEqual("Name + Dt0 * ( Inflow1 + Inflow2 )", _stock.Equation.ToString());
             Assert.AreEqual(2, _stock.Children.Count);
         }
 
@@ -70,7 +69,7 @@ namespace SymuSysDynTests.Model
         {
             _stock = new Stock("name", Equation1, new List<string>(), _outflows);
             _stock.SetStockEquation();
-            Assert.AreEqual("Name + Dt * ( - Outflow1 - Outflow2 )", _stock.Equation);
+            Assert.AreEqual("Name + Dt0 * ( - Outflow1 - Outflow2 )", _stock.Equation.ToString());
             Assert.AreEqual(2, _stock.Children.Count);
         }
 
@@ -82,7 +81,7 @@ namespace SymuSysDynTests.Model
         {
             _stock = new Stock("name", Equation1, _inflows, _outflows);
             _stock.SetStockEquation();
-            Assert.AreEqual("Name + Dt * ( Inflow1 + Inflow2 - Outflow1 - Outflow2 )", _stock.Equation);
+            Assert.AreEqual("Name + Dt0 * ( Inflow1 + Inflow2 - Outflow1 - Outflow2 )", _stock.Equation.ToString());
             Assert.AreEqual(4, _stock.Children.Count);
         }
     }

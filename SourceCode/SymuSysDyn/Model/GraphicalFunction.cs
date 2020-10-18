@@ -13,28 +13,21 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using static Symu.Common.Constants;
+
 #endregion
 
 namespace Symu.SysDyn.Model
 {
     /// <summary>
-    /// Graphical functions are alternately called lookup functions and table functions. They are used to describe
-    /// an arbitrary relationship between one input variable and one output variable.The domain of these
-    /// functions is consistently referred to as x and the range is consistently referred to as y.
-    /// A graphical function MUST be defined either with an x-axis scale and a set of y-values(evenly spaced
-    /// across the given x-axis scale) or with a set of x-y pairs.
+    ///     Graphical functions are alternately called lookup functions and table functions. They are used to describe
+    ///     an arbitrary relationship between one input variable and one output variable.The domain of these
+    ///     functions is consistently referred to as x and the range is consistently referred to as y.
+    ///     A graphical function MUST be defined either with an x-axis scale and a set of y-values(evenly spaced
+    ///     across the given x-axis scale) or with a set of x-y pairs.
     /// </summary>
     public class GraphicalFunction
     {
-
-        public float[] XPoints { get; }
-        public float[] YPoints { get; }
-
-        public Range XRange { get; }
-        public Range YRange { get; }
-
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="xPts">Optional</param>
         /// <param name="yPts"></param>
@@ -56,13 +49,14 @@ namespace Symu.SysDyn.Model
             YRange = new Range(yRange);
 
             var yTable = ParseStringTable(yPts);
-            var xTable = xPts == null? CreateXTable(yTable.Length) : ParseStringTable(xPts);
+            var xTable = xPts == null ? CreateXTable(yTable.Length) : ParseStringTable(xPts);
 
             XPoints = new float[xTable.Length];
             for (var counter = 0; counter < xTable.Length; counter++)
             {
                 XPoints[counter] = xTable[counter];
             }
+
             YPoints = new float[yTable.Length];
             for (var counter = 0; counter < yTable.Length; counter++)
             {
@@ -71,8 +65,15 @@ namespace Symu.SysDyn.Model
 
             ChecksRange();
         }
+
+        public float[] XPoints { get; }
+        public float[] YPoints { get; }
+
+        public Range XRange { get; }
+        public Range YRange { get; }
+
         /// <summary>
-        /// Check that Range and Points are 
+        ///     Check that Range and Points are
         /// </summary>
         public void ChecksRange()
         {
@@ -113,10 +114,10 @@ namespace Symu.SysDyn.Model
             {
                 throw new ArgumentOutOfRangeException();
             }
+
             var xTable = new float[divisions];
             if (divisions > 1)
             {
-
                 var increment = difference / (divisions - 1);
 
                 for (var counter = 0; counter < divisions; counter++)
@@ -129,6 +130,7 @@ namespace Symu.SysDyn.Model
                 xTable[0] = XRange.Min;
                 xTable[1] = XRange.Max;
             }
+
             return xTable;
         }
 

@@ -10,11 +10,12 @@
 namespace Symu.SysDyn.Model
 {
     /// <summary>
-    /// Flows represent rates of change of the stocks. 
+    ///     Flows represent rates of change of the stocks.
     /// </summary>
     public class Flow : Variable
     {
-        public Flow(string name, string eqn, GraphicalFunction graph, Range range, Range scale) : base(name, eqn, graph, range, scale)
+        public Flow(string name, string eqn, GraphicalFunction graph, Range range, Range scale) : base(name, eqn, graph,
+            range, scale)
         {
             Eqn = eqn;
             Value = CheckInitialValue(eqn);

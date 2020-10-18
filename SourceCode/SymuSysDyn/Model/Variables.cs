@@ -24,6 +24,7 @@ namespace Symu.SysDyn.Model
     public class Variables : IEnumerable<Variable>
     {
         private readonly List<Variable> _variables = new List<Variable>();
+        public Groups Groups { get; } = new Groups();
         public IEnumerable<Variable> GetNotUpdated => _variables.Where(x => !x.Updated);
 
         public IEnumerable<string> Names => _variables.Select(x => x.Name);
@@ -70,6 +71,7 @@ namespace Symu.SysDyn.Model
         {
             return _variables.Find(x => x.Name == name);
         }
+
         /// <summary>
         ///     returns current value of a node
         /// </summary>
@@ -96,6 +98,7 @@ namespace Symu.SysDyn.Model
             {
                 throw new ArgumentNullException(nameof(name));
             }
+
             if (!Exists(name))
             {
                 throw new NullReferenceException(nameof(name));
@@ -111,6 +114,37 @@ namespace Symu.SysDyn.Model
                 variable.Updated = false;
                 variable.OldValue = variable.Value;
             }
+        }
+
+        /// <summary>
+        ///     Get the list of variables of a group
+        /// </summary>
+        /// <param name="groupName"></param>
+        /// <returns></returns>
+        public Variables GetGroupVariables(string groupName)
+        {
+            return GetGroupVariables(Groups.Get(groupName));
+        }
+
+        /// <summary>
+        ///     Get the list of variables of a group
+        /// </summary>
+        /// <param name="group"></param>
+        /// <returns></returns>
+        public Variables GetGroupVariables(Group group)
+        {
+            if (group == null)
+            {
+                throw new ArgumentNullException(nameof(group));
+            }
+
+            var variables = new Variables();
+            foreach (var entity in group.Entities)
+            {
+                variables.Add(Get(entity));
+            }
+
+            return variables;
         }
 
         #region IEnumerator members
@@ -130,6 +164,5 @@ namespace Symu.SysDyn.Model
         }
 
         #endregion
-
     }
 }

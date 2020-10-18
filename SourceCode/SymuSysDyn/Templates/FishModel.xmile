@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
 <xmile version="1.0" xmlns="http://docs.oasis-open.org/xmile/ns/XMILE/v1.0">
   <header>
     <name>FishModel</name>
@@ -7,14 +8,14 @@
     </options>
     <product version="1.0">Hand Coded XMILE from Strategic Modelling and Business Dynamics book</product>
   </header>
-  <sim_specs method="Euler" time_units="Years" pause="5" >
+  <sim_specs method="Euler" time_units="Years" pause="5">
     <start>0</start>
     <stop>40</stop>
     <dt>0.25</dt>
   </sim_specs>
   <model>
     <variables>
-        <stock name="Fish_stock">
+      <stock name="Fish_stock">
         <eqn>500  {fish}</eqn>
         <scale min="0" max="4000" />
         <inflow>New_fish_per_year</inflow>
@@ -72,7 +73,7 @@
       </flow>
       <stock name="Ships_in_harbour">
         <eqn>0  {ships}</eqn>
-        <range min="0" max="10"/>
+        <range min="0" max="10" />
         <inflow>Ships_moved_to_harbour_this_year</inflow>
         <non_negative />
       </stock>

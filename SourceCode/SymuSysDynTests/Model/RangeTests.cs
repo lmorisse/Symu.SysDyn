@@ -9,10 +9,8 @@
 
 #region using directives
 
-using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Symu.SysDyn.Model;
-using Symu.SysDyn.Parser;
 
 #endregion
 
@@ -21,9 +19,9 @@ namespace SymuSysDynTests.Model
     [TestClass]
     public class RangeTests
     {
+        private readonly float[] _koPoints = {0, 1, -1, 3, 12};
+        private readonly float[] _okPoints = {0, 1, 2, 3};
         private readonly Range _range = new Range(0, 10);
-        private readonly float[] _okPoints = { 0, 1, 2, 3 };
-        private readonly float[] _koPoints = { 0, 1, -1, 3, 12 };
 
         [TestMethod]
         public void CheckTest()
@@ -31,6 +29,7 @@ namespace SymuSysDynTests.Model
             Assert.IsTrue(_range.Check(_okPoints));
             Assert.IsFalse(_range.Check(_koPoints));
         }
+
         [TestMethod]
         public void GetOutputInsideRangeTest()
         {

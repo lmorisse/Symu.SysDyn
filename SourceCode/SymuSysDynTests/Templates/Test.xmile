@@ -4,7 +4,7 @@
   <header>
     <name>Test</name>
   </header>
-  <sim_specs method="Euler" time_units="Time" pause="10">
+  <sim_specs method="Euler" time_units="Months" pause="10">
     <start>0</start>
     <stop>10</stop>
     <dt>1</dt>
@@ -15,19 +15,19 @@
         <eqn>1</eqn>
         <inflow>inflow1</inflow>
         <outflow>outflow1</outflow>
-        <range min="-1" max="10"/>
-        <scale min="-1" max="10"/>
+        <range min="-1" max="10" />
+        <scale min="-1" max="10" />
         <non_negative />
       </stock>
       <flow name="inflow1">
         <eqn>stock2/2</eqn>
-        <range min="-1" max="10"/>
-        <scale min="-1" max="10"/>
+        <range min="-1" max="10" />
+        <scale min="-1" max="10" />
       </flow>
       <flow name="outflow1">
         <eqn>stock2*2</eqn>
-        <range max="10"/>
-        <scale min="-1"/>
+        <range max="10" />
+        <scale min="-1" />
         <non_negative />
       </flow>
       <stock name="stock2">
@@ -42,6 +42,13 @@
           <ypts>0,1</ypts>
         </gf>
       </aux>
+      <group name="group1">
+        <entity name="stock1" />
+        <entity name="aux1" />
+      </group>
+      <group name="group2">
+        <entity name="stock2" />
+      </group>
     </variables>
   </model>
 </xmile>

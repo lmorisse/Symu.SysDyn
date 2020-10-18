@@ -11,63 +11,71 @@
 
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 
 #endregion
 
-namespace Symu.SysDyn.Results
+namespace Symu.SysDyn.Model
 {
-    public class ResultCollection : IEnumerable<Result>
+    public class Groups : IEnumerable<Group>
     {
+        private readonly List<Group> _groups = new List<Group>();
+
         /// <summary>
-        ///     Key => iteration
-        ///     Value => Result
+        ///     Gets or sets the node with the specified name
         /// </summary>
-        private readonly Dictionary<int, Result> _result = new Dictionary<int, Result>();
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public Group this[string name] => Get(name);
 
         /// <summary>
         ///     Gets or sets the node with the specified index
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        public Result this[int index] => _result[index];
+        public Group this[int index] => _groups[index];
 
-        public int Count => _result.Count;
-
-        public void Add(Result result)
+        public void Add(Group group)
         {
-            Add(_result.Count, result);
+            if (!Contains(group))
+            {
+                _groups.Add(group);
+            }
         }
 
-        public void Add(int iteration, Result result)
+        public void AddRange(IEnumerable<Group> groups)
         {
-            _result.Add(iteration, result);
+            _groups.AddRange(groups);
         }
 
-        public IEnumerable<float> GetResults(string name)
+        public bool Contains(Group group)
         {
-            return _result.Values.ToList().Select(result => result.GetValue(name)).ToList();
+            return _groups.Contains(group);
         }
 
-        public void Clear()
+        public bool Exists(string name)
         {
-            _result.Clear();
+            return _groups.Exists(x => x.Name == name);
+        }
+
+        public Group Get(string name)
+        {
+            return _groups.Find(x => x.Name == name);
         }
 
         #region IEnumerator members
 
         /// <summary>Returns an enumerator that iterates through the collection.</summary>
         /// <returns>An enumerator that can be used to iterate through the collection.</returns>
-        public IEnumerator<Result> GetEnumerator()
+        public IEnumerator<Group> GetEnumerator()
         {
-            return _result.Values.GetEnumerator();
+            return _groups.GetEnumerator();
         }
 
         /// <summary>Returns an enumerator that iterates through a collection.</summary>
         /// <returns>An object that can be used to iterate through the collection.</returns>
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return GetEnumerator();
+            return _groups.GetEnumerator();
         }
 
         #endregion

@@ -18,7 +18,7 @@ using Symu.SysDyn.Model;
 
 namespace Symu.SysDyn.QuickGraph
 {
-    public class Graph : BidirectionalGraph<string, VariableEdge>
+    public class Graph : BidirectionalGraph<Variable, VariableEdge>
     {
         public Graph(bool allowParallelEdges) : base(allowParallelEdges)
         {
@@ -37,24 +37,40 @@ namespace Symu.SysDyn.QuickGraph
             }
 
             var graph = new Graph(true);
-            graph.AddVertexRange(variables.Select(x => x.Name).ToList());
+            graph.AddVertexRange(variables.ToList());
             foreach (var variable in variables)
             {
-                foreach (var child in variable.Children)
+                foreach (var childName in variable.Children)
                 {
+                    var child = variables.Get(childName);
                     VariableEdge edge;
                     // particular case : stock outflow
-                    if (variable is Stock stock && stock.Outflow.Contains(child))
+                    if (variable is Stock stock)
                     {
-                        edge = new VariableEdge(variable.Name, child);
+                        if (stock.Outflow.Contains(childName))
+                        {
+                            edge = new CausalLink(variable, child);
+                        }
+                        else if (stock.Inflow.Contains(childName))
+                        {
+                            edge = new CausalLink(child, variable);
+                        }
+                        else
+                        {
+                            edge = new InformationFlow(child, variable);
+                        }
                     }
                     else
                     {
-                        edge = new VariableEdge(child, variable.Name);
+                        edge = new InformationFlow(child, variable);
                     }
-                    graph.AddEdge(edge);
-                }
 
+                    // In case of subGraph
+                    if (edge.Source != null && edge.Target != null)
+                    {
+                        graph.AddEdge(edge);
+                    }
+                }
             }
 
             return graph;

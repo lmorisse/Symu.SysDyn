@@ -11,9 +11,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using Symu.SysDyn.Equations;
 using Symu.SysDyn.Parser;
-using Symu.SysDyn.Simulation;
 
 #endregion
 
@@ -21,7 +20,8 @@ namespace Symu.SysDyn.Model
 {
     /// <summary>
     ///     Core building block of a model, also called level or state. Stocks accumulate change.
-    ///     Use Stock when past event influence present event. Stocks are a kind of memory, storing the results of past actions.
+    ///     Use Stock when past event influence present event. Stocks are a kind of memory, storing the results of past
+    ///     actions.
     ///     Their value at the start of the simulation must be set as either a constant or with an initial equation.
     ///     The initial equation is evaluated only once, at the beginning of the simulation.
     /// </summary>
@@ -34,7 +34,9 @@ namespace Symu.SysDyn.Model
             Outflow = StringUtils.CleanNames(outflow);
             SetChildren();
         }
-        public Stock(string name, string eqn, List<string> inflow, List<string> outflow, GraphicalFunction graph, Range range, Range scale) : base(name, eqn, graph, range, scale)
+
+        public Stock(string name, string eqn, List<string> inflow, List<string> outflow, GraphicalFunction graph,
+            Range range, Range scale) : base(name, eqn, graph, range, scale)
         {
             Eqn = eqn;
             Inflow = StringUtils.CleanNames(inflow);
@@ -43,25 +45,27 @@ namespace Symu.SysDyn.Model
         }
 
         /// <summary>
-        /// stock(t) = stock(t - dt) + dt*(inflows(t - dt) – outflows(t - dt))
-        /// Re compute SetChildren with the new equation
+        ///     stock(t) = stock(t - dt) + dt*(inflows(t - dt) – outflows(t - dt))
+        ///     Re compute SetChildren with the new equation
         /// </summary>
         public void SetStockEquation()
         {
-            var equation = Name ;
-            var inflows = AggregateFlows(Inflow, Simulation.ManagedEquation.Plus);
-            var outflows = AggregateFlows(Outflow, Simulation.ManagedEquation.Minus);
+            var equation = Name;
+            var inflows = AggregateFlows(Inflow, EquationUtils.Plus);
+            var outflows = AggregateFlows(Outflow, EquationUtils.Minus);
             if (inflows.Length > 0 || outflows.Length > 0)
             {
-                equation += Simulation.ManagedEquation.Plus + "DT" + Simulation.ManagedEquation.Multiplication + Simulation.ManagedEquation.LParenthesis + inflows;
+                equation += EquationUtils.Plus + Dt.Value + EquationUtils.Multiplication + StringUtils.LParenthesis +
+                            inflows;
                 if (outflows.Length > 0)
                 {
-                    equation += Simulation.ManagedEquation.Minus + outflows;
+                    equation += EquationUtils.Minus + outflows;
                 }
-                equation += Simulation.ManagedEquation.RParenthesis;
+
+                equation += StringUtils.RParenthesis;
             }
 
-            Equation = ManagedEquation.Initialize(equation);
+            Equation = new ManagedEquation(equation);
 
             SetChildren();
         }

@@ -10,6 +10,7 @@
 #region using directives
 
 using QuickGraph;
+using Symu.SysDyn.Model;
 
 #endregion
 
@@ -19,31 +20,31 @@ namespace Symu.SysDyn.QuickGraph
     ///     Flow Represents the flow of the system being analyzed.
     ///     Flow is defined as an edge of stocks
     /// </summary>
-    public sealed class VariableEdge : IEdge<string>
+    public class VariableEdge : IEdge<Variable>
     {
-        public VariableEdge(string source, string target)
+        public VariableEdge(Variable source, Variable target)
         {
             Source = source;
             Target = target;
         }
 
-        #region IEdge<string> Members
+        #region IEdge<Variable> Members
 
         /// <summary>
         ///     Source stock is the outflow property of a stock
         /// </summary>
-        public string Source { get; }
+        public Variable Source { get; }
 
         /// <summary>
         ///     Target stock is the inflow property of a stock
         /// </summary>
-        public string Target { get; }
+        public Variable Target { get; }
 
         #endregion
 
         public override string ToString()
         {
-            return string.Concat(Source, " -> ", Target);
+            return string.Concat(Source.ToString(), " -> ", Target.ToString());
         }
     }
 }

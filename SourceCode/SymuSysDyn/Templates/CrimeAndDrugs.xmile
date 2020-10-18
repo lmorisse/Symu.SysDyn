@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<xmile version="1.0" xmlns="http://docs.oasis-open.org/xmile/ns/XMILE/v1.0">
+  <header>
+    <name>Crime and drug</name>
+    <options>
+      <uses_outputs />
+    </options>
+    <product version="1.0">Hand Coded XMILE from Strategic Modelling and Business Dynamics book</product>
+  </header>
+  <sim_specs method="Euler" time_units="Years" pause="5">
+    <start>0</start>
+    <stop>40</stop>
+    <dt>0.25</dt>
+  </sim_specs>
+  <model>
+    <variables>
+      <aux name="Average_Yield_\nper_Crime_Incident">
+        <eqn>1000  {£ per incident}&#x0D;</eqn>
+      </aux>
+      <aux name="Community_Sensitivity_to_Crime">
+        <eqn>5   {complaints per incident}</eqn>
+      </aux>
+      <aux name="Call_for_Police_Action">
+        <eqn>Drug_Related_Crime*Community_Sensitivity_to_Crime&#x0D;{complaints per month}</eqn>
+        <scale min="0" max="2400" />
+      </aux>
+      <stock name="Number_of_Police_Allocated_to_Drug_Busting">
+        <eqn>10  {police officers}</eqn>
+        <scale min="0" max="40" />
+        <inflow>Change_in_Allocation__of_Police</inflow>
+        <non_negative />
+      </stock>
+      <aux name="Indicated_Allocation_of_Police">
+        <eqn>Call_for_Police_Action</eqn>
+        <scale min="0" max="40" />
+        <gf>
+          <yscale min="0" max="100" />
+          <xpts>0,500,1000,1500,2000,2500,3000,3500,4000,4500,5000</xpts>
+          <ypts>10,10,12.5,16.5,26.5,47.5,69.5,81,88,93,95</ypts>
+        </gf>
+      </aux>
+      <flow name="Change_in_Allocation_\nof_Police">
+        <eqn>(Indicated_Allocation_of_Police-Number_of_Police_Allocated_to_Drug_Busting)/Time_to_Move_Staff   {police officers per month}</eqn>
+        <scale min="0" max="10" />
+      </flow>
+      <aux name="Drug_Seizures">
+        <eqn>Number_of_Police_Allocated_to_Drug_Busting*&#x0D;Police_Effectiveness_in_Drug_Busting  {kg per month}&#x0D;</eqn>
+        <scale min="0" max="400" />
+      </aux>
+      <aux name="Police_Effectiveness_in_Drug_Busting">
+        <eqn>10+STEP(0,12)  {kilograms per officer per month}&#x0D;</eqn>
+      </aux>
+      <aux name="Time_to_Move_Staff">
+        <eqn>3  {months}&#x0D;</eqn>
+      </aux>
+      <stock name="Street_Price">
+        <eqn>400   {£ per kg}&#x0D;</eqn>
+        <scale min="0" max="1000" />
+        <inflow>Change_in__Street_Price</inflow>
+        <non_negative />
+      </stock>
+      <flow name="Change_in_\nStreet_Price">
+        <eqn>Street_Price*Pressure_for_Price_Change  {£ per kg per month}</eqn>
+      </flow>
+      <aux name="Pressure_for\nPrice_Change">
+        <eqn>Drug_Supply_Gap</eqn>
+        <gf>
+          <yscale min="-0.25" max="0.25" />
+          <xpts>-1000,-800,-600,-400,-200,0,200,400,600,800,1000</xpts>
+          <ypts>-0.20250000000000001,-0.14249999999999999,-0.092499999999999999,-0.047500000000000001,-0.02,0,0.02,0.052499999999999998,0.105,0.1525,0.2225</ypts>
+        </gf>
+        <display x="775" y="620" color="blue" label_side="left" label_angle="168" />
+      </aux>
+      <aux name="Drug_Supply_Gap">
+        <eqn>Demand_for_Drugs-Supply_of_Drugs_on_the_Street  {kg per month}&#x0D;</eqn>
+        <scale min="0" max="1000" />
+      </aux>
+      <aux name="Demand_for_Drugs">
+        <eqn>500  {kg per month}&#x0D;</eqn>
+        <scale min="0" max="500" />
+      </aux>
+      <aux name="Supply_of_Drugs\non_the_Street">
+        <eqn>Total_Supply_of_Drugs-Drug_Seizures  {kg per month}&#x0D;</eqn>
+        <scale min="-500" max="500" />
+      </aux>
+      <stock name="Total_Supply_of_Drugs">
+        <eqn>500  {kg per month}&#x0D;</eqn>
+        <non_negative />
+      </stock>
+      <aux name="Funds_Required_to_Satisfy_Addiction">
+        <eqn>Demand_for_Drugs*Street_Price   {£ per month}&#x0A;</eqn>
+        <scale min="0" max="500000" />
+      </aux>
+      <aux name="Drug_Related_Crime">
+        <eqn>Funds_Required_to_Satisfy_Addiction/Average_Yield__per_Crime_Incident   {incidents per month}</eqn>
+        <scale min="100" max="600" />
+      </aux>
+      <group name="COMMUNITY">
+        <entity name="Community_Sensitivity_to_Crime" />
+        <entity name="Call_for_Police_Action" />
+      </group>
+      <group name="POLICE_DEPARTMENT">
+        <entity name="Time_to_Move_Staff" />
+        <entity name="Number_of_Police_Allocated_to_Drug_Busting" />
+        <entity name="Change_in_Allocation__of_Police" />
+        <entity name="Indicated_Allocation_of_Police" />
+        <entity name="Drug_Seizures" />
+        <entity name="Police_Effectiveness_in_Drug_Busting" />
+      </group>
+      <group name="STREET_MARKET">
+        <entity name="Pressure_for_Price_Change" />
+        <entity name="Street_Price" />
+        <entity name="Change_in__Street_Price" />
+        <entity name="Total_Supply_of_Drugs" />
+        <entity name="Drug_Supply_Gap" />
+        <entity name="Supply_of_Drugs_on_the_Street" />
+      </group>
+      <group name="WORLD_OF_THE_DRUG_USERS">
+        <entity name="Average_Yield__per_Crime_Incident" />
+        <entity name="Demand_for_Drugs" />
+        <entity name="Funds_Required_to_Satisfy_Addiction" />
+        <entity name="Drug_Related_Crime" />
+      </group>
+    </variables>
+  </model>
+</xmile>

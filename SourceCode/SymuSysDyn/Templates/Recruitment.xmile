@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
 <xmile version="1.0" xmlns="http://docs.oasis-open.org/xmile/ns/XMILE/v1.0">
   <header>
     <name>Recruitment</name>
@@ -7,7 +8,7 @@
     </options>
     <product version="1.0">Hand Coded XMILE from Strategic Modelling and Business Dynamics book</product>
   </header>
-  <sim_specs method="Euler" time_units="Months" pause="5" >
+  <sim_specs method="Euler" time_units="Months" pause="5">
     <start>0</start>
     <stop>40</stop>
     <dt>0.25</dt>
@@ -15,7 +16,7 @@
   <model>
     <variables>
       <stock name="instructors">
-        <eqn>10</eqn>
+        <eqn>0</eqn>
         <scale min="0" max="80" />
         <inflow>recruitment</inflow>
         <outflow>turnover</outflow>

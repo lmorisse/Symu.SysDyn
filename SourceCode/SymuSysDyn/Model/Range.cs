@@ -11,27 +11,20 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.Design;
 using System.Globalization;
 using System.Linq;
-
-using static Symu.Common.Constants;
 
 #endregion
 
 namespace Symu.SysDyn.Model
 {
     /// <summary>
-    /// Class for Range, scale, bounds, with a min and a max
+    ///     Class for Range, scale, bounds, with a min and a max
     /// </summary>
     public class Range
     {
-        public float Min { get; } = float.NegativeInfinity;
-
-        public float Max { get; } = float.PositiveInfinity;
-        
         /// <summary>
-        /// Constructor based on float values
+        ///     Constructor based on float values
         /// </summary>
         public Range(bool nonNegative)
         {
@@ -43,7 +36,7 @@ namespace Symu.SysDyn.Model
         }
 
         /// <summary>
-        /// Constructor based on float values
+        ///     Constructor based on float values
         /// </summary>
         /// <param name="min"></param>
         /// <param name="max"></param>
@@ -55,7 +48,7 @@ namespace Symu.SysDyn.Model
         }
 
         /// <summary>
-        /// Constructor based on string scale
+        ///     Constructor based on string scale
         /// </summary>
         /// <param name="stringScale">Optional</param>
         public Range(IReadOnlyList<string> stringScale)
@@ -66,16 +59,18 @@ namespace Symu.SysDyn.Model
                 {
                     Min = float.Parse(stringScale[0], CultureInfo.InvariantCulture);
                 }
+
                 if (!string.IsNullOrEmpty(stringScale[1]))
                 {
                     Max = float.Parse(stringScale[1], CultureInfo.InvariantCulture);
                 }
             }
+
             Check();
         }
 
         /// <summary>
-        /// Constructor based on string values
+        ///     Constructor based on string values
         /// </summary>
         /// <param name="min"></param>
         /// <param name="max"></param>
@@ -86,17 +81,24 @@ namespace Symu.SysDyn.Model
             {
                 Min = float.Parse(min, CultureInfo.InvariantCulture);
             }
+
             if (!string.IsNullOrEmpty(max))
             {
                 Max = float.Parse(max, CultureInfo.InvariantCulture);
             }
+
             if (nonNegative)
             {
                 // Value must be positive
                 Min = Math.Max(Min, 0);
             }
+
             Check();
         }
+
+        public float Min { get; } = float.NegativeInfinity;
+
+        public float Max { get; } = float.PositiveInfinity;
 
         private void Check()
         {
@@ -105,8 +107,9 @@ namespace Symu.SysDyn.Model
                 throw new ArgumentOutOfRangeException();
             }
         }
+
         /// <summary>
-        /// Check if a serie of points is in the range
+        ///     Check if a serie of points is in the range
         /// </summary>
         /// <param name="points"></param>
         /// <returns></returns>
@@ -127,12 +130,8 @@ namespace Symu.SysDyn.Model
             {
                 return Max;
             }
-            if (input < Min)
-            {
-                return Min;
-            }
 
-            return input;
+            return input < Min ? Min : input;
         }
     }
 }

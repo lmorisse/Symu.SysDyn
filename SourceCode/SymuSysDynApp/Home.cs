@@ -11,8 +11,6 @@
 
 using System;
 using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
@@ -58,13 +56,19 @@ namespace SymuSysDynApp
                 cbVariables.Items.AddRange(_stateMachine.Variables.Names.ToArray());
             }
 
+            cbGroups.Items.Clear();
+            if (_stateMachine.Variables.Groups.Any())
+            {
+                cbGroups.Items.AddRange(_stateMachine.Variables.Groups.ToArray());
+            }
+
+
             tbStart.Text = _stateMachine.Simulation.Start.ToString(CultureInfo.InvariantCulture);
             tbStop.Text = _stateMachine.Simulation.Stop.ToString(CultureInfo.InvariantCulture);
             tbDt.Text = _stateMachine.Simulation.DeltaTime.ToString(CultureInfo.InvariantCulture);
             tbPause.Text = _stateMachine.Simulation.PauseInterval.ToString(CultureInfo.InvariantCulture);
             var dotString = GraphVizDot.GenerateDotString(_stateMachine.GetGraph());
             picImage.Image = GraphViz.RenderImage(dotString, "jpg");
-
         }
 
         private void cbVariables_SelectedIndexChanged(object sender, EventArgs e)
@@ -141,6 +145,13 @@ namespace SymuSysDynApp
             {
                 tbDt.BackColor = Color.Red;
             }
+        }
+
+        private void cbGroups_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var groupName = cbGroups.SelectedItem.ToString();
+            var dotString = GraphVizDot.GenerateDotString(_stateMachine.GetSubGraph(groupName));
+            picImage.Image = GraphViz.RenderImage(dotString, "jpg");
         }
     }
 }

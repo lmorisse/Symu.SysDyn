@@ -11,10 +11,9 @@
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
+using Symu.SysDyn.Equations;
 using Symu.SysDyn.Parser;
-using Symu.SysDyn.Simulation;
 
 #endregion
 
@@ -25,6 +24,8 @@ namespace Symu.SysDyn.Model
     /// </summary>
     public class Variable
     {
+        private float _value;
+
         public Variable(string name)
         {
             if (name == null)
@@ -38,36 +39,22 @@ namespace Symu.SysDyn.Model
         public Variable(string name, string eqn) : this(name)
         {
             Value = CheckInitialValue(eqn);
-            Equation = ManagedEquation.Initialize(eqn);
+            Equation = new ManagedEquation(eqn);
             Units = Units.CreateInstanceFromEquation(eqn);
             SetChildren();
         }
 
-        public Variable(string name, string eqn, GraphicalFunction graph, Range range, Range scale) : this(name, eqn)
+        public Variable(string name, string eqn, GraphicalFunction graph, Range range, Range scale) : this(name)
         {
+            Value = CheckInitialValue(eqn);
+            Units = Units.CreateInstanceFromEquation(eqn);
             Function = graph;
             Range = range;
             Scale = scale;
+            // intentionally after Range assignment
+            Equation = new ManagedEquation(eqn, range);
+            SetChildren();
         }
-
-        #region Xml attributes
-
-        public string Eqn { get; set; }
-        public Units Units { get; set; }
-        /// <summary>
-        /// Input range
-        /// </summary>
-        public Range Range{ get; set; } = new Range(false);
-        /// <summary>
-        /// Output scale
-        /// </summary>
-        public Range Scale { get; set; } = new Range(false);
-
-        #endregion
-
-        public string Name { get; }
-
-        private float _value;
 
         public float Value
         {
@@ -75,7 +62,7 @@ namespace Symu.SysDyn.Model
             set => _value = Scale.GetOutputInsideRange(value);
         }
 
-        public string Equation { get; set; }
+        public ManagedEquation Equation { get; set; }
 
         public GraphicalFunction Function { get; set; }
 
@@ -102,18 +89,23 @@ namespace Symu.SysDyn.Model
         /// <returns></returns>
         protected void SetChildren()
         {
-            var words = Equation?.Split(' ', '+', '-', '*', '/', '(', ')');
-
-            Children = words?.Where(word => !Simulation.ManagedEquation.Functions.Contains(word) &&
-                                            !Simulation.ManagedEquation.Operators.Contains(word) &&
-                                            !float.TryParse(word, NumberStyles.Any, CultureInfo.InvariantCulture,
-                                                out _) &&
-                                            word.Length > 0
-                                            && !word.Equals(Name)).ToList();
+            Children = Equation?.GetVariables()?.Where(word => !word.Equals(Name)).ToList() ?? new List<string>();
         }
 
         public static float CheckInitialValue(string equation)
         {
+            if (string.IsNullOrEmpty(equation))
+            {
+                return 0;
+            }
+
+            // Remove string in Braces which are units not equation
+            var index = equation.IndexOf('{');
+            if (index > 0)
+            {
+                equation = equation.Remove(index);
+            }
+
             if (!float.TryParse(equation, out var n))
             {
                 n = 0;
@@ -128,5 +120,24 @@ namespace Symu.SysDyn.Model
         {
             return Name;
         }
+
+        #region Xml attributes
+
+        public string Name { get; }
+
+        public string Eqn { get; set; }
+        public Units Units { get; set; }
+
+        /// <summary>
+        ///     Input range
+        /// </summary>
+        public Range Range { get; set; } = new Range(false);
+
+        /// <summary>
+        ///     Output scale
+        /// </summary>
+        public Range Scale { get; set; } = new Range(false);
+
+        #endregion
     }
 }
