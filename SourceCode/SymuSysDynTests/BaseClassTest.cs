@@ -35,6 +35,9 @@ namespace SymuSysDynTests
         }
 
         protected XmlParser Parser { get; } = new XmlParser(TestFile);
+        /// <summary>
+        /// It is not the Machine.Variables
+        /// </summary>
         protected Variables Variables { get; } = new Variables();
         protected XDocument XDoc { get; }
         protected XNamespace Ns { get; }

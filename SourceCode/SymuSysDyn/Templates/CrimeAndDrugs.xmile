@@ -8,9 +8,9 @@
     </options>
     <product version="1.0">Hand Coded XMILE from Strategic Modelling and Business Dynamics book</product>
   </header>
-  <sim_specs method="Euler" time_units="Years" pause="5">
+  <sim_specs method="Euler" time_units="Months" pause="12">
     <start>0</start>
-    <stop>40</stop>
+    <stop>60</stop>
     <dt>0.25</dt>
   </sim_specs>
   <model>

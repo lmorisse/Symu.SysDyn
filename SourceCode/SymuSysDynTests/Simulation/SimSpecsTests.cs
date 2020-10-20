@@ -23,6 +23,17 @@ namespace SymuSysDynTests.Simulation
         private SimSpecs _sim = new SimSpecs(0, 10);
         private bool _triggered;
 
+        [TestMethod]
+        public void PauseTest()
+        {
+            Assert.IsFalse(_sim.Pause);
+            _sim.PauseInterval = 0;
+            Assert.IsFalse(_sim.Pause);
+            _sim.PauseInterval = 10;
+            Assert.IsTrue(_sim.Pause);
+        }
+
+
         /// <summary>
         ///     DT = 1, no pause
         /// </summary>

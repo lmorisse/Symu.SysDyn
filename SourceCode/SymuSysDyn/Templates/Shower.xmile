@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<xmile version="1.0" xmlns="http://docs.oasis-open.org/xmile/ns/XMILE/v1.0">
+  <header>
+    <name>Shower</name>
+    <options>
+      <uses_outputs />
+    </options>
+    <product version="1.0">Hand Coded XMILE from Strategic Modelling and Business Dynamics book</product>
+  </header>
+  <sim_specs method="Euler" time_units="Seconds">
+    <start>0</start>
+    <stop>120</stop>
+    <dt>0.125</dt>
+  </sim_specs>
+  <model>
+    <variables>
+      <aux name="Max_Setting">
+        <eqn>1 {dimensionless}</eqn>
+      </aux>
+      <aux name="Min_Setting">
+        <eqn>0  {dimensionless}</eqn>
+      </aux>
+      <aux name="Required_Adjustment_1">
+        <eqn>If Temperature_Gap_1 &gt; 0 Then (Max_Setting-Tap_Setting)*Fractional_Adjustment_1 Else (Min_Setting-Tap_Setting)*Fractional_Adjustment_1  {fraction range of scale remaining}</eqn>
+      </aux>
+      <aux name="Fractional_Adjustment_1">
+        <eqn>ABS(Temperature_Gap_1*Judgemental_Calibration_1)   {fraction of scale range remaining}</eqn>
+      </aux>
+      <aux name="Desired\nTemperature">
+        <eqn>25  {°C, the temperature at which the person in shower 1 feels comfortable}</eqn>
+      </aux>
+      <aux name="Temperature_Gap_1">
+        <eqn>Desired_Temperature-Temperature_at_Shower_Head  {°C}</eqn>
+      </aux>
+      <aux name="Temperature_at_Shower_Head">
+        <eqn>SMTH3(Temperature__at_Tap_1,Pipeline_Delay)  {°C}</eqn>
+        <event_poster min="10" max="70">
+          <threshold value="15" direction="decreasing">
+            <event>
+              <text_box>Aaiaah!! I am freezing to death in here!  Could you get some warmer water in here before I turn into an ice cube!?!? Like NOW!!</text_box>
+            </event>
+          </threshold>
+          <threshold value="40">
+            <event>
+              <text_box>Aaiiaah!!  Is there a volcano erupting in here!?!?  Cool it, man, before I collect more third degree burns in here!  Get to it NOW!!</text_box>
+            </event>
+          </threshold>
+        </event_poster>
+      </aux>
+      <aux name="Pipeline_Delay">
+        <eqn>4  {seconds,  the time it takes for hot water to move through the pipe connecting the tap to the shower head}</eqn>
+      </aux>
+      <aux name="Temperature_\nat_Tap_1">
+        <eqn>(Flow_of_Cold_Water*Temperature_of_Cold_Water+Tap_Setting*Max_Flow_of_Hot_Water_to_1*Temperature_of_Hot_Water)/(Flow_of_Cold_Water+Tap_Setting*Max_Flow_of_Hot_Water_to_1)  {°C}</eqn>
+      </aux>
+      <aux name="Temperature_of_Hot_Water">
+        <eqn>70  {°C}</eqn>
+      </aux>
+      <stock name="Tap_Setting_2">
+        <eqn>21/60  {dimensionless fraction of scale range}</eqn>
+        <inflow>Change_in__Tap_Setting_2</inflow>
+      </stock>
+      <flow name="Change_in_\nTap_Setting_2">
+        <eqn>Required_Adjustment_2/Time_to_Adjust_Tap  &#x0D;{fraction range of scale remaining/second}</eqn>
+      </flow>
+      <aux name="Required_Adjustment_2">
+        <eqn>If Temperature_Gap_2 &gt; 0 Then (Max_Setting-Tap_Setting_2)*Fractional_Adjustment_2 Else (Min_Setting-Tap_Setting_2)*Fractional_Adjustment_2  {fraction range of scale remaining}</eqn>
+      </aux>
+      <aux name="Fractional_Adjustment_2">
+        <eqn>ABS(Temperature_Gap_2*Judgemental_Calibration_2)   {fraction of scale range remaining}</eqn>
+      </aux>
+      <aux name="Desired_\nTemperature_2">
+        <eqn>25  {°C, the temperature at which the person in shower 2 feels comfortable}</eqn>
+      </aux>
+      <aux name="Temperature_Gap_2">
+        <eqn>Desired__Temperature_2-Temperature_at_Shower_Head_2</eqn>
+      </aux>
+      <aux name="Temperature_at_Shower_Head_2">
+        <eqn>SMTH3(Temperature__at_Tap_2, Pipeline_Delay)  {°C}</eqn>
+      </aux>
+      <aux name="Temperature_\nat_Tap_2">
+        <eqn>(Flow_of_Cold_Water*Temperature_of_Cold_Water+Tap_Setting_2*&#x0D;Max_Flow_of_Hot_Water_to_2*Temperature_of_Hot_Water)/(Flow_of_Cold_Water+Tap_Setting_2*Max_Flow_of_Hot_Water_to_2)  {°C}</eqn>
+      </aux>
+      <aux name="Frac_Hot_Water_Available_to_2">
+        <eqn>Tap_Setting_2/(Tap_Setting+Tap_Setting_2)  {dimensionless}</eqn>
+      </aux>
+      <aux name="Max_Flow_of_Hot_Water_to_2">
+        <eqn>Max_Flow_of_Hot_Water*Frac_Hot_Water_Available_to_2  {litres per second}</eqn>
+      </aux>
+      <aux name="Judgemental_Calibration_2">
+        <eqn>1/10  {fraction of scale range remaining/°C, the judgemental calibration of the tap scale by the person in shower 2, represented as a fractional adjustment of tap setting within the visible scale remaining, per °C temperature gap}</eqn>
+      </aux>
+      <aux name="Time_to_Adjust_Tap">
+        <eqn>5  {seconds, the time taken to adjust the tap setting, combining both the judgemental delay and the physical delay in moving the tap}</eqn>
+      </aux>
+      <aux name="Frac_Hot_Water_Available_to_1">
+        <eqn>Tap_Setting/(Tap_Setting+Tap_Setting_2)  {dimensionless}</eqn>
+      </aux>
+      <aux name="Max_Flow_of_Hot_Water_to_1">
+        <eqn>Max_Flow_of_Hot_Water*Frac_Hot_Water_Available_to_1  {litres per second}</eqn>
+      </aux>
+      <aux name="Judgemental_Calibration_1">
+        <eqn>1/8  {fraction of scale range remaining/°C, the judgemental calibration of the tap scale by the person in shower 1, represented as a fractional adjustment of tap setting within the visible scale remaining, per °C temperature gap}</eqn>
+      </aux>
+      <aux name="Max_Flow_of_Hot_Water">
+        <eqn>1  {litre per second, which is equivalent to 60 litres per minute}</eqn>
+      </aux>
+      <aux name="Flow_of_Cold_Water">
+        <eqn> .25  {litres per second, which is equivalent to 15 litres per minute}</eqn>
+      </aux>
+      <aux name="Temperature_of_Cold_Water">
+        <eqn>10  {°C}</eqn>
+      </aux>
+      <aux name="Tap_Setting">
+        <eqn>21/60</eqn>
+      </aux>
+      <stock name="Your_Final_Score">
+        <eqn>Rate_of__Accumulation</eqn>
+        <inflow>Rate_of__Accumulation</inflow>
+        <non_negative />
+      </stock>
+      <flow name="Rate_of_\nAccumulation">
+        <eqn>ABS(Desired_Temperature-Temperature_at_Shower_Head)</eqn>
+        <non_negative />
+      </flow>
+      <stock name="Final_Score_in_Shower_2">
+        <eqn>Rate_of__Accumulation_2</eqn>
+        <inflow>Rate_of__Accumulation_2</inflow>
+        <non_negative />
+      </stock>
+      <flow name="Rate_of_\nAccumulation_2">
+        <eqn>ABS(Desired__Temperature_2-Temperature_at_Shower_Head_2)</eqn>
+        <non_negative />
+      </flow>
+      <group name="Shower_2___Hidden">
+        <entity name="Tap_Setting_2" />
+        <entity name="Change_in__Tap_Setting_2" />
+        <entity name="Required_Adjustment_2" />
+        <entity name="Fractional_Adjustment_2" />
+        <entity name="Time_to_Adjust_Tap" />
+        <entity name="Temperature__at_Tap_2" />
+        <entity name="Frac_Hot_Water_Available_to_2" />
+        <entity name="Max_Flow_of_Hot_Water_to_2" />
+        <entity name="Desired__Temperature_2" />
+        <entity name="Temperature_Gap_2" />
+        <entity name="Judgemental_Calibration_2" />
+        <entity name="Temperature_at_Shower_Head_2" />
+        <entity name="Final_Score_in_Shower_2" />
+        <entity name="Rate_of__Accumulation_2" />
+      </group>
+      <group name="Your_Shower">
+        <entity name="Max_Setting" />
+        <entity name="Min_Setting" />
+        <entity name="Required_Adjustment_1" />
+        <entity name="Fractional_Adjustment_1" />
+        <entity name="Temperature_Gap_1" />
+        <entity name="Tap_Setting" />
+        <entity name="Temperature__at_Tap_1" />
+        <entity name="Temperature_of_Hot_Water" />
+        <entity name="Frac_Hot_Water_Available_to_1" />
+        <entity name="Max_Flow_of_Hot_Water_to_1" />
+        <entity name="Max_Flow_of_Hot_Water" />
+        <entity name="Flow_of_Cold_Water" />
+        <entity name="Temperature_of_Cold_Water" />
+        <entity name="Desired_Temperature" />
+        <entity name="Judgemental_Calibration_1" />
+        <entity name="Temperature_at_Shower_Head" />
+        <entity name="Pipeline_Delay" />
+        <entity name="Your_Final_Score" />
+        <entity name="Rate_of__Accumulation" />
+      </group>
+    </variables>
+  </model>
+</xmile>

@@ -24,7 +24,9 @@ namespace Symu.SysDyn.Equations
 {
     public class ManagedEquation
     {
-        private readonly string _equation;
+        public string OriginalEquation { get; }
+        public string InitializedEquation { get; }
+        private readonly Expression _expression;
 
         /// <summary>
         ///     Range of the output of the equation provide by the variable
@@ -35,6 +37,7 @@ namespace Symu.SysDyn.Equations
         ///     List of all the built_in functions used in the equation
         /// </summary>
         private List<BuiltInFunction> _builtInFunctions;
+        public List<string> Variables { get; } = new List<string>();
 
         public ManagedEquation(string equation, Range range) : this(equation)
         {
@@ -43,19 +46,16 @@ namespace Symu.SysDyn.Equations
 
         public ManagedEquation(string equation)
         {
-            _equation = Initialize(equation);
+            OriginalEquation = equation;
+            InitializedEquation = Initialize(equation);
+            _expression = new Expression(InitializedEquation);
         }
-
-        /// <summary>
-        ///     List of all the words in the equation set in Initialize
-        /// </summary>
-        public List<string> Words { get; set; }
 
         /// <summary>Returns a string that represents the current object.</summary>
         /// <returns>A string that represents the current object.</returns>
         public override string ToString()
         {
-            return _equation;
+            return InitializedEquation;
         }
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace Symu.SysDyn.Equations
         /// <param name="variables"></param>
         /// <param name="sim"></param>
         /// <returns></returns>
-        public float Compute(Variables variables, SimSpecs sim)
+        public float Evaluate(Variables variables, SimSpecs sim)
         {
             if (variables == null)
             {
@@ -73,14 +73,8 @@ namespace Symu.SysDyn.Equations
 
             try
             {
-                var explicitEquation = Prepare(variables, sim);
-                if (string.IsNullOrEmpty(explicitEquation))
-                {
-                    return 0;
-                }
-
-                var e = new Expression(explicitEquation);
-                return Convert.ToSingle(e.Evaluate());
+                Prepare(variables, sim);
+                return Convert.ToSingle(_expression.Evaluate());
             }
             catch (ArgumentException ex)
             {
@@ -98,47 +92,30 @@ namespace Symu.SysDyn.Equations
         /// <param name="variables"></param>
         /// <param name="sim"></param>
         /// <returns></returns>
-        private string Prepare(Variables variables, SimSpecs sim)
+        public void Prepare(Variables variables, SimSpecs sim)
         {
-            var words = Words.ToArray();
-            for (var i = 0; i < words.Length; i++)
+            if (variables == null)
             {
-                var word = words[i];
-
-                if (EquationUtils.Operators.Contains(word))
-                {
-                    continue;
-                }
-
-                for (var j = 0; j < _builtInFunctions.Count; j++)
-                {
-                    var function = _builtInFunctions[j];
-                    if (word != function.Name + j)
-                    {
-                        continue;
-                    }
-
-                    words[i] = function.Prepare(word, sim);
-                }
-
-                var target = variables[word];
-                if (target == null)
-                {
-                    continue;
-                }
-
-                var output = target.Value.ToString(CultureInfo.InvariantCulture);
+                throw new ArgumentNullException(nameof(variables));
+            }
+            // Variables
+            foreach (var variable in Variables)
+            { 
+                var output = variables[variable].Value;
                 if (_range != null)
                 {
-                    words[i] = _range.GetOutputInsideRange(output).ToString(CultureInfo.InvariantCulture);
+                    _expression.Parameters[variable] = _range.GetOutputInsideRange(output);
                 }
                 else
                 {
-                    words[i] = output;
+                    _expression.Parameters[variable] = output;
                 }
             }
-
-            return string.Join(StringUtils.Blank, words);
+            // Built-in functions
+            foreach (var function in _builtInFunctions)
+            {
+                _expression.Parameters[function.IndexName] = function.Prepare(variables, sim);
+            }
         }
 
         /// <summary>
@@ -160,12 +137,13 @@ namespace Symu.SysDyn.Equations
             {
                 input = input.Remove(index);
             }
-
+            input = input.Trim();
             _builtInFunctions = StringUtils.GetStringFunctions(input).ToList();
             for (var i = 0; i < _builtInFunctions.Count; i++)
             {
                 var function = _builtInFunctions[i];
-                input = input.Replace(function.Function, function.Name + i);
+                function.IndexName = function.Name + i;
+                input = input.Replace(function.OriginalFunction, function.IndexName);
             }
 
             input = input.Replace(EquationUtils.Plus, StringUtils.Blank + EquationUtils.Plus + StringUtils.Blank);
@@ -179,28 +157,27 @@ namespace Symu.SysDyn.Equations
             input = input.Replace(StringUtils.RParenthesis,
                 StringUtils.Blank + StringUtils.RParenthesis + StringUtils.Blank);
             input = input.Replace("  ", StringUtils.Blank);
-            input = input.TrimEnd(' ');
 
-            Words = input.Split(' ').ToList();
+            var words = input.Split(' ').ToList();
+            words.RemoveAll(string.IsNullOrEmpty);
 
-            for (var i = 0; i < Words.Count; i++)
+            for (var i = 0; i < words.Count; i++)
             {
-                var word = Words[i];
+                var word = words[i];
                 if (EquationUtils.Operators.Contains(word))
                 {
                     continue;
                 }
 
-                Words[i] = StringUtils.CleanName(word);
+                words[i] = StringUtils.CleanName(word);
             }
-
-            return string.Join(StringUtils.Blank, Words);
+            SetVariables(words);
+            return words.Aggregate(string.Empty, (current, word) => current + word);
         }
 
-        public IEnumerable<string> GetVariables()
+        private void SetVariables (IEnumerable<string> words)
         {
-            var variables = new List<string>();
-            foreach (var word in Words)
+            foreach (var word in words)
             {
                 if (word.Length <= 1)
                 {
@@ -217,10 +194,8 @@ namespace Symu.SysDyn.Equations
                     continue;
                 }
 
-                variables.Add(word);
+                Variables.Add(word);
             }
-
-            return variables;
         }
     }
 }

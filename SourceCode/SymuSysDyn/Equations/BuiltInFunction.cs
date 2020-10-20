@@ -11,8 +11,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
+using NCalc2;
+using Symu.SysDyn.Model;
 using Symu.SysDyn.Parser;
 using Symu.SysDyn.Simulation;
 
@@ -21,84 +24,114 @@ using Symu.SysDyn.Simulation;
 namespace Symu.SysDyn.Equations
 {
     /// <summary>
-    ///     A built_in function defined by string
+    ///     A built in function defined by string
+    ///     Works with nested functions, i.e. if the parameters of the function are functions
     /// </summary>
+    /// <remarks>https://www.simulistics.com/help/equations/builtin.htm</remarks>
     public class BuiltInFunction
-    {
+    {        
+        public BuiltInFunction() { }
+
+
         public BuiltInFunction(string function)
         {
-            Function = function ?? throw new ArgumentNullException(nameof(function));
+            OriginalFunction = function ?? throw new ArgumentNullException(nameof(function));
             Name = StringUtils.CleanName(function.Split('(')[0]);
-            Parameters = GetParametersOfFunction(function);
+            Parameters = GetParameters(function);
+            Expression = new Expression(SetCleanedFunction());
         }
 
+        public string SetCleanedFunction()
+        {
+            var cleanedFunction = Name + StringUtils.LParenthesis;
+            for (var i = 0; i < Parameters.Count; i++)
+            {
+                cleanedFunction += Parameters[i];
+                if (i < Parameters.Count - 1)
+                {
+                    cleanedFunction += StringUtils.Comma;
+                }
+            }
+            cleanedFunction += StringUtils.RParenthesis;
+            return cleanedFunction;
+        }
         /// <summary>
         ///     The entire function included brackets and parameters
         /// </summary>
-        public string Function { get; }
+        public string OriginalFunction { get; protected set; }
+
+        /// <summary>
+        ///     The entire cleaned function ready to be evaluated
+        /// </summary>
+        public Expression Expression { get; set; }
 
         /// <summary>
         ///     The function name
         /// </summary>
-        public string Name { get; }
-
+        public string Name { get; protected set; }
         /// <summary>
-        ///     The list of parameters
+        ///     The function name indexed 
         /// </summary>
-        public IEnumerable<string> Parameters { get; }
+        public string IndexName { get; set; }
+
+        public List<ManagedEquation> Parameters { get; protected set; }
 
         /// <summary>
-        ///     Get the list of parameters of a function
+        ///     Get the list of parameters of a function with nested functions
         /// </summary>
         /// <param name="input"></param>
-        /// <returns>input = "function(param1, param2)" - return {param1, param2}</returns>
-        public static List<string> GetParametersOfFunction(string input)
+        /// <returns>input = "function(func(param1, param2), param3)" - return {func(param1, param2), param3}</returns>
+        public static List<ManagedEquation> GetParameters(string input)
         {
-            // Get function name
-            var func = Regex.Match(input, @"\b[^()]+\((.*)\)$");
+            var result = new List<ManagedEquation>();
+            const string extractFuncRegex = @"\b[^()]+\((.*)\)$";
+            const string extractArgsRegex = @"(?:[^,()]+((?:\((?>[^()]+|\((?<open>)|\)(?<-open>))*\)))*)+";
 
-            return string.IsNullOrEmpty(func.Groups[1].Value) ? 
-                new List<string>() : 
-                CleanParameters(func.Groups[1].Value.Split(',').ToList());
-        }
+            var parameters = Regex.Match(input, extractFuncRegex);
 
-        public static List<string> CleanParameters(List<string> parameters)
-        {
-            if (parameters == null)
+            if (string.IsNullOrEmpty(parameters.Groups[1].Value))
             {
-                throw new ArgumentNullException(nameof(parameters));
+                return result;
             }
 
-            return parameters.Select(CleanParameter).ToList();
-        }
-
-        public static string CleanParameter(string parameter)
-        {
-            if (parameter == null)
+            var innerArgs = parameters.Groups[1].Value;
+            var matches = Regex.Matches(innerArgs, extractArgsRegex);
+            for (var i = 0; i < matches.Count; i++)
             {
-                throw new ArgumentNullException(nameof(parameter));
+                result.Add(new ManagedEquation(matches[i].Value));
             }
 
-            parameter = parameter.ToLowerInvariant();
-
-            // Can have multiple blanks
-            while (parameter.Contains(' '))
-            {
-                parameter = parameter.Replace(StringUtils.Blank, string.Empty);
-            }
-
-            return parameter;
+            return result;
         }
 
         /// <summary>
         ///     Prepare the function for the Equation.Prepare()
         /// </summary>
-        /// <param name="word"></param>
+        /// <param name="variables"></param>
         /// <param name="sim"></param>
         /// <returns></returns>
-        public virtual string Prepare(string word, SimSpecs sim)
+        public float Prepare(Variables variables, SimSpecs sim)
         {
-            return word;
+            foreach (var parameter in Parameters)
+            {
+                parameter.Prepare(variables, sim);
+
+                foreach (var name in parameter.Variables)
+                {
+                    var variable = variables.Get(name);
+                    if (variable != null)
+                    {
+                        Expression.Parameters[name] = variable.Value;
+                    }
+                }
+            }
+
+            return Evaluate(sim);
+        }
+
+        public virtual float Evaluate(SimSpecs sim)
+        {
+            return Convert.ToSingle(Expression.Evaluate());
         }
     }
 }

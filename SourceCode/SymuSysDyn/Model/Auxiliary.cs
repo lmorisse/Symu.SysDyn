@@ -15,6 +15,9 @@ namespace Symu.SysDyn.Model
     /// </summary>
     public class Auxiliary : Variable
     {
+        public Auxiliary(string name, string eqn) : base(name, eqn)
+        {
+        }
         public Auxiliary(string name, string eqn, GraphicalFunction graph, Range range, Range scale) : base(name, eqn,
             graph, range, scale)
         {

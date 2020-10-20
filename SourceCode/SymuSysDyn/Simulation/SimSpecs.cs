@@ -166,7 +166,7 @@ namespace Symu.SysDyn.Simulation
             get => _pauseInterval;
             set
             {
-                Pause = true;
+                Pause = value > 0;
                 _pauseInterval = value;
             }
         }

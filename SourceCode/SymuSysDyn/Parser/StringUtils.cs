@@ -23,44 +23,64 @@ using Symu.SysDyn.Equations;
 
 namespace Symu.SysDyn.Parser
 {
+    //todo Maybe try a framework like https://github.com/IronyProject to have a real grammar more than regex
     public static class StringUtils
     {
+        public const string Comma = ",";
         public const string LParenthesis = "(";
         public const string RParenthesis = ")";
         public const string Blank = " ";
 
         #region Functions and parameters
-
+        /// <summary>
+        /// Extract functions from a string as a list of BuiltIn functions
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        //TODO use NCalc2 or Antlr methods?
         public static IEnumerable<BuiltInFunction> GetStringFunctions(string input)
         {
             if (input == null)
             {
                 throw new ArgumentNullException(nameof(input));
             }
+            var builtInFunctions = new List<BuiltInFunction>();
 
             var regex = new Regex(@"([a-zA-Z0-9]*)\s*\([^()]*\)");
             var functions = regex.Matches(input);
-            var builtInFunctions = new List<BuiltInFunction>();
-            foreach (var func in functions)
+
+            if (functions.Count > 0)
             {
-                var function = func.ToString().Replace(" ", "");
-
-                var name = CleanName(function.Split('(')[0]);
-
-                if (string.IsNullOrEmpty(name))
+                foreach (var func in functions)
                 {
-                    continue;
-                }
+                    var function = func.ToString().Trim();
 
-                switch (name)
-                {
-                    case Step.Value:
-                        builtInFunctions.Add(new Step(function));
-                        break;
-                    default:
-                        builtInFunctions.Add(new BuiltInFunction(function));
-                        break;
+                    var name = CleanName(function.Split('(')[0]);
+
+                    if (string.IsNullOrEmpty(name))
+                    {
+                        continue;
+                    }
+
+                    switch (name)
+                    {
+                        case "If":
+                        case "Then":
+                        case "Else":
+                            break;
+                        case Step.Value:
+                            builtInFunctions.Add(new Step(function));
+                            break;
+                        default:
+                            builtInFunctions.Add(new BuiltInFunction(function));
+                            break;
+                    }
                 }
+            }
+
+            if (IfThenElse.IsContainedIn(input))
+            {
+                builtInFunctions.Add(new IfThenElse(input));
             }
 
             if (Dt.IsContainedIn(input))
@@ -97,6 +117,8 @@ namespace Symu.SysDyn.Parser
                 throw new ArgumentNullException(nameof(name));
             }
 
+            // useful for function's parameters
+            name = name.Trim();
             name = name.ToLowerInvariant();
 
             // Can have multiple blanks
@@ -114,9 +136,7 @@ namespace Symu.SysDyn.Parser
                 name = name.Replace("__", "_");
             }
 
-            name = FirstCharToUpper(name);
-
-            return name;
+            return FirstCharToUpper(name);
         }
 
         private static string FirstCharToUpper(string input)

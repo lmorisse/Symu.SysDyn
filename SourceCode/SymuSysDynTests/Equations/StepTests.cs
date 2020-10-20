@@ -18,25 +18,68 @@ using Symu.SysDyn.Simulation;
 namespace SymuSysDynTests.Equations
 {
     [TestClass]
-    public class StepTests
+    public class StepTests: BaseClassTest
     {
-        private readonly Step _function = new Step("STEP(5, 10)");
-        private readonly SimSpecs _sim = new SimSpecs(0, 10);
 
         [TestMethod]
         public void StepBuiltInFunctionTest()
         {
-            Assert.AreEqual(5, _function.Height);
-            Assert.AreEqual(10, _function.StartTime);
+            var function = new Step("STEP(5, 10)");
+            Assert.AreEqual("5", function.Height);
+            Assert.AreEqual("10", function.StartTime);
+        }
+        /// <summary>
+        /// Non passing test
+        /// </summary>
+        [TestMethod]
+        public void EvaluateTest()
+        {
+            var function = new Step("STEP(5, 10)");
+            Machine.Simulation.Time = 0;
+            function.Prepare(Machine.Variables, Machine.Simulation);
+            Assert.AreEqual(0, function.Evaluate(Machine.Simulation));
         }
 
         [TestMethod]
-        public void PrepareTest()
+        public void EvaluateTest1()
         {
-            _sim.Time = 0;
-            Assert.AreEqual("0", _function.Prepare("Variable1", _sim));
-            _sim.Time = 10;
-            Assert.AreEqual("5", _function.Prepare("Variable1", _sim));
+            var function = new Step("STEP(5, 10)");
+            Machine.Simulation.Time = 10;
+            function.Prepare(Machine.Variables, Machine.Simulation);
+            Assert.AreEqual(5, function.Evaluate(Machine.Simulation));
+            Machine.Simulation.Time = 20;
+            function.Prepare(Machine.Variables, Machine.Simulation);
+            Assert.AreEqual(5, function.Evaluate(Machine.Simulation));
+        }
+
+        [TestMethod]
+        public void EvaluateTest2()
+        {
+            var function = new Step("STEP(aux1, 10)");
+            Machine.Simulation.Time = 10;
+            function.Prepare(Machine.Variables, Machine.Simulation);
+            Assert.AreEqual(1F, function.Expression.Parameters["Aux1"]);
+            Assert.AreEqual(1, function.Evaluate(Machine.Simulation));
+        }
+
+        [TestMethod]
+        public void EvaluateTest3()
+        {
+            var function = new Step("STEP(5, aux1)");
+            Machine.Simulation.Time = 1;
+            function.Prepare(Machine.Variables, Machine.Simulation);
+            Assert.AreEqual(1F, function.Expression.Parameters["Aux1"]);
+            Assert.AreEqual(5, function.Evaluate(Machine.Simulation));
+        }
+
+        [TestMethod]
+        public void EvaluateTest4()
+        {
+            var function = new Step("STEP(aux1, aux1)");
+            Machine.Simulation.Time = 1;
+            function.Prepare(Machine.Variables, Machine.Simulation);
+            Assert.AreEqual(1F, function.Expression.Parameters["Aux1"]);
+            Assert.AreEqual(1, function.Evaluate(Machine.Simulation));
         }
     }
 }

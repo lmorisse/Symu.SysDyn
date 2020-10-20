@@ -27,6 +27,13 @@ namespace Symu.SysDyn.Model
     /// </summary>
     public class Stock : Variable, IComparable
     {
+        public Stock(string name, string eqn, string inflow) : this(name, eqn, new List<string> { inflow }, new List<string>())
+        {
+        }
+        public Stock(string name, string eqn, string inflow, string outflow) : this(name, eqn, new List<string> {inflow}, new List<string> { outflow })
+        {
+        }
+
         public Stock(string name, string eqn, List<string> inflow, List<string> outflow) : base(name, eqn)
         {
             Eqn = eqn;

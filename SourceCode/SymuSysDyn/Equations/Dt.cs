@@ -11,6 +11,7 @@
 
 using System;
 using System.Globalization;
+using Symu.SysDyn.Model;
 using Symu.SysDyn.Simulation;
 
 #endregion
@@ -28,14 +29,14 @@ namespace Symu.SysDyn.Equations
         {
         }
 
-        public override string Prepare(string word, SimSpecs sim)
+        public override float Evaluate(SimSpecs sim)
         {
             if (sim == null)
             {
                 throw new ArgumentNullException(nameof(sim));
             }
 
-            return sim.DeltaTime.ToString(CultureInfo.InvariantCulture);
+            return sim.DeltaTime;
         }
 
         /// <summary>

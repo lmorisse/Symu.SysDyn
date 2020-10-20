@@ -40,8 +40,8 @@ namespace Symu.SysDyn.Model
         {
             Value = CheckInitialValue(eqn);
             Equation = new ManagedEquation(eqn);
-            Units = Units.CreateInstanceFromEquation(eqn);
             SetChildren();
+            Units = Units.CreateInstanceFromEquation(eqn);
         }
 
         public Variable(string name, string eqn, GraphicalFunction graph, Range range, Range scale) : this(name)
@@ -89,7 +89,7 @@ namespace Symu.SysDyn.Model
         /// <returns></returns>
         protected void SetChildren()
         {
-            Children = Equation?.GetVariables()?.Where(word => !word.Equals(Name)).ToList() ?? new List<string>();
+            Children = Equation?.Variables?.Where(word => !word.Equals(Name)).ToList() ?? new List<string>();
         }
 
         public static float CheckInitialValue(string equation)

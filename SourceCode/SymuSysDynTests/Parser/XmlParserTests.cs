@@ -67,7 +67,7 @@ namespace SymuSysDynTests.Parser
             Assert.AreEqual(2, Variables.Count());
             Assert.IsTrue(Variables.Exists("Inflow1"));
             Assert.IsTrue(Variables.Exists("Outflow1"));
-            Assert.AreEqual("Stock2 / 2", Variables[0].Equation.ToString());
+            Assert.AreEqual("Stock2/2", Variables[0].Equation.InitializedEquation);
         }
 
         [TestMethod]

@@ -12,6 +12,7 @@
 using System;
 using System.Globalization;
 using System.Linq;
+using Symu.SysDyn.Model;
 using Symu.SysDyn.Simulation;
 
 #endregion
@@ -30,23 +31,25 @@ namespace Symu.SysDyn.Equations
 
         public Step(string function) : base(function)
         {
-            // Height could be stored in string , but we need to check that it is a float
-            Height = Convert.ToSingle(Parameters.ElementAt(0));
-            StartTime = Convert.ToUInt16(Parameters.ElementAt(1));
-            //TOdo Manage exception 
+            Height = Parameters[0].Variables.Any() ? Parameters[0].Variables.First() : Parameters[0].OriginalEquation.Trim();
+            StartTime = Parameters[1].Variables.Any() ? Parameters[1].Variables.First() : Parameters[1].OriginalEquation.Trim();
         }
 
-        public float Height { get; }
-        public ushort StartTime { get; }
+        public string Height { get; }
+        public string StartTime { get; }
 
-        public override string Prepare(string word, SimSpecs sim)
+        public override float Evaluate(SimSpecs sim)
         {
             if (sim == null)
             {
                 throw new ArgumentNullException(nameof(sim));
             }
+            //Height can be either a literal or a numeric
+            var height = Parameters[0].Variables.Any() ? Convert.ToUInt16(Expression.Parameters[Height]) : Convert.ToUInt16(Height);
 
-            return sim.Time == StartTime ? Height.ToString(CultureInfo.InvariantCulture) : "0";
+            var startTime = Parameters[1].Variables.Any() ? Convert.ToUInt16(Expression.Parameters[StartTime]) : Convert.ToUInt16(StartTime);
+
+            return sim.Time >= startTime ? height : 0;
         }
     }
 }

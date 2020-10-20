@@ -23,26 +23,41 @@ namespace Symu.SysDyn.Simulation
 {
     public class StateMachine
     {
+        /// <summary>
+        /// Create an instance of the state machine from an xml File
+        /// The stateMachine is Not Initialized - you have to call Initialize after having filled the variables
+        /// </summary>
         public StateMachine()
         {
             Variables = new Variables();
             Simulation = new SimSpecs();
             Simulation.OnTimer += OnTimer;
         }
-
+        /// <summary>
+        /// Create an instance of the state machine from an xml File
+        /// The stateMachine is Initialized
+        /// </summary>
+        /// <param name="xmlFile"></param>
+        /// <param name="validate"></param>
         public StateMachine(string xmlFile, bool validate = true)
         {
             var xmlParser = new XmlParser(xmlFile, validate);
             Variables = xmlParser.ParseVariables();
             Simulation = xmlParser.ParseSimSpecs();
+            Simulation.OnTimer += OnTimer;
+            Initialize();
+        }
+
+        public void Initialize()
+        {
             Compute(); // Initialize the model / don't store the result
             SetStocksEquations();
-            Simulation.OnTimer += OnTimer;
         }
 
         public SimSpecs Simulation { get; }
         public Variables Variables { get; }
         public ResultCollection Results { get; } = new ResultCollection();
+        public bool StoreResults { get; set; } = true;
 
         /// <summary>
         ///     Process compute all iterations from Simulation.Start to Simulation.Stop
@@ -54,7 +69,11 @@ namespace Symu.SysDyn.Simulation
                 Compute();
             }
         }
-
+        public void Clear()
+        {
+            Simulation.Clear();
+            Results.Clear();
+        }
         /// <summary>
         ///     Once stock value is evaluated with initial equation, the real equation based on inflows and outflows is setted
         /// </summary>
@@ -93,7 +112,10 @@ namespace Symu.SysDyn.Simulation
         /// <param name="e"></param>
         public void OnTimer(object sender, EventArgs e)
         {
-            Results.Add(Result.CreateInstance(Variables));
+            if (StoreResults)
+            {
+                Results.Add(Result.CreateInstance(Variables));
+            }
         }
 
         /// <summary>
@@ -154,7 +176,7 @@ namespace Symu.SysDyn.Simulation
                 throw new ArgumentNullException(nameof(variable));
             }
 
-            var value = variable.Equation.Compute(Variables, Simulation);
+            var value = variable.Equation.Evaluate(Variables, Simulation);
 
             variable.Value = variable.Function?.GetOutputWithBounds(value) ?? value;
 

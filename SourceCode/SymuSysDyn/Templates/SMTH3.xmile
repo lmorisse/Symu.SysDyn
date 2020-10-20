@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<xmile version="1.0" xmlns="http://docs.oasis-open.org/xmile/ns/XMILE/v1.0">
+  <header>
+    <name>Test</name>
+  </header>
+  <sim_specs method="Euler">
+    <start>0</start>
+    <stop>20</stop>
+    <dt>0.5</dt>
+  </sim_specs>
+  <model>
+    <variables>
+      <aux name="Input">
+        <eqn>5+Step(10,3)</eqn>
+      </aux>
+      <aux name="Initial">
+        <eqn>5</eqn>
+      </aux>
+      <aux name="Averaging">
+        <eqn>5</eqn>
+      </aux>
+      <stock name="comp1">
+        <eqn>Initial</eqn>
+        <inflow>flow1</inflow>
+        <non_negative />
+      </stock>
+      <flow name="flow1">
+        <eqn>(input-comp1)*3/averaging</eqn>
+      </flow>
+      <stock name="comp2">
+        <eqn>Initial</eqn>
+        <inflow>flow2</inflow>
+        <non_negative />
+      </stock>
+      <flow name="flow2">
+        <eqn>(comp1-comp2)*3/averaging</eqn>
+      </flow>
+      <stock name="comp3">
+        <eqn>Initial</eqn>
+        <inflow>flow3</inflow>
+        <non_negative />
+      </stock>
+      <flow name="flow3">
+        <eqn>(comp2-comp3)*3/averaging</eqn>
+      </flow>
+    </variables>
+  </model>
+</xmile>
