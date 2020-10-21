@@ -111,17 +111,24 @@ namespace Symu.SysDyn.Equations
         /// <returns></returns>
         public float Prepare(Variables variables, SimSpecs sim)
         {
+            if (variables == null)
+            {
+                throw new ArgumentNullException(nameof(variables));
+            }
+
+            var prepareParams = new List<string>();
             foreach (var parameter in Parameters)
             {
                 parameter.Prepare(variables, sim);
+                prepareParams.AddRange(parameter.Variables);
+            }
 
-                foreach (var name in parameter.Variables)
+            foreach (var name in prepareParams.Distinct().ToList())
+            {
+                var variable = variables.Get(name);
+                if (variable != null)
                 {
-                    var variable = variables.Get(name);
-                    if (variable != null)
-                    {
-                        Expression.Parameters[name] = variable.Value;
-                    }
+                    Expression.Parameters[name] = variable.Value;
                 }
             }
 

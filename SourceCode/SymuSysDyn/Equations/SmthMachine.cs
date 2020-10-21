@@ -24,6 +24,11 @@ namespace Symu.SysDyn.Equations
     /// </summary>
     public class SmthMachine
     {
+        private const string SmthInput = "Smthinput";
+        private const string SmthInitial = "Smthinitial";
+        private const string SmthAveraging = "Smthaveraging";
+        private const string SmthComp = "Smthcomp";
+        private const string SmthFlow = "Smthflow";
         private readonly StateMachine _stateMachine = new StateMachine();
 
         public SmthMachine(string input, string averaging, byte order, string initial = "", float deltaTime= 0.5F)
@@ -54,34 +59,34 @@ namespace Symu.SysDyn.Equations
 
         public Variable CreateInput()
         {
-            return new Auxiliary("Input", Input);
+            return new Auxiliary(SmthInput, Input);
         }
         public Variable CreateInitial()
         {
-            return new Auxiliary("Initial", Initial);
+            return new Auxiliary(SmthInitial, Initial);
         }
         public Variable CreateAveraging()
         {
-            return new Auxiliary("Averaging", Averaging);
+            return new Auxiliary(SmthAveraging, Averaging);
         }
         public Variable CreateStock(byte order)
         {
-            var eqn = Initial == string.Empty ? "Input" : "Initial";
+            var eqn = Initial == string.Empty ? SmthInput : SmthInitial;
 
-            return new Stock("Comp"+order, eqn, "Flow"+order);
+            return new Stock(SmthComp+order, eqn, SmthFlow + order);
         }
         public Variable CreateFlow(byte order)
         {
             string eqn;
             if (order == 0)
             {
-                eqn = "(Input - Comp0) * " + Order + " / Averaging";
+                eqn = "("+SmthInput+"-"+SmthComp+"0)*" + Order + "/"+SmthAveraging;
             }
             else
             {
-                eqn = "(Comp"+ (order-1)+" - Comp"+order+") * " + Order + " / Averaging";
+                eqn = "("+SmthComp+ (order-1)+ "-"+ SmthComp + order+")*" + Order + "/"+SmthAveraging;
             }
-            return new Flow("Flow" + order, eqn);
+            return new Flow(SmthFlow + order, eqn);
         }
 
         public float Evaluate(ushort time)
@@ -91,7 +96,7 @@ namespace Symu.SysDyn.Equations
             _stateMachine.Clear();
             _stateMachine.Process();
             RemoveVariables();
-            return _stateMachine.Variables.Get("Comp" + (Order - 1)).Value;
+            return _stateMachine.Variables.Get(SmthComp + (Order - 1)).Value;
         }
         private readonly List<string> _variablesToRemove= new List<string>();
         /// <summary>

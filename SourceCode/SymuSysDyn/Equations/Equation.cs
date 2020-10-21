@@ -111,7 +111,13 @@ namespace Symu.SysDyn.Equations
             }
             // Variables
             foreach (var variable in Variables)
-            { 
+            {
+                if (!variables.Exists(variable))
+                {
+                    //In case of SmthMachine with parameters
+                    continue;
+                }
+
                 var output = variables[variable].Value;
                 if (_range != null)
                 {
@@ -162,7 +168,7 @@ namespace Symu.SysDyn.Equations
                 input = input.Replace(function.OriginalFunction, function.IndexName);
             }
             // split equation in words
-            var regexWords = new Regex(@"[0-9]*\.?\,?[0-9]+([eE][-+]?[0-9]+)?|[-^+*\/()]|\w+");
+            var regexWords = new Regex(@"[0-9]*\.?\,?[0-9]+|[-^+*\/()<>=]|\w+");
             var matches = regexWords.Matches(input);
             var words = new List<string>();
             foreach (var match in matches)

@@ -50,10 +50,12 @@ namespace SymuSysDynTests.Equations
         public void EvaluateTest1()
         {
             _machine.Simulation.Time = 4;
-            var aux = new Auxiliary("aux", "5+Step(10,3)");
+            var aux = new Auxiliary("aux", "5+Step(10,3)+aux2");
             _machine.Variables.Add(aux);
             var aux1 = new Auxiliary("aux1", "SMTH1(aux, 5)");
             _machine.Variables.Add(aux1);
+            var aux2 = new Auxiliary("aux2", "0");
+            _machine.Variables.Add(aux2);
             _machine.Compute();
             Assert.AreEqual(6, _machine.Variables[1].Value);
         }
