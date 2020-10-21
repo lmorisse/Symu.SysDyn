@@ -62,14 +62,14 @@ namespace Symu.SysDyn.Model
             var outflows = AggregateFlows(Outflow, EquationUtils.Minus);
             if (inflows.Length > 0 || outflows.Length > 0)
             {
-                equation += EquationUtils.Plus + Dt.Value + EquationUtils.Multiplication + StringUtils.LParenthesis +
+                equation += EquationUtils.Plus + Dt.Value + EquationUtils.Multiplication + "(" +
                             inflows;
                 if (outflows.Length > 0)
                 {
                     equation += EquationUtils.Minus + outflows;
                 }
 
-                equation += StringUtils.RParenthesis;
+                equation += ")";
             }
 
             Equation = new Equation(equation);

@@ -23,13 +23,5 @@ namespace Symu.SysDyn.Equations
         public const string Division = "/";
         public const string Multiplication = "*";
 
-        public static List<string> Operators { get; } = new List<string>
-        {
-            StringUtils.Blank,
-            Plus,
-            Minus,
-            Division,
-            Multiplication
-        };
     }
 }

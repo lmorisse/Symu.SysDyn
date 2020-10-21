@@ -160,7 +160,7 @@ namespace Symu.SysDyn.Equations
                 input = input.Remove(index);
             }
             input = input.Trim();
-            _functions = StringUtils.GetStringFunctions(input).ToList();
+            _functions = StringFunction.GetStringFunctions(input).ToList();
             for (var i = 0; i < _functions.Count; i++)
             {
                 var function = _functions[i];

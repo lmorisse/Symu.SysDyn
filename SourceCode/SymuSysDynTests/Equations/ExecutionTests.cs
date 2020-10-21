@@ -15,9 +15,7 @@ namespace SymuSysDynTests.Equations
         [TestMethod]
         public void NestedFunctionTest()
         {
-            var e = new Expression("Pow(Abs(X1),X2)");
-            e.Parameters["X1"] = 1;
-            e.Parameters["X2"] = 1;
+            var e = new Expression("Pow(Abs(X1),X2)") {Parameters = {["X1"] = 1, ["X2"] = 1}};
 
             Assert.AreEqual(1F, Convert.ToUInt16(e.Evaluate()));
         }
@@ -44,6 +42,12 @@ namespace SymuSysDynTests.Equations
             Assert.AreEqual(2F, Convert.ToUInt16(e.Evaluate()));
         }
 
+        [TestMethod]
+        public void NormalTest()
+        {
+            var e = new Expression("N(100,5)");
+            Assert.AreEqual(2F, Convert.ToUInt16(e.Evaluate()));
+        }
         [TestMethod]
         public void IfThenElseTest()
         {

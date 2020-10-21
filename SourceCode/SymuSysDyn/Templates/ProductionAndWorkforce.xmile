@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<xmile version="1.0" xmlns="http://docs.oasis-open.org/xmile/ns/XMILE/v1.0">
+  <header>
+    <name>Production</name>
+    <options>
+      <uses_outputs />
+    </options>
+    <product version="1.0">Hand Coded XMILE from Strategic Modelling and Business Dynamics book</product>
+  </header>
+  <sim_specs method="Euler" time_units="Weeks">
+    <start>0</start>
+    <stop>160</stop>
+    <dt>0.5</dt>
+  </sim_specs>
+  <model>
+    <variables>
+      <aux name="Average_Ship_Rate" flow_concept="true">
+        <eqn> SMTH1(Shipment_Rate,Time_to_Average_Ship_Rate)    {refrigerators/week}</eqn>
+        <scale min="1000" max="1400" />
+      </aux>
+      <aux name="Correction\nFor_Inventory">
+        <eqn> (Desired_Inventory-Refrigerator_Inventory)/Time_To_Correct_Inventory     {refrigerators/week}</eqn>
+      </aux>
+      <aux name="Desired_Inventory">
+        <eqn>Average_Ship_Rate*Normal_Inventory_Coverage   {refrigerators}</eqn>
+        <scale min="2000" max="6000" />
+      </aux>
+      <aux name="Desired\nWorkforce">
+        <eqn> SMTH1(Desired_Production/Estimated_Worker_Productivity,Workforce_Planning_Delay)    {workers}</eqn>
+        <scale min="180" max="260" />
+      </aux>
+      <aux name="Desired_Production">
+        <eqn>Average_Ship_Rate+Correction_For_Inventory   {refrigerators/week}</eqn>
+        <scale min="1000" max="1400" />
+      </aux>
+      <flow name="Departure\nRate">
+        <eqn> Workforce/Normal_Length_of_Stay   {workers/week}</eqn>
+        <scale min="0" max="8" />
+        <non_negative />
+      </flow>
+      <aux name="Normal_Inventory\nCoverage">
+        <eqn> 4    {weeks}</eqn>
+      </aux>
+      <flow name="Production_Rate">
+        <eqn>Workforce*Worker_Productivity   {refrigerators/week}</eqn>
+        <scale min="1000" max="1400" />
+        <non_negative />
+      </flow>
+      <aux name="Retail_Order_Rate">
+        <eqn> 1000*NORMAL(1,0) + STEP(100,10) + RAMP(0,10)     {units/week}</eqn>
+        <scale min="1000" max="1400" />
+      </aux>
+      <flow name="Shipment_Rate">
+        <eqn> Retail_Order_Rate  {refrigerators/week}</eqn>
+        <scale min="1000" max="1400" />
+        <non_negative />
+      </flow>
+      <aux name="Time_to_Average\nShip_Rate">
+        <eqn> 8    {weeks}</eqn>
+      </aux>
+      <aux name="Time_To\nCorrect_Inventory">
+        <eqn> 8   {weeks}</eqn>
+        <display x="183" y="275" color="blue" label_side="top" />
+      </aux>
+      <aux name="Normal_Length\nof_Stay">
+        <eqn> 50  {weeks}</eqn>
+      </aux>
+      <aux name="Workforce\nPlanning\nDelay">
+        <eqn> 4   {weeks}</eqn>
+      </aux>
+      <aux name="Estimated\nWorker_Productivity">
+        <eqn> 5+STEP(0,10)  {refrigerators per worker per week}</eqn>
+      </aux>
+      <stock name="Refrigerator\nInventory">
+        <eqn> 4000    {refrigerators}</eqn>
+        <scale min="2000" max="6000" />
+        <inflow>Production_Rate</inflow>
+        <outflow>Shipment_Rate</outflow>
+      </stock>
+      <stock name="Workforce">
+        <eqn> 200  {workers}</eqn>
+        <scale min="180" max="260" />
+        <inflow>Hiring_Rate</inflow>
+        <outflow>Departure_Rate</outflow>
+      </stock>
+      <flow name="Hiring_Rate">
+        <eqn>Workforce_Adjustment+Average_Departure_Rate</eqn>
+        <scale min="0" max="8" />
+      </flow>
+      <aux name="Workforce\nAdjustment">
+        <eqn>(Desired_Workforce-Workforce)/Time_to_Adjust_Workforce    {workers/week}</eqn>
+      </aux>
+      <aux name="Average_Departure\nRate" flow_concept="true">
+        <eqn>SMTH1(Departure_Rate,Time_to_Average_Departures)     {workers/week}</eqn>
+      </aux>
+      <aux name="Time_to\nAdjust_Workforce">
+        <eqn>8  {weeks}</eqn>
+      </aux>
+      <aux name="Time_to_Average\nDepartures">
+        <eqn>4  {weeks}</eqn>
+      </aux>
+      <aux name="Worker\nProductivity">
+        <eqn>5  {refrigerators per worker per week}</eqn>
+      </aux>
+      <group name="PRODUCTION__CONTROL">
+        <entity name="Correction_For_Inventory" />
+        <entity name="Desired_Inventory" />
+        <entity name="Desired_Production" />
+        <entity name="Normal_Inventory_Coverage" />
+        <entity name="Production_Rate" />
+        <entity name="Retail_Order_Rate" />
+        <entity name="Shipment_Rate" />
+        <entity name="Time_To_Correct_Inventory" />
+        <entity name="Refrigerator_Inventory" />
+        <entity name="Worker_Productivity" />
+        <entity name="Average_Ship_Rate" />
+        <entity name="Time_to_Average_Ship_Rate" />
+      </group>
+      <group name="WORKFORCE__MANAGEMENT">
+        <entity name="Desired_Workforce" />
+        <entity name="Departure_Rate" />
+        <entity name="Normal_Length_of_Stay" />
+        <entity name="Workforce" />
+        <entity name="Hiring_Rate" />
+        <entity name="Workforce_Adjustment" />
+        <entity name="Average_Departure_Rate" />
+        <entity name="Time_to_Adjust_Workforce" />
+        <entity name="Time_to_Average_Departures" />
+        <entity name="Workforce_Planning_Delay" />
+        <entity name="Estimated_Worker_Productivity" />
+      </group>
+    </variables>
+  </model>
+</xmile>

@@ -45,9 +45,9 @@ namespace Symu.SysDyn.Equations
                 throw new ArgumentNullException(nameof(sim));
             }
             //Height can be either a literal or a numeric
-            var height = Parameters[0].Variables.Any() ? Convert.ToUInt16(Expression.Parameters[Height]) : Convert.ToUInt16(Height);
+            var height = Parameters[0].Variables.Any() ? Convert.ToSingle(Expression.Parameters[Height]) : Convert.ToSingle(Height, CultureInfo.InvariantCulture);
 
-            var startTime = Parameters[1].Variables.Any() ? Convert.ToUInt16(Expression.Parameters[StartTime]) : Convert.ToUInt16(StartTime);
+            var startTime = Parameters[1].Variables.Any() ? Convert.ToUInt16(Expression.Parameters[StartTime]) : Convert.ToUInt16(StartTime, CultureInfo.InvariantCulture);
 
             return sim.Time >= startTime ? height : 0;
         }

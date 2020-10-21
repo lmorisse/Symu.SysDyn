@@ -22,7 +22,7 @@ namespace SymuSysDynTests.Equations
     {
 
         [TestMethod]
-        public void StepBuiltInFunctionTest()
+        public void StepTest()
         {
             var function = new Step("STEP(5, 10)");
             Assert.AreEqual("5", function.Height);

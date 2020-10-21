@@ -27,6 +27,7 @@ namespace Symu.SysDyn.Equations
     ///     A built in function defined by string
     ///     Works with nested functions, i.e. if the parameters of the function are functions
     /// </summary>
+    /// <remarks>When adding a new buildIn function, create an inherited class of BuiltInFunction and add it in StringFunction.GetStringFunctions</remarks>
     /// <remarks>https://www.simulistics.com/help/equations/builtin.htm</remarks>
     public class BuiltInFunction
     {        
@@ -42,16 +43,16 @@ namespace Symu.SysDyn.Equations
 
         public string SetCleanedFunction()
         {
-            var cleanedFunction = Name + StringUtils.LParenthesis;
+            var cleanedFunction = Name + "(";
             for (var i = 0; i < Parameters.Count; i++)
             {
                 cleanedFunction += Parameters[i];
                 if (i < Parameters.Count - 1)
                 {
-                    cleanedFunction += StringUtils.Comma;
+                    cleanedFunction += ",";
                 }
             }
-            cleanedFunction += StringUtils.RParenthesis;
+            cleanedFunction += ")";
             return cleanedFunction;
         }
         /// <summary>

@@ -74,7 +74,7 @@ namespace Symu.SysDyn.Equations
             var condition = Parameters.ElementAt(0);
             var thenExpression = Parameters.ElementAt(1);
             var elseExpression = Parameters.ElementAt(2);
-            return "if(" + condition + StringUtils.Comma + thenExpression + StringUtils.Comma + elseExpression + StringUtils.RParenthesis;
+            return "if(" + condition + "," + thenExpression + "," + elseExpression + ")";
         }
 
         /// <summary>
