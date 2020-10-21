@@ -12,7 +12,7 @@
 using System;
 using System.Globalization;
 using System.Linq;
-
+using Symu.SysDyn.Model;
 using Symu.SysDyn.Simulation;
 
 #endregion
@@ -27,30 +27,29 @@ namespace Symu.SysDyn.Equations
     /// </summary>
     public class Smth1 : BuiltInFunction
     {
+        public const string Value = "Smth1";
         protected SmthMachine SmthMachine { get; set; }
-        
+
         public Smth1(string function) : base(function)
         {
             Input = Parameters[0].OriginalEquation;
             Averaging = Parameters[1].OriginalEquation;
-            if (Parameters.Count == 3)
-            {
-                Initial = Parameters[2].OriginalEquation;
-            }
+            Initial = Parameters.Count == 3 ? Parameters[2].OriginalEquation : string.Empty;
 
             SmthMachine = new SmthMachine(Input, Averaging, 1, Initial);
         }
         public string Input { get; protected set; }
         public string Averaging { get; protected set; }
-        public string Initial { get; protected set; } = "0";
+        public string Initial { get; protected set; }
 
-        public override float Evaluate(SimSpecs sim)
+        public override float Evaluate(Variables variables, SimSpecs sim)
         {
             if (sim == null)
             {
                 throw new ArgumentNullException(nameof(sim));
             }
 
+            SmthMachine.AddVariables(variables);
             return SmthMachine.Evaluate(sim.Time);
         }
     }

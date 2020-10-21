@@ -10,7 +10,16 @@ namespace SymuSysDynTests.Equations
         [TestMethod()]
         public void SmthMachineTest()
         {
-            _smth = new SmthMachine("1","2",3,"4");
+            _smth = new SmthMachine("1","2",3);
+            Assert.AreEqual("1", _smth.Input);
+            Assert.AreEqual("2", _smth.Averaging);
+            Assert.AreEqual(3, _smth.Order);
+            Assert.AreEqual(string.Empty, _smth.Initial);
+        }
+        [TestMethod()]
+        public void SmthMachineTest1()
+        {
+            _smth = new SmthMachine("1", "2", 3, "4");
             Assert.AreEqual("1", _smth.Input);
             Assert.AreEqual("2", _smth.Averaging);
             Assert.AreEqual(3, _smth.Order);

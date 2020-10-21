@@ -20,7 +20,7 @@ namespace SymuSysDynTests.Equations
             CheckKoTest(IfThenElse.Parse("IF x1 ELSE x3"));
         }
 
-        private static void CheckOkTest(IReadOnlyList<ManagedEquation> parameters)
+        private static void CheckOkTest(IReadOnlyList<Equation> parameters)
         {
             Assert.AreEqual(3, parameters.Count);
             Assert.AreEqual("X1", parameters[0].Variables.First());

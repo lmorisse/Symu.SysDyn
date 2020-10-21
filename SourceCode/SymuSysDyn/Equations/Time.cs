@@ -11,6 +11,7 @@
 
 using System;
 using System.Globalization;
+using System.Text.RegularExpressions;
 using Symu.SysDyn.Model;
 using Symu.SysDyn.Simulation;
 
@@ -25,11 +26,11 @@ namespace Symu.SysDyn.Equations
     {
         public const string Value = "Time";
 
-        public Time() : base(Value)
+        public Time(string function) : base(function)
         {
         }
 
-        public override float Evaluate(SimSpecs sim)
+        public override float Evaluate(Variables variables, SimSpecs sim)
         {
             if (sim == null)
             {
@@ -43,19 +44,19 @@ namespace Symu.SysDyn.Equations
         ///     Check if it is a Time function
         /// </summary>
         /// <param name="input"></param>
+        /// <param name="word"></param>
         /// <returns></returns>
-        public static bool IsContainedIn(string input)
+        public static bool IsContainedIn(string input, out string word)
         {
             if (input == null)
             {
                 throw new ArgumentNullException(nameof(input));
             }
 
-            var inputLower = input.ToLowerInvariant();
-
-            return inputLower.Contains(Value.ToLowerInvariant()) &&
-                   !inputLower.Contains("_" + Value.ToLowerInvariant()) &&
-                   !inputLower.Contains(Value.ToLowerInvariant() + "_");
+            var regex = new Regex(@"\w*(?<!_)time(?!_)", RegexOptions.IgnoreCase);
+            var match = regex.Match(input);
+            word = match.Value;
+            return match.Success;
         }
     }
 }

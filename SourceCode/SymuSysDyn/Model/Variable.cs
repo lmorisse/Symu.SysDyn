@@ -39,7 +39,7 @@ namespace Symu.SysDyn.Model
         public Variable(string name, string eqn) : this(name)
         {
             Value = CheckInitialValue(eqn);
-            Equation = new ManagedEquation(eqn);
+            Equation = new Equation(eqn);
             SetChildren();
             Units = Units.CreateInstanceFromEquation(eqn);
         }
@@ -52,7 +52,7 @@ namespace Symu.SysDyn.Model
             Range = range;
             Scale = scale;
             // intentionally after Range assignment
-            Equation = new ManagedEquation(eqn, range);
+            Equation = new Equation(eqn, range);
             SetChildren();
         }
 
@@ -62,7 +62,7 @@ namespace Symu.SysDyn.Model
             set => _value = Scale.GetOutputInsideRange(value);
         }
 
-        public ManagedEquation Equation { get; set; }
+        public Equation Equation { get; set; }
 
         public GraphicalFunction Function { get; set; }
 

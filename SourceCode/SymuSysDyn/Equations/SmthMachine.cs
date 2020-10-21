@@ -7,7 +7,10 @@
 
 #endregion
 
+using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using Symu.SysDyn.Model;
 using Symu.SysDyn.Simulation;
 
@@ -23,7 +26,7 @@ namespace Symu.SysDyn.Equations
     {
         private readonly StateMachine _stateMachine = new StateMachine();
 
-        public SmthMachine(string input, string averaging, byte order, string initial = "0", float deltaTime= 0.5F)
+        public SmthMachine(string input, string averaging, byte order, string initial = "", float deltaTime= 0.5F)
         {
             Input = input;
             Averaging = averaging;
@@ -40,8 +43,6 @@ namespace Symu.SysDyn.Equations
                 _stateMachine.Variables.Add(CreateStock(i));
                 _stateMachine.Variables.Add(CreateFlow(i));
             }
-            _stateMachine.Initialize();
-
         }
         public string Input { get; }
         public string Averaging { get; }
@@ -65,7 +66,7 @@ namespace Symu.SysDyn.Equations
         }
         public Variable CreateStock(byte order)
         {
-            var eqn = Initial == "0" ? "Input" : "Initial";
+            var eqn = Initial == string.Empty ? "Input" : "Initial";
 
             return new Stock("Comp"+order, eqn, "Flow"+order);
         }
@@ -85,10 +86,41 @@ namespace Symu.SysDyn.Equations
 
         public float Evaluate(ushort time)
         {
+            _stateMachine.Initialize();
             _stateMachine.Simulation.Stop = time;
             _stateMachine.Clear();
             _stateMachine.Process();
+            RemoveVariables();
             return _stateMachine.Variables.Get("Comp" + (Order - 1)).Value;
+        }
+        private readonly List<string> _variablesToRemove= new List<string>();
+        /// <summary>
+        /// If SMTH has variables as parameters, we need to had them in the state machine so that can be initialized
+        /// </summary>
+        /// <param name="variables"></param>
+        public void AddVariables(Variables variables)
+        {
+            var children = new List<string>();
+            foreach (var variable in _stateMachine.Variables.Select(x => x.Children).Distinct())
+            {
+                children.AddRange(variable);
+            }
+            children = children.Distinct().ToList();
+
+
+            foreach (var variable in from child in children where variables.Exists(child) select variables.Get(child))
+            {
+                _variablesToRemove.Add(variable.Name);
+                _stateMachine.Variables.Add(variable);
+            }
+        }
+
+        private void RemoveVariables()
+        {
+            foreach (var variable in _variablesToRemove)
+            {
+                _stateMachine.Variables.Remove(variable);
+            }
         }
     }
 }

@@ -7,21 +7,36 @@ namespace SymuSysDynTests.Equations
     [TestClass()]
     public class Smth3Tests
     {
-        private readonly Smth3 _smth = new Smth3("SMTH3(5+Step(10,3),5)");
-        private readonly SimSpecs _sim = new SimSpecs(0,20);
+        private readonly StateMachine _machine = new StateMachine();
+
+        [TestInitialize]
+        public void Initialize()
+        {
+            _machine.Simulation.Stop = 20;
+        }
         [TestMethod()]
         public void Smth3Test()
         {
-            Assert.AreEqual("0", _smth.Initial);
-            Assert.AreEqual("5+Step(10,3)", _smth.Input);
-            Assert.AreEqual("5", _smth.Averaging);
+            var smth = new Smth3("SMTH3(5+Step(10,3),5)");
+            Assert.AreEqual(string.Empty, smth.Initial);
+            Assert.AreEqual("5+Step(10,3)", smth.Input);
+            Assert.AreEqual("5", smth.Averaging);
+        }
+        [TestMethod()]
+        public void Smth3Test1()
+        {
+            var smth = new Smth3("SMTH3(5+Step(10,3),5,2)");
+            Assert.AreEqual("2", smth.Initial);
+            Assert.AreEqual("5+Step(10,3)", smth.Input);
+            Assert.AreEqual("5", smth.Averaging);
         }
 
         [TestMethod()]
         public void EvaluateTest()
         {
-            _sim.Time = 4;
-            Assert.AreEqual(5,_smth.Evaluate(_sim));
+            var smth = new Smth3("SMTH3(5+Step(10,3),5)");
+            _machine.Simulation.Time = 4;
+            Assert.AreEqual(5,smth.Evaluate(_machine.Variables, _machine.Simulation));
         }
     }
 }

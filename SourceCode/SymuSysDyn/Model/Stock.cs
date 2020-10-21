@@ -72,7 +72,7 @@ namespace Symu.SysDyn.Model
                 equation += StringUtils.RParenthesis;
             }
 
-            Equation = new ManagedEquation(equation);
+            Equation = new Equation(equation);
 
             SetChildren();
         }

@@ -22,11 +22,14 @@ namespace SymuSysDynTests.Equations
         [TestMethod]
         public void IsContainedInTest()
         {
-            Assert.IsTrue(Time.IsContainedIn("TIME"));
-            Assert.IsTrue(Time.IsContainedIn(" TIME "));
-            Assert.IsTrue(Time.IsContainedIn("-TIME+"));
-            Assert.IsFalse(Time.IsContainedIn("TIME_XXX"));
-            Assert.IsFalse(Time.IsContainedIn("XXX_TIME"));
+            Assert.IsTrue(Time.IsContainedIn("TIME", out var time));
+            Assert.AreEqual("TIME", time);
+            Assert.IsTrue(Time.IsContainedIn(" Time ", out time));
+            Assert.AreEqual("Time", time);
+            Assert.IsTrue(Time.IsContainedIn("-time+", out time));
+            Assert.AreEqual("time", time);
+            Assert.IsFalse(Time.IsContainedIn("TIME_XXX", out _));
+            Assert.IsFalse(Time.IsContainedIn("XXX_TIME", out _));
         }
     }
 }

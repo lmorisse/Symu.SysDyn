@@ -32,7 +32,6 @@ namespace Symu.SysDyn.Equations
     {        
         public BuiltInFunction() { }
 
-
         public BuiltInFunction(string function)
         {
             OriginalFunction = function ?? throw new ArgumentNullException(nameof(function));
@@ -74,16 +73,16 @@ namespace Symu.SysDyn.Equations
         /// </summary>
         public string IndexName { get; set; }
 
-        public List<ManagedEquation> Parameters { get; protected set; }
+        public List<Equation> Parameters { get; protected set; }
 
         /// <summary>
         ///     Get the list of parameters of a function with nested functions
         /// </summary>
         /// <param name="input"></param>
         /// <returns>input = "function(func(param1, param2), param3)" - return {func(param1, param2), param3}</returns>
-        public static List<ManagedEquation> GetParameters(string input)
+        public static List<Equation> GetParameters(string input)
         {
-            var result = new List<ManagedEquation>();
+            var result = new List<Equation>();
             const string extractFuncRegex = @"\b[^()]+\((.*)\)$";
             const string extractArgsRegex = @"(?:[^,()]+((?:\((?>[^()]+|\((?<open>)|\)(?<-open>))*\)))*)+";
 
@@ -98,7 +97,7 @@ namespace Symu.SysDyn.Equations
             var matches = Regex.Matches(innerArgs, extractArgsRegex);
             for (var i = 0; i < matches.Count; i++)
             {
-                result.Add(new ManagedEquation(matches[i].Value));
+                result.Add(new Equation(matches[i].Value));
             }
 
             return result;
@@ -126,10 +125,10 @@ namespace Symu.SysDyn.Equations
                 }
             }
 
-            return Evaluate(sim);
+            return Evaluate(variables, sim);
         }
 
-        public virtual float Evaluate(SimSpecs sim)
+        public virtual float Evaluate(Variables variables, SimSpecs sim)
         {
             return Convert.ToSingle(Expression.Evaluate());
         }

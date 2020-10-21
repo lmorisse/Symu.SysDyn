@@ -12,7 +12,7 @@
 using System;
 using System.Globalization;
 using System.Linq;
-
+using Symu.SysDyn.Model;
 using Symu.SysDyn.Simulation;
 
 #endregion
@@ -27,6 +27,7 @@ namespace Symu.SysDyn.Equations
     /// </summary>
     public class Smth3 : Smth1
     {
+        public new const string Value = "Smth3";
         public Smth3(string function) : base(function)
         {
             SmthMachine = new SmthMachine(Input, Averaging, 3, Initial);

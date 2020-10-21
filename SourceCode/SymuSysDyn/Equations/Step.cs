@@ -38,7 +38,7 @@ namespace Symu.SysDyn.Equations
         public string Height { get; }
         public string StartTime { get; }
 
-        public override float Evaluate(SimSpecs sim)
+        public override float Evaluate(Variables variables, SimSpecs sim)
         {
             if (sim == null)
             {

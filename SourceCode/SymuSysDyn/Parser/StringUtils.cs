@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Symu.SysDyn.Equations;
+using Symu.SysDyn.Model;
 
 #endregion
 
@@ -32,12 +33,12 @@ namespace Symu.SysDyn.Parser
         public const string Blank = " ";
 
         #region Functions and parameters
+
         /// <summary>
         /// Extract functions from a string as a list of BuiltIn functions
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        //TODO use NCalc2 or Antlr methods?
         public static IEnumerable<BuiltInFunction> GetStringFunctions(string input)
         {
             if (input == null)
@@ -46,7 +47,7 @@ namespace Symu.SysDyn.Parser
             }
             var builtInFunctions = new List<BuiltInFunction>();
 
-            var regex = new Regex(@"([a-zA-Z0-9]*)\s*\([^()]*\)");
+            var regex = new Regex(@"([a-zA-Z0-9]+)\s*\([^()]*\)");
             var functions = regex.Matches(input);
 
             if (functions.Count > 0)
@@ -71,6 +72,15 @@ namespace Symu.SysDyn.Parser
                         case Step.Value:
                             builtInFunctions.Add(new Step(function));
                             break;
+                        case Smth1.Value:
+                            builtInFunctions.Add(new Smth1(function));
+                            break;
+                        case Smth3.Value:
+                            builtInFunctions.Add(new Smth3(function));
+                            break;
+                        case SmthN.Value:
+                            builtInFunctions.Add(new SmthN(function));
+                            break;
                         default:
                             builtInFunctions.Add(new BuiltInFunction(function));
                             break;
@@ -83,14 +93,14 @@ namespace Symu.SysDyn.Parser
                 builtInFunctions.Add(new IfThenElse(input));
             }
 
-            if (Dt.IsContainedIn(input))
+            if (Dt.IsContainedIn(input, out var dt))
             {
-                builtInFunctions.Add(new Dt());
+                builtInFunctions.Add(new Dt(dt));
             }
 
-            if (Time.IsContainedIn(input))
+            if (Time.IsContainedIn(input, out var time))
             {
-                builtInFunctions.Add(new Time());
+                builtInFunctions.Add(new Time(time));
             }
 
             return builtInFunctions;

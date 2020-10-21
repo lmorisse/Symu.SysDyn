@@ -55,7 +55,7 @@ namespace Symu.SysDyn.Simulation
         }
 
         public SimSpecs Simulation { get; }
-        public Variables Variables { get; }
+        public Variables Variables { get; set; }
         public ResultCollection Results { get; } = new ResultCollection();
         public bool StoreResults { get; set; } = true;
 
@@ -142,6 +142,11 @@ namespace Symu.SysDyn.Simulation
             var waitingParents = new List<Variable>();
             foreach (var child in parent.Children.Select(childName => Variables[childName]))
             {
+                // In case of SmthMachine with parameters that have children
+                if (child == null)
+                {
+                    continue;
+                }
                 switch (child.Updated)
                 {
                     //parent who needs to wait for children 

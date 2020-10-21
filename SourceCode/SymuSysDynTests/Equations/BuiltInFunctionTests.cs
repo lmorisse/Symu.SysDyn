@@ -110,7 +110,7 @@ namespace SymuSysDynTests.Equations
         {
             var function = new BuiltInFunction("abs(-5)");
             function.Prepare(Machine.Variables, Machine.Simulation);
-            Assert.AreEqual(5F, function.Evaluate(Machine.Simulation));
+            Assert.AreEqual(5F, function.Evaluate(Machine.Variables, Machine.Simulation));
         }
 
         /// <summary>
@@ -122,7 +122,7 @@ namespace SymuSysDynTests.Equations
             var function = new BuiltInFunction("abs(aux1)");
             function.Prepare(Machine.Variables, Machine.Simulation);
             Assert.AreEqual(1F, function.Expression.Parameters["Aux1"]);
-            Assert.AreEqual(1F, function.Evaluate(Machine.Simulation));
+            Assert.AreEqual(1F, function.Evaluate(Machine.Variables, Machine.Simulation));
         }
 
         [TestMethod]

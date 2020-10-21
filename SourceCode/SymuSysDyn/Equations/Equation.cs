@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Text.RegularExpressions;
 using NCalc2;
 using Symu.SysDyn.Model;
 using Symu.SysDyn.Parser;
@@ -22,7 +23,7 @@ using Symu.SysDyn.Simulation;
 
 namespace Symu.SysDyn.Equations
 {
-    public class ManagedEquation
+    public class Equation
     {
         public string OriginalEquation { get; }
         public string InitializedEquation { get; }
@@ -34,19 +35,24 @@ namespace Symu.SysDyn.Equations
         private readonly Range _range;
 
         /// <summary>
-        ///     List of all the built_in functions used in the equation
+        ///     List of all the nested functions used in the equation
         /// </summary>
-        private List<BuiltInFunction> _builtInFunctions;
-        public List<string> Variables { get; } = new List<string>();
+        private List<BuiltInFunction> _functions = new List<BuiltInFunction>();
+        public List<string> Variables { get; private set; } = new List<string>();
 
-        public ManagedEquation(string equation, Range range) : this(equation)
+        public Equation(string equation, Range range) : this(equation)
         {
             _range = range;
         }
 
-        public ManagedEquation(string equation)
+        public Equation(string equation)
         {
             OriginalEquation = equation;
+            if (string.IsNullOrEmpty(equation))
+            {
+                return;
+            }
+
             InitializedEquation = Initialize(equation);
             _expression = new Expression(InitializedEquation);
         }
@@ -69,6 +75,11 @@ namespace Symu.SysDyn.Equations
             if (variables == null)
             {
                 throw new ArgumentNullException(nameof(variables));
+            }
+
+            if (_expression == null)
+            {
+                return 0;
             }
 
             try
@@ -112,7 +123,7 @@ namespace Symu.SysDyn.Equations
                 }
             }
             // Built-in functions
-            foreach (var function in _builtInFunctions)
+            foreach (var function in _functions)
             {
                 _expression.Parameters[function.IndexName] = function.Prepare(variables, sim);
             }
@@ -130,6 +141,11 @@ namespace Symu.SysDyn.Equations
             {
                 throw new ArgumentNullException(nameof(input));
             }
+            // Case of a numeric
+            if (float.TryParse(input, out _))
+            {
+                return input.Trim();
+            }
 
             // Remove string in Braces which are units not equation
             var index = input.IndexOf('{');
@@ -138,62 +154,51 @@ namespace Symu.SysDyn.Equations
                 input = input.Remove(index);
             }
             input = input.Trim();
-            _builtInFunctions = StringUtils.GetStringFunctions(input).ToList();
-            for (var i = 0; i < _builtInFunctions.Count; i++)
+            _functions = StringUtils.GetStringFunctions(input).ToList();
+            for (var i = 0; i < _functions.Count; i++)
             {
-                var function = _builtInFunctions[i];
+                var function = _functions[i];
                 function.IndexName = function.Name + i;
                 input = input.Replace(function.OriginalFunction, function.IndexName);
             }
-
-            input = input.Replace(EquationUtils.Plus, StringUtils.Blank + EquationUtils.Plus + StringUtils.Blank);
-            input = input.Replace(EquationUtils.Minus, StringUtils.Blank + EquationUtils.Minus + StringUtils.Blank);
-            input = input.Replace(EquationUtils.Multiplication,
-                StringUtils.Blank + EquationUtils.Multiplication + StringUtils.Blank);
-            input = input.Replace(EquationUtils.Division,
-                StringUtils.Blank + EquationUtils.Division + StringUtils.Blank);
-            input = input.Replace(StringUtils.LParenthesis,
-                StringUtils.Blank + StringUtils.LParenthesis + StringUtils.Blank);
-            input = input.Replace(StringUtils.RParenthesis,
-                StringUtils.Blank + StringUtils.RParenthesis + StringUtils.Blank);
-            input = input.Replace("  ", StringUtils.Blank);
-
-            var words = input.Split(' ').ToList();
-            words.RemoveAll(string.IsNullOrEmpty);
-
-            for (var i = 0; i < words.Count; i++)
+            // split equation in words
+            var regexWords = new Regex(@"[0-9]*\.?\,?[0-9]+([eE][-+]?[0-9]+)?|[-^+*\/()]|\w+");
+            var matches = regexWords.Matches(input);
+            var words = new List<string>();
+            foreach (var match in matches)
             {
-                var word = words[i];
-                if (EquationUtils.Operators.Contains(word))
-                {
-                    continue;
-                }
-
-                words[i] = StringUtils.CleanName(word);
+                var word = StringUtils.CleanName(match.ToString());
+                words.Add(word);
+                SetVariables(word);
             }
-            SetVariables(words);
+
+            Variables = Variables.Distinct().ToList();
             return words.Aggregate(string.Empty, (current, word) => current + word);
         }
 
-        private void SetVariables (IEnumerable<string> words)
+        private void SetVariables (string word)
         {
-            foreach (var word in words)
+            if (word.Length <= 1)
             {
-                if (word.Length <= 1)
-                {
-                    continue;
-                }
+                return;
+            }
 
-                if (float.TryParse(word, NumberStyles.Any, CultureInfo.InvariantCulture, out _))
-                {
-                    continue;
-                }
+            if (float.TryParse(word, NumberStyles.Any, CultureInfo.InvariantCulture, out _))
+            {
+                return;
+            }
 
-                if (_builtInFunctions.Exists(x => word.StartsWith(x.Name)))
+            var function = _functions.Find(x => word == x.IndexName);
+            if (function != null)
+            {
+                //Get the variables of the function
+                foreach (var equation in function.Parameters)
                 {
-                    continue;
+                    Variables.AddRange(equation.Variables);
                 }
-
+            }
+            else
+            {
                 Variables.Add(word);
             }
         }

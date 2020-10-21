@@ -164,5 +164,10 @@ namespace Symu.SysDyn.Model
         }
 
         #endregion
+
+        public void Remove(string name)
+        {
+            _variables.RemoveAll(x => x.Name == name);
+        }
     }
 }
