@@ -31,22 +31,22 @@ namespace Symu.SysDyn.Model
         /// </summary>
         /// <param name="xPts">Optional</param>
         /// <param name="yPts"></param>
-        /// <param name="xRange">Optional</param>
-        /// <param name="yRange"></param>
-        public GraphicalFunction(string xPts, string yPts, IReadOnlyList<string> xRange, IReadOnlyList<string> yRange)
+        /// <param name="xScale">Optional</param>
+        /// <param name="yScale"></param>
+        public GraphicalFunction(string xPts, string yPts, IReadOnlyList<string> xScale, IReadOnlyList<string> yScale)
         {
             if (yPts == null)
             {
                 throw new ArgumentNullException(nameof(yPts));
             }
 
-            if (yRange == null)
+            if (yScale == null)
             {
-                throw new ArgumentNullException(nameof(yRange));
+                throw new ArgumentNullException(nameof(yScale));
             }
 
-            XRange = new Range(xRange);
-            YRange = new Range(yRange);
+            XScale = new Range(xScale);
+            YScale = new Range(yScale);
 
             var yTable = ParseStringTable(yPts);
             var xTable = xPts == null ? CreateXTable(yTable.Length) : ParseStringTable(xPts);
@@ -65,19 +65,43 @@ namespace Symu.SysDyn.Model
 
             ChecksRange();
         }
-
+        /// <summary>
+        /// specifies the exact x-values corresponding to the y-values given in the YPoints
+        /// default: the x-axis XScale evenly divided into the number of points in YPoints creating a(fixed) increment along the x - axis).
+        /// Note that when this is specified, the number of points given MUST exactly match the number of points in YPoints,
+        /// one x - value for each and every y - value, corresponding positionally,
+        /// and the values must be sorted in ascending order(from smallest to largest).
+        /// By default, these values are comma - separated.
+        /// REQUIRED when no x - axis scale.
+        /// </summary>
         public float[] XPoints { get; }
+        /// <summary>
+        /// specifies the y-values for the graphical function, starting with the y-value for the smallest x-value
+        /// and continuing as x increases until ending with the y-value corresponding to the largest x-value.
+        /// By default, these values are comma-separated.
+        /// REQUIRED
+        /// </summary>
         public float[] YPoints { get; }
-
-        public Range XRange { get; }
-        public Range YRange { get; }
+        /// <summary>
+        /// defines the scale of the x-axis
+        /// default: smallest and largest values in XPoints
+        /// REQUIRED when no x-axis points.
+        /// </summary>
+        public Range XScale { get; }
+        /// <summary>
+        ///  defines the scale of the y-axis
+        /// default: smallest and largest values in YPoints.
+        /// This only affects the scale of the graph as shown in a user interface;
+        /// it has no impact on the behavior or interpretation of the graphical function.
+        /// </summary>
+        public Range YScale { get; }
 
         /// <summary>
         ///     Check that Range and Points are
         /// </summary>
         public void ChecksRange()
         {
-            if (!XRange.Check(XPoints) || !YRange.Check(YPoints))
+            if (!XScale.Check(XPoints) || !YScale.Check(YPoints))
             {
                 throw new ArgumentOutOfRangeException();
             }
@@ -109,7 +133,7 @@ namespace Symu.SysDyn.Model
 
         public float[] CreateXTable(int divisions)
         {
-            var difference = XRange.Max - XRange.Min;
+            var difference = XScale.Max - XScale.Min;
             if (float.IsInfinity(difference))
             {
                 throw new ArgumentOutOfRangeException();
@@ -122,13 +146,13 @@ namespace Symu.SysDyn.Model
 
                 for (var counter = 0; counter < divisions; counter++)
                 {
-                    xTable[counter] = XRange.Min + increment * counter;
+                    xTable[counter] = XScale.Min + increment * counter;
                 }
             }
             else
             {
-                xTable[0] = XRange.Min;
-                xTable[1] = XRange.Max;
+                xTable[0] = XScale.Min;
+                xTable[1] = XScale.Max;
             }
 
             return xTable;
@@ -140,6 +164,11 @@ namespace Symu.SysDyn.Model
 
             //find which line segment our x fits into 
             //TODO: currently n time, need faster implementation to protect against very high resolution graphical functions. 
+
+            if (x < XPoints[0])
+            {
+                return YPoints[0];
+            }
             for (var counter = 0; counter < XPoints.Length; counter++)
             {
                 if (x < XPoints[counter])
@@ -164,7 +193,7 @@ namespace Symu.SysDyn.Model
 
         public float GetOutputWithBounds(float input)
         {
-            return GetOutput(XRange.GetOutputInsideRange(input));
+            return GetOutput(XScale.GetOutputInsideRange(input));
         }
     }
 }

@@ -22,6 +22,21 @@ namespace SymuSysDynTests.Simulation
     {
         private SimSpecs _sim = new SimSpecs(0, 10);
         private bool _triggered;
+        [TestMethod]
+        public void SimSpecsTest()
+        {
+            _sim = new SimSpecs(10, 100);
+            Assert.AreEqual(10, _sim.Start);
+            Assert.AreEqual(0, _sim.Step);
+            Assert.AreEqual(100, _sim.Stop);
+        }
+        [TestMethod]
+        public void ClearTest()
+        {
+            _sim = new SimSpecs(10, 100, 0.5F);
+            _sim.Clear();
+            Assert.AreEqual(20, _sim.Step);
+        }
 
         [TestMethod]
         public void PauseTest()

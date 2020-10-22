@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<xmile version="1.0" xmlns="http://docs.oasis-open.org/xmile/ns/XMILE/v1.0">
+  <header>
+    <name>Fliers</name>
+    <options>
+      <uses_outputs />
+    </options>
+    <product version="1.0">Hand Coded XMILE from Strategic Modelling and Business Dynamics book</product>
+  </header>
+  <sim_specs method="Euler" time_units="Years" >
+    <start>1996</start>
+    <stop>2000</stop>
+    <dt>0.03125</dt>
+  </sim_specs>
+  <model>
+    <variables>
+      <aux name="Average_Carriers_Per_Route">
+        <doc>Number of carriers on average operating the same or alternative routes to the start-up airline. &#x0D;Units: Carriers per route.&#x0D;Equation: Average_Carriers_Per_Route =  4 &#x0D;</doc>
+        <eqn> 4 </eqn>
+      </aux>
+      <flow name="Change_in\nRivals_Fare">
+        <doc>Change in Rivals Fare describes the rate at which rivals are adapting their fare structure to match the lower fares of the start-up company.  This rate of adaptation is an important competitive factor and captures both the inertia of operating costs and the possibility of predatory pricing.&#x0D;Units: £s per passenger mile per year.&#x0D;Equation: Change_in_Rivals_Fare =  (Fare_Set_by_Startup-Rivals_Fare)/Time_to_Change_Costs&#x0D;</doc>
+        <eqn> (Fare_Set_by_Startup-Rivals_Fare)/Time_to_Change_Costs</eqn>
+      </flow>
+      <flow name="Increase_of_\nPotential_Passengers">
+        <doc>Fliers hearing favourable comments about the start-up airline. &#x0D;Units: passengers per year. &#x0D;Equation: Increase_of_Potential_Passengers = (Potential_Passengers*Conversion_Ratio + Marketing_Spend*1000*Marketing_Effectiveness) *Effect_of_Route_Saturation</doc>
+        <eqn>(Potential__Passengers*Conversion_Ratio + Marketing_Spend*1000*Marketing_Effectiveness) * Effect_of_Route_Saturation</eqn>
+        <scale min="0" max="4000000" />
+        <non_negative />
+      </flow>
+      <aux name="Fare_Set\nby_Startup">
+        <doc>Fare set by the start-up airline. &#x0D;Units: £s per passenger mile.&#x0D;Equation: Fare_Set_by_Startup = .09 &#x0D;</doc>
+        <eqn>.09</eqn>
+      </aux>
+      <aux name="Time_to\nChange_Costs">
+        <doc>Time to Change Costs is the parameter that controls the rate of adaptation of the rivals&apos; fare.  This variable is normally in the range of 1 - 6 years, with an average value of 4 years; meaning that high-cost rivals could take up to 4 years to achieve the radical restructuring needed to fully match the low operating costs of the start-up company, though partial adjustment may be much quicker.  Large carriers will match seat prices regardless of cost by providing some seats at a lower price in an attempt to match the price of the new entrant.  This adjustment can happen very quickly but it is a limited option, e.g. out of 150 seats there may be 15 cheap ones.  For very popular flights there are no cheap seats.  The aggregate effect is therefore only a partial adjustment to fully competitive prices in the short run.&#x0D;Units: years.&#x0D;Equation: Time_to_Change_Costs = 4 (default value).&#x0D;</doc>
+        <eqn>4</eqn>
+      </aux>
+      <aux name="Route_Saturation">
+        <doc>Proportion of fliers who are likely to travel the routes served by the start-up airline who have formed a favourable impression of the airline. &#x0D;Units: dimensionless index between 0 and 1.&#x0D;Equation:  Route_Saturation = Potential_Passenger_Miles/Maximum_Passenger_Miles&#x0D;</doc>
+        <eqn>Potential_Passenger_Miles/Maximum_Passenger_Miles</eqn>
+        <scale min="0" max="1" />
+      </aux>
+      <aux name="Maximum\nMarket_Size_Multiple">
+        <doc>Maximum likely increase in the flying public if cut-price service were widely available.  Measured as a multiple of the current size of the flying public on any route covered by the start-up airline. &#x0D;Units: dimensionless index.&#x0D;Equation: Maximum_Market_Size_Multiple =  2 &#x0D;</doc>
+        <eqn> 2 </eqn>
+      </aux>
+      <aux name="Maximum_Passenger_Miles">
+        <doc>Maximum passenger miles available per year to any one carrier on the routes served by the start-up airline. &#x0D;Units: passenger miles per year.&#x0D;Equation: Maximum_Passenger_Miles = Available_Passenger_Miles*Average_Carriers_Per_Route*Market_Share_Limit*Maximum_Market_Size_Multiple&#x0D;</doc>
+        <eqn>Available_Passenger_Miles*Average_Carriers_Per_Route*Market_Share_Limit*Maximum_Market_Size_Multiple</eqn>
+        <scale min="0" max="16000000000" />
+      </aux>
+      <aux name="Available\nPassenger_Miles">
+        <doc>Passenger miles available per year if the planes are fully loaded. &#x0D;Units: passenger miles per year.&#x0D;Equation: Available_Passenger_Miles = Planes*Passenger_Miles_Per_Plane*Service_Days_Per_Year &#x0D;</doc>
+        <eqn>Planes*Passenger_Miles_Per_Plane*Service_Days_Per_Year </eqn>
+        <scale min="0" max="16000000000" />
+      </aux>
+      <aux name="Passenger_Miles\nPer_Plane">
+        <doc>Number of passenger miles provided by a typical plane each day flying to and from European destinations.  For example, a typical aircraft has a capacity for 150 passengers and makes 3 flights of 1000 miles per day.&#x0D;&#x0D;Units: passenger miles per plane per day.&#x0D;Equation: Passenger_Miles_Per_Plane =  450,000&#x0D;</doc>
+        <eqn> .45e6</eqn>
+      </aux>
+      <aux name="Relative_\nFare">
+        <doc>Fare set by the start-up company relative to the average fare of industry rivals. &#x0D;Units: dimensionless index.&#x0D;Equation: Relative_Fare =  Fare_Set_by_Startup/Rivals_Fare&#x0D;</doc>
+        <eqn> Fare_Set_by_Startup/Rivals_Fare</eqn>
+      </aux>
+      <aux name="Market\nShare_Limit">
+        <doc>The maximum share of route traffic that any one carrier is likely to achieve in a competitive industry. &#x0D;Units: dimensionless index.&#x0D;Equation: Market_Share_Limit =  .5 &#x0D;</doc>
+        <eqn> .5  </eqn>
+      </aux>
+      <aux name="Service_Days\nPer_Year">
+        <doc>Number of service days per year. &#x0D;Units:  days per year.&#x0D;Equation: Service_Days_Per_Year =  360 &#x0D;</doc>
+        <eqn> 360 </eqn>
+      </aux>
+      <stock name="Rivals\nFare">
+        <doc>Average fare charged by an established industry rival. &#x0D;Units: £ per passenger mile.&#x0D;Equation: Rivals_Fare(t) = Rivals_Fare(t - dt) + (Change_in_Rivals_Fare) * dt&#x0D;Initial value: 0.25&#x0D;</doc>
+        <eqn> .25 </eqn>
+        <inflow>Change_in_Rivals_Fare</inflow>
+      </stock>
+      <stock name="Service\nReputation">
+        <doc>Quality of service in the mind of the customer.  Service reputation consists of performance, safety, on-board service, quality of meals, ease of booking, punctuality, etc.  For short-haul flights punctuality is often the determining factor.  In this case Service Reputation is set at a constant value of 1 - meaning, for the purpose of experimentation, Service Reputation remains high throughout.  If Service Reputation were to be a variable, then the model should include the operating policies and strategic resources of the start-up airline that determine on-board service, punctuality, etc.&#x0D;Units: dimensionless index.&#x0D;Equation: Service_Reputation(t) = Service_Reputation(t - dt)&#x0D;</doc>
+        <eqn> 1</eqn>
+      </stock>
+      <stock name="Planes">
+        <doc>Number of planes in the fleet. &#x0D;Units: planes.&#x0D;Equation: Planes(t) = Planes(t - dt)&#x0D;Initial value: Planes =  12&#x0D;</doc>
+        <eqn>12 </eqn>
+      </stock>
+      <stock name="Potential_\nPassengers">
+        <doc>Fliers with a favourable impression of the start-up airline.  &#x0D;Units: passengers. &#x0D;Equation: Potential_Passengers(t) = Potential_Passengers(t - dt) + (Increase_of_Potential_Passengers - Loss_of_Potential_Passengers) * dt.&#x0D;Initial value: Potential_Passengers = 5000&#x0D;</doc>
+        <eqn>5000</eqn>
+        <scale min="0" max="4000000" />
+        <inflow>Increase_of__Potential_Passengers</inflow>
+        <outflow>Loss_of__Potential_Passengers</outflow>
+      </stock>
+      <aux name="Effect_of\nRoute_Saturation">
+        <doc>The Effect of Route Saturation describes the limits to regional growth.  When very few passengers have heard of the new regional service then word-of-mouth and marketing effort achieve maximum impact in winning over new passengers, so the Effect of Route Saturation takes the neutral value of 1.  As more and more fliers in the region form a favourable impression of the new service the Effect of Route Saturation falls below 1 and begins to curtail word-of-mouth and marketing effort.  When all fliers in the region are aware of the new service there is no-one else left to win over and the Effect of Route Saturation takes a value of 0. &#x0D;Units: dimensionless index.&#x0D;Equation: Effect_of_Route_Saturation = GRAPH(Route_Saturation)&#x0D;(0.5, 1.00), (0.55, 0.985), (0.6, 0.955), (0.65, 0.875), (0.7, 0.76), (0.75, 0.625), (0.8, 0.42), (0.85, 0.24), (0.9, 0.115), (0.95, 0.035), (1.00, 0.00)&#x0D;</doc>
+        <eqn>Route_Saturation</eqn>
+        <scale min="0" max="1" />
+        <gf>
+          <yscale min="0" max="1" />
+          <xpts>0.5,0.55,0.60,0.65,0.70,0.75,0.80,0.85,0.90,0.95,1.00</xpts>
+          <ypts>1,0.985,0.955,0.875,0.760,0.625,0.420,0.240,0.115,0.0350,0</ypts>
+        </gf>
+      </aux>
+      <aux name="Conversion_Ratio">
+        <doc>This concept determines the strength of word-of-mouth marketing.  It is defined as the number of new fliers won-over by each existing potential passenger.  In this case, Conversion Ratio is a function of relative fare.  For example, with a dramatically low relative fare of 40% of rivals’ fare, then each potential passenger wins over 2 more potential passengers.  On the other hand, if the start-up’s relative fare is exactly equal to rivals’ fare, then there is no word-of-mouth effect because there is nothing noteworthy about price.  In some cases very low fares may deter passengers due to concerns about safety.  But in this case easyJet is flying a fleet of brand new 737s which instil confidence.&#x0D;Units: dimensionless index.&#x0D;Equation: Conversion_Ratio = GRAPH(Relative_Fare )&#x0D;(0.00, 3.00), (0.1, 2.92), (0.2, 2.77), (0.3, 2.50), (0.4, 2.02), (0.5, 1.52), (0.6, 0.875), (0.7, 0.325), (0.8, 0.125), (0.9, 0.05), (1, 0.00), (1.10, 0.00), (1.20, 0.00)&#x0D;</doc>
+        <eqn>Relative__Fare </eqn>
+        <scale min="0" max="4" />
+        <gf>
+          <yscale min="0" max="3" />
+          <xpts>0,0.099999999999999992,0.19999999999999998,0.29999999999999999,0.39999999999999997,0.49999999999999994,0.59999999999999998,0.69999999999999996,0.79999999999999993,0.89999999999999991,0.99999999999999989,1.0999999999999999,1.2</xpts>
+          <ypts>3,2.9249999999999998,2.7749999999999999,2.5,2.0249999999999999,1.5249999999999999,0.875,0.32500000000000001,0.125,0.050000000000000003,0,0,0</ypts>
+        </gf>
+      </aux>
+      <aux name="Churn">
+        <doc>Fraction of potential passengers losing interest in the airline each year. &#x0D;Units: 1/year.&#x0D;Equation: Churn = GRAPH(Service_Reputation)&#x0D;(0.5, 1.00), (0.6, 0.695), (0.7, 0.485), (0.8, 0.31), (0.9, 0.195), (1.00, 0.1), (1.10, 0.065), (1.20, 0.055), (1.30, 0.04), (1.40, 0.03), (1.50, 0.025)&#x0D;</doc>
+        <eqn>Service_Reputation</eqn>
+        <scale min="0" max="4" />
+        <gf>
+          <yscale min="0" max="1" />
+          <xpts>0.5,0.59999999999999998,0.69999999999999996,0.80000000000000004,0.90000000000000002,1,1.1000000000000001,1.2,1.3,1.3999999999999999,1.5</xpts>
+          <ypts>1,0.69499999999999995,0.48499999999999999,0.31,0.19500000000000001,0.10000000000000001,0.065000000000000002,0.055,0.040000000000000001,0.029999999999999999,0.025000000000000001</ypts>
+        </gf>
+      </aux>
+      <aux name="Required\nPassengers">
+        <doc>Number of passengers needed to completely fill the fleet of planes in an operating year. &#x0D;Units: passengers.&#x0D;Equation: Required_Passengers = Available_Passenger_Miles/(Miles_Per_Flight*Flights_Per_Year)&#x0D;</doc>
+        <eqn>Available_Passenger_Miles/(Miles_Per_Flight*Flights_Per_Year)</eqn>
+        <scale min="0" max="4000000" />
+      </aux>
+      <aux name="Potential\nPassenger_Miles">
+        <doc>The number of passenger miles per year generated if all potential passengers exercise the option to fly.  For example, if the number of potential passengers is 60,000, the average miles flown per flight is 1000 and the number of flights per year per passenger is 2, then Potential Passenger Miles is 120 million miles per year. &#x0D;Units: miles per year.&#x0D;Equation: Potential_Passenger_Miles = Potential_Passengers*Miles_Per_Flight*Flights_Per_Year&#x0D;</doc>
+        <eqn>Potential__Passengers*Miles_Per_Flight*Flights_Per_Year</eqn>
+        <scale min="0" max="16000000000" />
+      </aux>
+      <aux name="Miles\nPer_Flight">
+        <doc>The average length of round-trip flights in Europe. &#x0D;Units: miles per flight.&#x0D;Equation:  Miles_Per_Flight = 1000 &#x0D;</doc>
+        <eqn>1000 </eqn>
+      </aux>
+      <flow name="Loss_of_\nPotential_Passengers">
+        <doc>Fliers losing interest in the start-up airline. &#x0D;Units: passengers per year.&#x0D;Equation: Loss_of_Potential_Passengers = Potential_Passengers*Churn &#x0D;</doc>
+        <eqn>Potential__Passengers*Churn  </eqn>
+        <scale min="0" max="4000000" />
+        <non_negative />
+      </flow>
+      <aux name="Flights\nPer_Year">
+        <doc>Number of round-trip flights per year per passenger. &#x0D;Units: flights per year per passenger.&#x0D;Equation: Flights_Per_Year =  2&#x0D;</doc>
+        <eqn>2</eqn>
+      </aux>
+      <aux name="Marketing\nSpend">
+        <doc>Amount spent on marketing per year measured in £ 000&apos;s. &#x0D;Units: £ 000&apos;s per year.&#x0D;Equation: Marketing_Spend = 2500 (default value).&#x0D;</doc>
+        <eqn>2500</eqn>
+      </aux>
+      <aux name="Marketing\nEffectiveness">
+        <doc>Passengers wooed per £ spent. &#x0D;Units: passengers per £.&#x0D;Equation: Marketing_Effectiveness = 0.05&#x0D;</doc>
+        <eqn>0.05 </eqn>
+      </aux>
+      <group name="RIVALS">
+        <entity name="Change_in_Rivals_Fare" />
+        <entity name="Rivals_Fare" />
+        <entity name="Fare_Set_by_Startup" />
+        <entity name="Time_to_Change_Costs" />
+      </group>
+      <group name="PASSENGERS">
+        <entity name="Route_Saturation" />
+        <entity name="Miles_Per_Flight" />
+        <entity name="Increase_of__Potential_Passengers" />
+        <entity name="Potential__Passengers" />
+        <entity name="Loss_of__Potential_Passengers" />
+        <entity name="Relative__Fare" />
+        <entity name="Effect_of_Route_Saturation" />
+        <entity name="Conversion_Ratio" />
+        <entity name="Potential_Passenger_Miles" />
+        <entity name="Marketing_Spend" />
+        <entity name="Marketing_Effectiveness" />
+        <entity name="Service_Reputation" />
+        <entity name="Churn" />
+        <entity name="Flights_Per_Year" />
+      </group>
+      <group name="MARKET_SIZE_and_CAPACITY">
+        <entity name="Average_Carriers_Per_Route" />
+        <entity name="Maximum_Market_Size_Multiple" />
+        <entity name="Maximum_Passenger_Miles" />
+        <entity name="Available_Passenger_Miles" />
+        <entity name="Market_Share_Limit" />
+        <entity name="Required_Passengers" />
+        <entity name="Planes" />
+        <entity name="Passenger_Miles_Per_Plane" />
+        <entity name="Service_Days_Per_Year" />
+      </group>
+    </variables>
+  </model>
+</xmile>

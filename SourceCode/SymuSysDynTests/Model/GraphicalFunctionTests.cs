@@ -46,11 +46,11 @@ namespace SymuSysDynTests.Model
         {
             _gf = new GraphicalFunction(null, Ypts, _xScaleList, _yScaleList);
             Assert.AreEqual(2, _gf.XPoints.Length);
-            Assert.AreEqual(0, _gf.XRange.Min);
-            Assert.AreEqual(1, _gf.XRange.Max);
+            Assert.AreEqual(0, _gf.XScale.Min);
+            Assert.AreEqual(1, _gf.XScale.Max);
             Assert.AreEqual(2, _gf.YPoints.Length);
-            Assert.AreEqual(1, _gf.YRange.Min);
-            Assert.AreEqual(2, _gf.YRange.Max);
+            Assert.AreEqual(1, _gf.YScale.Min);
+            Assert.AreEqual(2, _gf.YScale.Max);
         }
 
         [TestMethod]
@@ -65,11 +65,11 @@ namespace SymuSysDynTests.Model
         {
             _gf = new GraphicalFunction(Xpts, Ypts, _xScaleList, _yScaleList);
             Assert.AreEqual(2, _gf.XPoints.Length);
-            Assert.AreEqual(0, _gf.XRange.Min);
-            Assert.AreEqual(1, _gf.XRange.Max);
+            Assert.AreEqual(0, _gf.XScale.Min);
+            Assert.AreEqual(1, _gf.XScale.Max);
             Assert.AreEqual(2, _gf.YPoints.Length);
-            Assert.AreEqual(1, _gf.YRange.Min);
-            Assert.AreEqual(2, _gf.YRange.Max);
+            Assert.AreEqual(1, _gf.YScale.Min);
+            Assert.AreEqual(2, _gf.YScale.Max);
         }
 
         [TestMethod]

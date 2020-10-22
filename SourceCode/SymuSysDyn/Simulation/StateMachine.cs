@@ -52,6 +52,7 @@ namespace Symu.SysDyn.Simulation
         {
             Compute(); // Initialize the model / don't store the result
             SetStocksEquations();
+            Simulation.Clear();
         }
 
         public SimSpecs Simulation { get; }

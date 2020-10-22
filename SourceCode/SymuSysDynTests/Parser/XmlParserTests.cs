@@ -92,10 +92,10 @@ namespace SymuSysDynTests.Parser
         {
             XElement = XElement.Descendants(Ns + "aux").First();
             var gf = Parser.ParseGraphicalFunction(XElement);
-            Assert.AreEqual(0, gf.XRange.Min);
-            Assert.AreEqual(1, gf.XRange.Max);
-            Assert.AreEqual(0, gf.YRange.Min);
-            Assert.AreEqual(1, gf.YRange.Max);
+            Assert.AreEqual(0, gf.XScale.Min);
+            Assert.AreEqual(1, gf.XScale.Max);
+            Assert.AreEqual(0, gf.YScale.Min);
+            Assert.AreEqual(1, gf.YScale.Max);
         }
 
         [TestMethod]

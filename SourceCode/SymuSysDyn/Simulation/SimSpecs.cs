@@ -72,7 +72,7 @@ namespace Symu.SysDyn.Simulation
 
         public void Clear()
         {
-            Step = 0;
+            Step = (ushort)Math.Floor(Start / DeltaTime);
         }
 
         public bool Run()
@@ -134,12 +134,14 @@ namespace Symu.SysDyn.Simulation
         #region XML attributes
 
         public ushort Stop { get; set; }
+
         public ushort Start { get; set; }
 
         private float _deltaTime = 1;
 
         /// <summary>
         ///     Step size
+        ///     Delta time should be no more than one-quarter of the shortest time constant in the model.
         /// </summary>
         public float DeltaTime
         {

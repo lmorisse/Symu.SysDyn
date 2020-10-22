@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<xmile version="1.0" xmlns="http://docs.oasis-open.org/xmile/ns/XMILE/v1.0">
+  <header>
+    <name>Bass word of mouth</name>
+    <options>
+      <uses_outputs />
+    </options>
+    <product version="1.0">Hand Coded XMILE from Strategic Modelling and Business Dynamics book</product>
+  </header>
+  <sim_specs method="Euler" time_units="Years" >
+    <start>0</start>
+    <stop>10</stop>
+    <dt>0.0625</dt>
+  </sim_specs>
+  <model>
+    <variables>
+      <stock name="Potential_Adopters">
+        <doc>The number of potential adopters is determined by the total population size and the current number of active adopters.&#x0D;</doc>
+        <eqn>Total_Population - Adopters  {people}</eqn>
+        <scale min="0" max="1000000" />
+        <outflow>Adoption_Rate</outflow>
+      </stock>
+      <flow name="Adoption_Rate">
+        <doc>The rate at which a potential adopter becomes an active adopter. This is driven by advertising efforts and the word of mouth effect.&#x0D;&#x0D;&#x0D;</doc>
+        <eqn>Adoption_from_Advertising +Adoption_from_Word_of_Mouth  {people/year}</eqn>
+        <non_negative />
+      </flow>
+      <stock name="Adopters">
+        <doc>The number of active adopters in the system.&#x0D;&#x0D;&#x0D;</doc>
+        <eqn>10  {people}</eqn>
+        <scale min="0" max="1000000" />
+        <inflow>Adoption_Rate</inflow>
+      </stock>
+      <aux name="Adoption_from\nAdvertising">
+        <doc>Adoption can result from advertising according to the effectiveness of the advertising effort among the pool of potential adopters.&#x0D;&#x0D;&#x0D;</doc>
+        <eqn>Advertising_Effectiveness*Potential_Adopters  {people/year}</eqn>
+      </aux>
+      <aux name="Adoption_from\nWord_of_Mouth">
+        <doc>Adoption by word of mouth is driven by the contact rate between potential adopters and active adopters and the fraction of times these interactions will result in adoption. The word of mouth effect is small if the number of active adopters relative to the total population size is small.&#x0D;&#x0D;&#x0D;</doc>
+        <eqn>Contact_Rate*Adopters*(Potential_Adopters/Total_Population)*Adoption_Fraction  {people/year}</eqn>
+      </aux>
+      <aux name="Advertising_Effectiveness">
+        <doc>Advertising results in adoption according the effectiveness of the advertising, expressed as a fraction per year of potential adopters. &#x0D;</doc>
+        <eqn>.01  {1/year}</eqn>
+      </aux>
+      <aux name="Total\nPopulation">
+        <doc>The size of the total population.&#x0D;&#x0D;</doc>
+        <eqn>1e+006  {people}</eqn>
+      </aux>
+      <aux name="Adoption\nFraction">
+        <doc>The proportion of contacts between an active adopter and a potential adopter that result in adoption.&#x0D;&#x0D;</doc>
+        <eqn>.02  {dimensionless}</eqn>
+      </aux>
+      <aux name="Contact_Rate">
+        <doc>The rate at which active adopters come into contact with potential adopters.&#x0D;&#x0D;&#x0D;</doc>
+        <eqn>100  {people per person/year, which simplifies dimensionally to 1/year}</eqn>
+      </aux>
+      <aux name="Sketch_of_Adopters">
+        <eqn>TIME</eqn>
+        <gf>
+          <xscale min="0" max="10" />
+          <yscale min="0" max="1e+006" />
+          <ypts>0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0</ypts>
+        </gf>
+      </aux>
+      <group name="Word_Of_Mouth">
+        <entity name="Potential_Adopters" />
+        <entity name="Adoption_Rate" />
+        <entity name="Adopters" />
+        <entity name="Adoption_from\nWord_of_Mouth" />
+        <entity name="Total\nPopulation" />
+        <entity name="Adoption\nFraction" />
+        <entity name="Contact_Rate" />
+      </group>
+      <group name="Advertising">
+        <entity name="Potential_Adopters" />
+        <entity name="Adoption_Rate" />
+        <entity name="Advertising_Effectiveness" />
+        <entity name="Adoption_from\nAdvertising" />
+      </group>
+    </variables>
+  </model>
+</xmile>
