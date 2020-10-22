@@ -48,7 +48,7 @@
         <non_negative />
       </flow>
       <aux name="Retail_Order_Rate">
-        <eqn> 1000*NORMAL(1,0) + STEP(100,10) + RAMP(0,10)     {units/week}</eqn>
+        <eqn> 1000*NORMAL(1,0.0) + STEP(100,10)     {units/week}</eqn>
         <scale min="1000" max="1400" />
       </aux>
       <flow name="Shipment_Rate">

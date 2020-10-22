@@ -9,14 +9,13 @@
 
 #region using directives
 
-using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Symu.SysDyn.Equations;
+using Symu.SysDyn.Functions;
 using Symu.SysDyn.Simulation;
 
 #endregion
 
-namespace SymuSysDynTests.Equations
+namespace SymuSysDynTests.Functions
 {
     [TestClass]
     public class EquationTests

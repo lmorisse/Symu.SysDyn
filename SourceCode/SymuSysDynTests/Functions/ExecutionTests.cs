@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NCalc2;
-using Symu.SysDyn.Equations;
 
-namespace SymuSysDynTests.Equations
+namespace SymuSysDynTests.Functions
 {
     /// <summary>
     /// Use to explore the capabilities of NCalc2

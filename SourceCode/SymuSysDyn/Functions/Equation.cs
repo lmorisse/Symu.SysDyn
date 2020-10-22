@@ -21,7 +21,7 @@ using Symu.SysDyn.Simulation;
 
 #endregion
 
-namespace Symu.SysDyn.Equations
+namespace Symu.SysDyn.Functions
 {
     public class Equation
     {

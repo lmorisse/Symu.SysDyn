@@ -11,17 +11,13 @@
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using NCalc2;
-using Symu.SysDyn.Model;
-using Symu.SysDyn.Parser;
-using Symu.SysDyn.Simulation;
 
 #endregion
 
-namespace Symu.SysDyn.Equations
+namespace Symu.SysDyn.Functions
 {
     /// <summary>
     ///     IF condition THEN expression ELSE expression

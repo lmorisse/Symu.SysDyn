@@ -10,23 +10,22 @@
 #region using directives
 
 using System;
-using System.Globalization;
 using System.Text.RegularExpressions;
 using Symu.SysDyn.Model;
 using Symu.SysDyn.Simulation;
 
 #endregion
 
-namespace Symu.SysDyn.Equations
+namespace Symu.SysDyn.Functions
 {
     /// <summary>
-    ///     DT built in function
+    ///     TIME built in function
     /// </summary>
-    public class Dt : BuiltInFunction
+    public class Time : BuiltInFunction
     {
-        public const string Value = "Dt";
+        public const string Value = "Time";
 
-        public Dt(string function) : base(function)
+        public Time(string function) : base(function)
         {
         }
 
@@ -37,11 +36,11 @@ namespace Symu.SysDyn.Equations
                 throw new ArgumentNullException(nameof(sim));
             }
 
-            return sim.DeltaTime;
+            return sim.Time;
         }
 
         /// <summary>
-        ///     Check if it is a DT function
+        ///     Check if it is a Time function
         /// </summary>
         /// <param name="input"></param>
         /// <param name="word"></param>
@@ -53,7 +52,7 @@ namespace Symu.SysDyn.Equations
                 throw new ArgumentNullException(nameof(input));
             }
 
-            var regex = new Regex(@"\w*(?<!_)dt(?!_)", RegexOptions.IgnoreCase);
+            var regex = new Regex(@"\w*(?<!_)time(?!_)", RegexOptions.IgnoreCase);
             var match = regex.Match(input);
             word = match.Value;
             return match.Success;

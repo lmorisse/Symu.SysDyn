@@ -83,7 +83,7 @@ namespace SymuSysDynApp
 
             chartControl1.Series.Clear();
             chartControl1.Series.Add(chartSerie);
-
+            chartControl1.Text = variableName;
             //ChartAppearance.ApplyChartStyles(chartControl2);
         }
 

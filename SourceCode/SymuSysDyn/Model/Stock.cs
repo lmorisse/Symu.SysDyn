@@ -11,7 +11,7 @@
 
 using System;
 using System.Collections.Generic;
-using Symu.SysDyn.Equations;
+using Symu.SysDyn.Functions;
 using Symu.SysDyn.Parser;
 
 #endregion

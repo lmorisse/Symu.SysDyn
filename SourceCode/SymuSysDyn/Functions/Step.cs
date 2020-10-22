@@ -17,7 +17,7 @@ using Symu.SysDyn.Simulation;
 
 #endregion
 
-namespace Symu.SysDyn.Equations
+namespace Symu.SysDyn.Functions
 {
     /// <summary>
     ///     STEP built in function

@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Symu.SysDyn.Equations;
+using Symu.SysDyn.Functions;
 
-namespace SymuSysDynTests.Equations
+namespace SymuSysDynTests.Functions
 {
     [TestClass()]
     public class IfThenElseTests

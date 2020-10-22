@@ -1,9 +1,8 @@
 ﻿using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Symu.SysDyn.Equations;
-using Symu.SysDyn.Parser;
+using Symu.SysDyn.Functions;
 
-namespace SymuSysDynTests.Equations
+namespace SymuSysDynTests.Functions
 {
     [TestClass()]
     public class StringFunctionTests
@@ -15,16 +14,18 @@ namespace SymuSysDynTests.Equations
         public void GetStringFunctionsTest()
         {
             const string test =
-                "someStuffBeforeFunction Func1(param1,param2)+someStuffAfterFunction + DT + TIME + STEP( 1 , 2)-Normal(1,2)";
+                "someStuffBeforeFunction Func1(param1,param2)+someStuffAfterFunction + DT + TIME + STEP( 1 , 2)-Normal(1,2)*RAMP(2,1)";
             var results = StringFunction.GetStringFunctions(test).ToList();
-            Assert.AreEqual(5, results.Count);
+            Assert.AreEqual(6, results.Count);
             Assert.AreEqual("Func1", results[0].Name);
             Assert.AreEqual("Step", results[1].Name);
             Assert.IsTrue(results[1] is Step);
             Assert.IsTrue(results[2] is Normal);
             Assert.AreEqual("Normal", results[2].Name);
-            Assert.IsTrue(results[3] is Dt);
-            Assert.IsTrue(results[4] is Time);
+            Assert.IsTrue(results[3] is Ramp);
+            Assert.AreEqual("Ramp", results[3].Name);
+            Assert.IsTrue(results[4] is Dt);
+            Assert.IsTrue(results[5] is Time);
         }
 
         /// <summary>

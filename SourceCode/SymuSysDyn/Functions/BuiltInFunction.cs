@@ -11,7 +11,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using NCalc2;
@@ -21,7 +20,7 @@ using Symu.SysDyn.Simulation;
 
 #endregion
 
-namespace Symu.SysDyn.Equations
+namespace Symu.SysDyn.Functions
 {
     /// <summary>
     ///     A built in function defined by string

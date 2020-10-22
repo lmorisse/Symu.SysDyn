@@ -9,12 +9,9 @@
 
 #region using directives
 
-using System.Collections.Generic;
-using Symu.SysDyn.Parser;
-
 #endregion
 
-namespace Symu.SysDyn.Equations
+namespace Symu.SysDyn.Functions
 {
     public static class EquationUtils
     {

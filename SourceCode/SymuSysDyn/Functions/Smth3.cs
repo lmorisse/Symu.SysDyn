@@ -9,15 +9,9 @@
 
 #region using directives
 
-using System;
-using System.Globalization;
-using System.Linq;
-using Symu.SysDyn.Model;
-using Symu.SysDyn.Simulation;
-
 #endregion
 
-namespace Symu.SysDyn.Equations
+namespace Symu.SysDyn.Functions
 {
     /// <summary>
     /// The smth1, smth3 and smthn functions perform a first-, third- and nth-order respectively exponential smooth of input, using an exponential averaging time of averaging,

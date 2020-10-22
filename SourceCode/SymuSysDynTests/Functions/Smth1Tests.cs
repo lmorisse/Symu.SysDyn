@@ -1,10 +1,9 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-using Symu.SysDyn.Equations;
+using Symu.SysDyn.Functions;
 using Symu.SysDyn.Model;
 using Symu.SysDyn.Simulation;
 
-namespace SymuSysDynTests.Equations
+namespace SymuSysDynTests.Functions
 {
     [TestClass()]
     public class Smth1Tests

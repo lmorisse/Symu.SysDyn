@@ -10,14 +10,12 @@
 #region using directives
 
 using System;
-using System.Globalization;
-using System.Linq;
 using Symu.SysDyn.Model;
 using Symu.SysDyn.Simulation;
 
 #endregion
 
-namespace Symu.SysDyn.Equations
+namespace Symu.SysDyn.Functions
 {
     /// <summary>
     /// The smth1, smth3 and smthn functions perform a first-, third- and nth-order respectively exponential smooth of input, using an exponential averaging time of averaging,
@@ -25,20 +23,32 @@ namespace Symu.SysDyn.Equations
     /// The other functions behave analogously.They return the value of the final smooth in the cascade.
     /// If you do not specify an initial value initial, they assume the value to be the initial value of input.
     /// </summary>
-    public class SmthN : Smth1
+    public class Smth1 : BuiltInFunction
     {
-        public new const string Value = "SmthN";
-        public SmthN(string function) : base(function)
+        public const string Value = "Smth1";
+        protected SmthMachine SmthMachine { get; set; }
+
+        public Smth1(string function) : base(function)
         {
             Input = Parameters[0].OriginalEquation;
             Averaging = Parameters[1].OriginalEquation;
-            Order = Convert.ToByte(Parameters[2].OriginalEquation);
-            Initial = Parameters.Count == 4 ? Parameters[3].OriginalEquation : string.Empty;
-            SmthMachine = new SmthMachine(Input, Averaging, Order, Initial);
+            Initial = Parameters.Count == 3 ? Parameters[2].OriginalEquation : string.Empty;
+
+            SmthMachine = new SmthMachine(Input, Averaging, 1, Initial);
         }
-        /// <summary>
-        /// Nth order smooth
-        /// </summary>
-        public byte Order { get; }
+        public string Input { get; protected set; }
+        public string Averaging { get; protected set; }
+        public string Initial { get; protected set; }
+
+        public override float Evaluate(Variables variables, SimSpecs sim)
+        {
+            if (sim == null)
+            {
+                throw new ArgumentNullException(nameof(sim));
+            }
+
+            SmthMachine.AddVariables(variables);
+            return SmthMachine.Evaluate(sim.Time);
+        }
     }
 }

@@ -10,11 +10,11 @@
 #region using directives
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Symu.SysDyn.Equations;
+using Symu.SysDyn.Functions;
 
 #endregion
 
-namespace SymuSysDynTests.Equations
+namespace SymuSysDynTests.Functions
 {
     [TestClass]
     public class TimeTests

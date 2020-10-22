@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using Symu.SysDyn.Parser;
 
-namespace Symu.SysDyn.Equations
+namespace Symu.SysDyn.Functions
 {
     //todo Maybe try a framework like https://github.com/IronyProject to have a real grammar more than regex
     public static class StringFunction
@@ -68,6 +68,9 @@ namespace Symu.SysDyn.Equations
                             break;
                         case Normal.Value:
                             builtInFunctions.Add(new Normal(function));
+                            break;
+                        case Ramp.Value:
+                            builtInFunctions.Add(new Ramp(function));
                             break;
                         case Smth1.Value:
                             builtInFunctions.Add(new Smth1(function));
