@@ -15,6 +15,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using NCalc2;
+using Symu.SysDyn.Functions;
 using Symu.SysDyn.Model;
 using Symu.SysDyn.Parser;
 using Symu.SysDyn.Simulation;
@@ -23,8 +24,26 @@ using Symu.SysDyn.Simulation;
 
 namespace Symu.SysDyn.Functions
 {
-    public class Equation
+    public class Equation : IEquation
     {
+        public static IEquation CreateInstance(string eqn)
+        {
+            return CreateInstance(eqn, null);
+        }
+        public static IEquation CreateInstance(string eqn, Range range)
+        {
+            if (string.IsNullOrEmpty(eqn))
+            {
+                return null;
+            }
+
+            if (float.TryParse(eqn, out var floatEqn))
+            {
+                return new ConstantEquation(floatEqn);
+            }
+
+            return new Equation(eqn, range);
+        }
         public string OriginalEquation { get; }
         public string InitializedEquation { get; }
         private readonly Expression _expression;
@@ -47,12 +66,12 @@ namespace Symu.SysDyn.Functions
 
         public Equation(string equation)
         {
-            OriginalEquation = equation;
-            if (string.IsNullOrEmpty(equation))
+            if (equation == null)
             {
-                return;
+                throw new ArgumentNullException(nameof(equation));
             }
 
+            OriginalEquation = equation.Trim();
             InitializedEquation = Initialize(equation);
             _expression = new Expression(InitializedEquation);
         }
@@ -160,7 +179,7 @@ namespace Symu.SysDyn.Functions
                 input = input.Remove(index);
             }
             input = input.Trim();
-            _functions = StringFunction.GetStringFunctions(input).ToList();
+            _functions = StringFunction.GetFunctions(input).ToList();
             for (var i = 0; i < _functions.Count; i++)
             {
                 var function = _functions[i];

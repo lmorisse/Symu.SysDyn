@@ -32,8 +32,8 @@ namespace Symu.SysDyn.Functions
 
         public Ramp(string function) : base(function)
         {
-            Time = Parameters[0].Variables.Any() ? Parameters[0].Variables.First() : Parameters[0].OriginalEquation.Trim();
-            Slope = Parameters[1].Variables.Any() ? Parameters[1].Variables.First() : Parameters[1].OriginalEquation.Trim();
+            Time = Parameters[0].Variables.Any() ? Parameters[0].Variables.First() : Parameters[0].OriginalEquation;
+            Slope = Parameters[1].Variables.Any() ? Parameters[1].Variables.First() : Parameters[1].OriginalEquation;
         }
 
         public string Time { get; }

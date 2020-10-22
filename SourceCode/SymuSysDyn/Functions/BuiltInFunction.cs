@@ -34,9 +34,9 @@ namespace Symu.SysDyn.Functions
 
         public BuiltInFunction(string function)
         {
-            OriginalFunction = function ?? throw new ArgumentNullException(nameof(function));
+            OriginalFunction = function?.Trim() ?? throw new ArgumentNullException(nameof(function));
             Name = StringUtils.CleanName(function.Split('(')[0]);
-            Parameters = GetParameters(function);
+            Parameters = StringFunction.GetParameters(function);
             Expression = new Expression(SetCleanedFunction());
         }
 
@@ -73,35 +73,7 @@ namespace Symu.SysDyn.Functions
         /// </summary>
         public string IndexName { get; set; }
 
-        public List<Equation> Parameters { get; protected set; }
-
-        /// <summary>
-        ///     Get the list of parameters of a function with nested functions
-        /// </summary>
-        /// <param name="input"></param>
-        /// <returns>input = "function(func(param1, param2), param3)" - return {func(param1, param2), param3}</returns>
-        public static List<Equation> GetParameters(string input)
-        {
-            var result = new List<Equation>();
-            const string extractFuncRegex = @"\b[^()]+\((.*)\)$";
-            const string extractArgsRegex = @"(?:[^,()]+((?:\((?>[^()]+|\((?<open>)|\)(?<-open>))*\)))*)+";
-
-            var parameters = Regex.Match(input, extractFuncRegex);
-
-            if (string.IsNullOrEmpty(parameters.Groups[1].Value))
-            {
-                return result;
-            }
-
-            var innerArgs = parameters.Groups[1].Value;
-            var matches = Regex.Matches(innerArgs, extractArgsRegex);
-            for (var i = 0; i < matches.Count; i++)
-            {
-                result.Add(new Equation(matches[i].Value));
-            }
-
-            return result;
-        }
+        public List<IEquation> Parameters { get; protected set; }
 
         /// <summary>
         ///     Prepare the function for the Equation.Prepare()

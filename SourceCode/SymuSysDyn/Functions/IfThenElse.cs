@@ -39,9 +39,9 @@ namespace Symu.SysDyn.Functions
         /// Parse the string function to extract the if-then-else conditions in the parameters
         /// </summary>
         /// <param name="input"></param>
-        public static List<Equation> Parse(string input)
+        public static List<IEquation> Parse(string input)
         {
-            var parameters = new List<Equation>();
+            var parameters = new List<IEquation>();
 
 
             var result = MatchRegex(input);
@@ -49,9 +49,9 @@ namespace Symu.SysDyn.Functions
             {
                 return parameters;
             }
-            parameters.Add(new Equation(result.Groups[1].Value)); //If
-            parameters.Add(new Equation(result.Groups[2].Value)); //Then
-            parameters.Add(new Equation(result.Groups[3].Value)); //Else
+            parameters.Add(Equation.CreateInstance(result.Groups[1].Value)); //If
+            parameters.Add(Equation.CreateInstance(result.Groups[2].Value)); //Then
+            parameters.Add(Equation.CreateInstance(result.Groups[3].Value)); //Else
             return parameters;
         }
 

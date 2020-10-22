@@ -31,8 +31,8 @@ namespace Symu.SysDyn.Functions
 
         public Step(string function) : base(function)
         {
-            Height = Parameters[0].Variables.Any() ? Parameters[0].Variables.First() : Parameters[0].OriginalEquation.Trim();
-            StartTime = Parameters[1].Variables.Any() ? Parameters[1].Variables.First() : Parameters[1].OriginalEquation.Trim();
+            Height = Parameters[0].Variables.Any() ? Parameters[0].Variables.First() : Parameters[0].OriginalEquation;
+            StartTime = Parameters[1].Variables.Any() ? Parameters[1].Variables.First() : Parameters[1].OriginalEquation;
         }
 
         public string Height { get; }

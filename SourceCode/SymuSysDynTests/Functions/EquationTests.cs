@@ -21,23 +21,34 @@ namespace SymuSysDynTests.Functions
     public class EquationTests
     {
         private const string Equation0 = "";
+        private const string Equation3 = "2";
         private const string Equation1 = "variable1 + variable2";
         private const string Equation2 = "3 + name + Dt *(variable1 - variable2)-Time+SET(3,5) {test}";
-        private Equation _equation;
+        private IEquation _equation;
 
         [TestMethod]
         public void InitializeTest0()
         {
-            var machine = new StateMachine();
-            _equation = new Equation(Equation0);
-            Assert.IsNull(_equation.InitializedEquation);
-            Assert.AreEqual(0, _equation.Variables.Count); 
-            Assert.AreEqual(0, _equation.Evaluate(machine.Variables, machine.Simulation));
+            //var machine = new StateMachine();
+            _equation = Equation.CreateInstance(Equation0);
+            Assert.IsNull(_equation);
+            //Assert.IsNull(_equation.InitializedEquation);
+            //Assert.AreEqual(0, _equation.Variables.Count); 
+            //Assert.AreEqual(0, _equation.Evaluate(machine.Variables, machine.Simulation));
         }
         [TestMethod]
         public void InitializeTest()
         {
-            _equation = new Equation(Equation1);
+            _equation = Equation.CreateInstance(Equation3);
+            Assert.AreEqual("2", _equation.InitializedEquation);
+            Assert.AreEqual(0, _equation.Variables.Count);
+            Assert.IsInstanceOfType(_equation, typeof(ConstantEquation));
+        }
+        [TestMethod]
+        public void InitializeTest1()
+        {
+            _equation = Equation.CreateInstance(Equation1);
+            Assert.IsInstanceOfType(_equation, typeof(Equation));
             Assert.AreEqual("Variable1+Variable2", _equation.InitializedEquation);
             Assert.AreEqual(2, _equation.Variables.Count);
             Assert.AreEqual("Variable1", _equation.Variables[0]);
@@ -47,8 +58,9 @@ namespace SymuSysDynTests.Functions
         [TestMethod]
         public void InitializeTest2()
         {
-            _equation = new Equation(Equation2);
-            Assert.AreEqual("3+Name+Dt1*(Variable1-Variable2)-Time2+Set0", _equation.InitializedEquation);
+            _equation = Equation.CreateInstance(Equation2);
+            Assert.IsInstanceOfType(_equation, typeof(Equation));
+            Assert.AreEqual("3+Name+Dt0*(Variable1-Variable2)-Time1+Set2", _equation.InitializedEquation);
             Assert.AreEqual(3, _equation.Variables.Count);
             Assert.AreEqual("Name", _equation.Variables[0]);
             Assert.AreEqual("Variable1", _equation.Variables[1]);
@@ -58,7 +70,7 @@ namespace SymuSysDynTests.Functions
         [TestMethod]
         public void GetVariablesTest()
         {
-            _equation = new Equation(Equation2);
+            _equation = Equation.CreateInstance(Equation2);
 
             Assert.AreEqual(3, _equation.Variables.Count);
             Assert.AreEqual("Name", _equation.Variables[0]);

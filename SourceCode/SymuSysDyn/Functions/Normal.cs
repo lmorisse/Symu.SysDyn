@@ -32,8 +32,8 @@ namespace Symu.SysDyn.Functions
 
         public Normal(string function) : base(function)
         {
-            Mean = Parameters[0].Variables.Any() ? Parameters[0].Variables.First() : Parameters[0].OriginalEquation.Trim();
-            StandardDeviation = Parameters[1].Variables.Any() ? Parameters[1].Variables.First() : Parameters[1].OriginalEquation.Trim();
+            Mean = Parameters[0].Variables.Any() ? Parameters[0].Variables.First() : Parameters[0].OriginalEquation;
+            StandardDeviation = Parameters[1].Variables.Any() ? Parameters[1].Variables.First() : Parameters[1].OriginalEquation;
 
             if (Parameters.Count == 3)
             {

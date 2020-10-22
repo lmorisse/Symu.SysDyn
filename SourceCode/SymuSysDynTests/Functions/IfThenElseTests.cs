@@ -20,7 +20,7 @@ namespace SymuSysDynTests.Functions
             CheckKoTest(IfThenElse.Parse("IF x1 ELSE x3"));
         }
 
-        private static void CheckOkTest(IReadOnlyList<Equation> parameters)
+        private static void CheckOkTest(IReadOnlyList<IEquation> parameters)
         {
             Assert.AreEqual(3, parameters.Count);
             Assert.AreEqual("X1", parameters[0].Variables.First());

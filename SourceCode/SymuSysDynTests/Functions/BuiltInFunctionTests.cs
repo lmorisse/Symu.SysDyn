@@ -125,43 +125,5 @@ namespace SymuSysDynTests.Functions
             Assert.AreEqual(1F, function.Evaluate(Machine.Variables, Machine.Simulation));
         }
 
-        [TestMethod]
-        public void GetParametersTest()
-        {
-            var parameters = BuiltInFunction.GetParameters("Func");
-            Assert.AreEqual(0, parameters.Count);
-        }
-
-        [TestMethod]
-        public void GetParametersTest1()
-        {
-            var parameters = BuiltInFunction.GetParameters("Func()");
-            Assert.AreEqual(0, parameters.Count);
-        }
-
-        [TestMethod]
-        public void GetParametersTest2()
-        {
-            var parameters = BuiltInFunction.GetParameters("Func(param1)");
-            Assert.AreEqual(1, parameters.Count);
-            Assert.AreEqual("Param1", parameters[0].Variables.First());
-        }
-
-        [TestMethod]
-        public void GetParametersTest3()
-        {
-            var parameters = BuiltInFunction.GetParameters("Func(param1, param2)");
-            Assert.AreEqual(2, parameters.Count);
-            Assert.AreEqual("Param1", parameters[0].Variables.First());
-            Assert.AreEqual("Param2", parameters[1].Variables.First());
-        }
-
-        [TestMethod()]
-        public void GetParametersTest4()
-        {
-            const string test = @"someFunc(a,b,func1(a,b+c),func2(a*b,func3(a+b,c)),func4(e)+func5(f),func6(func7(g,h)+func8(i,(a)=>a+2)),g+2)";
-            var results = BuiltInFunction.GetParameters(test);
-            Assert.AreEqual(7, results.Count);
-        }
     }
 }
