@@ -1,0 +1,373 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<xmile version="1.0" xmlns="http://docs.oasis-open.org/xmile/ns/XMILE/v1.0">
+  <header>
+    <name>People express</name>
+    <options>
+      <uses_outputs />
+    </options>
+    <product version="1.0">Hand Coded XMILE from Strategic Modelling and Business Dynamics book</product>
+  </header>
+  <sim_specs method="Euler" time_units="Years">
+    <start>1980</start>
+    <stop>1988</stop>
+    <dt>0.125</dt>
+  </sim_specs>
+  <model>
+    <variables>
+      <aux name="Actual\nPassenger_Miles">
+        <eqn> MIN(Potential_Passenger__Miles, Available_Passenger_Miles)</eqn>
+        <scale min="0" max="32000000000" />
+      </aux>
+      <aux name="Service_Quality">
+        <eqn> True_Service_Capacity/Actual_Passenger_Miles</eqn>
+        <scale min="0" max="2" />
+      </aux>
+      <aux name="Interview_Rate">
+        <eqn>25  {interviews per staff member per year}</eqn>
+      </aux>
+      <aux name="Average\nCarriers_Per_Route">
+        <eqn> 4  {carriers operating the same or alternative route to Peoples}</eqn>
+      </aux>
+      <aux name="Normal_Productivity">
+        <eqn> 1.5e6   {revenue passenger miles per CSM per year}</eqn>
+      </aux>
+      <aux name="Burrs_Personal_Growth_Target">
+        <eqn> .7 {fraction per year}</eqn>
+      </aux>
+      <flow name="Change_in\nCompetitor_Fare">
+        <eqn> (PeoplesFare-Competitor_Fare)/Time_to_Change_Costs</eqn>
+      </flow>
+      <flow name="Change_In\nQuality_of_Service">
+        <eqn> (Service_Quality-Service_Reputation)/TimeTo_Perceive_Quality</eqn>
+      </flow>
+      <flow name="Increase_of\nPotential_Passengers">
+        <eqn>IF Conversion_Ratio &gt;0 THEN Potential_Passengers*Conversion_Ratio*Effect_of_Route_Saturation ELSE Potential_Passengers*Conversion_Ratio</eqn>
+      </flow>
+      <aux name="Cost_of_Staff">
+        <eqn> 40e3   {dollars per CSM per year}</eqn>
+      </aux>
+      <aux name="Cost_of_Service">
+        <eqn> Total_Staff*Cost_of_Staff</eqn>
+        <scale min="0" max="2000000000" />
+      </aux>
+      <aux name="Interviews">
+        <eqn> Size_of_Hiring_Team*Interview_Rate</eqn>
+      </aux>
+      <aux name="Staff_Per_Plane">
+        <eqn> Total_Staff/Planes</eqn>
+        <scale min="0" max="100" />
+      </aux>
+      <aux name="Date">
+        <eqn> TIME</eqn>
+      </aux>
+      <aux name="Effective_Experienced_Staff">
+        <eqn> Experienced_Staff-Size_of_Hiring_Team-Hidden_Coaching  {staff}</eqn>
+        <scale min="0" max="4000" />
+      </aux>
+      <aux name="Maximum_Staff_Per_Plane">
+        <eqn> 80</eqn>
+      </aux>
+      <aux name="Growth_Rate">
+        <eqn> SMTH1(Plane_Purchases/Planes,2,.7)</eqn>
+        <scale min="0" max="2" />
+      </aux>
+      <aux name="Conversion\nRatio">
+        <eqn>Relative_Fare</eqn>
+        <gf>
+          <xscale min="0" max="1.2" />
+          <yscale min="0" max="3" />
+          <ypts>3,2.9249999999999998,2.7749999999999999,2.5,2.0249999999999999,1.5249999999999999,0.875,0.32500000000000001,0.125,0.050000000000000003,0,0,0</ypts>
+        </gf>
+      </aux>
+      <aux name="FractionServiceCost">
+        <eqn> Cost_of_Service/(Cost_of_Service+Operating_Cost_of_Planes)</eqn>
+        <scale min="0" max="0.5" />
+      </aux>
+      <aux name="GrossProfit">
+        <eqn> Revenue-1.8*(Operating_Cost_of_Planes+Cost_of_Service)</eqn>
+        <scale min="0" max="2000000000" />
+      </aux>
+      <flow name="Hiring">
+        <eqn> IF Limit_on_Staff&gt;Total_Staff THEN MaxHiringRate ELSE 0</eqn>
+        <non_negative />
+      </flow>
+      <flow name="Induction">
+        <eqn> New_Staff/Time_To_Gain_Experience</eqn>
+        <non_negative />
+      </flow>
+      <aux name="Load_Factor">
+        <eqn> SMTH1((Actual_Passenger_Miles/Available_Passenger_Miles),.5)</eqn>
+        <scale min="0" max="1.2" />
+      </aux>
+      <aux name="Turnover">
+        <eqn>0  {fraction per year}</eqn>
+      </aux>
+      <flow name="Departures">
+        <eqn> Experienced_Staff*Turnover</eqn>
+        <non_negative />
+      </flow>
+      <aux name="Route\nSaturation">
+        <eqn>Potential_Passenger__Miles/Maximum_Passenger_Miles</eqn>
+      </aux>
+      <aux name="MaxHiringRate">
+        <eqn> Interviews*Proportion_Accepted</eqn>
+      </aux>
+      <aux name="Maximum\nMarket\nSize_Multiple">
+        <eqn> 2  {Maximum likely increase in the flying public if cut-price service were widely available.  Measured as a multiple of the current size of the flying public on any route covered by Peoples}</eqn>
+      </aux>
+      <aux name="Maximum\nPassenger_Miles">
+        <eqn> Available_Passenger_Miles*Average_Carriers_Per_Route*Route_Share_Limit*Maximum_Market_Size_Multiple</eqn>
+      </aux>
+      <aux name="Operating_Cost\nof_Planes">
+        <eqn> Planes*Unit_Operating_Cost</eqn>
+        <scale min="0" max="2000000000" />
+      </aux>
+      <aux name="Available\nPassenger_Miles">
+        <eqn>Planes*Passenger_Miles_Per_Plane*Service_Days_Per_Year  {passenger miles per day at full loading}</eqn>
+        <scale min="0" max="32000000000" />
+      </aux>
+      <aux name="Passenger\nMiles_Per_Plane">
+        <eqn> .36e6  {passenger miles per plane per day}</eqn>
+      </aux>
+      <flow name="Plane\nPurchases">
+        <eqn> Target_Increase_In_Planes</eqn>
+        <scale min="-100" max="100" />
+      </flow>
+      <aux name="Proportion_Accepted">
+        <eqn>.2  {assuming 10 percent pass pre-interview screening, so overall acceptance rate is 0.1*0.2 = 0.02 or 2 percent}</eqn>
+      </aux>
+      <aux name="Relative\nFare">
+        <eqn> PeoplesFare/Competitor_Fare</eqn>
+      </aux>
+      <aux name="Limit_on_Staff">
+        <eqn> Planes*Maximum_Staff_Per_Plane</eqn>
+      </aux>
+      <aux name="Revenue">
+        <eqn> Actual_Passenger_Miles*PeoplesFare</eqn>
+        <scale min="0" max="2000000000" />
+      </aux>
+      <aux name="Route\nShare\nLimit">
+        <eqn> .5  {The maximum share of route traffic allowed to any one carrier.  An average for the industry that reflects the climate of anti-trust opinion}</eqn>
+      </aux>
+      <aux name="True_Service_Capacity">
+        <eqn>(New_Staff*Normal_Productivity*.5+Effective_Experienced_Staff*&#x0D;Normal_Productivity)*Motivation  {passenger miles per year}</eqn>
+        <scale min="0" max="32000000000" />
+      </aux>
+      <aux name="Service\nDays_Per_Year">
+        <eqn> 360  {service days per year}</eqn>
+      </aux>
+      <aux name="Size_of_Hiring_Team">
+        <eqn>Experienced_Staff*Priority_to_Hiring</eqn>
+      </aux>
+      <aux name="Target_Increase\nIn_Planes">
+        <eqn> Planes*Burrs_Personal_Growth_Target*(1-Growth_Reduction_FromLoad)&#x0D;{Increase in fleet measured in planes per year, based on Burrs growth goal modified by restraint on growth from the load factor}</eqn>
+      </aux>
+      <aux name="Time_To_Gain_Experience">
+        <eqn> 2  {years}</eqn>
+        <scale min="0" max="4" />
+      </aux>
+      <aux name="TimeTo\nPerceive_Quality">
+        <eqn> 2 {years}</eqn>
+      </aux>
+      <aux name="Total_Staff">
+        <eqn> New_Staff+Experienced_Staff</eqn>
+        <scale min="0" max="8000" />
+      </aux>
+      <aux name="Unit_Operating_Cost">
+        <eqn> 3e6  {dollars per plane per year}</eqn>
+      </aux>
+      <stock name="Competitor\nFare">
+        <eqn> .25   {dollars per passenger mile}</eqn>
+        <scale min="0" max="0.29999999999999999" />
+        <inflow>Change_in_Competitor_Fare</inflow>
+      </stock>
+      <aux name="Priority_to_Hiring">
+        <eqn>.2  {dimensionless}</eqn>
+      </aux>
+      <aux name="Rookie_Fraction">
+        <eqn>New_Staff/(Experienced_Staff+New_Staff)</eqn>
+        <scale min="0" max="1" />
+      </aux>
+      <stock name="New_Staff">
+        <eqn>0  {employees}</eqn>
+        <scale min="0" max="4000" />
+        <inflow>Hiring</inflow>
+        <outflow>Induction</outflow>
+      </stock>
+      <aux name="Time_to_Change_Costs">
+        <eqn>4  {years}</eqn>
+      </aux>
+      <stock name="Service\nReputation">
+        <eqn> 1.2</eqn>
+        <scale min="0" max="2" />
+        <inflow>Change_In_Quality_of_Service</inflow>
+      </stock>
+      <stock name="Planes">
+        <eqn>4 {The initial number of commissioned planes in the fleet}</eqn>
+        <scale min="0" max="300" />
+        <inflow>Plane_Purchases</inflow>
+        <non_negative />
+      </stock>
+      <stock name="Potential\nPassengers">
+        <eqn>180000 {passengers, created by an advertising launch campaign and media coverage}</eqn>
+        <scale min="0" max="8000000" />
+        <inflow>Increase_of_Potential_Passengers</inflow>
+        <outflow>Loss_of_Potential_Pasengers</outflow>
+      </stock>
+      <aux name="Vision_of_Service">
+        <eqn>SMTH1(Service_Reputation, 5)</eqn>
+        <scale min="0" max="2" />
+      </aux>
+      <stock name="Experienced_Staff">
+        <eqn>200 {employees}</eqn>
+        <scale min="0" max="4000" />
+        <inflow>Induction</inflow>
+        <outflow>Departures</outflow>
+      </stock>
+      <aux name="Effect_of\nRoute_Saturation">
+        <eqn>Route_Saturation</eqn>
+        <gf>
+          <xscale min="0.5" max="1" />
+          <yscale min="0" max="1" />
+          <ypts>1,0.98499999999999999,0.95499999999999996,0.875,0.76000000000000001,0.625,0.41999999999999998,0.23999999999999999,0.115,0.035000000000000003,0</ypts>
+        </gf>
+      </aux>
+      <aux name="Hidden_Coaching">
+        <eqn>New_Staff*Coaching_Load   {staff}</eqn>
+      </aux>
+      <aux name="Coaching_Load">
+        <eqn>.3  {fraction of experienced person&apos;s time absorbed by coaching new staff}</eqn>
+      </aux>
+      <aux name="Indicated_Motivation">
+        <eqn>Growth_Rate</eqn>
+        <gf>
+          <xscale min="-1" max="1" />
+          <yscale min="0" max="5" />
+          <ypts>0.5,0.52000000000000002,0.59999999999999998,0.69999999999999996,0.84999999999999998,1,1.2250000000000001,1.6000000000000001,2.3500000000000001,2.8500000000000001,3</ypts>
+        </gf>
+      </aux>
+      <stock name="Motivation">
+        <eqn>2  {dimensionless index}</eqn>
+        <scale min="0" max="4" />
+        <inflow>Change_of_Motivation</inflow>
+        <non_negative />
+      </stock>
+      <aux name="Growth\nReduction\nFromLoad">
+        <eqn>Load_Factor</eqn>
+        <gf>
+          <xscale min="0" max="1" />
+          <yscale min="0" max="2" />
+          <ypts>2,2,2,1.96,1.9199999999999999,1.8300000000000001,1.6699999999999999,1.4399999999999999,1,0.32000000000000001,0</ypts>
+        </gf>
+      </aux>
+      <aux name="PeoplesFare">
+        <eqn>Date</eqn>
+        <scale min="0" max="0.29999999999999999" />
+        <gf>
+          <xscale min="1981" max="1991" />
+          <yscale min="0" max="0.5" />
+          <ypts>0.089999999999999997,0.089999999999999997,0.089999999999999997,0.089999999999999997,0.089999999999999997,0.089999999999999997,0.089999999999999997,0.089999999999999997,0.089999999999999997,0.089999999999999997,0.089999999999999997</ypts>
+        </gf>
+      </aux>
+      <aux name="Potential_Service_Capacity">
+        <eqn>(Experienced_Staff+New_Staff)*Normal_Productivity*Motivation</eqn>
+        <scale min="0" max="32000000000" />
+      </aux>
+      <flow name="Change_of\nMotivation">
+        <eqn>(Indicated_Motivation-Motivation)/Time_to_Change_Motivation {fraction per year}</eqn>
+      </flow>
+      <aux name="Time_to_Change_Motivation">
+        <eqn>.5   {year} </eqn>
+      </aux>
+      <flow name="Loss_of\nPotential_Pasengers">
+        <eqn>Potential_Passengers*Churn  {passnegers per year}</eqn>
+        <non_negative />
+      </flow>
+      <aux name="Churn">
+        <eqn>Service_Reputation</eqn>
+        <gf>
+          <xscale min="0.5" max="1.5" />
+          <yscale min="0" max="1" />
+          <ypts>1,0.69499999999999995,0.48499999999999999,0.31,0.19500000000000001,0.10000000000000001,0.065000000000000002,0.055,0.040000000000000001,0.029999999999999999,0.025000000000000001</ypts>
+        </gf>
+      </aux>
+      <aux name="Potential_Passenger_\nMiles">
+        <eqn>Potential_Passengers*Miles_Per_Flight*Flights_Per_Year&#x0D;{passenger miles per year - initial value is 60000*800*4 = 19.2  million}</eqn>
+        <scale min="0" max="32000000000" />
+      </aux>
+      <aux name="Flights_Per_Year">
+        <eqn>4  {flights per passenger per year}</eqn>
+      </aux>
+      <aux name="Miles_Per_Flight">
+        <eqn>800  {miles per flight}</eqn>
+      </aux>
+      <aux name="Passengers">
+        <eqn>Actual_Passenger_Miles/(Flights_Per_Year*Miles_Per_Flight)</eqn>
+        <scale min="0" max="8000000" />
+      </aux>
+      <group name="FLEET_OF_PLANES">
+        <entity name="Actual_Passenger_Miles" />
+        <entity name="Load_Factor" />
+        <entity name="Available_Passenger_Miles" />
+        <entity name="Passenger_Miles_Per_Plane" />
+        <entity name="Plane_Purchases" />
+        <entity name="Service_Days_Per_Year" />
+        <entity name="Planes" />
+        <entity name="Passengers" />
+        <entity name="Burrs_Personal_Growth_Target" />
+        <entity name="Target_Increase_In_Planes" />
+        <entity name="Growth_Reduction_FromLoad" />
+      </group>
+      <group name="SERVICE_REPUTATION_1">
+        <entity name="Change_In_Quality_of_Service" />
+        <entity name="Service_Reputation" />
+        <entity name="Service_Quality" />
+        <entity name="TimeTo_Perceive_Quality" />
+        <entity name="Vision_of_Service" />
+      </group>
+      <group name="POTENTIAL_PASSENGERS_1">
+        <entity name="Increase_of_Potential_Passengers" />
+        <entity name="Route_Saturation" />
+        <entity name="Potential_Passengers" />
+        <entity name="Effect_of_Route_Saturation" />
+        <entity name="Loss_of_Potential_Pasengers" />
+        <entity name="Potential_Passenger__Miles" />
+        <entity name="Flights_Per_Year" />
+        <entity name="Miles_Per_Flight" />
+        <entity name="Conversion_Ratio" />
+        <entity name="Relative_Fare" />
+        <entity name="Churn" />
+      </group>
+      <group name="STAFF_AND__RECRUITMENT">
+        <entity name="Indicated_Motivation" />
+        <entity name="Normal_Productivity" />
+        <entity name="Hiring" />
+        <entity name="Induction" />
+        <entity name="True_Service_Capacity" />
+        <entity name="Time_To_Gain_Experience" />
+        <entity name="New_Staff" />
+        <entity name="Hidden_Coaching" />
+        <entity name="Coaching_Load" />
+        <entity name="Motivation" />
+        <entity name="Change_of_Motivation" />
+        <entity name="Time_to_Change_Motivation" />
+        <entity name="Effective_Experienced_Staff" />
+        <entity name="Turnover" />
+        <entity name="Departures" />
+        <entity name="Experienced_Staff" />
+        <entity name="Potential_Service_Capacity" />
+        <entity name="Interview_Rate" />
+        <entity name="Interviews" />
+        <entity name="Maximum_Staff_Per_Plane" />
+        <entity name="MaxHiringRate" />
+        <entity name="Proportion_Accepted" />
+        <entity name="Limit_on_Staff" />
+        <entity name="Size_of_Hiring_Team" />
+        <entity name="Total_Staff" />
+        <entity name="Priority_to_Hiring" />
+        <entity name="Rookie_Fraction" />
+      </group>
+    </variables>
+  </model>
+</xmile>

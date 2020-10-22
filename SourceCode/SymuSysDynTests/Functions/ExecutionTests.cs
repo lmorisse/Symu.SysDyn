@@ -41,12 +41,6 @@ namespace SymuSysDynTests.Functions
         }
 
         [TestMethod]
-        public void NormalTest()
-        {
-            var e = new Expression("N(100,5)");
-            Assert.AreEqual(2F, Convert.ToUInt16(e.Evaluate()));
-        }
-        [TestMethod]
         public void IfThenElseTest()
         {
             var e = new Expression("if(1<1,1,2)");

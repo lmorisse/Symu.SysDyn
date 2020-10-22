@@ -52,7 +52,7 @@ namespace Symu.SysDyn.Functions
                 throw new ArgumentNullException(nameof(input));
             }
 
-            var regex = new Regex(@"\w*(?<!_)dt(?!_)", RegexOptions.IgnoreCase);
+            var regex = new Regex(@"\w*(?<!_)dt(?!_)(?![a-zA-Z0-9])", RegexOptions.IgnoreCase);
             var match = regex.Match(input);
             word = match.Value;
             return match.Success;

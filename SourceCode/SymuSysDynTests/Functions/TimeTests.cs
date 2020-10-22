@@ -28,6 +28,7 @@ namespace SymuSysDynTests.Functions
             Assert.AreEqual("Time", time);
             Assert.IsTrue(Time.IsContainedIn("-time+", out time));
             Assert.AreEqual("time", time);
+            Assert.IsFalse(Time.IsContainedIn("TIMEXXX", out _));
             Assert.IsFalse(Time.IsContainedIn("TIME_XXX", out _));
             Assert.IsFalse(Time.IsContainedIn("XXX_TIME", out _));
         }

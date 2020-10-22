@@ -28,6 +28,7 @@ namespace SymuSysDynTests.Functions
             Assert.AreEqual("Dt", dt);
             Assert.IsTrue(Dt.IsContainedIn("-dt+", out dt));
             Assert.AreEqual("dt", dt);
+            Assert.IsFalse(Dt.IsContainedIn("DTXXX", out _));
             Assert.IsFalse(Dt.IsContainedIn("DT_XXX", out _));
             Assert.IsFalse(Dt.IsContainedIn("XXX_DT", out _));
         }
