@@ -16,14 +16,10 @@ namespace Symu.SysDyn.Model
     {
         public Flow(string name, string eqn) : base(name, eqn)
         {
-            Eqn = eqn;
-            Value = CheckInitialValue(eqn);
         }
         public Flow(string name, string eqn, GraphicalFunction graph, Range range, Range scale) : base(name, eqn, graph,
             range, scale)
         {
-            Eqn = eqn;
-            Value = CheckInitialValue(eqn);
         }
     }
 }

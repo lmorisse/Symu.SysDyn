@@ -10,6 +10,8 @@
 #region using directives
 
 using System;
+using System.Globalization;
+using Symu.SysDyn.Equations;
 using Symu.SysDyn.Model;
 using Symu.SysDyn.Simulation;
 
@@ -34,11 +36,16 @@ namespace Symu.SysDyn.Functions
             Averaging = Parameters[1].OriginalEquation;
             Initial = Parameters.Count == 3 ? Parameters[2].OriginalEquation : string.Empty;
 
-            SmthMachine = new SmthMachine(Input, Averaging, 1, Initial);
+            Order = 1;
         }
+
         public string Input { get; protected set; }
         public string Averaging { get; protected set; }
         public string Initial { get; protected set; }
+        /// <summary>
+        /// Nth order smooth
+        /// </summary>
+        public byte Order { get; protected set; }
 
         public override float Evaluate(Variables variables, SimSpecs sim)
         {
@@ -47,6 +54,7 @@ namespace Symu.SysDyn.Functions
                 throw new ArgumentNullException(nameof(sim));
             }
 
+            SmthMachine = new SmthMachine(Input, Averaging, Order, Initial);
             SmthMachine.AddVariables(variables);
             return SmthMachine.Evaluate(sim.Time);
         }

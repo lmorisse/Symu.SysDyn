@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using NCalc2;
+using Symu.SysDyn.Equations;
 using Symu.SysDyn.Model;
 using Symu.SysDyn.Parser;
 using Symu.SysDyn.Simulation;
@@ -36,7 +37,7 @@ namespace Symu.SysDyn.Functions
         {
             OriginalFunction = function?.Trim() ?? throw new ArgumentNullException(nameof(function));
             Name = StringUtils.CleanName(function.Split('(')[0]);
-            Parameters = StringFunction.GetParameters(function);
+            Parameters = FunctionUtils.ParseParameters(function);
             Expression = new Expression(SetCleanedFunction());
         }
 
@@ -67,7 +68,7 @@ namespace Symu.SysDyn.Functions
         /// <summary>
         ///     The function name
         /// </summary>
-        public string Name { get; protected set; }
+        public string Name { get; set; }
         /// <summary>
         ///     The function name indexed 
         /// </summary>
@@ -110,6 +111,20 @@ namespace Symu.SysDyn.Functions
         public virtual float Evaluate(Variables variables, SimSpecs sim)
         {
             return Convert.ToSingle(Expression.Evaluate());
+        }
+
+        public bool TryEvaluate(Variables variables, SimSpecs sim, out float result)
+        {
+            try
+            {
+                result = Evaluate(variables, sim);
+                return true;
+            }
+            catch
+            {
+                result = 0;
+                return false;
+            }
         }
     }
 }

@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using NCalc2;
+using Symu.SysDyn.Equations;
 
 #endregion
 
@@ -49,9 +50,9 @@ namespace Symu.SysDyn.Functions
             {
                 return parameters;
             }
-            parameters.Add(Equation.CreateInstance(result.Groups[1].Value)); //If
-            parameters.Add(Equation.CreateInstance(result.Groups[2].Value)); //Then
-            parameters.Add(Equation.CreateInstance(result.Groups[3].Value)); //Else
+            parameters.Add(EquationFactory.CreateInstance(result.Groups[1].Value)); //If
+            parameters.Add(EquationFactory.CreateInstance(result.Groups[2].Value)); //Then
+            parameters.Add(EquationFactory.CreateInstance(result.Groups[3].Value)); //Else
             return parameters;
         }
 

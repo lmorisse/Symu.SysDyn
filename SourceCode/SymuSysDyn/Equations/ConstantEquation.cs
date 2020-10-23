@@ -12,7 +12,7 @@ using System.Globalization;
 using Symu.SysDyn.Model;
 using Symu.SysDyn.Simulation;
 
-namespace Symu.SysDyn.Functions
+namespace Symu.SysDyn.Equations
 {
     /// <summary>
     /// Optimized IEquation for variable that have an constant equation

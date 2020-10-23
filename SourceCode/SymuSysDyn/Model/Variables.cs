@@ -111,8 +111,7 @@ namespace Symu.SysDyn.Model
         {
             foreach (var variable in _variables)
             {
-                variable.Updated = false;
-                variable.OldValue = variable.Value;
+                variable.Initialize();
             }
         }
 

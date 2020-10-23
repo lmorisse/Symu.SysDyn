@@ -21,6 +21,7 @@
   <ItemGroup>
     <PackageReference Include="NCalc2" Version="2.1.0" />
     <PackageReference Include="QuickGraph" Version="3.6.61119.7" />
+    <PackageReference Include="System.Collections.Immutable" Version="1.7.1" />
   </ItemGroup>
 
   <ItemGroup>

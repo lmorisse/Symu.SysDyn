@@ -32,12 +32,10 @@ namespace Symu.SysDyn.Functions
 
         public Ramp(string function) : base(function)
         {
-            Time = Parameters[0].Variables.Any() ? Parameters[0].Variables.First() : Parameters[0].OriginalEquation;
-            Slope = Parameters[1].Variables.Any() ? Parameters[1].Variables.First() : Parameters[1].OriginalEquation;
         }
 
-        public string Time { get; }
-        public string Slope { get; }
+        public string Time => Parameters[0].InitializedEquation;
+        public string Slope => Parameters[1].InitializedEquation;
 
         public override float Evaluate(Variables variables, SimSpecs sim)
         {
@@ -46,9 +44,9 @@ namespace Symu.SysDyn.Functions
                 throw new ArgumentNullException(nameof(sim));
             }
             // can be either a literal or a numeric
-            var time = Parameters[0].Variables.Any() ? Convert.ToUInt16(Expression.Parameters[Time]) : Convert.ToUInt16(Time, CultureInfo.InvariantCulture);
+            var time = Convert.ToUInt16(Parameters[0].Evaluate(variables, sim));
 
-            var slope = Parameters[1].Variables.Any() ? Convert.ToSingle(Expression.Parameters[Slope]) : Convert.ToSingle(Slope, CultureInfo.InvariantCulture);
+            var slope = Convert.ToSingle(Parameters[1].Evaluate(variables, sim));
 
             return sim.Time >= time ? slope*(sim.Time - time) : 0;
         }

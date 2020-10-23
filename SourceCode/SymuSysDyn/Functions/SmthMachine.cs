@@ -89,14 +89,12 @@ namespace Symu.SysDyn.Functions
 
         public float Evaluate(ushort time)
         {
-            _stateMachine.Initialize();
             _stateMachine.Simulation.Stop = time;
-            _stateMachine.Clear();
+            // Initialize intentionally in Evaluate and not in Constructor because of external parameters
+            _stateMachine.Initialize();
             _stateMachine.Process();
-            RemoveVariables();
             return _stateMachine.Variables.Get(SmthComp + (Order - 1)).Value;
         }
-        private readonly List<string> _variablesToRemove= new List<string>();
         /// <summary>
         /// If SMTH has variables as parameters, we need to had them in the state machine so that can be initialized
         /// </summary>
@@ -113,16 +111,7 @@ namespace Symu.SysDyn.Functions
 
             foreach (var variable in from child in children where variables.Exists(child) select variables.Get(child))
             {
-                _variablesToRemove.Add(variable.Name);
                 _stateMachine.Variables.Add(variable);
-            }
-        }
-
-        private void RemoveVariables()
-        {
-            foreach (var variable in _variablesToRemove)
-            {
-                _stateMachine.Variables.Remove(variable);
             }
         }
     }

@@ -181,12 +181,8 @@ namespace Symu.SysDyn.Simulation
             {
                 throw new ArgumentNullException(nameof(variable));
             }
-            if (variable.Equation != null)
-            {
-                var value = variable.Equation.Evaluate(Variables, Simulation);
-                variable.Value = variable.Function?.GetOutputWithBounds(value) ?? value;
-            }
-            variable.Updated = true;
+
+            variable.Update(Variables, Simulation);
         }
 
         /// <summary>

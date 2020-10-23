@@ -9,13 +9,13 @@ using Symu.SysDyn.Functions;
 namespace SymuSysDynTests.Functions
 {
     [TestClass()]
-    public class StringFunctionTests
+    public class FunctionFactoryTests
     {
         [TestMethod]
         public void GetStringFunctionsTest()
         {
             const string test = "xxx func0(a)+b + func1(a,b+c) - func2(a*b,func3(a+b,c)) * func4(e)+func5((f))+func6(func7(g,h)+func8(i,(a)=>a+2)) yyy";
-            var result = StringFunction.GetStringFunctions(test);
+            var result = FunctionUtils.ParseStringFunctions(test);
             Assert.AreEqual(6, result.Count);
             Assert.AreEqual("func0(a)", result[0]);
             Assert.AreEqual("func1(a,b+c)", result[1]);
@@ -28,7 +28,7 @@ namespace SymuSysDynTests.Functions
         public void GetStringFunctionsTest1()
         {
             const string test = "Func1((param1),(param2))+someStuffAfterFunction + DT + TIME + STEP( 1 , 2)-Normal(1,2)*RAMP(2,1)";
-            var result = StringFunction.GetStringFunctions(test);
+            var result = FunctionUtils.ParseStringFunctions(test);
             Assert.AreEqual(6, result.Count);
             Assert.AreEqual("Func1((param1),(param2))", result[0]);
             Assert.AreEqual("DT", result[1]);
@@ -46,7 +46,7 @@ namespace SymuSysDynTests.Functions
         public void GetStringFunctionsTest2()
         {
             const string test = "someStuffBeforeFunction + ( param1 ) + ((param2) + (param3)) + xxx";
-            var results = StringFunction.GetStringFunctions(test);
+            var results = FunctionUtils.ParseStringFunctions(test);
             Assert.AreEqual(0, results.Count);
         }
         /// <summary>
@@ -56,7 +56,7 @@ namespace SymuSysDynTests.Functions
         public void GetStringFunctionsTest3()
         {
             const string test = "Dt* (variable1 - variable2)-Time+SET(3,5)";
-            var results = StringFunction.GetStringFunctions(test);
+            var results = FunctionUtils.ParseStringFunctions(test);
             Assert.AreEqual(3, results.Count);
             Assert.AreEqual("Dt", results[0]);
             Assert.AreEqual("Time", results[1]);
@@ -70,7 +70,7 @@ namespace SymuSysDynTests.Functions
         {
             const string test =
                 "Func1((param1),(param2))+DT + TIME + STEP( 1 , 2)-Normal(1,2)*RAMP(2,1)";
-            var results = StringFunction.GetFunctions(test).ToList();
+            var results = FunctionUtils.ParseFunctions(test).ToList();
             Assert.AreEqual(6, results.Count);
             Assert.AreEqual("Func1", results[0].Name);
             Assert.IsTrue(results[1] is Dt);
@@ -90,7 +90,7 @@ namespace SymuSysDynTests.Functions
         public void GetFunctionsTest1()
         {
             const string test = "someStuffBeforeFunction + ( param1 ) + ( param2 + param3 ) + xxx";
-            var results = StringFunction.GetFunctions(test).ToList();
+            var results = FunctionUtils.ParseFunctions(test).ToList();
             Assert.AreEqual(0, results.Count);
         }
 
@@ -102,7 +102,7 @@ namespace SymuSysDynTests.Functions
         public void GetFunctionsTest21()
         {
             const string test = "If x1 then x2 else x3";
-            var results = StringFunction.GetFunctions(test).ToList();
+            var results = FunctionUtils.ParseFunctions(test).ToList();
             Assert.AreEqual(1, results.Count);
             Assert.IsTrue(results[0] is IfThenElse);
         }
@@ -110,21 +110,21 @@ namespace SymuSysDynTests.Functions
         [TestMethod]
         public void GetParametersTest()
         {
-            var parameters = StringFunction.GetParameters("Func");
+            var parameters = FunctionUtils.ParseParameters("Func");
             Assert.AreEqual(0, parameters.Count);
         }
 
         [TestMethod]
         public void GetParametersTest1()
         {
-            var parameters = StringFunction.GetParameters("Func()");
+            var parameters = FunctionUtils.ParseParameters("Func()");
             Assert.AreEqual(0, parameters.Count);
         }
 
         [TestMethod]
         public void GetParametersTest2()
         {
-            var parameters = StringFunction.GetParameters("Func(param1)");
+            var parameters = FunctionUtils.ParseParameters("Func(param1)");
             Assert.AreEqual(1, parameters.Count);
             Assert.AreEqual("Param1", parameters[0].Variables.First());
         }
@@ -132,7 +132,7 @@ namespace SymuSysDynTests.Functions
         [TestMethod]
         public void GetParametersTest3()
         {
-            var parameters = StringFunction.GetParameters("Func(param1, param2)");
+            var parameters = FunctionUtils.ParseParameters("Func(param1, param2)");
             Assert.AreEqual(2, parameters.Count);
             Assert.AreEqual("Param1", parameters[0].Variables.First());
             Assert.AreEqual("Param2", parameters[1].Variables.First());
@@ -142,7 +142,7 @@ namespace SymuSysDynTests.Functions
         public void GetParametersTest4()
         {
             const string test = @"someFunc((a),b,func1(a,b+c),func2(a*b,func3(a+b,c)),func4(e)+func5(f),func6(func7(g,h)+func8(i,(a)=>a+2)),g+2)";
-            var results = StringFunction.GetParameters(test);
+            var results = FunctionUtils.ParseParameters(test);
             Assert.AreEqual(7, results.Count);
         }
 
@@ -150,7 +150,7 @@ namespace SymuSysDynTests.Functions
         public void GetParametersTest5()
         {
             const string test = @"SMTH1((Actual_Passenger_Miles/Available_Passenger_Miles),.5)";
-            var results = StringFunction.GetParameters(test);
+            var results = FunctionUtils.ParseParameters(test);
             Assert.AreEqual(2, results.Count);
         }
     }

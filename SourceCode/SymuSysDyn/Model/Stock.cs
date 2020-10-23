@@ -11,6 +11,7 @@
 
 using System;
 using System.Collections.Generic;
+using Symu.SysDyn.Equations;
 using Symu.SysDyn.Functions;
 using Symu.SysDyn.Parser;
 
@@ -36,7 +37,6 @@ namespace Symu.SysDyn.Model
 
         public Stock(string name, string eqn, List<string> inflow, List<string> outflow) : base(name, eqn)
         {
-            Eqn = eqn;
             Inflow = StringUtils.CleanNames(inflow);
             Outflow = StringUtils.CleanNames(outflow);
             SetChildren();
@@ -45,7 +45,6 @@ namespace Symu.SysDyn.Model
         public Stock(string name, string eqn, List<string> inflow, List<string> outflow, GraphicalFunction graph,
             Range range, Range scale) : base(name, eqn, graph, range, scale)
         {
-            Eqn = eqn;
             Inflow = StringUtils.CleanNames(inflow);
             Outflow = StringUtils.CleanNames(outflow);
             SetChildren();
@@ -58,21 +57,21 @@ namespace Symu.SysDyn.Model
         public void SetStockEquation()
         {
             var equation = Name;
-            var inflows = AggregateFlows(Inflow, EquationUtils.Plus);
-            var outflows = AggregateFlows(Outflow, EquationUtils.Minus);
+            var inflows = AggregateFlows(Inflow, "+");
+            var outflows = AggregateFlows(Outflow, "-");
             if (inflows.Length > 0 || outflows.Length > 0)
             {
-                equation += EquationUtils.Plus + Dt.Value + EquationUtils.Multiplication + "(" +
+                equation += "+" + Dt.Value + "*(" +
                             inflows;
                 if (outflows.Length > 0)
                 {
-                    equation += EquationUtils.Minus + outflows;
+                    equation += "-" + outflows;
                 }
 
                 equation += ")";
             }
 
-            Equation = new Equation(equation);
+            Equation = EquationFactory.CreateInstance(equation);
 
             SetChildren();
         }

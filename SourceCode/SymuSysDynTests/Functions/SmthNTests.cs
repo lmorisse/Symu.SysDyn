@@ -38,6 +38,8 @@ namespace SymuSysDynTests.Functions
         public void EvaluateTest()
         {
             var smth = new SmthN("SMTHN(5+Step(10,3),5,3)");
+            _machine.Simulation.Time = 2;
+            Assert.AreEqual(5, smth.Evaluate(_machine.Variables, _machine.Simulation));
             _machine.Simulation.Time = 4;
             Assert.AreEqual(5, smth.Evaluate(_machine.Variables, _machine.Simulation));
         }

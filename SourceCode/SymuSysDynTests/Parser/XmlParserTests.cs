@@ -57,7 +57,7 @@ namespace SymuSysDynTests.Parser
             Parser.ParseAuxiliaries(XElement, Variables);
             Assert.AreEqual(1, Variables.Count());
             Assert.AreEqual("Aux1", Variables[0].Name);
-            Assert.AreEqual(2, Variables[0].Value);
+            Assert.AreEqual(1, Variables[0].Value);
         }
 
         [TestMethod]

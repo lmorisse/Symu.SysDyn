@@ -31,12 +31,10 @@ namespace Symu.SysDyn.Functions
 
         public Step(string function) : base(function)
         {
-            Height = Parameters[0].Variables.Any() ? Parameters[0].Variables.First() : Parameters[0].OriginalEquation;
-            StartTime = Parameters[1].Variables.Any() ? Parameters[1].Variables.First() : Parameters[1].OriginalEquation;
         }
 
-        public string Height { get; }
-        public string StartTime { get; }
+        public string Height => Parameters[0].InitializedEquation;
+        public string StartTime => Parameters[1].InitializedEquation;
 
         public override float Evaluate(Variables variables, SimSpecs sim)
         {
@@ -45,9 +43,9 @@ namespace Symu.SysDyn.Functions
                 throw new ArgumentNullException(nameof(sim));
             }
             //Height can be either a literal or a numeric
-            var height = Parameters[0].Variables.Any() ? Convert.ToSingle(Expression.Parameters[Height]) : Convert.ToSingle(Height, CultureInfo.InvariantCulture);
+            var height = Convert.ToSingle(Parameters[0].Evaluate(variables, sim));
 
-            var startTime = Parameters[1].Variables.Any() ? Convert.ToUInt16(Expression.Parameters[StartTime]) : Convert.ToUInt16(StartTime, CultureInfo.InvariantCulture);
+            var startTime = Convert.ToUInt16(Parameters[1].Evaluate(variables, sim));
 
             return sim.Time >= startTime ? height : 0;
         }

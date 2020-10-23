@@ -10,6 +10,8 @@
 #region using directives
 
 using System;
+using System.Globalization;
+using Symu.SysDyn.Equations;
 
 #endregion
 
@@ -26,15 +28,8 @@ namespace Symu.SysDyn.Functions
         public new const string Value = "SmthN";
         public SmthN(string function) : base(function)
         {
-            Input = Parameters[0].OriginalEquation;
-            Averaging = Parameters[1].OriginalEquation;
             Order = Convert.ToByte(Parameters[2].OriginalEquation);
             Initial = Parameters.Count == 4 ? Parameters[3].OriginalEquation : string.Empty;
-            SmthMachine = new SmthMachine(Input, Averaging, Order, Initial);
         }
-        /// <summary>
-        /// Nth order smooth
-        /// </summary>
-        public byte Order { get; }
     }
 }

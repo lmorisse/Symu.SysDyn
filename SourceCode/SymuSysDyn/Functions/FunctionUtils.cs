@@ -7,26 +7,18 @@
 
 #endregion
 
-#region using directives
-
-#endregion
-
-#region using directives
-
-#endregion
-
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Xml;
-using Symu.SysDyn.Parser;
+using Symu.SysDyn.Equations;
 
 namespace Symu.SysDyn.Functions
 {
-    //todo Maybe try a framework like https://github.com/IronyProject to have a real grammar more than regex
-    public static class StringFunction
+    /// <summary>
+    /// Utils method to parse string for functions and theirs parameters
+    /// </summary>
+    public static class FunctionUtils
     {
 
 
@@ -35,7 +27,7 @@ namespace Symu.SysDyn.Functions
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        public static IEnumerable<BuiltInFunction> GetFunctions(string input)
+        public static IEnumerable<BuiltInFunction> ParseFunctions(string input)
         {
             if (input == null)
             {
@@ -43,72 +35,21 @@ namespace Symu.SysDyn.Functions
             }
             var builtInFunctions = new List<BuiltInFunction>();
 
-            #region functions with ()
-            var functions = GetStringFunctions(input);
+            var functions = ParseStringFunctions(input);
 
             if (functions != null)
             {
-                foreach (var function in functions)
-                {
-                    var name = StringUtils.CleanName(function.Split('(')[0]);
-                    switch (name)
-                    {
-                        // May be followed by () and then considered as a default builtin function
-                        case "If": 
-                        case "Then":
-                        case "Else":
-                            break;
-                        case Step.Value:
-                            builtInFunctions.Add(new Step(function));
-                            break;
-                        case Normal.Value:
-                            builtInFunctions.Add(new Normal(function));
-                            break;
-                        case Ramp.Value:
-                            builtInFunctions.Add(new Ramp(function));
-                            break;
-                        case Smth1.Value:
-                            builtInFunctions.Add(new Smth1(function));
-                            break;
-                        case Smth3.Value:
-                            builtInFunctions.Add(new Smth3(function));
-                            break;
-                        case SmthN.Value:
-                            builtInFunctions.Add(new SmthN(function));
-                            break;
-                        case Dt.Value:
-                            builtInFunctions.Add(new Dt(function));
-                            break;
-                        case Time.Value:
-                            builtInFunctions.Add(new Time(function));
-                            break;
-                        default:
-                            builtInFunctions.Add(new BuiltInFunction(function));
-                            break;
-                    }
-                }
+                builtInFunctions.AddRange(functions.Select(FunctionFactory.CreateInstance));
             }
-            #endregion
 
-            #region functions without ()
             if (IfThenElse.IsContainedIn(input))
             {
                 builtInFunctions.Add(new IfThenElse(input));
             }
 
-            //if (Dt.IsContainedIn(input, out var dt))
-            //{
-            //    builtInFunctions.Add(new Dt(dt));
-            //}
-
-            //if (Time.IsContainedIn(input, out var time))
-            //{
-            //    builtInFunctions.Add(new Time(time));
-            //}
-            #endregion
-
             return builtInFunctions;
         }
+
         /// <summary>
         /// Functions Without Brackets ni lowercase
         /// </summary>
@@ -120,7 +61,7 @@ namespace Symu.SysDyn.Functions
         /// <returns></returns>
         /// <remarks>No regex approach for maintainability reason</remarks>
         /// <code>var regex = new Regex(@"([a-zA-Z0-9]+)\s*\([^)]*\)");</code>
-        public static List<string> GetStringFunctions(string input)
+        public static List<string> ParseStringFunctions(string input)
         {
             if (string.IsNullOrEmpty(input))
             {
@@ -185,7 +126,6 @@ namespace Symu.SysDyn.Functions
                         }
 
                         break;
-
                 }
             }
             return result;
@@ -196,7 +136,7 @@ namespace Symu.SysDyn.Functions
         /// </summary>
         /// <param name="input"></param>
         /// <returns>input = "function(func(param1, param2), param3)" - return {func(param1, param2), param3}</returns>
-        public static List<IEquation> GetParameters(string input)
+        public static List<IEquation> ParseParameters(string input)
         {
             var result = new List<IEquation>();
             const string extractFuncRegex = @"\b[^()]+\((.*)\)$";
@@ -213,7 +153,7 @@ namespace Symu.SysDyn.Functions
             var matches = Regex.Matches(innerArgs, extractArgsRegex);
             for (var i = 0; i < matches.Count; i++)
             {
-                result.Add(Equation.CreateInstance(matches[i].Value));
+                result.Add(EquationFactory.CreateInstance(matches[i].Value));
             }
 
             return result;

@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using Symu.SysDyn.Model;
 using Symu.SysDyn.Simulation;
 
-namespace Symu.SysDyn.Functions
+namespace Symu.SysDyn.Equations
 {
     /// <summary>
     /// Interface for equation

@@ -12,8 +12,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Symu.SysDyn.Equations;
 using Symu.SysDyn.Functions;
 using Symu.SysDyn.Parser;
+using Symu.SysDyn.Simulation;
 
 #endregion
 
@@ -24,8 +26,6 @@ namespace Symu.SysDyn.Model
     /// </summary>
     public class Variable
     {
-        private float _value;
-
         public Variable(string name)
         {
             if (name == null)
@@ -38,23 +38,33 @@ namespace Symu.SysDyn.Model
 
         public Variable(string name, string eqn) : this(name)
         {
-            Value = CheckInitialValue(eqn);
-            Equation = Functions.Equation.CreateInstance(eqn, null);
-            SetChildren();
             Units = Units.CreateInstanceFromEquation(eqn);
+            Equation = EquationFactory.CreateInstance(eqn, null);
+            // intentionally after EquationFactory
+            SetInitialValue();
+            SetChildren();
         }
 
         public Variable(string name, string eqn, GraphicalFunction graph, Range range, Range scale) : this(name)
         {
-            Value = CheckInitialValue(eqn);
-            Units = Units.CreateInstanceFromEquation(eqn);
-            Function = graph;
+            _graphicalFunction = graph;
             Range = range;
             Scale = scale;
+            Units = Units.CreateInstanceFromEquation(eqn);
             // intentionally after Range assignment
-            Equation = Functions.Equation.CreateInstance(eqn, range);
+            Equation = EquationFactory.CreateInstance(eqn, range);
+            // intentionally after EquationFactory
+            SetInitialValue();
             SetChildren();
         }
+
+        public void SetInitialValue()
+        {
+            Value = Equation == null ? 0 : SetInitialValue(Equation.OriginalEquation);
+            Initialize();
+        }
+
+        private float _value;
 
         public float Value
         {
@@ -64,14 +74,12 @@ namespace Symu.SysDyn.Model
 
         public IEquation Equation { get; set; }
 
-        public GraphicalFunction Function { get; set; }
-
-        public float OldValue { get; set; }
+        private readonly GraphicalFunction _graphicalFunction;
 
         /// <summary>
         ///     The variable has been updated
         /// </summary>
-        public bool Updated { get; set; }
+        public bool Updated { get; private set; }
 
         /// <summary>
         ///     The variable is being updating
@@ -81,7 +89,7 @@ namespace Symu.SysDyn.Model
         /// <summary>
         ///     Children are items from Equation that are not numbers, operators, blanks nor itself
         /// </summary>
-        public List<string> Children { get; protected set; }
+        public List<string> Children { get; private set; }
 
         /// <summary>
         ///     Find all children of a variable
@@ -92,26 +100,21 @@ namespace Symu.SysDyn.Model
             Children = Equation?.Variables.Where(word => !word.Equals(Name)).ToList() ?? new List<string>();
         }
 
-        public static float CheckInitialValue(string equation)
+        public static float SetInitialValue(string stringEquation)
         {
-            if (string.IsNullOrEmpty(equation))
+            if (float.TryParse(stringEquation, out var n))
+            {
+                return n;
+            }
+
+            try
+            {
+                return EquationFactory.CreateInstance(stringEquation)?.Evaluate(new Variables(), new SimSpecs()) ?? 0;
+            }
+            catch 
             {
                 return 0;
             }
-
-            // Remove string in Braces which are units not equation
-            var index = equation.IndexOf('{');
-            if (index > 0)
-            {
-                equation = equation.Remove(index);
-            }
-
-            if (!float.TryParse(equation, out var n))
-            {
-                n = 0;
-            }
-
-            return n;
         }
 
         /// <summary>Returns a string that represents the current object.</summary>
@@ -121,11 +124,22 @@ namespace Symu.SysDyn.Model
             return Name;
         }
 
+        public void Update(Variables variables, SimSpecs simulation)
+        {
+            if (Updated)
+            {
+                return;
+            }
+
+            var value = Equation.Evaluate(variables, simulation);
+            Value = _graphicalFunction?.GetOutputWithBounds(value) ?? value;
+            Updated = true;
+        }
+
         #region Xml attributes
 
         public string Name { get; }
 
-        public string Eqn { get; set; }
         public Units Units { get; set; }
 
         /// <summary>
@@ -139,5 +153,10 @@ namespace Symu.SysDyn.Model
         public Range Scale { get; set; } = new Range(false);
 
         #endregion
+
+        public void Initialize()
+        {
+            Updated = Equation == null || Equation is ConstantEquation;
+        }
     }
 }

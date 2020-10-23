@@ -24,7 +24,7 @@ namespace Symu.SysDyn.Functions
         public new const string Value = "Smth3";
         public Smth3(string function) : base(function)
         {
-            SmthMachine = new SmthMachine(Input, Averaging, 3, Initial);
+            Order = 3;
         }
     }
 }

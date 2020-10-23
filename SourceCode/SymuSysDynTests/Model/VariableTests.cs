@@ -19,11 +19,11 @@ namespace SymuSysDynTests.Model
     [TestClass]
     public class VariableTests
     {
-        private const string Equation0 = "10 {unit}\r";
         private const string Equation1 = "variable1 + variable2 {unit}\r";
         private const string Equation2 = "name + DT *(variable1 - variable2)";
         private const string Equation3 = "STEP(3, 5)";
         private const string Equation4 = "";
+        private const string Equation5 = "10";
         private Variable _variable;
 
         /// <summary>
@@ -51,26 +51,28 @@ namespace SymuSysDynTests.Model
             Assert.AreEqual(2, _variable.Children.Count);
             Assert.IsTrue(_variable.Children.Contains("Variable1"));
             Assert.IsTrue(_variable.Children.Contains("Variable2"));
+            Assert.IsFalse(_variable.Updated);
         }
 
         /// <summary>
-        ///     Initial value
+        ///     Constant
         /// </summary>
         [TestMethod]
-        public void VariableTest2()
+        public void VariableTest5()
         {
-            _variable = new Variable("name", "1");
+            _variable = new Variable("name", Equation5);
             Assert.AreEqual("Name", _variable.Name);
-            Assert.AreEqual(1, _variable.Value);
-            Assert.AreEqual("1", _variable.Equation.InitializedEquation);
+            Assert.AreEqual(10, _variable.Value);
+            Assert.AreEqual("10", _variable.Equation.InitializedEquation);
             Assert.AreEqual(0, _variable.Children.Count);
+            Assert.IsTrue(_variable.Updated);
         }
 
         /// <summary>
         ///     With built in functions
         /// </summary>
         [TestMethod]
-        public void VariableTest3()
+        public void VariableTest2()
         {
             _variable = new Variable("name", Equation2);
             Assert.AreEqual("Name", _variable.Name);
@@ -79,19 +81,35 @@ namespace SymuSysDynTests.Model
             Assert.AreEqual(2, _variable.Children.Count);
             Assert.IsTrue(_variable.Children.Contains("Variable1"));
             Assert.IsTrue(_variable.Children.Contains("Variable2"));
+            Assert.IsFalse(_variable.Updated);
         }
 
         /// <summary>
         ///     With built in functions
         /// </summary>
         [TestMethod]
-        public void VariableTest4()
+        public void VariableTest3()
         {
             _variable = new Variable("name", Equation3);
             Assert.AreEqual("Name", _variable.Name);
             Assert.AreEqual(0, _variable.Value);
             Assert.IsNotNull(_variable.Equation);
             Assert.AreEqual(0, _variable.Children.Count);
+            Assert.IsFalse(_variable.Updated);
+        }
+
+        /// <summary>
+        ///     No equation
+        /// </summary>
+        [TestMethod]
+        public void VariableTest4()
+        {
+            _variable = new Variable("name", Equation4);
+            Assert.AreEqual("Name", _variable.Name);
+            Assert.AreEqual(0, _variable.Value);
+            Assert.IsNull(_variable.Equation);
+            Assert.AreEqual(0, _variable.Children.Count);
+            Assert.IsTrue(_variable.Updated);
         }
 
         [TestMethod]
@@ -104,9 +122,9 @@ namespace SymuSysDynTests.Model
         [TestMethod]
         public void CheckInitialValueTest()
         {
-            Assert.AreEqual(10, Variable.CheckInitialValue(Equation0));
-            Assert.AreEqual(0, Variable.CheckInitialValue(Equation1));
-            Assert.AreEqual(0, Variable.CheckInitialValue(Equation4));
+            Assert.AreEqual(10, Variable.SetInitialValue(Equation5));
+            Assert.AreEqual(0, Variable.SetInitialValue(Equation1));
+            Assert.AreEqual(0, Variable.SetInitialValue(Equation4));
         }
     }
 }

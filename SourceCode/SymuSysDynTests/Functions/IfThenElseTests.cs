@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Symu.SysDyn.Equations;
 using Symu.SysDyn.Functions;
 
 namespace SymuSysDynTests.Functions

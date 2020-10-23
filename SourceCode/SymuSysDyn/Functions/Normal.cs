@@ -32,42 +32,24 @@ namespace Symu.SysDyn.Functions
 
         public Normal(string function) : base(function)
         {
-            Mean = Parameters[0].Variables.Any() ? Parameters[0].Variables.First() : Parameters[0].OriginalEquation;
-            StandardDeviation = Parameters[1].Variables.Any() ? Parameters[1].Variables.First() : Parameters[1].OriginalEquation;
-
-            if (Parameters.Count == 3)
-            {
-                Seed = Parameters[2].Variables.Any()
-                    ? Parameters[2].Variables.First()
-                    : Parameters[2].OriginalEquation.Trim();
-            }
-            else
-            {
-                Seed = string.Empty;
-            }
         }
 
-        public string Mean { get; }
-        public string StandardDeviation { get; }
-        public string Seed { get; }
+        public string Mean => Parameters[0].InitializedEquation;
+        public string StandardDeviation => Parameters[1].InitializedEquation;
+        public string Seed => Parameters.Count == 3 ? Parameters[2].InitializedEquation : string.Empty;
 
         public override float Evaluate(Variables variables, SimSpecs sim)
         {
-            if (sim == null)
-            {
-                throw new ArgumentNullException(nameof(sim));
-            }
-            //mean can be either a literal or a numeric
-            var mean = Parameters[0].Variables.Any() ? Convert.ToSingle(Expression.Parameters[Mean]) : Convert.ToSingle(Mean, CultureInfo.InvariantCulture);
+            var mean = Parameters[0].Evaluate(variables, sim);
 
-            var standardDeviation = Parameters[1].Variables.Any() ? Convert.ToSingle(Expression.Parameters[StandardDeviation]) : Convert.ToSingle(StandardDeviation, CultureInfo.InvariantCulture);
+            var standardDeviation = Parameters[1].Evaluate(variables, sim);
 
             if (string.IsNullOrEmpty(Seed))
             {
                 return Common.Math.ProbabilityDistributions.Normal.Sample(mean, standardDeviation);
             }
             // with seed parameter
-            var seed = Parameters[2].Variables.Any() ? Convert.ToInt32(Expression.Parameters[Seed]) : Convert.ToInt32(Seed, CultureInfo.InvariantCulture);
+            var seed = Convert.ToInt32(Parameters[2].Evaluate(variables, sim));
 
             return Common.Math.ProbabilityDistributions.Normal.Sample(mean, standardDeviation, seed);
         }

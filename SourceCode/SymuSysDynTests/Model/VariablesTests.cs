@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Symu.SysDyn.Model;
+using Symu.SysDyn.Simulation;
 
 #endregion
 
@@ -22,8 +23,8 @@ namespace SymuSysDynTests.Model
     [TestClass]
     public class VariablesTests
     {
-        private readonly Variable _variable = new Variable("0");
-        private readonly Variable _variable1 = new Variable("1");
+        private readonly Variable _variable = new Variable("0", "STEP(1,5)");
+        private readonly Variable _variable1 = new Variable("1", "STEP(1,5)");
         private readonly Variables _variables = new Variables();
         private Group _group;
         private List<Variable> _variableList;
@@ -64,15 +65,13 @@ namespace SymuSysDynTests.Model
         {
             foreach (var variable in _variableList)
             {
-                variable.Value = 1;
-                variable.Updated = true;
+                variable.Update(new Variables(), new SimSpecs());
             }
 
             _variables.AddRange(_variableList);
             _variables.Initialize();
             foreach (var variable in _variables)
             {
-                Assert.AreEqual(variable.Value, variable.OldValue);
                 Assert.IsFalse(variable.Updated);
             }
         }
@@ -82,8 +81,7 @@ namespace SymuSysDynTests.Model
         {
             foreach (var variable in _variableList)
             {
-                variable.Value = 1;
-                variable.Updated = true;
+                variable.Update(new Variables(), new SimSpecs());
             }
 
             _variables.AddRange(_variableList);
