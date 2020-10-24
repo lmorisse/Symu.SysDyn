@@ -27,7 +27,11 @@ namespace Symu.SysDyn.Functions
     ///     A built in function defined by string
     ///     Works with nested functions, i.e. if the parameters of the function are functions
     /// </summary>
-    /// <remarks>When adding a new buildIn function, create an inherited class of BuiltInFunction and add it in StringFunction.GetStringFunctions</remarks>
+    /// <remarks>When adding a new buildIn function,
+    /// create an inherited class of BuiltInFunction
+    /// add it in FunctionUtils.ParseStringFunctions
+    /// add a unit test class for the function
+    /// add a unit test in AllBuiltInFUnctionsTests to have the list of all available functions</remarks>
     /// <remarks>https://www.simulistics.com/help/equations/builtin.htm</remarks>
     public class BuiltInFunction
     {        

@@ -38,24 +38,5 @@ namespace Symu.SysDyn.Functions
 
             return sim.DeltaTime;
         }
-
-        /// <summary>
-        ///     Check if it is a DT function
-        /// </summary>
-        /// <param name="input"></param>
-        /// <param name="word"></param>
-        /// <returns></returns>
-        public static bool IsContainedIn(string input, out string word)
-        {
-            if (input == null)
-            {
-                throw new ArgumentNullException(nameof(input));
-            }
-
-            var regex = new Regex(@"\w*(?<!_)dt(?!_)(?![a-zA-Z0-9])", RegexOptions.IgnoreCase);
-            var match = regex.Match(input);
-            word = match.Value;
-            return match.Success;
-        }
     }
 }

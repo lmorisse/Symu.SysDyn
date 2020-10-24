@@ -128,6 +128,11 @@ namespace Symu.SysDyn.Functions
                         break;
                 }
             }
+            // Case of a single BuiltInFunction without brackets
+            if (!result.Any() && FunctionsWithoutBrackets.Contains(name.ToLowerInvariant()))
+            {
+                result.Add(name);
+            }
             return result;
         }
 

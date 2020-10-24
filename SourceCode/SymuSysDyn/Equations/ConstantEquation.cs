@@ -19,20 +19,20 @@ namespace Symu.SysDyn.Equations
     /// </summary>
     public class ConstantEquation : IEquation
     {
-        private readonly float _constant;
-
-        public string InitializedEquation => _constant.ToString(CultureInfo.InvariantCulture);
-        public string OriginalEquation => _constant.ToString(CultureInfo.InvariantCulture);
-        public ConstantEquation(float constant) 
+        public string InitializedEquation => Value.ToString(CultureInfo.InvariantCulture);
+        public string OriginalEquation => Value.ToString(CultureInfo.InvariantCulture);
+        public ConstantEquation(float value) 
         {
-            _constant = constant;
+            Value = value;
         }
+
+        public float Value { get; }
 
         public List<string> Variables { get; } = new List<string>();
 
         public float Evaluate(Variables variables, SimSpecs sim)
         {
-            return _constant;
+            return Value;
         }
 
         public void Prepare(Variables variables, SimSpecs sim)

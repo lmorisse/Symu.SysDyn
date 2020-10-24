@@ -35,7 +35,7 @@ namespace SymuSysDynApp
         private void button1_Click(object sender, EventArgs e)
         {
             _stateMachine.Process();
-            cbVariables.Enabled = true;
+            cbResults.Enabled = true;
             lblTime.Text = _stateMachine.Simulation.Time.ToString(CultureInfo.InvariantCulture);
         }
 
@@ -50,10 +50,10 @@ namespace SymuSysDynApp
         private void InitializeStateMachine()
         {
             _stateMachine = new StateMachine(openFileDialog1.FileName, false);
-            cbVariables.Items.Clear();
+            cbResults.Items.Clear();
             if (_stateMachine.Variables.Names != null)
             {
-                cbVariables.Items.AddRange(_stateMachine.Variables.Names.ToArray());
+                cbResults.Items.AddRange(_stateMachine.Variables.Names.ToArray());
             }
 
             cbGroups.Items.Clear();
@@ -62,6 +62,11 @@ namespace SymuSysDynApp
                 cbGroups.Items.AddRange(_stateMachine.Variables.Groups.ToArray());
             }
 
+            cbVariables.Items.Clear();
+            if (_stateMachine.Variables.Any())
+            {
+                cbVariables.Items.AddRange(_stateMachine.Variables.ToArray());
+            }
 
             tbStart.Text = _stateMachine.Simulation.Start.ToString(CultureInfo.InvariantCulture);
             tbStop.Text = _stateMachine.Simulation.Stop.ToString(CultureInfo.InvariantCulture);
@@ -73,7 +78,7 @@ namespace SymuSysDynApp
 
         private void cbVariables_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var variableName = cbVariables.SelectedItem.ToString();
+            var variableName = cbResults.SelectedItem.ToString();
             var items = _stateMachine.Results.GetResults(variableName).ToArray();
             var chartSerie = new ChartSeries {Name = variableName};
             for (var i = 0; i < items.Length; i++)
@@ -152,6 +157,15 @@ namespace SymuSysDynApp
             var groupName = cbGroups.SelectedItem.ToString();
             var dotString = GraphVizDot.GenerateDotString(_stateMachine.GetSubGraph(groupName));
             picImage.Image = GraphViz.RenderImage(dotString, "jpg");
+        }
+
+        private void cbVariables_SelectedIndexChanged_1(object sender, EventArgs e)
+        {
+
+            var variableName = cbVariables.SelectedItem.ToString();
+            var variable = _stateMachine.Variables.Get(variableName);
+            tbEquation.Text = variable.Equation.ToString();
+            tbValue.Text = variable.Value.ToString(CultureInfo.InvariantCulture);
         }
     }
 }

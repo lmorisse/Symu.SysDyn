@@ -18,7 +18,7 @@ namespace SymuSysDynTests.Functions
         public void Smth3Test()
         {
             var smth = new Smth3("SMTH3(5+Step(10,3),5)");
-            Assert.AreEqual(string.Empty, smth.Initial);
+            Assert.AreEqual("5+Step(10,3)", smth.Initial);
             Assert.AreEqual("5+Step(10,3)", smth.Input);
             Assert.AreEqual("5", smth.Averaging);
         }

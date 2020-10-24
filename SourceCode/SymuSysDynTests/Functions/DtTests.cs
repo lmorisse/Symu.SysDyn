@@ -9,6 +9,7 @@
 
 #region using directives
 
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Symu.SysDyn.Functions;
 
@@ -17,20 +18,18 @@ using Symu.SysDyn.Functions;
 namespace SymuSysDynTests.Functions
 {
     [TestClass]
-    public class DtTests
+    public class DtTests: BaseClassTest
     {
+
+        [DataRow(0.1F)]
+        [DataRow(0.5F)]
+        [DataRow(1F)]
         [TestMethod]
-        public void IsContainedInTest()
+        public void DtTest1(float dt)
         {
-            Assert.IsTrue(Dt.IsContainedIn("DT", out var dt));
-            Assert.AreEqual("DT", dt);
-            Assert.IsTrue(Dt.IsContainedIn(" Dt ", out dt));
-            Assert.AreEqual("Dt", dt);
-            Assert.IsTrue(Dt.IsContainedIn("-dt+", out dt));
-            Assert.AreEqual("dt", dt);
-            Assert.IsFalse(Dt.IsContainedIn("DTXXX", out _));
-            Assert.IsFalse(Dt.IsContainedIn("DT_XXX", out _));
-            Assert.IsFalse(Dt.IsContainedIn("XXX_DT", out _));
+            var dtFunction = new Dt("DT");
+            Machine.Simulation.DeltaTime = dt;
+            Assert.AreEqual(dt, dtFunction.Evaluate(Machine.Variables, Machine.Simulation));
         }
     }
 }

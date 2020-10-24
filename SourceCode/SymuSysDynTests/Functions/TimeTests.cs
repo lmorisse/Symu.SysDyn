@@ -17,20 +17,18 @@ using Symu.SysDyn.Functions;
 namespace SymuSysDynTests.Functions
 {
     [TestClass]
-    public class TimeTests
+    public class TimeTests: BaseClassTest
     {
+        [DataRow(0)]
+        [DataRow(10)]
+        [DataRow(100)]
         [TestMethod]
-        public void IsContainedInTest()
+        public void TimeTest(int time)
         {
-            Assert.IsTrue(Time.IsContainedIn("TIME", out var time));
-            Assert.AreEqual("TIME", time);
-            Assert.IsTrue(Time.IsContainedIn(" Time ", out time));
-            Assert.AreEqual("Time", time);
-            Assert.IsTrue(Time.IsContainedIn("-time+", out time));
-            Assert.AreEqual("time", time);
-            Assert.IsFalse(Time.IsContainedIn("TIMEXXX", out _));
-            Assert.IsFalse(Time.IsContainedIn("TIME_XXX", out _));
-            Assert.IsFalse(Time.IsContainedIn("XXX_TIME", out _));
+            var timeFunction = new Time("TIME");
+            Machine.Simulation.Time = (ushort)time;
+            Assert.AreEqual(time, timeFunction.Evaluate(Machine.Variables, Machine.Simulation));
         }
+
     }
 }

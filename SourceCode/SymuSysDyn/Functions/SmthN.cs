@@ -29,7 +29,7 @@ namespace Symu.SysDyn.Functions
         public SmthN(string function) : base(function)
         {
             Order = Convert.ToByte(Parameters[2].OriginalEquation);
-            Initial = Parameters.Count == 4 ? Parameters[3].OriginalEquation : string.Empty;
+            Initial = Parameters.Count == 4 ? Parameters[3].OriginalEquation : Input;
         }
     }
 }

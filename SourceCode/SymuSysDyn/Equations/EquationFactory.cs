@@ -13,6 +13,7 @@ using System.Collections.Immutable;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
+using NCalc2;
 using Symu.SysDyn.Functions;
 using Symu.SysDyn.Model;
 using Symu.SysDyn.Parser;
@@ -46,6 +47,17 @@ namespace Symu.SysDyn.Equations
                 return new ConstantEquation(floatEqn);
             }
 
+            try
+            {
+                // Test literal such as "1/10"
+                var expression =new Expression(eqn);
+                var eval = expression.Evaluate();
+                return new ConstantEquation(Convert.ToSingle(eval));
+            }
+            catch
+            {
+                // not an constant equation...
+            }
             var initializedEquation = Initialize(eqn, out var functions, out var variables, out var words);
             float sumEval=0;
             foreach (var function in functions.ToImmutableList())
@@ -63,14 +75,41 @@ namespace Symu.SysDyn.Equations
                 sumEval += eval;
             }
 
-            if (functions.Any() )
+            for (var i = 0; i < words.Count; i++)
+            {
+                var word = words[i];
+                if (word.Length <= 1)
+                {
+                    continue;
+                }
+
+                var expression = new Expression(word);
+                try
+                {
+                    // Test literal such as ".01"
+                    var eval = Convert.ToSingle(expression.Evaluate());
+                    // variable can be replaced by a constant
+                    initializedEquation = initializedEquation.Replace(word, eval.ToString(CultureInfo.InvariantCulture));
+                    words[i] = eval.ToString(CultureInfo.InvariantCulture);
+                    sumEval += eval;
+                }
+                catch
+                {
+                    continue;
+                }
+            }
+
+            // Equation with functions or only variables with brackets
+            if (functions.Any() || words.Contains("("))
             {
                 return new ComplexEquation(eqn, initializedEquation, functions, variables, range);
             }
+            // Only variables without brackets
             if (variables.Any())
             {
                 return new SimpleEquation(eqn, initializedEquation, variables, words, range);
             }
+            // Only constants
             return new ConstantEquation(sumEval);
         }
 
@@ -99,7 +138,7 @@ namespace Symu.SysDyn.Equations
                 originalEquation = originalEquation.Replace(function.OriginalFunction, function.IndexName);
             }
             // split equation in words
-            var regexWords = new Regex(@"[0-9]*\.?\,?[0-9]+|[-^+*\/()<>=]|\w+");
+            var regexWords = new Regex(@"[a-zA-Z0-9_]*\.?\,?[a-zA-Z0-9_]+|[-^+*\/()<>=]|\w+");//@"[0-9]*\.?\,?[0-9]+|[-^+*\/()<>=]|\w+");
             var matches = regexWords.Matches(originalEquation);
             words = new List<string>();
             variables = new List<string>();

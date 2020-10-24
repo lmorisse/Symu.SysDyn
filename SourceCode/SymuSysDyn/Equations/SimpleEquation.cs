@@ -93,6 +93,9 @@ namespace Symu.SysDyn.Equations
             {
                 switch (word)
                 {
+                    //case "(":
+                    //case ")":
+                    //    break;
                     case "+":
                     case "-":
                     case "*":

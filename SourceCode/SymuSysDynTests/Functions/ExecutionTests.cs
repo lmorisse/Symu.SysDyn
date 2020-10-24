@@ -33,12 +33,6 @@ namespace SymuSysDynTests.Functions
 
         #region BuilIn functions
 
-        [TestMethod]
-        public void AbsTest()
-        {
-            var e = new Expression("Abs(-2)");
-            Assert.AreEqual(2F, Convert.ToUInt16(e.Evaluate()));
-        }
 
         [TestMethod]
         public void IfThenElseTest()

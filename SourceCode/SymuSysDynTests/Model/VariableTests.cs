@@ -118,13 +118,5 @@ namespace SymuSysDynTests.Model
             _variable = new Variable("name");
             Assert.AreEqual("Name", _variable.ToString());
         }
-
-        [TestMethod]
-        public void CheckInitialValueTest()
-        {
-            Assert.AreEqual(10, Variable.SetInitialValue(Equation5));
-            Assert.AreEqual(0, Variable.SetInitialValue(Equation1));
-            Assert.AreEqual(0, Variable.SetInitialValue(Equation4));
-        }
     }
 }

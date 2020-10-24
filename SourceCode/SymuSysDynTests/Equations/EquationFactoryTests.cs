@@ -10,6 +10,7 @@
 #region using directives
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NCalc2;
 using Symu.SysDyn.Equations;
 
 #endregion
@@ -23,9 +24,13 @@ namespace SymuSysDynTests.Equations
         private const string ConstantEquation = "2";
         private const string ConstantEquation1 = "Abs(1)";
         private const string ConstantEquation2 = "Normal(1,0)"; // with builtin function
-        private const string SimpleEquation = "variable1 + variable2";
-        private const string SimpleEquation1 = "variable1 + Abs(1)"; // with builtin function
-        private const string ComplexEquation = "3 + name + Dt *(variable1 - variable2)-Time+SET(3,5) {test}";
+        private const string ConstantEquation3 = ".01";
+        private const string ConstantEquation4 = ".45e6";
+        private const string ConstantEquation5 = "1/10";
+        private const string SimpleEquation = "variable_1 + variable2";
+        private const string SimpleEquation1 = "variable_1 + Abs(1)"; // with builtin function
+        private const string ComplexEquation = ".3 + name + Dt *(variable_1 - variable2)-TIME+SET(3,5) {test}";
+        private const string ComplexEquation1 = "variable_1/(variable2*variable3)"; // not a simple equation because of the brackets
         private IEquation _equation;
 
         [TestMethod]
@@ -61,33 +66,69 @@ namespace SymuSysDynTests.Equations
         [TestMethod]
         public void CreateInstanceTest4()
         {
-            _equation = EquationFactory.CreateInstance(SimpleEquation);
-            Assert.IsInstanceOfType(_equation, typeof(SimpleEquation));
-            Assert.AreEqual("Variable1+Variable2", _equation.InitializedEquation);
-            Assert.AreEqual(2, _equation.Variables.Count);
-            Assert.AreEqual("Variable1", _equation.Variables[0]);
-            Assert.AreEqual("Variable2", _equation.Variables[1]);
+            _equation = EquationFactory.CreateInstance(ConstantEquation3);
+            Assert.AreEqual("0.01", _equation.InitializedEquation);
+            Assert.AreEqual(0, _equation.Variables.Count);
+            Assert.IsInstanceOfType(_equation, typeof(ConstantEquation));
         }
         [TestMethod]
         public void CreateInstanceTest5()
         {
-            _equation = EquationFactory.CreateInstance(SimpleEquation1);
-            Assert.IsInstanceOfType(_equation, typeof(SimpleEquation));
-            Assert.AreEqual("Variable1+1", _equation.InitializedEquation);
-            Assert.AreEqual(1, _equation.Variables.Count);
-            Assert.AreEqual("Variable1", _equation.Variables[0]);
+            _equation = EquationFactory.CreateInstance(ConstantEquation4);
+            Assert.AreEqual("450000", _equation.InitializedEquation);
+            Assert.AreEqual(0, _equation.Variables.Count);
+            Assert.IsInstanceOfType(_equation, typeof(ConstantEquation));
         }
-
         [TestMethod]
         public void CreateInstanceTest6()
         {
+            _equation = EquationFactory.CreateInstance(ConstantEquation5);
+            Assert.AreEqual("0.1", _equation.InitializedEquation);
+            Assert.AreEqual(0, _equation.Variables.Count);
+            Assert.IsInstanceOfType(_equation, typeof(ConstantEquation));
+        }
+        [TestMethod]
+        public void CreateInstanceTest7()
+        {
+            _equation = EquationFactory.CreateInstance(SimpleEquation);
+            Assert.IsInstanceOfType(_equation, typeof(SimpleEquation));
+            Assert.AreEqual("Variable_1+Variable2", _equation.InitializedEquation);
+            Assert.AreEqual(2, _equation.Variables.Count);
+            Assert.AreEqual("Variable_1", _equation.Variables[0]);
+            Assert.AreEqual("Variable2", _equation.Variables[1]);
+        }
+        [TestMethod]
+        public void CreateInstanceTest8()
+        {
+            _equation = EquationFactory.CreateInstance(SimpleEquation1);
+            Assert.IsInstanceOfType(_equation, typeof(SimpleEquation));
+            Assert.AreEqual("Variable_1+1", _equation.InitializedEquation);
+            Assert.AreEqual(1, _equation.Variables.Count);
+            Assert.AreEqual("Variable_1", _equation.Variables[0]);
+        }
+
+        [TestMethod]
+        public void CreateInstanceTest9()
+        {
             _equation = EquationFactory.CreateInstance(ComplexEquation);
             Assert.IsInstanceOfType(_equation, typeof(ComplexEquation));
-            Assert.AreEqual("3+Name+Dt0*(Variable1-Variable2)-Time1+Set2", _equation.InitializedEquation);
+            Assert.AreEqual("0.3+Name+Dt0*(Variable_1-Variable2)-Time1+Set2", _equation.InitializedEquation);
             Assert.AreEqual(3, _equation.Variables.Count);
             Assert.AreEqual("Name", _equation.Variables[0]);
-            Assert.AreEqual("Variable1", _equation.Variables[1]);
+            Assert.AreEqual("Variable_1", _equation.Variables[1]);
             Assert.AreEqual("Variable2", _equation.Variables[2]);
+        }
+
+        [TestMethod]
+        public void CreateInstanceTest10()
+        {
+            _equation = EquationFactory.CreateInstance(ComplexEquation1);
+            Assert.IsInstanceOfType(_equation, typeof(ComplexEquation));
+            Assert.AreEqual("Variable_1/(Variable2*Variable3)", _equation.InitializedEquation);
+            Assert.AreEqual(3, _equation.Variables.Count);
+            Assert.AreEqual("Variable_1", _equation.Variables[0]);
+            Assert.AreEqual("Variable2", _equation.Variables[1]);
+            Assert.AreEqual("Variable3", _equation.Variables[2]);
         }
 
         [TestMethod]
@@ -97,7 +138,7 @@ namespace SymuSysDynTests.Equations
 
             Assert.AreEqual(3, _equation.Variables.Count);
             Assert.AreEqual("Name", _equation.Variables[0]);
-            Assert.AreEqual("Variable1", _equation.Variables[1]);
+            Assert.AreEqual("Variable_1", _equation.Variables[1]);
             Assert.AreEqual("Variable2", _equation.Variables[2]);
         }
     }

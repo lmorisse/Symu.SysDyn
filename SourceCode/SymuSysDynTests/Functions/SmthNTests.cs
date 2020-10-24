@@ -19,7 +19,7 @@ namespace SymuSysDynTests.Functions
         public void SmthNTest()
         {
             var smth = new SmthN("SMTHN(5+Step(10,3),5,3)");
-            Assert.AreEqual(string.Empty, smth.Initial);
+            Assert.AreEqual("5+Step(10,3)", smth.Initial);
             Assert.AreEqual("5+Step(10,3)", smth.Input);
             Assert.AreEqual("5", smth.Averaging);
             Assert.AreEqual(3, smth.Order);

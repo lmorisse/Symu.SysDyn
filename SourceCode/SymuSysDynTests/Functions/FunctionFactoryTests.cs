@@ -12,7 +12,7 @@ namespace SymuSysDynTests.Functions
     public class FunctionFactoryTests
     {
         [TestMethod]
-        public void GetStringFunctionsTest()
+        public void ParseStringFunctionsTest()
         {
             const string test = "xxx func0(a)+b + func1(a,b+c) - func2(a*b,func3(a+b,c)) * func4(e)+func5((f))+func6(func7(g,h)+func8(i,(a)=>a+2)) yyy";
             var result = FunctionUtils.ParseStringFunctions(test);
@@ -25,7 +25,7 @@ namespace SymuSysDynTests.Functions
             Assert.AreEqual("func6(func7(g,h)+func8(i,(a)=>a+2))", result[5]);
         }
         [TestMethod]
-        public void GetStringFunctionsTest1()
+        public void ParseStringFunctionsTest1()
         {
             const string test = "Func1((param1),(param2))+someStuffAfterFunction + DT + TIME + STEP( 1 , 2)-Normal(1,2)*RAMP(2,1)";
             var result = FunctionUtils.ParseStringFunctions(test);
@@ -37,13 +37,21 @@ namespace SymuSysDynTests.Functions
             Assert.AreEqual("Normal(1,2)", result[4]);
             Assert.AreEqual("RAMP(2,1)", result[5]);
         }
+        [TestMethod]
+        public void ParseStringFunctionsTest1Bis()
+        {
+            const string test = "TIME";
+            var result = FunctionUtils.ParseStringFunctions(test);
+            Assert.AreEqual(1, result.Count);
+            Assert.AreEqual("TIME", result[0]);
+        }
 
 
         /// <summary>
         ///     Non passing test
         /// </summary>
         [TestMethod]
-        public void GetStringFunctionsTest2()
+        public void ParseStringFunctionsTest2()
         {
             const string test = "someStuffBeforeFunction + ( param1 ) + ((param2) + (param3)) + xxx";
             var results = FunctionUtils.ParseStringFunctions(test);
@@ -53,7 +61,7 @@ namespace SymuSysDynTests.Functions
         ///     passing test : Is variable false then true
         /// </summary>
         [TestMethod]
-        public void GetStringFunctionsTest3()
+        public void ParseStringFunctionsTest3()
         {
             const string test = "Dt* (variable1 - variable2)-Time+SET(3,5)";
             var results = FunctionUtils.ParseStringFunctions(test);

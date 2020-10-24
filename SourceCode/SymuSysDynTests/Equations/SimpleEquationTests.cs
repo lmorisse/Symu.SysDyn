@@ -11,6 +11,7 @@ namespace SymuSysDynTests.Equations
         private const string MinusEquation = "variable1 - variable2";
         private const string MultiplicationEquation = "variable1 * variable2";
         private const string DivisionEquation = "variable1 / variable2";
+        private const string BracketsEquation = "((variable1)/(variable2))";
         private const string MixEquation = "1 + variable1";
         private readonly Variables _variables = new Variables();
         private readonly Variable _variable1 = new Variable("Variable1");
@@ -71,6 +72,14 @@ namespace SymuSysDynTests.Equations
             var variable = new Variable("X", MixEquation);
             _variables.Add(variable);
             Assert.AreEqual(2, variable.Equation.Evaluate(_variables, null));
+        }
+
+        [TestMethod()]
+        public void EvaluateTest6()
+        {
+            var variable = new Variable("X", BracketsEquation);
+            _variables.Add(variable);
+            Assert.AreEqual(0.5F, variable.Equation.Evaluate(_variables, null));
         }
     }
 }

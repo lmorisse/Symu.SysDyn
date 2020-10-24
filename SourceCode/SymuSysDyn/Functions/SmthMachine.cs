@@ -8,6 +8,7 @@
 #endregion
 
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Symu.SysDyn.Model;
 using Symu.SysDyn.Simulation;
@@ -29,7 +30,7 @@ namespace Symu.SysDyn.Functions
         private const string SmthFlow = "Smthflow";
         private readonly StateMachine _stateMachine = new StateMachine();
 
-        public SmthMachine(string input, string averaging, byte order, string initial = "", float deltaTime= 0.5F)
+        public SmthMachine(string input, string averaging, byte order, string initial, float deltaTime= 0.5F)
         {
             Input = input;
             Averaging = averaging;
@@ -69,9 +70,8 @@ namespace Symu.SysDyn.Functions
         }
         public Variable CreateStock(byte order)
         {
-            var eqn = Initial == string.Empty ? SmthInput : SmthInitial;
-
-            return new Stock(SmthComp+order, eqn, SmthFlow + order);
+            //var eqn = Initial == string.Empty ? SmthInput : SmthInitial;
+            return new Stock(SmthComp+order, SmthInitial, SmthFlow + order);
         }
         public Variable CreateFlow(byte order)
         {
@@ -111,7 +111,10 @@ namespace Symu.SysDyn.Functions
 
             foreach (var variable in from child in children where variables.Exists(child) select variables.Get(child))
             {
-                _stateMachine.Variables.Add(variable);
+                // Adding a constant variable, not the real one
+                // Because teh variable is already updated, and should not be updated once again
+                var constant = new Variable(variable.Name, variable.Value.ToString(CultureInfo.InvariantCulture));
+                _stateMachine.Variables.Add(constant);
             }
         }
     }

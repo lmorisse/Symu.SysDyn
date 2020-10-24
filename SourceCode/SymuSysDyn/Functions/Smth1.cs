@@ -34,8 +34,7 @@ namespace Symu.SysDyn.Functions
         {
             Input = Parameters[0].OriginalEquation;
             Averaging = Parameters[1].OriginalEquation;
-            Initial = Parameters.Count == 3 ? Parameters[2].OriginalEquation : string.Empty;
-
+            Initial = Parameters.Count == 3 ? Parameters[2].OriginalEquation : Input;
             Order = 1;
         }
 

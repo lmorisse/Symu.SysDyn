@@ -20,7 +20,7 @@ namespace SymuSysDynTests.Functions
         public void Smth1Test()
         {
             var smth = new Smth1("SMTH1(5+Step(10,3),5)");
-            Assert.AreEqual(string.Empty, smth.Initial);
+            Assert.AreEqual("5+Step(10,3)", smth.Initial);
             Assert.AreEqual("5+Step(10,3)", smth.Input);
             Assert.AreEqual("5", smth.Averaging);
         }
@@ -61,7 +61,8 @@ namespace SymuSysDynTests.Functions
             _machine.Initialize();
             _machine.Simulation.Time = 4;
             _machine.Compute();
-            Assert.AreEqual(6, _machine.Variables[1].Value);
+            //At step 4, Aux = 15 => Aux1 = SMTH1(15,5)
+            Assert.AreEqual(15, _machine.Variables[1].Value);
         }
     }
 }

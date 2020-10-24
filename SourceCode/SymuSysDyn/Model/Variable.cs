@@ -100,20 +100,31 @@ namespace Symu.SysDyn.Model
             Children = Equation?.Variables.Where(word => !word.Equals(Name)).ToList() ?? new List<string>();
         }
 
-        public static float SetInitialValue(string stringEquation)
+        public float SetInitialValue(string stringEquation)
         {
-            if (float.TryParse(stringEquation, out var n))
+            switch (Equation)
             {
-                return n;
-            }
-
-            try
-            {
-                return EquationFactory.CreateInstance(stringEquation)?.Evaluate(new Variables(), new SimSpecs()) ?? 0;
-            }
-            catch 
-            {
-                return 0;
+                case ConstantEquation constant:
+                    return constant.Value;
+                case ComplexEquation _:
+                    try
+                    {
+                        // Value may be the initial value of the equation
+                        var eval = EquationFactory.CreateInstance(stringEquation)?.Evaluate(new Variables(), new SimSpecs()) ?? 0;
+                        if (float.IsNaN(eval) || float.IsInfinity(eval))
+                        {
+                            eval = 0;
+                        }
+                        return eval;
+                    }
+                    catch
+                    {
+                        // The equation contains variables, it can be evaluate
+                        return 0;
+                    }
+                default:
+                    // SimpleEquation are made of variables, there is no initial value
+                    return 0;
             }
         }
 
@@ -131,8 +142,13 @@ namespace Symu.SysDyn.Model
                 return;
             }
 
-            var value = Equation.Evaluate(variables, simulation);
-            Value = _graphicalFunction?.GetOutputWithBounds(value) ?? value;
+            var eval = Equation.Evaluate(variables, simulation);
+            //if (float.IsNaN(eval) || float.IsInfinity(eval))
+            //{
+            //    //eval = 0;
+            //    throw new DivideByZeroException();
+            //}
+            Value = _graphicalFunction?.GetOutputWithBounds(eval) ?? eval;
             Updated = true;
         }
 
