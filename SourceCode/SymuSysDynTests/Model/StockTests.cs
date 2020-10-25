@@ -32,7 +32,7 @@ namespace SymuSysDynTests.Model
             Assert.AreEqual("Name", _stock.Name);
             CollectionAssert.AreEqual(_inflows, _stock.Inflow);
             CollectionAssert.AreEqual(_outflows, _stock.Outflow);
-            Assert.AreEqual("1", _stock.Equation.InitializedEquation);
+            Assert.IsNull(_stock.Equation);
             Assert.AreEqual(1, _stock.Value);
             Assert.AreEqual(0, _stock.Children.Count);
         }

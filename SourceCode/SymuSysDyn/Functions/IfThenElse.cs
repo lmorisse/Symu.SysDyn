@@ -11,6 +11,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using NCalc2;
@@ -33,27 +34,57 @@ namespace Symu.SysDyn.Functions
         {
             OriginalFunction = function ?? throw new ArgumentNullException(nameof(function));
             Name = "If";
-            Parameters = Parse(function);
-            Expression = new Expression(SetEquation());
+            Parse(ref function, out var parameters, out var args);
+            Parameters = parameters;
+            Args = args;
+            Expression = new Expression(function);
         }
+
         /// <summary>
         /// Parse the string function to extract the if-then-else conditions in the parameters
         /// </summary>
         /// <param name="input"></param>
-        public static List<IEquation> Parse(string input)
+        /// <param name="parameters"></param>
+        /// <param name="args"></param>
+        public static void Parse(ref string input, out List<IEquation> parameters, out List<float> args)
         {
-            var parameters = new List<IEquation>();
-
+            parameters = new List<IEquation>();
+            args = new List<float>();
 
             var result = MatchRegex(input);
             if (!result.Success)
             {
-                return parameters;
+                return;
             }
-            parameters.Add(EquationFactory.CreateInstance(result.Groups[1].Value)); //If
-            parameters.Add(EquationFactory.CreateInstance(result.Groups[2].Value)); //Then
-            parameters.Add(EquationFactory.CreateInstance(result.Groups[3].Value)); //Else
-            return parameters;
+
+            var equation = "if(";
+            var condition = EquationFactory.CreateInstance(result.Groups[1].Value, out var value);
+            equation = UpdateEquation(parameters, args, condition, value, equation);
+
+            equation += ",";
+            var thenExpression = EquationFactory.CreateInstance(result.Groups[2].Value, out value);
+            equation = UpdateEquation(parameters, args, thenExpression, value, equation);
+
+            equation += ",";
+            var elseExpression = EquationFactory.CreateInstance(result.Groups[3].Value, out value);
+            equation = UpdateEquation(parameters, args, elseExpression, value, equation);
+            input = equation + ")";
+        }
+
+        private static string UpdateEquation(ICollection<IEquation> parameters, ICollection<float> args, IEquation elseExpression, float value, string equation)
+        {
+            parameters.Add(elseExpression);
+            args.Add(value);
+            if (elseExpression != null)
+            {
+                equation += elseExpression;
+            }
+            else
+            {
+                equation += value.ToString(CultureInfo.InvariantCulture);
+            }
+
+            return equation;
         }
 
         private static Match MatchRegex(string input)
@@ -62,17 +93,17 @@ namespace Symu.SysDyn.Functions
             return regex.Match(input);
         }
 
-        /// <summary>
-        /// "if(Condition,ThenExpression,ElseExpression)"
-        /// </summary>
-        /// <returns></returns>
-        public string SetEquation()
-        {
-            var condition = Parameters.ElementAt(0);
-            var thenExpression = Parameters.ElementAt(1);
-            var elseExpression = Parameters.ElementAt(2);
-            return "if(" + condition + "," + thenExpression + "," + elseExpression + ")";
-        }
+        ///// <summary>
+        ///// "if(Condition,ThenExpression,ElseExpression)"
+        ///// </summary>
+        ///// <returns></returns>
+        //public string SetEquation()
+        //{
+        //    var condition = Parameters.ElementAt(0);
+        //    var thenExpression = Parameters.ElementAt(1);
+        //    var elseExpression = Parameters.ElementAt(2);
+        //    return "if(" + condition + "," + thenExpression + "," + elseExpression + ")";
+        //}
 
         /// <summary>
         ///     Check if it is a IfThenElse function

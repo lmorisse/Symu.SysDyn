@@ -63,7 +63,7 @@ namespace SymuSysDynTests.Model
             _variable = new Variable("name", Equation5);
             Assert.AreEqual("Name", _variable.Name);
             Assert.AreEqual(10, _variable.Value);
-            Assert.AreEqual("10", _variable.Equation.InitializedEquation);
+            Assert.IsNull(_variable.Equation);
             Assert.AreEqual(0, _variable.Children.Count);
             Assert.IsTrue(_variable.Updated);
         }

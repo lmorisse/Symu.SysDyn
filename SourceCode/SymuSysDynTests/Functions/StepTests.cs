@@ -37,12 +37,6 @@ namespace SymuSysDynTests.Functions
             Machine.Simulation.Time = 0;
             function.Prepare(Machine.Variables, Machine.Simulation);
             Assert.AreEqual(0, function.Evaluate(Machine.Variables, Machine.Simulation));
-        }
-
-        [TestMethod]
-        public void EvaluateTest1()
-        {
-            var function = new Step("STEP(5, 10)");
             Machine.Simulation.Time = 10;
             function.Prepare(Machine.Variables, Machine.Simulation);
             Assert.AreEqual(5, function.Evaluate(Machine.Variables, Machine.Simulation));

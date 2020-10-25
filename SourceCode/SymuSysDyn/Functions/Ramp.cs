@@ -34,8 +34,8 @@ namespace Symu.SysDyn.Functions
         {
         }
 
-        public string Time => Parameters[0].InitializedEquation;
-        public string Slope => Parameters[1].InitializedEquation;
+        public string Time => GetParam(0);
+        public string Slope => GetParam(1);
 
         public override float Evaluate(Variables variables, SimSpecs sim)
         {
@@ -44,9 +44,9 @@ namespace Symu.SysDyn.Functions
                 throw new ArgumentNullException(nameof(sim));
             }
             // can be either a literal or a numeric
-            var time = Convert.ToUInt16(Parameters[0].Evaluate(variables, sim));
+            var time = Convert.ToUInt16(GetValue(0,variables, sim));
 
-            var slope = Convert.ToSingle(Parameters[1].Evaluate(variables, sim));
+            var slope = GetValue(1,variables, sim);
 
             return sim.Time >= time ? slope*(sim.Time - time) : 0;
         }

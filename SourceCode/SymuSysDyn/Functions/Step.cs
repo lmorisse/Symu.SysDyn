@@ -33,8 +33,8 @@ namespace Symu.SysDyn.Functions
         {
         }
 
-        public string Height => Parameters[0].InitializedEquation;
-        public string StartTime => Parameters[1].InitializedEquation;
+        public string Height => GetParam(0);
+        public string StartTime => GetParam(1);
 
         public override float Evaluate(Variables variables, SimSpecs sim)
         {
@@ -43,9 +43,9 @@ namespace Symu.SysDyn.Functions
                 throw new ArgumentNullException(nameof(sim));
             }
             //Height can be either a literal or a numeric
-            var height = Convert.ToSingle(Parameters[0].Evaluate(variables, sim));
+            var height = GetValue(0,variables, sim);
 
-            var startTime = Convert.ToUInt16(Parameters[1].Evaluate(variables, sim));
+            var startTime = Convert.ToUInt16(GetValue(1,variables, sim));
 
             return sim.Time >= startTime ? height : 0;
         }

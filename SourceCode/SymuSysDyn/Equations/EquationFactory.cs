@@ -17,18 +17,20 @@ using NCalc2;
 using Symu.SysDyn.Functions;
 using Symu.SysDyn.Model;
 using Symu.SysDyn.Parser;
+using Symu.SysDyn.Simulation;
 
 namespace Symu.SysDyn.Equations
 {
     public static class EquationFactory
     {
-        public static IEquation CreateInstance(string eqn)
+        public static IEquation CreateInstance(string eqn, out float value)
         {
-            return CreateInstance(eqn, null);
+            return CreateInstance(eqn, null, out value);
         }
 
-        public static IEquation CreateInstance(string eqn, Range range)
+        public static IEquation CreateInstance(string eqn, Range range, out float value)
         {
+            value = 0;
             if (string.IsNullOrEmpty(eqn))
             {
                 return null;
@@ -44,7 +46,8 @@ namespace Symu.SysDyn.Equations
 
             if (float.TryParse(eqn, out var floatEqn))
             {
-                return new ConstantEquation(floatEqn);
+                value = floatEqn;
+                return null;
             }
 
             try
@@ -52,11 +55,12 @@ namespace Symu.SysDyn.Equations
                 // Test literal such as "1/10"
                 var expression =new Expression(eqn);
                 var eval = expression.Evaluate();
-                return new ConstantEquation(Convert.ToSingle(eval));
+                value = Convert.ToSingle(eval);
+                return null;
             }
             catch
             {
-                // not an constant equation...
+                // not an constant
             }
             var initializedEquation = Initialize(eqn, out var functions, out var variables, out var words);
             float sumEval=0;
@@ -102,7 +106,16 @@ namespace Symu.SysDyn.Equations
             // Equation with functions or only variables with brackets
             if (functions.Any() || words.Contains("("))
             {
-                return new ComplexEquation(eqn, initializedEquation, functions, variables, range);
+                var complexEquation = new ComplexEquation(eqn, initializedEquation, functions, variables, range);
+                try
+                {
+                    value = complexEquation.InitialValue();
+                    return null;
+                }
+                catch
+                {
+                    return complexEquation;
+                }
             }
             // Only variables without brackets
             if (variables.Any())
@@ -110,7 +123,8 @@ namespace Symu.SysDyn.Equations
                 return new SimpleEquation(eqn, initializedEquation, variables, words, range);
             }
             // Only constants
-            return new ConstantEquation(sumEval);
+            value = sumEval;
+            return null;
         }
 
         /// <summary>
@@ -170,7 +184,7 @@ namespace Symu.SysDyn.Equations
             if (function != null)
             {
                 //Get the variables of the function
-                foreach (var equation in function.Parameters)
+                foreach (var equation in function.Parameters.Where(x => x != null))
                 {
                     variables.AddRange(equation.Variables);
                 }

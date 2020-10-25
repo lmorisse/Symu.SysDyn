@@ -118,48 +118,69 @@ namespace SymuSysDynTests.Functions
         [TestMethod]
         public void GetParametersTest()
         {
-            var parameters = FunctionUtils.ParseParameters("Func");
+            var function = "Func";
+            FunctionUtils.ParseParameters(ref function, out var name, out var parameters, out var args);
+            //var parameters = FunctionUtils.ParseParameters(ref function, out var name);
             Assert.AreEqual(0, parameters.Count);
+            Assert.AreEqual("Func", name);
         }
 
         [TestMethod]
         public void GetParametersTest1()
         {
-            var parameters = FunctionUtils.ParseParameters("Func()");
+            var function = "Func()";
+
+            FunctionUtils.ParseParameters(ref function, out var name, out var parameters, out var args); 
+            //var parameters = FunctionUtils.ParseParameters(ref function, out var name);
             Assert.AreEqual(0, parameters.Count);
+            Assert.AreEqual("Func", name);
         }
 
         [TestMethod]
         public void GetParametersTest2()
         {
-            var parameters = FunctionUtils.ParseParameters("Func(param1)");
+            var function = "Func(param1)";
+
+            FunctionUtils.ParseParameters(ref function, out var name, out var parameters, out var args); 
+            //var parameters = FunctionUtils.ParseParameters(ref function, out var name);
             Assert.AreEqual(1, parameters.Count);
             Assert.AreEqual("Param1", parameters[0].Variables.First());
+            Assert.AreEqual("Func", name);
         }
 
         [TestMethod]
         public void GetParametersTest3()
         {
-            var parameters = FunctionUtils.ParseParameters("Func(param1, param2)");
+            var function = "Func(param1, param2)";
+
+            FunctionUtils.ParseParameters(ref function, out var name, out var parameters, out var args); 
+            //var parameters = FunctionUtils.ParseParameters(ref function, out var name);
             Assert.AreEqual(2, parameters.Count);
             Assert.AreEqual("Param1", parameters[0].Variables.First());
             Assert.AreEqual("Param2", parameters[1].Variables.First());
+            Assert.AreEqual("Func", name);
         }
 
         [TestMethod()]
         public void GetParametersTest4()
         {
-            const string test = @"someFunc((a),b,func1(a,b+c),func2(a*b,func3(a+b,c)),func4(e)+func5(f),func6(func7(g,h)+func8(i,(a)=>a+2)),g+2)";
-            var results = FunctionUtils.ParseParameters(test);
-            Assert.AreEqual(7, results.Count);
+            var function = @"someFunc((a),b,func1(a,b+c),func2(a*b,func3(a+b,c)),func4(e)+func5(f),func6(func7(g,h)+func8(i,(a)=>a+2)),g+2)";
+
+            FunctionUtils.ParseParameters(ref function, out var name, out var parameters, out var args); 
+            //var results = FunctionUtils.ParseParameters(ref function, out var name);
+            Assert.AreEqual(7, parameters.Count);
+            Assert.AreEqual("Somefunc", name);
         }
 
         [TestMethod()]
         public void GetParametersTest5()
         {
-            const string test = @"SMTH1((Actual_Passenger_Miles/Available_Passenger_Miles),.5)";
-            var results = FunctionUtils.ParseParameters(test);
-            Assert.AreEqual(2, results.Count);
+            var function = @"SMTH1((Actual_Passenger_Miles/Available_Passenger_Miles),.5)";
+
+            FunctionUtils.ParseParameters(ref function, out var name, out var parameters, out var args); 
+            //var results = FunctionUtils.ParseParameters(ref function, out var name);
+            Assert.AreEqual(2, parameters.Count);
+            Assert.AreEqual("Smth1", name);
         }
     }
 }

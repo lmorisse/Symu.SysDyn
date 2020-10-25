@@ -64,44 +64,47 @@ namespace SymuSysDynTests.Functions
             Assert.AreEqual("Func", function.Name);
             Assert.AreEqual(2, function.Parameters.Count);
             Assert.AreEqual("Param1", function.Parameters[0].Variables.First());
-            Assert.AreEqual("5", function.Parameters[1].OriginalEquation);
+            Assert.IsNull(function.Parameters[1]);
+            Assert.AreEqual(2, function.Args.Count);
+            Assert.AreEqual(0, function.Args[0]);
+            Assert.AreEqual(5, function.Args[1]);
         }
-        /// <summary>
-        /// No parameter
-        /// </summary>
-        [TestMethod]
-        public void SetCleanedFunctionTest()
-        {
-            var function = new BuiltInFunction("Func()");
-            Assert.AreEqual("Func()", function.SetCleanedFunction());
-        }
-        /// <summary>
-        /// One literal parameter
-        /// </summary>
-        [TestMethod]
-        public void SetCleanedFunctionTest1()
-        {
-            var function = new BuiltInFunction("Func(param)");
-            Assert.AreEqual("Func(Param)", function.SetCleanedFunction());
-        }
-        /// <summary>
-        /// Two literal parameters
-        /// </summary>
-        [TestMethod]
-        public void SetCleanedFunctionTest2()
-        {
-            var function = new BuiltInFunction("Func( param1 , Param2)");
-            Assert.AreEqual("Func(Param1,Param2)", function.SetCleanedFunction());
-        }
-        /// <summary>
-        /// Mix parameters
-        /// </summary>
-        [TestMethod]
-        public void SetCleanedFunctionTest3()
-        {
-            var function = new BuiltInFunction("Func( 1 , Param2)");
-            Assert.AreEqual("Func(1,Param2)", function.SetCleanedFunction());
-        }
+        ///// <summary>
+        ///// No parameter
+        ///// </summary>
+        //[TestMethod]
+        //public void SetCleanedFunctionTest()
+        //{
+        //    var function = new BuiltInFunction("Func()");
+        //    Assert.AreEqual("Func()", function.SetCleanedFunction());
+        //}
+        ///// <summary>
+        ///// One literal parameter
+        ///// </summary>
+        //[TestMethod]
+        //public void SetCleanedFunctionTest1()
+        //{
+        //    var function = new BuiltInFunction("Func(param)");
+        //    Assert.AreEqual("Func(Param)", function.SetCleanedFunction());
+        //}
+        ///// <summary>
+        ///// Two literal parameters
+        ///// </summary>
+        //[TestMethod]
+        //public void SetCleanedFunctionTest2()
+        //{
+        //    var function = new BuiltInFunction("Func( param1 , Param2)");
+        //    Assert.AreEqual("Func(Param1,Param2)", function.SetCleanedFunction());
+        //}
+        ///// <summary>
+        ///// Mix parameters
+        ///// </summary>
+        //[TestMethod]
+        //public void SetCleanedFunctionTest3()
+        //{
+        //    var function = new BuiltInFunction("Func( 1 , Param2)");
+        //    Assert.AreEqual("Func(1,Param2)", function.SetCleanedFunction());
+        //}
         /// <summary>
         /// Prepare with no literal parameters
         /// </summary>

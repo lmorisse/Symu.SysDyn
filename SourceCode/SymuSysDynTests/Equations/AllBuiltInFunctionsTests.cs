@@ -22,7 +22,7 @@ namespace SymuSysDynTests.Equations
         [TestMethod]
         public void TimeTest()
         {
-            var equation = EquationFactory.CreateInstance("TIME");
+            var equation = EquationFactory.CreateInstance("TIME", out _);
             Assert.IsInstanceOfType(equation, typeof(ComplexEquation));
             Assert.AreEqual("Time0", equation.InitializedEquation);
             Assert.AreEqual(0, equation.Variables.Count);
@@ -30,7 +30,7 @@ namespace SymuSysDynTests.Equations
         [TestMethod]
         public void DtTest()
         {
-            var equation = EquationFactory.CreateInstance("DT");
+            var equation = EquationFactory.CreateInstance("DT", out _);
             Assert.IsInstanceOfType(equation, typeof(ComplexEquation));
             Assert.AreEqual("Dt0", equation.InitializedEquation);
             Assert.AreEqual(0, equation.Variables.Count);
@@ -38,7 +38,7 @@ namespace SymuSysDynTests.Equations
         [TestMethod]
         public void StepTest()
         {
-            var equation = EquationFactory.CreateInstance("STEP(Height,StartTime)");
+            var equation = EquationFactory.CreateInstance("STEP(Height,StartTime)", out _);
             Assert.IsInstanceOfType(equation, typeof(ComplexEquation));
             Assert.AreEqual("Step0", equation.InitializedEquation);
             Assert.AreEqual(2, equation.Variables.Count);
@@ -49,7 +49,7 @@ namespace SymuSysDynTests.Equations
         public void RampTest()
         {
             //Time is a reserved word
-            var equation = EquationFactory.CreateInstance("RAMP(StartTime,Slope)");
+            var equation = EquationFactory.CreateInstance("RAMP(StartTime,Slope)", out _);
             Assert.IsInstanceOfType(equation, typeof(ComplexEquation));
             Assert.AreEqual("Ramp0", equation.InitializedEquation);
             Assert.AreEqual(2, equation.Variables.Count);
@@ -59,7 +59,7 @@ namespace SymuSysDynTests.Equations
         [TestMethod]
         public void NormalTest()
         {
-            var equation = EquationFactory.CreateInstance("Normal(Mean,StandardDeviation)");
+            var equation = EquationFactory.CreateInstance("Normal(Mean,StandardDeviation)", out _);
             Assert.IsInstanceOfType(equation, typeof(ComplexEquation));
             Assert.AreEqual("Normal0", equation.InitializedEquation);
             Assert.AreEqual(2, equation.Variables.Count);
@@ -69,7 +69,7 @@ namespace SymuSysDynTests.Equations
         [TestMethod]
         public void NormalTest1()
         {
-            var equation = EquationFactory.CreateInstance("Normal(Mean,StandardDeviation,Seed)");
+            var equation = EquationFactory.CreateInstance("Normal(Mean,StandardDeviation,Seed)", out _);
             Assert.IsInstanceOfType(equation, typeof(ComplexEquation));
             Assert.AreEqual("Normal0", equation.InitializedEquation);
             Assert.AreEqual(3, equation.Variables.Count);
@@ -80,7 +80,7 @@ namespace SymuSysDynTests.Equations
         [TestMethod]
         public void IfThenElseTest()
         {
-            var equation = EquationFactory.CreateInstance("If condition then thenExpression else elseExpression");
+            var equation = EquationFactory.CreateInstance("If condition then thenExpression else elseExpression", out _);
             Assert.IsInstanceOfType(equation, typeof(ComplexEquation));
             Assert.AreEqual("If0", equation.InitializedEquation);
             Assert.AreEqual(3, equation.Variables.Count);
@@ -91,7 +91,7 @@ namespace SymuSysDynTests.Equations
         [TestMethod]
         public void Smth1Test()
         {
-            var equation = EquationFactory.CreateInstance("SMTH1(Input, Averaging)");
+            var equation = EquationFactory.CreateInstance("SMTH1(Input, Averaging)", out _);
             Assert.IsInstanceOfType(equation, typeof(ComplexEquation));
             Assert.AreEqual("Smth10", equation.InitializedEquation);
             Assert.AreEqual(2, equation.Variables.Count);
@@ -101,7 +101,7 @@ namespace SymuSysDynTests.Equations
         [TestMethod]
         public void Smth1Test1()
         {
-            var equation = EquationFactory.CreateInstance("SMTH1(Input, Averaging, Initial)");
+            var equation = EquationFactory.CreateInstance("SMTH1(Input, Averaging, Initial)", out _);
             Assert.IsInstanceOfType(equation, typeof(ComplexEquation));
             Assert.AreEqual("Smth10", equation.InitializedEquation);
             Assert.AreEqual(3, equation.Variables.Count);
@@ -112,7 +112,7 @@ namespace SymuSysDynTests.Equations
         [TestMethod]
         public void Smth3Test()
         {
-            var equation = EquationFactory.CreateInstance("SMTH3(Input, Averaging)");
+            var equation = EquationFactory.CreateInstance("SMTH3(Input, Averaging)", out _);
             Assert.IsInstanceOfType(equation, typeof(ComplexEquation));
             Assert.AreEqual("Smth30", equation.InitializedEquation);
             Assert.AreEqual(2, equation.Variables.Count);
@@ -122,7 +122,7 @@ namespace SymuSysDynTests.Equations
         [TestMethod]
         public void Smth3Test1()
         {
-            var equation = EquationFactory.CreateInstance("SMTH3(Input, Averaging, Initial)");
+            var equation = EquationFactory.CreateInstance("SMTH3(Input, Averaging, Initial)", out _);
             Assert.IsInstanceOfType(equation, typeof(ComplexEquation));
             Assert.AreEqual("Smth30", equation.InitializedEquation);
             Assert.AreEqual(3, equation.Variables.Count);
@@ -133,7 +133,7 @@ namespace SymuSysDynTests.Equations
         [TestMethod]
         public void SmthNTest()
         {
-            var equation = EquationFactory.CreateInstance("SMTHN(Input, Averaging, Order)");
+            var equation = EquationFactory.CreateInstance("SMTHN(Input, Averaging, Order)", out _);
             Assert.IsInstanceOfType(equation, typeof(ComplexEquation));
             Assert.AreEqual("Smthn0", equation.InitializedEquation);
             Assert.AreEqual(3, equation.Variables.Count);
@@ -144,7 +144,7 @@ namespace SymuSysDynTests.Equations
         [TestMethod]
         public void SmthNTest1()
         {
-            var equation = EquationFactory.CreateInstance("SMTHN(Input, Averaging, Order, Initial)");
+            var equation = EquationFactory.CreateInstance("SMTHN(Input, Averaging, Order, Initial)", out _);
             Assert.IsInstanceOfType(equation, typeof(ComplexEquation));
             Assert.AreEqual("Smthn0", equation.InitializedEquation);
             Assert.AreEqual(4, equation.Variables.Count);
@@ -156,7 +156,7 @@ namespace SymuSysDynTests.Equations
         [TestMethod]
         public void AbsTest()
         {
-            var equation = EquationFactory.CreateInstance("Abs(variable)");
+            var equation = EquationFactory.CreateInstance("Abs(variable)", out _);
             Assert.IsInstanceOfType(equation, typeof(ComplexEquation));
             Assert.AreEqual("Abs0", equation.InitializedEquation);
             Assert.AreEqual(1, equation.Variables.Count);
@@ -165,7 +165,7 @@ namespace SymuSysDynTests.Equations
         [TestMethod]
         public void MinTest()
         {
-            var equation = EquationFactory.CreateInstance("Min(variable1, variable2)");
+            var equation = EquationFactory.CreateInstance("Min(variable1, variable2)", out _);
             Assert.IsInstanceOfType(equation, typeof(ComplexEquation));
             Assert.AreEqual("Min0", equation.InitializedEquation);
             Assert.AreEqual(2, equation.Variables.Count);
@@ -175,7 +175,7 @@ namespace SymuSysDynTests.Equations
         [TestMethod]
         public void MaxTest()
         {
-            var equation = EquationFactory.CreateInstance("Max(variable1, variable2)");
+            var equation = EquationFactory.CreateInstance("Max(variable1, variable2)", out _);
             Assert.IsInstanceOfType(equation, typeof(ComplexEquation));
             Assert.AreEqual("Max0", equation.InitializedEquation);
             Assert.AreEqual(2, equation.Variables.Count);
@@ -185,7 +185,7 @@ namespace SymuSysDynTests.Equations
         [TestMethod]
         public void PowTest()
         {
-            var equation = EquationFactory.CreateInstance("Pow(variable1, variable2)");
+            var equation = EquationFactory.CreateInstance("Pow(variable1, variable2)", out _);
             Assert.IsInstanceOfType(equation, typeof(ComplexEquation));
             Assert.AreEqual("Pow0", equation.InitializedEquation);
             Assert.AreEqual(2, equation.Variables.Count);

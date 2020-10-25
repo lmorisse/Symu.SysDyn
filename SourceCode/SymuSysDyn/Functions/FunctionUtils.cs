@@ -9,9 +9,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Symu.SysDyn.Equations;
+using Symu.SysDyn.Parser;
 
 namespace Symu.SysDyn.Functions
 {
@@ -137,31 +139,56 @@ namespace Symu.SysDyn.Functions
         }
 
         /// <summary>
-        ///     Get the list of parameters of a function with nested functions
+        ///     Get the list of parameters/args of a function with nested functions
         /// </summary>
-        /// <param name="input"></param>
+        /// <param name="function"></param>
+        /// <param name="name"></param>
+        /// <param name="parameters"></param>
+        /// <param name="args"></param>
         /// <returns>input = "function(func(param1, param2), param3)" - return {func(param1, param2), param3}</returns>
-        public static List<IEquation> ParseParameters(string input)
+        //public static List<IEquation> ParseParameters(ref string function,  out string name)
+        public static void ParseParameters(ref string function, out string name, out List<IEquation> parameters, out List<float> args)
         {
-            var result = new List<IEquation>();
+            if (function == null)
+            {
+                throw new ArgumentNullException(nameof(function));
+            }
+
+            parameters= new List<IEquation>();
+            args = new List<float>();
+            name = StringUtils.CleanName(function.Split('(')[0]);
+            var cleanedFunction = name+"(";
             const string extractFuncRegex = @"\b[^()]+\((.*)\)$";
             const string extractArgsRegex = @"(?:[^,()]+((?:\((?>[^()]+|\((?<open>)|\)(?<-open>))*\)))*)+";
 
-            var parameters = Regex.Match(input, extractFuncRegex);
+            var match = Regex.Match(function, extractFuncRegex);
 
-            if (string.IsNullOrEmpty(parameters.Groups[1].Value))
+            if (string.IsNullOrEmpty(match.Groups[1].Value))
             {
-                return result;
+                return;// parameters;
             }
 
-            var innerArgs = parameters.Groups[1].Value;
+            var innerArgs = match.Groups[1].Value;
             var matches = Regex.Matches(innerArgs, extractArgsRegex);
             for (var i = 0; i < matches.Count; i++)
             {
-                result.Add(EquationFactory.CreateInstance(matches[i].Value));
+                var equation = EquationFactory.CreateInstance(matches[i].Value, out var value);
+                parameters.Add(equation);
+                args.Add(value);
+                if (equation != null)
+                {
+                    cleanedFunction += equation.ToString();
+                }
+                else
+                {
+                    cleanedFunction += value.ToString(CultureInfo.InvariantCulture);
+                }
+                if (i < matches.Count - 1)
+                {
+                    cleanedFunction += ",";
+                }
             }
-
-            return result;
+            function = cleanedFunction + ")";
         }
     }
 }

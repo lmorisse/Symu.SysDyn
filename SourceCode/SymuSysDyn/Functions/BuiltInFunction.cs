@@ -11,6 +11,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using NCalc2;
@@ -40,25 +41,13 @@ namespace Symu.SysDyn.Functions
         public BuiltInFunction(string function)
         {
             OriginalFunction = function?.Trim() ?? throw new ArgumentNullException(nameof(function));
-            Name = StringUtils.CleanName(function.Split('(')[0]);
-            Parameters = FunctionUtils.ParseParameters(function);
-            Expression = new Expression(SetCleanedFunction());
+            FunctionUtils.ParseParameters(ref function, out var name, out var parameters, out var args);
+            Name = name;
+            Parameters = parameters;
+            Args = args;
+            Expression = new Expression(function);
         }
 
-        public string SetCleanedFunction()
-        {
-            var cleanedFunction = Name + "(";
-            for (var i = 0; i < Parameters.Count; i++)
-            {
-                cleanedFunction += Parameters[i];
-                if (i < Parameters.Count - 1)
-                {
-                    cleanedFunction += ",";
-                }
-            }
-            cleanedFunction += ")";
-            return cleanedFunction;
-        }
         /// <summary>
         ///     The entire function included brackets and parameters
         /// </summary>
@@ -77,8 +66,26 @@ namespace Symu.SysDyn.Functions
         ///     The function name indexed 
         /// </summary>
         public string IndexName { get; set; }
-
+        /// <summary>
+        /// List of arguments that are IEquation or null if it is a constant
+        /// If it is a constant, the value is stored in Args
+        /// </summary>
         public List<IEquation> Parameters { get; protected set; }
+        /// <summary>
+        /// List of arguments that are constants
+        /// If it is an IEquation, the value is stored in Parameters
+        /// </summary>
+        public List<float> Args { get; protected set; }
+
+        protected float GetValue(int index, Variables variables, SimSpecs sim)
+        {
+            return Parameters[index] != null ? Parameters[index].Evaluate(variables, sim) : Args[index];
+        }
+
+        protected string GetParam(int index)
+        {
+            return Parameters[index] != null ? Parameters[index].InitializedEquation : Args[index].ToString(CultureInfo.InvariantCulture);
+        }
 
         /// <summary>
         ///     Prepare the function for the Equation.Prepare()
@@ -94,7 +101,7 @@ namespace Symu.SysDyn.Functions
             }
 
             var prepareParams = new List<string>();
-            foreach (var parameter in Parameters)
+            foreach (var parameter in Parameters.Where(x => x != null))
             {
                 parameter.Prepare(variables, sim);
                 prepareParams.AddRange(parameter.Variables);

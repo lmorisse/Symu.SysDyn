@@ -28,8 +28,8 @@ namespace Symu.SysDyn.Functions
         public new const string Value = "SmthN";
         public SmthN(string function) : base(function)
         {
-            Order = Convert.ToByte(Parameters[2].OriginalEquation);
-            Initial = Parameters.Count == 4 ? Parameters[3].OriginalEquation : Input;
+            Order = Convert.ToByte(GetParamFromOriginalEquation(2));
+            Initial = Parameters.Count == 4 ? GetParamFromOriginalEquation(3) : Input;
         }
     }
 }

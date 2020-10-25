@@ -39,9 +39,9 @@ namespace Symu.SysDyn.Model
         public Variable(string name, string eqn) : this(name)
         {
             Units = Units.CreateInstanceFromEquation(eqn);
-            Equation = EquationFactory.CreateInstance(eqn, null);
-            // intentionally after EquationFactory
-            SetInitialValue();
+            Equation = EquationFactory.CreateInstance(eqn, null, out var value);
+            Value = value;
+            Initialize();
             SetChildren();
         }
 
@@ -52,20 +52,13 @@ namespace Symu.SysDyn.Model
             Scale = scale;
             Units = Units.CreateInstanceFromEquation(eqn);
             // intentionally after Range assignment
-            Equation = EquationFactory.CreateInstance(eqn, range);
-            // intentionally after EquationFactory
-            SetInitialValue();
+            Equation = EquationFactory.CreateInstance(eqn, range, out var value);
+            Value = value;
+            Initialize();
             SetChildren();
         }
 
-        public void SetInitialValue()
-        {
-            Value = Equation == null ? 0 : SetInitialValue(Equation.OriginalEquation);
-            Initialize();
-        }
-
         private float _value;
-
         public float Value
         {
             get => _value;
@@ -100,34 +93,6 @@ namespace Symu.SysDyn.Model
             Children = Equation?.Variables.Where(word => !word.Equals(Name)).ToList() ?? new List<string>();
         }
 
-        public float SetInitialValue(string stringEquation)
-        {
-            switch (Equation)
-            {
-                case ConstantEquation constant:
-                    return constant.Value;
-                case ComplexEquation _:
-                    try
-                    {
-                        // Value may be the initial value of the equation
-                        var eval = EquationFactory.CreateInstance(stringEquation)?.Evaluate(new Variables(), new SimSpecs()) ?? 0;
-                        if (float.IsNaN(eval) || float.IsInfinity(eval))
-                        {
-                            eval = 0;
-                        }
-                        return eval;
-                    }
-                    catch
-                    {
-                        // The equation contains variables, it can be evaluate
-                        return 0;
-                    }
-                default:
-                    // SimpleEquation are made of variables, there is no initial value
-                    return 0;
-            }
-        }
-
         /// <summary>Returns a string that represents the current object.</summary>
         /// <returns>A string that represents the current object.</returns>
         public override string ToString()
@@ -143,11 +108,6 @@ namespace Symu.SysDyn.Model
             }
 
             var eval = Equation.Evaluate(variables, simulation);
-            //if (float.IsNaN(eval) || float.IsInfinity(eval))
-            //{
-            //    //eval = 0;
-            //    throw new DivideByZeroException();
-            //}
             Value = _graphicalFunction?.GetOutputWithBounds(eval) ?? eval;
             Updated = true;
         }
@@ -172,7 +132,7 @@ namespace Symu.SysDyn.Model
 
         public void Initialize()
         {
-            Updated = Equation == null || Equation is ConstantEquation;
+            Updated = Equation == null;
         }
     }
 }

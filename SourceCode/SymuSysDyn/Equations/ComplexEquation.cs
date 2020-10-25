@@ -124,5 +124,16 @@ namespace Symu.SysDyn.Equations
                 _expression.Parameters[function.IndexName] = function.Prepare(variables, sim);
             }
         }
+
+        public float InitialValue()
+        {
+            var value = Convert.ToSingle(_expression.Evaluate());
+            if (float.IsNaN(value) || float.IsInfinity(value))
+            {
+                value = 0;
+            }
+
+            return value;
+        }
     }
 }

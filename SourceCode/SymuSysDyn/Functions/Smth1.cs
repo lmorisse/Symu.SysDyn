@@ -32,10 +32,14 @@ namespace Symu.SysDyn.Functions
 
         public Smth1(string function) : base(function)
         {
-            Input = Parameters[0].OriginalEquation;
-            Averaging = Parameters[1].OriginalEquation;
-            Initial = Parameters.Count == 3 ? Parameters[2].OriginalEquation : Input;
+            Input = GetParamFromOriginalEquation(0);
+            Averaging = GetParamFromOriginalEquation(1);
+            Initial = Parameters.Count == 3 ? GetParamFromOriginalEquation(2) : Input;
             Order = 1;
+        }
+        protected string GetParamFromOriginalEquation(int index)
+        {
+            return Parameters[index] != null ? Parameters[index].OriginalEquation : Args[index].ToString(CultureInfo.InvariantCulture);
         }
 
         public string Input { get; protected set; }

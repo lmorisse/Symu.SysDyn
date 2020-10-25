@@ -71,7 +71,7 @@ namespace Symu.SysDyn.Model
                 equation += ")";
             }
 
-            Equation = EquationFactory.CreateInstance(equation);
+            Equation = EquationFactory.CreateInstance(equation, out _);
 
             SetChildren();
         }
