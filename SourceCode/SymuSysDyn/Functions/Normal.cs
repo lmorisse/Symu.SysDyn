@@ -55,5 +55,11 @@ namespace Symu.SysDyn.Functions
             return Common.Math.ProbabilityDistributions.Normal.Sample(mean, standardDeviation, seed);
         }
 
+        public override float InitialValue()
+        {
+            return Args.Count==2 ? 
+                Common.Math.ProbabilityDistributions.Normal.Sample(Args[0], Args[1]) : 
+                Common.Math.ProbabilityDistributions.Normal.Sample(Args[0], Args[1], Convert.ToInt32(Args[2]));
+        }
     }
 }

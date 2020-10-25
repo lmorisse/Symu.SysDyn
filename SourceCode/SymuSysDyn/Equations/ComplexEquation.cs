@@ -11,6 +11,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Globalization;
+using System.Linq;
 using NCalc2;
 using Symu.SysDyn.Functions;
 using Symu.SysDyn.Model;
@@ -26,14 +29,14 @@ namespace Symu.SysDyn.Equations
     public class ComplexEquation : IEquation
     {
         public string OriginalEquation { get; }
-        public string InitializedEquation { get; }
+        public string InitializedEquation { get; set; }
         /// <summary>
         ///     Range of the output of the equation provide by the variable
         /// </summary>
         private readonly Range _range;
 
         public List<string> Variables { get; }
-        private readonly Expression _expression;
+        private Expression _expression;
 
         /// <summary>
         ///     List of all the nested functions used in the equation
@@ -134,6 +137,34 @@ namespace Symu.SysDyn.Equations
             }
 
             return value;
+        }
+
+
+        public void Replace(string child, string value)
+        {
+            //Replace functions
+            foreach (var function in _functions.ToImmutableList())
+            {
+                function.Replace(child, value);
+
+                if (function.Parameters.Any(x => x != null))
+                {
+                    continue;
+                }
+
+                try
+                {
+                    InitializedEquation = InitializedEquation.Replace(function.IndexName, function.InitialValue().ToString(CultureInfo.InvariantCulture));
+                    _functions.Remove(function);
+                }
+                catch 
+                {
+                }
+
+            }
+            InitializedEquation = InitializedEquation.Replace(child, value);
+            Variables.Remove(child);
+            _expression = new Expression(InitializedEquation);
         }
     }
 }

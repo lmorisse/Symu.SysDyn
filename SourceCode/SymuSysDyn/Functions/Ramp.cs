@@ -50,5 +50,10 @@ namespace Symu.SysDyn.Functions
 
             return sim.Time >= time ? slope*(sim.Time - time) : 0;
         }
+
+        public override float InitialValue()
+        {
+            return 0;
+        }
     }
 }

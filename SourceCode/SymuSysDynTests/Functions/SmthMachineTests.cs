@@ -29,5 +29,6 @@ namespace SymuSysDynTests.Functions
             Assert.IsTrue(10 < _smth.Evaluate(10));
             Assert.IsTrue(14 < _smth.Evaluate(20));
         }
+
     }
 }

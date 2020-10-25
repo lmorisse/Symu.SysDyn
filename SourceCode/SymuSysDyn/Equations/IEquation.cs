@@ -19,9 +19,11 @@ namespace Symu.SysDyn.Equations
     public interface IEquation
     {
         string OriginalEquation { get; }
-        string InitializedEquation { get; }
+        string InitializedEquation { get; set; }
         List<string> Variables { get; }
+        float InitialValue();
         float Evaluate(Variables variables, SimSpecs sim);
         void Prepare(Variables variables, SimSpecs sim);
+        void Replace(string child, string value);
     }
 }

@@ -11,7 +11,6 @@ namespace SymuSysDynTests.Equations
         private const string MinusEquation = "variable1 - variable2";
         private const string MultiplicationEquation = "variable1 * variable2";
         private const string DivisionEquation = "variable1 / variable2";
-        private const string BracketsEquation = "((variable1)/(variable2))";
         private const string MixEquation = "1 + variable1";
         private readonly Variables _variables = new Variables();
         private readonly Variable _variable1 = new Variable("Variable1");
@@ -26,6 +25,7 @@ namespace SymuSysDynTests.Equations
             _variables.Add(_variable2);
         }
 
+        #region Evaluate
         [TestMethod()]
         public void EvaluateTest()
         {
@@ -74,12 +74,61 @@ namespace SymuSysDynTests.Equations
             Assert.AreEqual(2, variable.Equation.Evaluate(_variables, null));
         }
 
+        #endregion
+
+        #region Replace
         [TestMethod()]
-        public void EvaluateTest6()
+        public void ReplaceTest()
         {
-            var variable = new Variable("X", BracketsEquation);
-            _variables.Add(variable);
-            Assert.AreEqual(0.5F, variable.Equation.Evaluate(_variables, null));
+            var variable = new Variable("X", PlusEquation);
+            variable.Equation.Replace("Variable1", "1");
+            variable.Equation.Replace("Variable2", "1");
+            Assert.AreEqual(2, variable.Equation.InitialValue());
         }
+
+        [TestMethod()]
+        public void ReplaceTest1()
+        {
+            var variable = new Variable("X", MinusEquation);
+            variable.Equation.Replace("Variable1", "2");
+            variable.Equation.Replace("Variable2", "1");
+            Assert.AreEqual(1, variable.Equation.InitialValue());
+        }
+
+        [TestMethod()]
+        public void ReplaceTest2()
+        {
+            var variable = new Variable("X", MultiplicationEquation);
+            variable.Equation.Replace("Variable1", "1");
+            variable.Equation.Replace("Variable2", "1");
+            Assert.AreEqual(1, variable.Equation.InitialValue());
+        }
+
+        [TestMethod()]
+        public void ReplaceTest3()
+        {
+            var variable = new Variable("X", DivisionEquation);
+            variable.Equation.Replace("Variable1", "1");
+            variable.Equation.Replace("Variable2", "1");
+            Assert.AreEqual(1, variable.Equation.InitialValue());
+        }
+
+        [TestMethod()]
+        public void ReplaceTest4()
+        {
+            var variable = new Variable("X", Equation);
+            variable.Equation.Replace("Variable1", "1");
+            Assert.AreEqual(1, variable.Equation.InitialValue());
+        }
+
+        [TestMethod()]
+        public void ReplaceTest5()
+        {
+            var variable = new Variable("X", MixEquation);
+            variable.Equation.Replace("Variable1", "1");
+            Assert.AreEqual(2, variable.Equation.InitialValue());
+        }
+
+        #endregion
     }
 }

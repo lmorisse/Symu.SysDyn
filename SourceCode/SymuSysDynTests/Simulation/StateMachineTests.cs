@@ -30,8 +30,9 @@ namespace SymuSysDynTests.Simulation
             Assert.AreEqual(1, Machine.Variables["Stock1"].Value);
             Assert.AreEqual(2, Machine.Variables["Stock2"].Value);
             Assert.AreEqual(1, Machine.Variables["Inflow1"].Value);
-            Assert.AreEqual(4, Machine.Variables["Outflow1"].Value);
+            Assert.AreEqual(5, Machine.Variables["Outflow1"].Value);
             Assert.AreEqual(1, Machine.Variables["Aux1"].Value);
+            Assert.AreEqual(1, Machine.Variables["Aux2"].Value);
         }
 
         [TestMethod]
@@ -41,7 +42,7 @@ namespace SymuSysDynTests.Simulation
             Assert.AreEqual(11, Machine.Results.Count);
             foreach (var result in Machine.Results)
             {
-                Assert.AreEqual(5, result.Count);
+                Assert.AreEqual(6, result.Count);
             }
         }
 
@@ -59,7 +60,7 @@ namespace SymuSysDynTests.Simulation
         {
             var flow = Machine.Variables["Outflow1"];
             Machine.UpdateVariable(flow);
-            Assert.AreEqual(4, flow.Value);
+            Assert.AreEqual(5, flow.Value);
             Assert.IsTrue(flow.Updated);
         }
 
@@ -86,8 +87,37 @@ namespace SymuSysDynTests.Simulation
         public void GetGraphTest()
         {
             var graph = Machine.GetGraph();
-            Assert.AreEqual(5, graph.VertexCount);
-            Assert.AreEqual(4, graph.EdgeCount);
+            Assert.AreEqual(6, graph.VertexCount);
+            Assert.AreEqual(6, graph.EdgeCount);
         }
+
+        [TestMethod()]
+        public void OptimizeTest()
+        {
+            //Variables
+            var variable = Machine.Variables.Get("Stock1");
+            Assert.AreEqual(2, variable.Children.Count);
+            variable = Machine.Variables.Get("Inflow1");
+            Assert.AreEqual(1, variable.Children.Count);
+            Assert.AreEqual(1, variable.Value);
+            variable = Machine.Variables.Get("Outflow1");
+            Assert.AreEqual(2, variable.Children.Count);
+            Assert.AreEqual(5, variable.Value);
+            variable = Machine.Variables.Get("Stock2");
+            Assert.AreEqual(0, variable.Children.Count);
+            Assert.AreEqual(2, variable.Value);
+            variable = Machine.Variables.Get("Aux1");
+            Assert.AreEqual(0, variable.Children.Count);
+            Assert.AreEqual(1, variable.Value);
+            variable = Machine.Variables.Get("Aux2");
+            Assert.AreEqual(1, variable.Children.Count);
+            Assert.AreEqual(1, variable.Value);
+            // Optimized
+            Assert.AreEqual(1, Machine.OptimizedVariables.Count());
+            Assert.AreEqual(1, Machine.OptimizedVariables[0].Value);
+            Assert.AreEqual(1, Machine.OptimizedVariables[0].Equation.Variables.Count);
+            Assert.AreEqual("Stock1+Dt0*(1-5)", Machine.OptimizedVariables[0].Equation.InitializedEquation);
+        }
+
     }
 }

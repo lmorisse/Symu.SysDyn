@@ -11,7 +11,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Globalization;
 using System.Linq;
+using Symu.SysDyn.Equations;
 using Symu.SysDyn.Model;
 using Symu.SysDyn.Parser;
 using Symu.SysDyn.QuickGraph;
@@ -48,33 +51,146 @@ namespace Symu.SysDyn.Simulation
             Initialize();
         }
 
+        public SimSpecs Simulation { get; }
+        public Variables Variables { get; set; }
+        public Variables OptimizedVariables { get; } = new Variables();
+        public ResultCollection Results { get; } = new ResultCollection();
+        public bool StoreResults { get; set; } = true;
+
+        #region Initialize
+
+
         public void Initialize()
         {
             Compute(); // Initialize the model / don't store the result
             SetStocksEquations();
+            Optimize();
             Simulation.Clear();
         }
-
-        public SimSpecs Simulation { get; }
-        public Variables Variables { get; set; }
-        public ResultCollection Results { get; } = new ResultCollection();
-        public bool StoreResults { get; set; } = true;
+        /// <summary>
+        ///     Optimize variables
+        /// </summary>
+        public void Optimize()
+        {
+            Variables.Initialize();
+            foreach (var variable in Variables.GetNotUpdated)
+            {
+                OptimizedVariables.Add(variable.Clone());
+            }
+            List<Variable> waitingParents ;
+            do
+            {
+                waitingParents = new List<Variable>();
+                foreach (var variable in OptimizedVariables.GetNotUpdated.ToImmutableList())
+                {
+                    var withChildren = waitingParents;
+                    withChildren.AddRange(OptimizeChildren(variable));
+                    waitingParents = withChildren.Distinct().ToList(); //no duplicates
+                }
+            } while (waitingParents.Any());
+        }
 
         /// <summary>
-        ///     Process compute all iterations from Simulation.Start to Simulation.Stop
+        ///     Takes a variable and updates all variables listed as children.
         /// </summary>
-        public void Process()
+        /// <param name="parent"></param>
+        /// <returns></returns>
+        public List<Variable> OptimizeChildren(Variable parent)
         {
-            while (Simulation.Run())
+            if (parent == null)
             {
-                Compute();
+                throw new ArgumentNullException(nameof(parent));
             }
+
+            parent.Updating = true;
+            var readyToUpdate = true;
+            var waitingParents = new List<Variable>();
+            foreach (var child in parent.Children.Select(childName => OptimizedVariables[childName]).Where(x => x != null && !x.Updated)) 
+            {
+                switch (child.Updating)
+                {
+                    //parent who needs to wait for children 
+                    case true:
+                        waitingParents.Add(parent);
+                        readyToUpdate = false;
+                        break;
+                    case false:
+                        waitingParents.AddRange(OptimizeChildren(child));
+                        break;
+                }
+            }
+
+            // Update other variables
+            if (readyToUpdate)
+            {
+                OptimizeVariable(parent);
+                if (parent.Equation == null)
+                {
+                    Variables.SetValue(parent.Name, parent.Value);
+                    OptimizedVariables.Remove(parent.Name);
+                }
+            }
+
+            parent.Updating = false;
+            return waitingParents;
         }
+
+        /// <summary>
+        ///     Take a variable and update the value of that node
+        /// </summary>
+        /// <param name="variable"></param>
+        public void OptimizeVariable(Variable variable)
+        {
+            if (variable == null)
+            {
+                throw new ArgumentNullException(nameof(variable));
+            }
+
+            if (!variable.Children.Any())
+            {
+                variable.Equation = null;
+                return;
+            }
+
+            if (variable.Equation == null)
+            {
+                return;
+            }
+            foreach (var child in 
+                variable.Children.Select(childName => Variables[childName]).Where(x => x != null).ToImmutableList())
+            {
+                if (!OptimizedVariables.Exists(child.Name))
+                //if (child.Equation == null)
+                {
+                    variable.Equation.Replace(child.Name, child.Value.ToString(CultureInfo.InvariantCulture));
+                }
+                variable.Children.Remove(child.Name);
+            }
+
+            if (!variable.Children.Any())
+            {
+                try
+                {
+                    variable.Value = variable.Equation.InitialValue();
+                    variable.Equation = null;
+                }
+                catch
+                {
+                    // Equation may be a complexEquation and have still some functions
+                    // Children is not enough as a test
+                    // todo have a more robust test 
+                }
+            }
+
+            variable.Updated = true;
+        }
+
         public void Clear()
         {
             Simulation.Clear();
             Results.Clear();
         }
+
         /// <summary>
         ///     Once stock value is evaluated with initial equation, the real equation based on inflows and outflows is setted
         /// </summary>
@@ -83,6 +199,19 @@ namespace Symu.SysDyn.Simulation
             foreach (var stock in Variables.Stocks)
             {
                 stock.SetStockEquation();
+            }
+        }
+        #endregion
+
+        #region Process
+        /// <summary>
+        ///     Process compute all iterations from Simulation.Start to Simulation.Stop
+        /// </summary>
+        public void Process()
+        {
+            while (Simulation.Run())
+            {
+                Compute();
             }
         }
 
@@ -103,7 +232,7 @@ namespace Symu.SysDyn.Simulation
                     withChildren.AddRange(UpdateChildren(variable));
                     waitingParents = withChildren.Distinct().ToList(); //no duplicates
                 }
-            } while (waitingParents.Count > 0);
+            } while (waitingParents.Any());
         }
 
         /// <summary>
@@ -141,17 +270,12 @@ namespace Symu.SysDyn.Simulation
 
             var readyToUpdate = true;
             var waitingParents = new List<Variable>();
-            foreach (var child in parent.Children.Select(childName => Variables[childName]))
+            foreach (var child in parent.Children.Select(childName => Variables[childName]).Where(x => x != null && !x.Updated))
             {
-                // In case of SmthMachine with parameters that have children
-                if (child == null)
-                {
-                    continue;
-                }
-                switch (child.Updated)
+                switch (child.Updating)
                 {
                     //parent who needs to wait for children 
-                    case false when child.Updating:
+                    case true:
                         waitingParents.Add(parent);
                         readyToUpdate = false;
                         break;
@@ -184,6 +308,7 @@ namespace Symu.SysDyn.Simulation
 
             variable.Update(Variables, Simulation);
         }
+        #endregion
 
         /// <summary>
         ///     Create Graph of variables using QuickGraph

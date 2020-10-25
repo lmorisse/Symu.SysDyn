@@ -9,6 +9,8 @@ namespace SymuSysDynTests.Equations
         private const string NormalEquation = "Normal(variable1,0)";
         private const string MinEquation = "Min(variable1,variable2)";
         private const string PlusEquation = "Normal(variable1+variable2,0)";
+        private const string BracketsEquation = "((variable1)/(variable2))";
+        private const string SameVariableEquation = "((variable1)+(variable1))";
         private readonly Variables _variables = new Variables();
         private readonly Variable _variable1 = new Variable("Variable1");
         private readonly Variable _variable2 = new Variable("Variable2");
@@ -22,6 +24,7 @@ namespace SymuSysDynTests.Equations
             _variables.Add(_variable2);
         }
 
+        #region Evaluate
         [TestMethod()]
         public void EvaluateTest()
         {
@@ -46,5 +49,57 @@ namespace SymuSysDynTests.Equations
             Assert.AreEqual(3, variable.Equation.Evaluate(_variables, null));
         }
 
+        [TestMethod()]
+        public void EvaluateTest4()
+        {
+            var variable = new Variable("X", BracketsEquation);
+            _variables.Add(variable);
+            Assert.AreEqual(0.5F, variable.Equation.Evaluate(_variables, null));
+        }
+        #endregion
+
+        #region Replace
+
+        [TestMethod()]
+        public void ReplaceTest()
+        {
+            var variable = new Variable("X", NormalEquation);
+            variable.Equation.Replace("Variable1", "1");
+            Assert.AreEqual(1, variable.Equation.InitialValue());
+        }
+        [TestMethod()]
+        public void ReplaceTest1()
+        {
+            var variable = new Variable("X", MinEquation);
+            variable.Equation.Replace("Variable1", "1");
+            variable.Equation.Replace("Variable2", "2");
+            Assert.AreEqual(1, variable.Equation.InitialValue());
+        }
+        [TestMethod()]
+        public void ReplaceTest2()
+        {
+            var variable = new Variable("X", PlusEquation);
+            variable.Equation.Replace("Variable1", "1");
+            variable.Equation.Replace("Variable2", "2");
+            Assert.AreEqual(3, variable.Equation.InitialValue());
+        }
+
+        [TestMethod()]
+        public void ReplaceTest3()
+        {
+            var variable = new Variable("X", BracketsEquation);
+            variable.Equation.Replace("Variable1", "1");
+            variable.Equation.Replace("Variable2", "1");
+            Assert.AreEqual(1, variable.Equation.InitialValue());
+        }
+
+        [TestMethod()]
+        public void ReplaceTest4()
+        {
+            var variable = new Variable("X", SameVariableEquation);
+            variable.Equation.Replace("Variable1", "1");
+            Assert.AreEqual(2, variable.Equation.InitialValue());
+        }
+        #endregion
     }
 }

@@ -25,14 +25,14 @@ namespace Symu.SysDyn.Equations
     {
 
         public string OriginalEquation { get; }
-        public string InitializedEquation { get; }
+        public string InitializedEquation { get; set; }
         /// <summary>
         /// Result of the Prepare method
         /// Simplified version of Expression
         /// </summary>
         private float _eval;
 
-        private readonly IEnumerable<string> _words;
+        private readonly List<string> _words;
 
         /// <summary>
         ///     Range of the output of the equation provide by the variable
@@ -41,13 +41,13 @@ namespace Symu.SysDyn.Equations
 
         public List<string> Variables { get; } 
 
-        public SimpleEquation(string originalEquation, string initializedEquation, List<string> variables, IEnumerable<string> words, Range range) : 
+        public SimpleEquation(string originalEquation, string initializedEquation, List<string> variables, List<string> words, Range range) : 
             this(originalEquation, initializedEquation, variables, words)
         {
             Range = range;
         }
 
-        public SimpleEquation(string originalEquation, string initializedEquation, List<string> variables, IEnumerable<string> words)
+        public SimpleEquation(string originalEquation, string initializedEquation, List<string> variables, List<string> words)
         {
             OriginalEquation = originalEquation;
             InitializedEquation = initializedEquation;
@@ -74,6 +74,24 @@ namespace Symu.SysDyn.Equations
             return _eval;
         }
 
+        public float InitialValue()
+        {
+            Prepare(new Variables(), null);
+            return _eval;
+        }
+
+        public void Replace(string child, string value)
+        {
+            var index = _words.FindIndex(ind => ind.Equals(child));
+            if (index < 0)
+            {
+                return;
+            }
+            _words[index] = value;
+            InitializedEquation = InitializedEquation.Replace(child, value);
+            Variables.Remove(child);
+        }
+
         /// <summary>
         ///     Prepare equation to be computed
         ///     Replace all variables of the equation by its actual value
@@ -81,7 +99,7 @@ namespace Symu.SysDyn.Equations
         /// <param name="variables"></param>
         /// <param name="sim"></param>
         /// <returns></returns>
-        public virtual void Prepare(Variables variables, SimSpecs sim)
+        public void Prepare(Variables variables, SimSpecs sim)
         {
             if (variables == null)
             {
@@ -93,9 +111,6 @@ namespace Symu.SysDyn.Equations
             {
                 switch (word)
                 {
-                    //case "(":
-                    //case ")":
-                    //    break;
                     case "+":
                     case "-":
                     case "*":

@@ -45,6 +45,7 @@ namespace Symu.SysDyn.Functions
             Name = name;
             Parameters = parameters;
             Args = args;
+            InitializedFunction = function;
             Expression = new Expression(function);
         }
 
@@ -52,6 +53,7 @@ namespace Symu.SysDyn.Functions
         ///     The entire function included brackets and parameters
         /// </summary>
         public string OriginalFunction { get; protected set; }
+        public string InitializedFunction { get; set; }
 
         /// <summary>
         ///     The entire cleaned function ready to be evaluated
@@ -119,9 +121,14 @@ namespace Symu.SysDyn.Functions
             return Evaluate(variables, sim);
         }
 
-        public virtual float Evaluate(Variables variables, SimSpecs sim)
+        public virtual float InitialValue()
         {
             return Convert.ToSingle(Expression.Evaluate());
+        }
+
+        public virtual float Evaluate(Variables variables, SimSpecs sim)
+        {
+            return InitialValue();
         }
 
         public bool TryEvaluate(Variables variables, SimSpecs sim, out float result)
@@ -135,6 +142,39 @@ namespace Symu.SysDyn.Functions
             {
                 result = 0;
                 return false;
+            }
+        }
+
+        public void Replace(string child, string value)
+        {
+            
+            var replace = false;
+
+            for (var index = 0; index < Parameters.Count; index++)
+            {
+                var parameter = Parameters[index];
+                if (parameter == null)
+                {
+                    continue;
+                }
+
+                var equation = parameter.InitializedEquation;
+                parameter.Replace(child, value);
+                if (parameter.Variables.Any())
+                {
+                    continue;
+                }
+
+                InitializedFunction = InitializedFunction.Replace(equation, parameter.InitializedEquation);
+                Args[index] = parameter.InitialValue();
+                Parameters[index] = null;
+                replace = true;
+            }
+
+            InitializedFunction = InitializedFunction.Replace(child, value);
+            if (replace)
+            {
+                Expression = new Expression(InitializedFunction);
             }
         }
     }

@@ -67,12 +67,12 @@ namespace Symu.SysDyn.Model
 
         public IEquation Equation { get; set; }
 
-        private readonly GraphicalFunction _graphicalFunction;
+        private GraphicalFunction _graphicalFunction;
 
         /// <summary>
         ///     The variable has been updated
         /// </summary>
-        public bool Updated { get; private set; }
+        public bool Updated { get; set; }
 
         /// <summary>
         ///     The variable is being updating
@@ -80,8 +80,9 @@ namespace Symu.SysDyn.Model
         public bool Updating { get; set; }
 
         /// <summary>
-        ///     Children are items from Equation that are not numbers, operators, blanks nor itself
+        ///     Children are Equation's Variables except itself
         /// </summary>
+        /// <remarks>Could be a computed property, but for performance, it is setted once</remarks>
         public List<string> Children { get; private set; }
 
         /// <summary>
@@ -133,6 +134,22 @@ namespace Symu.SysDyn.Model
         public void Initialize()
         {
             Updated = Equation == null;
+        }
+
+        public Variable Clone()
+        {
+            var clone = new Variable(Name)
+            {
+                _graphicalFunction = _graphicalFunction,
+                Range = Range,
+                Scale = Scale,
+                Units = Units,
+                Equation = Equation,
+                Value = Value,
+                Children = new List<string>()
+            };
+            clone.Children.AddRange(Children);
+            return clone;
         }
     }
 }

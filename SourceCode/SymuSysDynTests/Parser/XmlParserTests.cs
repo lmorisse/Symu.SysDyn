@@ -37,7 +37,7 @@ namespace SymuSysDynTests.Parser
         public void ParseVariablesTest()
         {
             var variables = Parser.ParseVariables();
-            Assert.AreEqual(5, variables.Count());
+            Assert.AreEqual(6, variables.Count());
         }
 
         [TestMethod]
@@ -55,9 +55,11 @@ namespace SymuSysDynTests.Parser
         public void ParseAuxiliariesTest()
         {
             Parser.ParseAuxiliaries(XElement, Variables);
-            Assert.AreEqual(1, Variables.Count());
+            Assert.AreEqual(2, Variables.Count());
             Assert.AreEqual("Aux1", Variables[0].Name);
             Assert.AreEqual(1, Variables[0].Value);
+            Assert.AreEqual("Aux2", Variables[1].Name);
+            Assert.AreEqual(0, Variables[1].Value);
         }
 
         [TestMethod]

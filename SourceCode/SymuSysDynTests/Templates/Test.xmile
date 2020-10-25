@@ -25,7 +25,7 @@
         <scale min="-1" max="10" />
       </flow>
       <flow name="outflow1">
-        <eqn>stock2*2</eqn>
+        <eqn>stock2*2+aux2</eqn>
         <range max="10" />
         <scale min="-1" />
         <non_negative />
@@ -41,6 +41,9 @@
           <yscale min="0" max="1" />
           <ypts>0,1</ypts>
         </gf>
+      </aux>
+      <aux name="aux2">
+        <eqn>ABS(aux1)</eqn>
       </aux>
       <group name="group1">
         <entity name="stock1" />

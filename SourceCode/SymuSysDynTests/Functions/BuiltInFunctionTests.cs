@@ -2,12 +2,15 @@
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Symu.SysDyn.Functions;
+using Symu.SysDyn.Model;
+using Symu.SysDyn.Simulation;
 
 namespace SymuSysDynTests.Functions
 {
     [TestClass()]
-    public class BuiltInFunctionTests: BaseClassTest
+    public class BuiltInFunctionTests
     {
+        private readonly StateMachine _machine = new StateMachine();
         [TestMethod]
         public void BuiltInFunctionTest()
         {
@@ -69,42 +72,7 @@ namespace SymuSysDynTests.Functions
             Assert.AreEqual(0, function.Args[0]);
             Assert.AreEqual(5, function.Args[1]);
         }
-        ///// <summary>
-        ///// No parameter
-        ///// </summary>
-        //[TestMethod]
-        //public void SetCleanedFunctionTest()
-        //{
-        //    var function = new BuiltInFunction("Func()");
-        //    Assert.AreEqual("Func()", function.SetCleanedFunction());
-        //}
-        ///// <summary>
-        ///// One literal parameter
-        ///// </summary>
-        //[TestMethod]
-        //public void SetCleanedFunctionTest1()
-        //{
-        //    var function = new BuiltInFunction("Func(param)");
-        //    Assert.AreEqual("Func(Param)", function.SetCleanedFunction());
-        //}
-        ///// <summary>
-        ///// Two literal parameters
-        ///// </summary>
-        //[TestMethod]
-        //public void SetCleanedFunctionTest2()
-        //{
-        //    var function = new BuiltInFunction("Func( param1 , Param2)");
-        //    Assert.AreEqual("Func(Param1,Param2)", function.SetCleanedFunction());
-        //}
-        ///// <summary>
-        ///// Mix parameters
-        ///// </summary>
-        //[TestMethod]
-        //public void SetCleanedFunctionTest3()
-        //{
-        //    var function = new BuiltInFunction("Func( 1 , Param2)");
-        //    Assert.AreEqual("Func(1,Param2)", function.SetCleanedFunction());
-        //}
+        #region Evaluate
         /// <summary>
         /// Prepare with no literal parameters
         /// </summary>
@@ -112,8 +80,8 @@ namespace SymuSysDynTests.Functions
         public void EvaluateTest()
         {
             var function = new BuiltInFunction("abs(-5)");
-            function.Prepare(Machine.Variables, Machine.Simulation);
-            Assert.AreEqual(5F, function.Evaluate(Machine.Variables, Machine.Simulation));
+            function.Prepare(_machine.Variables, _machine.Simulation);
+            Assert.AreEqual(5F, function.Evaluate(_machine.Variables, _machine.Simulation));
         }
 
         /// <summary>
@@ -123,10 +91,38 @@ namespace SymuSysDynTests.Functions
         public void EvaluateTest1()
         {
             var function = new BuiltInFunction("abs(aux1)");
-            function.Prepare(Machine.Variables, Machine.Simulation);
+            _machine.Variables.Add(new Variable("Aux1","1"));
+            function.Prepare(_machine.Variables, _machine.Simulation);
             Assert.AreEqual(1F, function.Expression.Parameters["Aux1"]);
-            Assert.AreEqual(1F, function.Evaluate(Machine.Variables, Machine.Simulation));
+            Assert.AreEqual(1F, function.Evaluate(_machine.Variables, _machine.Simulation));
         }
+        #endregion
 
+        #region 
+    
+        [TestMethod()]
+        public void ReplaceTest()
+        {
+            var function = new BuiltInFunction("abs(param1)");
+            function.Replace("Param1", "1");
+            Assert.AreEqual(1, function.InitialValue());
+        }
+        [TestMethod()]
+        public void ReplaceTest1()
+        {
+            var function = new BuiltInFunction("Min(param1, param2)");
+            function.Replace("Param1", "1");
+            function.Replace("Param2", "2");
+            Assert.AreEqual(1, function.InitialValue());
+        }
+        [TestMethod()]
+        public void ReplaceTest2()
+        {
+            var function = new BuiltInFunction("Min(abs(param1), param1+param2)");
+            function.Replace("Param1", "1");
+            function.Replace("Param2", "2");
+            Assert.AreEqual(1, function.InitialValue());
+        }
+        #endregion
     }
 }
