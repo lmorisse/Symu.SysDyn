@@ -36,6 +36,11 @@ namespace Symu.SysDyn.Equations
         private readonly Range _range;
 
         public List<string> Variables { get; }
+        /// <summary>
+        /// List of words that constitute the initialized equation
+        /// It is necessary for the replace method
+        /// </summary>
+        private readonly List<string> _words;
         private Expression _expression;
 
         /// <summary>
@@ -43,19 +48,20 @@ namespace Symu.SysDyn.Equations
         /// </summary>
         public List<BuiltInFunction> Functions { get; }
 
-        public ComplexEquation(string originalEquation, string initializedEquation, List<BuiltInFunction> functions, List<string> variables, Range range) : 
-            this(originalEquation, initializedEquation, functions, variables)
+        public ComplexEquation(string originalEquation, string initializedEquation, List<BuiltInFunction> functions, List<string> variables, List<string> words, Range range) : 
+            this(originalEquation, initializedEquation, functions, variables, words)
         {
             _range = range;
         }
 
-        public ComplexEquation(string originalEquation, string initializedEquation, List<BuiltInFunction> functions, List<string> variables)
+        public ComplexEquation(string originalEquation, string initializedEquation, List<BuiltInFunction> functions, List<string> variables, List<string> words)
         {
             OriginalEquation = originalEquation;
             InitializedEquation = initializedEquation;
             Variables = variables;
             Functions = functions;
             _expression = new Expression(InitializedEquation);
+            _words = words;
         }
 
 
@@ -154,7 +160,18 @@ namespace Symu.SysDyn.Equations
 
                 try
                 {
-                    InitializedEquation = InitializedEquation.Replace(function.IndexName, function.InitialValue().ToString(CultureInfo.InvariantCulture));
+                    //InitializedEquation = InitializedEquation.Replace(function.IndexName, function.InitialValue().ToString(CultureInfo.InvariantCulture));
+
+                    //var index1 = _words.FindIndex(ind => ind.Equals(function.IndexName));
+                    //if (index1 < 0)
+                    //{
+                    //    return;
+                    //}
+                    //_words[index1] = function.InitialValue().ToString(CultureInfo.InvariantCulture);
+                    while (_words.FindIndex(ind => ind.Equals(function.IndexName)) >= 0)
+                    {
+                        _words[_words.FindIndex(ind => ind.Equals(function.IndexName))] = function.InitialValue().ToString(CultureInfo.InvariantCulture);
+                    }
                     Functions.Remove(function);
                 }
                 catch 
@@ -162,7 +179,17 @@ namespace Symu.SysDyn.Equations
                 }
 
             }
-            InitializedEquation = InitializedEquation.Replace(child, value);
+            
+            while (_words.FindIndex(ind => ind.Equals(child)) >=0)
+            {
+                _words[_words.FindIndex(ind => ind.Equals(child))] = value;
+            }
+            //var index = _words.FindIndex(ind => ind.Equals(child));
+            //if (index >= 0)
+            //{
+            //    _words[index] = value;
+            //}
+            InitializedEquation = string.Join(string.Empty, _words);
             Variables.Remove(child);
             _expression = new Expression(InitializedEquation);
         }

@@ -62,22 +62,8 @@ namespace Symu.SysDyn.Equations
             {
                 // not an constant
             }
-            var initializedEquation = Initialize(eqn, out var functions, out var variables, out var words);
+           Initialize(eqn, out var functions, out var variables, out var words);
             float sumEval=0;
-            foreach (var function in functions.ToImmutableList())
-            {
-                var success = function.TryEvaluate(null, null, out var eval);
-                if (!success)
-                {
-                    continue;
-                }
-
-                // Function can be replaced by a constant
-                initializedEquation = initializedEquation.Replace(function.IndexName,
-                    eval.ToString(CultureInfo.InvariantCulture));
-                functions.Remove(function);
-                sumEval += eval;
-            }
 
             for (var i = 0; i < words.Count; i++)
             {
@@ -87,26 +73,42 @@ namespace Symu.SysDyn.Equations
                     continue;
                 }
 
-                var expression = new Expression(word);
-                try
+                float eval = 0;
+                var function = functions.Find(x => x.IndexName == word);
+                if (function != null)
                 {
-                    // Test literal such as ".01"
-                    var eval = Convert.ToSingle(expression.Evaluate());
-                    // variable can be replaced by a constant
-                    initializedEquation = initializedEquation.Replace(word, eval.ToString(CultureInfo.InvariantCulture));
-                    words[i] = eval.ToString(CultureInfo.InvariantCulture);
-                    sumEval += eval;
+                    var success = function.TryEvaluate(null, null, out eval);
+                    if (!success)
+                    {
+                        continue;
+                    }
+
+                    functions.Remove(function);
                 }
-                catch
+                else
                 {
-                    continue;
+                    var expression = new Expression(word);
+                    try
+                    {
+                        // Test literal such as ".01"
+                        eval = Convert.ToSingle(expression.Evaluate());
+                    }
+                    catch
+                    {
+                        continue;
+                    }
                 }
+
+                // Variable can be replaced by a constant
+                words[i] = eval.ToString(CultureInfo.InvariantCulture);
+                sumEval += eval;
             }
+            var initializedEquation = string.Join(string.Empty, words);
 
             // Equation with functions or only variables with brackets
             if (functions.Any() || words.Contains("("))
             {
-                var complexEquation = new ComplexEquation(eqn, initializedEquation, functions, variables, range);
+                var complexEquation = new ComplexEquation(eqn, initializedEquation, functions, variables, words, range);
                 try
                 {
                     value = complexEquation.InitialValue();
@@ -164,7 +166,7 @@ namespace Symu.SysDyn.Equations
             }
 
             variables = variables.Distinct().ToList();
-            return words.Aggregate(string.Empty, (current, word) => current + word);
+            return string.Join(string.Empty, words);
         }
 
         private static IEnumerable<string> SetVariables(string word, List<BuiltInFunction> functions)

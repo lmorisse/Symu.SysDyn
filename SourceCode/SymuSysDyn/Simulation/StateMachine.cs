@@ -14,7 +14,9 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Globalization;
 using System.Linq;
+using NCalc2;
 using Symu.SysDyn.Equations;
+using Symu.SysDyn.Functions;
 using Symu.SysDyn.Model;
 using Symu.SysDyn.Parser;
 using Symu.SysDyn.QuickGraph;
@@ -157,6 +159,12 @@ namespace Symu.SysDyn.Simulation
             {
                 return true;
             }
+            // Replace function Dt
+            if (variable.Equation is ComplexEquation complexEquation)
+            {
+                complexEquation.Replace(Dt.Value, Simulation.DeltaTime.ToString(CultureInfo.InvariantCulture));
+            }
+            // Replace variable per its value
             foreach (var child in variable.Children.Select(childName => ReferenceVariables[childName]).ToImmutableList().
                 Where(child => !Variables.Exists(child.Name)))
             {

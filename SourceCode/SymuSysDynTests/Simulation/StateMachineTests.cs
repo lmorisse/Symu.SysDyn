@@ -90,13 +90,17 @@ namespace SymuSysDynTests.Simulation
             Assert.AreEqual(6, graph.VertexCount);
             Assert.AreEqual(6, graph.EdgeCount);
         }
-
+        /// <summary>
+        /// Optimize with constants
+        /// </summary>
+        /// <remarks>See StateMachineSMTH3Tests for non constant variables</remarks>
         [TestMethod()]
         public void OptimizeTest()
         {
             Machine.Optimize();
             //Variables
             var variable = Machine.ReferenceVariables.Get("Stock1");
+            Assert.AreEqual(0, variable.Value);
             Assert.AreEqual(2, variable.Children.Count);
             variable = Machine.ReferenceVariables.Get("Inflow1");
             Assert.AreEqual(1, variable.Children.Count);
@@ -114,10 +118,10 @@ namespace SymuSysDynTests.Simulation
             Assert.AreEqual(1, variable.Children.Count);
             Assert.AreEqual(1, variable.Value);
             // Optimized
-            Assert.AreEqual(1, Machine.Variables.Count());
-            Assert.AreEqual(1, Machine.Variables[0].Value);
-            Assert.AreEqual(1, Machine.Variables[0].Equation.Variables.Count);
-            Assert.AreEqual("Stock1+Dt0*(1-5)", Machine.Variables[0].Equation.InitializedEquation);
+            Assert.AreEqual(0, Machine.Variables.Count());
+            //Assert.AreEqual(1, Machine.Variables[0].Value);
+            //Assert.AreEqual(1, Machine.Variables[0].Equation.Variables.Count);
+            //Assert.AreEqual("Stock1+Dt0*(1-5)", Machine.Variables[0].Equation.InitializedEquation);
         }
 
     }

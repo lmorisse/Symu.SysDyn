@@ -50,15 +50,15 @@ namespace SymuSysDynTests.Simulation
             variable = Machine.Variables.Get("Comp1");
             Assert.IsNotNull(variable);
             Assert.AreEqual(5, variable.Value);
-            Assert.AreEqual("Comp1+Dt0*(Flow1)", variable.Equation.InitializedEquation);
+            Assert.AreEqual("Comp1+0.5*(Flow1)", variable.Equation.InitializedEquation);
             variable = Machine.Variables.Get("Comp2");
             Assert.IsNotNull(variable);
             Assert.AreEqual(5, variable.Value);
-            Assert.AreEqual("Comp2+Dt0*(Flow2)", variable.Equation.InitializedEquation);
+            Assert.AreEqual("Comp2+0.5*(Flow2)", variable.Equation.InitializedEquation);
             variable = Machine.Variables.Get("Comp3");
             Assert.IsNotNull(variable);
             Assert.AreEqual(5, variable.Value);
-            Assert.AreEqual("Comp3+Dt0*(Flow3)", variable.Equation.InitializedEquation);
+            Assert.AreEqual("Comp3+0.5*(Flow3)", variable.Equation.InitializedEquation);
             variable = Machine.Variables.Get("Flow1");
             Assert.IsNotNull(variable);
             Assert.AreEqual(0, variable.Value);

@@ -11,6 +11,7 @@ namespace SymuSysDynTests.Equations
         private const string PlusEquation = "Normal(variable1+variable2,0)";
         private const string BracketsEquation = "((variable1)/(variable2))";
         private const string SameVariableEquation = "((variable1)+(variable1))";
+        private const string SameStartEquation = "((variable1)+(variable1_1))";
         private readonly Variables _variables = new Variables();
         private readonly Variable _variable1 = new Variable("Variable1");
         private readonly Variable _variable2 = new Variable("Variable2");
@@ -99,6 +100,14 @@ namespace SymuSysDynTests.Equations
             var variable = new Variable("X", SameVariableEquation);
             variable.Equation.Replace("Variable1", "1");
             Assert.AreEqual(2, variable.Equation.InitialValue());
+        }
+
+        [TestMethod()]
+        public void ReplaceTest5()
+        {
+            var variable = new Variable("X", SameStartEquation);
+            variable.Equation.Replace("Variable1", "1");
+            Assert.AreEqual("((1)+(Variable1_1))", variable.Equation.InitializedEquation);
         }
         #endregion
     }

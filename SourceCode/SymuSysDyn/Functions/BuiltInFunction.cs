@@ -165,17 +165,42 @@ namespace Symu.SysDyn.Functions
                     continue;
                 }
 
-                InitializedFunction = InitializedFunction.Replace(equation, parameter.InitializedEquation);
+                //InitializedFunction = InitializedFunction.Replace(equation, parameter.InitializedEquation);
                 Args[index] = parameter.InitialValue();
                 Parameters[index] = null;
                 replace = true;
             }
 
-            InitializedFunction = InitializedFunction.Replace(child, value);
-            if (replace)
+            if (child == Dt.Value && Name == child)
             {
-                Expression = new Expression(InitializedFunction);
+                Expression = new Expression(value);
+                return;
             }
+
+            if (!replace)
+            {
+                return;
+            }
+
+            InitializedFunction = Name + "(";
+            for (var i = 0; i < Parameters.Count; i++)
+            {
+                if (Parameters[i] != null)
+                {
+                    InitializedFunction += Parameters[i];
+                }
+                else
+                {
+                    InitializedFunction += Args[i];
+                }
+                if (i < Parameters.Count -1)
+                {
+
+                    InitializedFunction += ",";
+                }
+            }
+            InitializedFunction += ")";
+            Expression = new Expression(InitializedFunction);
         }
     }
 }

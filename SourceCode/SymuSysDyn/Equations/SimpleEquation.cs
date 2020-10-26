@@ -11,6 +11,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Symu.SysDyn.Model;
 using Symu.SysDyn.Simulation;
 
@@ -82,13 +83,17 @@ namespace Symu.SysDyn.Equations
 
         public void Replace(string child, string value)
         {
-            var index = _words.FindIndex(ind => ind.Equals(child));
-            if (index < 0)
+            //var index = _words.FindIndex(ind => ind.Equals(child));
+            //if (index < 0)
+            //{
+            //    return;
+            //}
+            //_words[index] = value;
+            while (_words.FindIndex(ind => ind.Equals(child)) >= 0)
             {
-                return;
+                _words[_words.FindIndex(ind => ind.Equals(child))] = value;
             }
-            _words[index] = value;
-            InitializedEquation = InitializedEquation.Replace(child, value);
+            InitializedEquation = string.Join(string.Empty,_words);
             Variables.Remove(child);
         }
 

@@ -11,6 +11,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Symu.SysDyn.Equations;
 using Symu.SysDyn.Functions;
@@ -137,23 +138,28 @@ namespace Symu.SysDyn.Model
             }
             // No variables or itself
             var canBeOptimized = !Children.Any() 
-                                 && (!Equation.Variables.Any() || (Equation.Variables.Count==1 && Equation.Variables[0] == Name));
+                                 && (!Equation.Variables.Any() || Equation.Variables.Count==1 && Equation.Variables[0] == Name);
             if (canBeOptimized && Equation is ComplexEquation complexEquation)
             {
                 canBeOptimized = !complexEquation.Functions.Any();
             }
+
             if (canBeOptimized)
             {
                 if (setInitialValue)
                 {
-                    try
-                    {
+                    //try
+                    //{
+                        if (Equation.Variables.Count == 1 && Equation.Variables[0] == Name)
+                        {
+                            Equation.Replace(Name, Value.ToString(CultureInfo.InvariantCulture));
+                        }
                         Value = Equation.InitialValue();
-                    }
-                    catch
-                    {
-                        // Should be removed
-                    }
+                    //}
+                    //catch
+                    //{
+                    //    // Should be removed
+                    //}
                 }
 
                 Equation = null;
