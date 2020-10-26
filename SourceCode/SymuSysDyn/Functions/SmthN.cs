@@ -12,6 +12,8 @@
 using System;
 using System.Globalization;
 using Symu.SysDyn.Equations;
+using Symu.SysDyn.Model;
+using Symu.SysDyn.Simulation;
 
 #endregion
 
@@ -29,7 +31,18 @@ namespace Symu.SysDyn.Functions
         public SmthN(string function) : base(function)
         {
             Order = Convert.ToByte(GetParamFromOriginalEquation(2));
-            Initial = Parameters.Count == 4 ? GetParamFromOriginalEquation(3) : Input;
+        }
+        public new string Initial => Parameters.Count == 4 ? GetParamFromOriginalEquation(3) : Input;
+        public override float Evaluate(Variables variables, SimSpecs sim)
+        {
+            if (sim == null)
+            {
+                throw new ArgumentNullException(nameof(sim));
+            }
+
+            SmthMachine = new SmthMachine(Input, Averaging, Order, Initial); // to have the correct Initial, we can't call Evaluate SMTH1
+            SmthMachine.AddVariables(variables);
+            return SmthMachine.Evaluate(sim.Time);
         }
     }
 }

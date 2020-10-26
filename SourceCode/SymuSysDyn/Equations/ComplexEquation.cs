@@ -71,7 +71,11 @@ namespace Symu.SysDyn.Equations
         {
             return InitializedEquation;
         }
-
+        public bool CanBeOptimized(string variableName)
+        {
+            var itself = _words.Count == 1 && Variables.Count == 1 && Variables[0] == variableName;
+            return !Functions.Any() && (!Variables.Any() || itself);
+        }
         /// <summary>
         ///     Takes equation and the current variable values returns the result of the equation as the float
         /// </summary>
@@ -160,14 +164,6 @@ namespace Symu.SysDyn.Equations
 
                 try
                 {
-                    //InitializedEquation = InitializedEquation.Replace(function.IndexName, function.InitialValue().ToString(CultureInfo.InvariantCulture));
-
-                    //var index1 = _words.FindIndex(ind => ind.Equals(function.IndexName));
-                    //if (index1 < 0)
-                    //{
-                    //    return;
-                    //}
-                    //_words[index1] = function.InitialValue().ToString(CultureInfo.InvariantCulture);
                     while (_words.FindIndex(ind => ind.Equals(function.IndexName)) >= 0)
                     {
                         _words[_words.FindIndex(ind => ind.Equals(function.IndexName))] = function.InitialValue().ToString(CultureInfo.InvariantCulture);
@@ -184,11 +180,7 @@ namespace Symu.SysDyn.Equations
             {
                 _words[_words.FindIndex(ind => ind.Equals(child))] = value;
             }
-            //var index = _words.FindIndex(ind => ind.Equals(child));
-            //if (index >= 0)
-            //{
-            //    _words[index] = value;
-            //}
+
             InitializedEquation = string.Join(string.Empty, _words);
             Variables.Remove(child);
             _expression = new Expression(InitializedEquation);

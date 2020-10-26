@@ -157,7 +157,6 @@ namespace Symu.SysDyn.Functions
             parameters= new List<IEquation>();
             args = new List<float>();
             name = StringUtils.CleanName(function.Split('(')[0]);
-            var cleanedFunction = name+"(";
             const string extractFuncRegex = @"\b[^()]+\((.*)\)$";
             const string extractArgsRegex = @"(?:[^,()]+((?:\((?>[^()]+|\((?<open>)|\)(?<-open>))*\)))*)+";
 
@@ -175,20 +174,41 @@ namespace Symu.SysDyn.Functions
                 var equation = EquationFactory.CreateInstance(matches[i].Value, out var value);
                 parameters.Add(equation);
                 args.Add(value);
-                if (equation != null)
+            }
+            function = GetInitializedFunction(name, parameters, args);
+        }
+
+        public static string GetInitializedFunction(string name, List<IEquation> parameters, List<float> args)
+        {
+            if (parameters == null)
+            {
+                throw new ArgumentNullException(nameof(parameters));
+            }
+
+            if (args == null)
+            {
+                throw new ArgumentNullException(nameof(args));
+            }
+
+            var initializedFunction = name + "(";
+            for (var i = 0; i < parameters.Count; i++)
+            {
+                if (parameters[i] != null)
                 {
-                    cleanedFunction += equation.ToString();
+                    initializedFunction += parameters[i];
                 }
                 else
                 {
-                    cleanedFunction += value.ToString(CultureInfo.InvariantCulture);
+                    initializedFunction += args[i];
                 }
-                if (i < matches.Count - 1)
+                if (i < parameters.Count - 1)
                 {
-                    cleanedFunction += ",";
+
+                    initializedFunction += ",";
                 }
             }
-            function = cleanedFunction + ")";
+            initializedFunction += ")";
+            return initializedFunction;
         }
     }
 }

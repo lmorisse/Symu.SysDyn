@@ -169,5 +169,10 @@ namespace Symu.SysDyn.Model
         {
             _variables.RemoveAll(x => x.Name == name);
         }
+
+        public void Clear()
+        {
+            _variables.Clear();
+        }
     }
 }

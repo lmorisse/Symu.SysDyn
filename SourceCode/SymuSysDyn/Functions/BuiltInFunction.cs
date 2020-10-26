@@ -147,7 +147,6 @@ namespace Symu.SysDyn.Functions
 
         public void Replace(string child, string value)
         {
-            
             var replace = false;
 
             for (var index = 0; index < Parameters.Count; index++)
@@ -158,14 +157,12 @@ namespace Symu.SysDyn.Functions
                     continue;
                 }
 
-                var equation = parameter.InitializedEquation;
                 parameter.Replace(child, value);
                 if (parameter.Variables.Any())
                 {
                     continue;
                 }
 
-                //InitializedFunction = InitializedFunction.Replace(equation, parameter.InitializedEquation);
                 Args[index] = parameter.InitialValue();
                 Parameters[index] = null;
                 replace = true;
@@ -182,24 +179,7 @@ namespace Symu.SysDyn.Functions
                 return;
             }
 
-            InitializedFunction = Name + "(";
-            for (var i = 0; i < Parameters.Count; i++)
-            {
-                if (Parameters[i] != null)
-                {
-                    InitializedFunction += Parameters[i];
-                }
-                else
-                {
-                    InitializedFunction += Args[i];
-                }
-                if (i < Parameters.Count -1)
-                {
-
-                    InitializedFunction += ",";
-                }
-            }
-            InitializedFunction += ")";
+            InitializedFunction = FunctionUtils.GetInitializedFunction(Name, Parameters, Args);
             Expression = new Expression(InitializedFunction);
         }
     }

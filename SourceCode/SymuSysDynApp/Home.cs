@@ -39,7 +39,7 @@ namespace SymuSysDynApp
             cbResults.Items.Clear();
             if (_stateMachine.Variables.Names != null)
             {
-                cbResults.Items.AddRange(_stateMachine.Variables.Names.ToArray());
+                cbResults.Items.AddRange(_stateMachine.Variables.Names.OrderBy(x => x).ToArray());
             }
             cbResults.Enabled = true;
             btnClear.Enabled = true;
@@ -61,15 +61,18 @@ namespace SymuSysDynApp
             cbGroups.Items.Clear();
             if (_stateMachine.ReferenceVariables.Groups.Any())
             {
-                cbGroups.Items.AddRange(_stateMachine.ReferenceVariables.Groups.ToArray());
+                cbGroups.Items.AddRange(_stateMachine.ReferenceVariables.Groups.OrderBy(x => x.Name).ToArray());
             }
 
             cbVariables.Items.Clear();
             if (_stateMachine.ReferenceVariables.Any())
             {
-                cbVariables.Items.AddRange(_stateMachine.ReferenceVariables.ToArray());
+                cbVariables.Items.AddRange(_stateMachine.ReferenceVariables.OrderBy(x => x.Name).ToArray());
             }
 
+            lblTime.Text = "0";
+            cbResults.SelectedText = string.Empty;
+            btnClear.Enabled = false;
             cbOptimized.Checked = _stateMachine.Optimized;
             tbStart.Text = _stateMachine.Simulation.Start.ToString(CultureInfo.InvariantCulture);
             tbStop.Text = _stateMachine.Simulation.Stop.ToString(CultureInfo.InvariantCulture);

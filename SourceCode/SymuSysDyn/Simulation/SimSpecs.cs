@@ -19,6 +19,13 @@ using static Symu.Common.Constants;
 
 namespace Symu.SysDyn.Simulation
 {
+    public enum SimState
+    {
+        NotStarted,
+        Started,
+        Pause,
+        Stopped
+    }
     /// <summary>
     ///     SimSpecs is the structure to define and store information about the simulation
     ///     It is based on sim_specs element of the xmile schema (schema.xsd)
@@ -61,7 +68,8 @@ namespace Symu.SysDyn.Simulation
             }
         }
 
-        public bool OnPause { get; private set; }
+        public SimState State { get; private set; } = SimState.NotStarted; 
+        public bool OnPause => State == SimState.Pause;
         public ushort Step { get; set; }
         public ushort Time { get; set; }
 
@@ -73,10 +81,12 @@ namespace Symu.SysDyn.Simulation
         public void Clear()
         {
             Step = (ushort)Math.Floor(Start / DeltaTime);
+            State = SimState.NotStarted;
         }
 
         public bool Run()
         {
+            State = SimState.Started;
             TimeManagement();
             // with pause
             if (Pause && Time > 0)
@@ -84,7 +94,8 @@ namespace Symu.SysDyn.Simulation
                 if (OnPause)
                 {
                     Step++;
-                    OnPause = false;
+                    State = SimState.Started;
+                    //OnPause = false;
                 }
 
                 //TODO use Symu.Common.Constants
@@ -104,7 +115,8 @@ namespace Symu.SysDyn.Simulation
                 }
                 else
                 {
-                    OnPause = true;
+                    State = SimState.Pause;
+                    //OnPause = true;
                 }
 
                 return run;
@@ -113,6 +125,7 @@ namespace Symu.SysDyn.Simulation
             // without pause
             if (Time >= Stop)
             {
+                State = SimState.Stopped;
                 return false;
             }
 

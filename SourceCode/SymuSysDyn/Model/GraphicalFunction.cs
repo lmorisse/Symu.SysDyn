@@ -12,6 +12,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using static Symu.Common.Constants;
 
 #endregion
@@ -157,17 +158,22 @@ namespace Symu.SysDyn.Model
 
             return xTable;
         }
-
+        /// <summary>
+        /// find which line segment our x fits into 
+        /// </summary>
+        /// <param name="x"></param>
+        /// <returns></returns>
         private float GetOutput(float x)
         {
             var target = 0;
 
-            //find which line segment our x fits into 
-            //TODO: currently n time, need faster implementation to protect against very high resolution graphical functions. 
-
             if (x < XPoints[0])
             {
                 return YPoints[0];
+            }
+            if (x > XPoints.Last())
+            {
+                return YPoints.Last();
             }
             for (var counter = 0; counter < XPoints.Length; counter++)
             {

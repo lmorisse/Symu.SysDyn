@@ -87,6 +87,7 @@ namespace Symu.SysDyn.Simulation
         {
             Variables.Initialize();
             List<Variable> waitingParents;
+            //First remove all constant variables
             foreach (var variable in Variables.GetUpdated.Select(x => x.Name).ToImmutableList())
             {
                 Variables.Remove(variable);
@@ -179,9 +180,20 @@ namespace Symu.SysDyn.Simulation
         {
             Simulation.Clear();
             Results.Clear();
-            foreach (var variable in Variables)
+            if (Optimized)
             {
-                variable.Value = ReferenceVariables.GetValue(variable.Name);
+                foreach (var variable in Variables)
+                {
+                    variable.Value = ReferenceVariables.GetValue(variable.Name);
+                }
+            }
+            else
+            {
+                Variables.Clear();
+                foreach (var variable in ReferenceVariables)
+                {
+                    Variables.Add(variable.Clone());
+                }
             }
         }
 
@@ -203,7 +215,7 @@ namespace Symu.SysDyn.Simulation
         /// </summary>
         public void Process()
         {
-            if (Optimized && Simulation.Step==0)
+            if (Optimized && Simulation.State == SimState.NotStarted)
             {
                 // Only the first step
                 Optimize();

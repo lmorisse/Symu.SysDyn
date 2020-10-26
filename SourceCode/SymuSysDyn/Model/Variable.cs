@@ -63,7 +63,17 @@ namespace Symu.SysDyn.Model
         public float Value
         {
             get => _value;
-            set => _value = Scale.GetOutputInsideRange(value);
+            set
+            {
+                if (float.IsNaN(value) || float.IsInfinity(value))
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
+                // Graphical function
+                _value = _graphicalFunction?.GetOutputWithBounds(value) ?? value;
+                // Scale
+                _value = Scale.GetOutputInsideRange(_value);
+            }
         }
 
         public IEquation Equation { get; set; }
@@ -110,7 +120,7 @@ namespace Symu.SysDyn.Model
             }
 
             var eval = Equation.Evaluate(variables, simulation);
-            Value = _graphicalFunction?.GetOutputWithBounds(eval) ?? eval;
+            Value = eval;
             Updated = true;
         }
 
@@ -137,35 +147,25 @@ namespace Symu.SysDyn.Model
                 return true;
             }
             // No variables or itself
-            var canBeOptimized = !Children.Any() 
-                                 && (!Equation.Variables.Any() || Equation.Variables.Count==1 && Equation.Variables[0] == Name);
-            if (canBeOptimized && Equation is ComplexEquation complexEquation)
+            var canBeOptimized = !Children.Any() && Equation.CanBeOptimized(Name);
+
+            if (!canBeOptimized)
             {
-                canBeOptimized = !complexEquation.Functions.Any();
+                return Equation == null;
             }
 
-            if (canBeOptimized)
+            if (setInitialValue)
             {
-                if (setInitialValue)
+                if (Equation.Variables.Count == 1 && Equation.Variables[0] == Name)
                 {
-                    //try
-                    //{
-                        if (Equation.Variables.Count == 1 && Equation.Variables[0] == Name)
-                        {
-                            Equation.Replace(Name, Value.ToString(CultureInfo.InvariantCulture));
-                        }
-                        Value = Equation.InitialValue();
-                    //}
-                    //catch
-                    //{
-                    //    // Should be removed
-                    //}
+                    Equation.Replace(Name, Value.ToString(CultureInfo.InvariantCulture));
                 }
-
-                Equation = null;
+                Value = Equation.InitialValue();
             }
 
-            return canBeOptimized || Equation==null;
+            Equation = null;
+
+            return true;
         }
 
         #endregion

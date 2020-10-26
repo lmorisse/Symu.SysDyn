@@ -11,7 +11,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using MathNet.Numerics.Financial;
 using Symu.SysDyn.Model;
 using Symu.SysDyn.Simulation;
 
@@ -63,6 +65,12 @@ namespace Symu.SysDyn.Equations
             return InitializedEquation;
         }
 
+        public bool CanBeOptimized(string variableName)
+        {
+            var itself = _words.Count == 1 && Variables.Count == 1 && Variables[0] == variableName;
+            return !Variables.Any() || itself;
+        }
+
         /// <summary>
         ///     Takes equation and the current variable values returns the result of the equation as the float
         /// </summary>
@@ -83,12 +91,6 @@ namespace Symu.SysDyn.Equations
 
         public void Replace(string child, string value)
         {
-            //var index = _words.FindIndex(ind => ind.Equals(child));
-            //if (index < 0)
-            //{
-            //    return;
-            //}
-            //_words[index] = value;
             while (_words.FindIndex(ind => ind.Equals(child)) >= 0)
             {
                 _words[_words.FindIndex(ind => ind.Equals(child))] = value;
@@ -129,7 +131,7 @@ namespace Symu.SysDyn.Equations
                         {
                             output = Range?.GetOutputInsideRange(variable.Value) ?? variable.Value;
                         }
-                        else if (float.TryParse(word, out var parse))
+                        else if (float.TryParse(word, NumberStyles.Any,CultureInfo.InvariantCulture, out var parse))
                         {
                             output = parse;
                         }

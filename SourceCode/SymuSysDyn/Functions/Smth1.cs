@@ -32,9 +32,6 @@ namespace Symu.SysDyn.Functions
 
         public Smth1(string function) : base(function)
         {
-            Input = GetParamFromOriginalEquation(0);
-            Averaging = GetParamFromOriginalEquation(1);
-            Initial = Parameters.Count == 3 ? GetParamFromOriginalEquation(2) : Input;
             Order = 1;
         }
         protected string GetParamFromOriginalEquation(int index)
@@ -42,9 +39,9 @@ namespace Symu.SysDyn.Functions
             return Parameters[index] != null ? Parameters[index].OriginalEquation : Args[index].ToString(CultureInfo.InvariantCulture);
         }
 
-        public string Input { get; protected set; }
-        public string Averaging { get; protected set; }
-        public string Initial { get; protected set; }
+        public string Input => GetParamFromOriginalEquation(0);
+        public string Averaging => GetParamFromOriginalEquation(1);
+        public string Initial => Parameters.Count == 3 ? GetParamFromOriginalEquation(2) : Input;
         /// <summary>
         /// Nth order smooth
         /// </summary>

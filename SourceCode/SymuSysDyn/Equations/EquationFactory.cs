@@ -43,8 +43,8 @@ namespace Symu.SysDyn.Equations
                 eqn = eqn.Remove(index);
             }
             eqn = eqn.Trim();
-
-            if (float.TryParse(eqn, out var floatEqn))
+            if (float.TryParse(eqn, NumberStyles.Any, CultureInfo.InvariantCulture, out var floatEqn))
+            //if (float.TryParse(eqn, out var floatEqn))
             {
                 value = floatEqn;
                 return null;
