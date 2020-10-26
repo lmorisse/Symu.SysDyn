@@ -41,7 +41,7 @@ namespace SymuSysDynTests.Simulation
         [TestMethod()]
         public void OptimizeTest()
         {
-            Machine.Optimize();
+            Machine.OptimizeVariables();
             Assert.AreEqual(7, Machine.Variables.Count());
             var variable = Machine.Variables.Get("Input");
             Assert.IsNotNull(variable);

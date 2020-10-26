@@ -183,7 +183,7 @@ namespace Symu.SysDyn.Model
                 Range = Range,
                 Scale = Scale,
                 Units = Units,
-                Equation = Equation,
+                Equation = Equation?.Clone(),
                 Value = Value,
                 Children = new List<string>()
             };

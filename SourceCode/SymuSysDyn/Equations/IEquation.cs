@@ -26,5 +26,6 @@ namespace Symu.SysDyn.Equations
         void Prepare(Variables variables, SimSpecs sim);
         void Replace(string child, string value);
         bool CanBeOptimized(string variableName);
+        IEquation Clone();
     }
 }

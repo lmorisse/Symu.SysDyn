@@ -11,6 +11,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Globalization;
 using System.Linq;
 using MathNet.Numerics.Financial;
@@ -56,6 +57,11 @@ namespace Symu.SysDyn.Equations
             InitializedEquation = initializedEquation;
             Variables = variables;
             _words = words;
+        }
+
+        public IEquation Clone()
+        {
+            return new SimpleEquation(OriginalEquation, InitializedEquation, Variables, _words, Range);
         }
 
         /// <summary>Returns a string that represents the current object.</summary>

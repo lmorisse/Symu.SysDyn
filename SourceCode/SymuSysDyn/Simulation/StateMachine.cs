@@ -29,6 +29,10 @@ namespace Symu.SysDyn.Simulation
     public class StateMachine
     {
         /// <summary>
+        /// Immutable List of the optimized variables if optimized option is on
+        /// </summary>
+        private Variables _optimizedVariablesReference;
+        /// <summary>
         /// Create an instance of the state machine from an xml File
         /// The stateMachine is Not Initialized - you have to call Initialize after having filled the variables
         /// </summary>
@@ -73,18 +77,68 @@ namespace Symu.SysDyn.Simulation
 
         private void StoreReferenceVariables()
         {
-            // Clone the Reference Variables
+            // Clone the  Variables
             foreach (var variable in Variables)
             {
                 ReferenceVariables.Add(variable.Clone());
+            }
+        }
+        private void RetrieveFromReferenceVariables()
+        {
+            if (Variables.Any())
+            {
+                return;
+            }
+
+            foreach (var variable in ReferenceVariables)
+            {
+                Variables.Add(variable.Clone());
+            }
+        }
+        /// <summary>
+        /// Store the optimized variables
+        /// </summary>
+        private void StoreOptimizedReferenceVariables()
+        {
+            _optimizedVariablesReference = new Variables();
+            // Clone the Variables
+            foreach (var variable in Variables)
+            {
+                _optimizedVariablesReference.Add(variable.Clone());
+            }
+        }
+        private void RetrieveFromOptimizedReferenceVariables()
+        {
+            foreach (var variable in _optimizedVariablesReference)
+            {
+                Variables.Add(variable.Clone());
             }
         }
 
         /// <summary>
         ///     Optimize variables
         /// </summary>
-        public void Optimize()
+        public void OptimizeVariables()
         {
+            if (!Optimized)
+            {
+                RetrieveFromReferenceVariables();
+                return;
+            }
+
+            if (Simulation.State != SimState.NotStarted)
+            {
+                return;
+            }
+
+            if (_optimizedVariablesReference != null)
+            {
+               RetrieveFromOptimizedReferenceVariables();
+                return;
+            }
+
+            RetrieveFromReferenceVariables();
+
             Variables.Initialize();
             List<Variable> waitingParents;
             //First remove all constant variables
@@ -102,6 +156,7 @@ namespace Symu.SysDyn.Simulation
                     waitingParents = withChildren.Distinct().ToList(); //no duplicates
                 }
             } while (waitingParents.Any());
+            StoreOptimizedReferenceVariables();
         }
 
         /// <summary>
@@ -180,21 +235,7 @@ namespace Symu.SysDyn.Simulation
         {
             Simulation.Clear();
             Results.Clear();
-            if (Optimized)
-            {
-                foreach (var variable in Variables)
-                {
-                    variable.Value = ReferenceVariables.GetValue(variable.Name);
-                }
-            }
-            else
-            {
-                Variables.Clear();
-                foreach (var variable in ReferenceVariables)
-                {
-                    Variables.Add(variable.Clone());
-                }
-            }
+            Variables.Clear();
         }
 
         /// <summary>
@@ -215,11 +256,7 @@ namespace Symu.SysDyn.Simulation
         /// </summary>
         public void Process()
         {
-            if (Optimized && Simulation.State == SimState.NotStarted)
-            {
-                // Only the first step
-                Optimize();
-            }
+            OptimizeVariables();
             while (Simulation.Run())
             {
                 Compute();

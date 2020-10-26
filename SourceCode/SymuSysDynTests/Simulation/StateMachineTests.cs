@@ -97,7 +97,7 @@ namespace SymuSysDynTests.Simulation
         [TestMethod()]
         public void OptimizeTest()
         {
-            Machine.Optimize();
+            Machine.OptimizeVariables();
             //Variables
             var variable = Machine.ReferenceVariables.Get("Stock1");
             Assert.AreEqual(1, variable.Value);

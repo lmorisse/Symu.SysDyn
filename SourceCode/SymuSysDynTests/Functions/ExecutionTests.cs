@@ -10,6 +10,20 @@ namespace SymuSysDynTests.Functions
     [TestClass()]
     public class ExecutionTests
     {
+        
+        [TestMethod]
+        public void NestedFunctionTest0()
+        {
+            var function = @"max(i,min(k,l))-abs(h)+pow(1,2)";
+
+            var e = new Expression(function);
+            bool err = e.HasErrors();
+            var param = e.Parameters;
+            var parsed = e.ParsedExpression;
+            //Assert.AreEqual(1F, Convert.ToUInt16(e.Evaluate()));
+        }
+
+
         [TestMethod]
         public void NestedFunctionTest()
         {

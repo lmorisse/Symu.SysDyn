@@ -64,6 +64,10 @@ namespace Symu.SysDyn.Equations
             _words = words;
         }
 
+        public IEquation Clone()
+        {
+            return new ComplexEquation(OriginalEquation, InitializedEquation, Functions, Variables, _words, _range);
+        }
 
         /// <summary>Returns a string that represents the current object.</summary>
         /// <returns>A string that represents the current object.</returns>

@@ -1,0 +1,48 @@
+﻿NCalc2 features (https://github.com/sheetsync/NCalc/blob/master/Evaluant.Calculator/Domain/EvaluationVisitor.cs)
+
+Comparators :
+And
+Or
+Div
+Equal
+Greater
+GreaterOrEqual
+Lesser
+LesserOrEqual
+Minus
+Modulo
+NotEqual
+Plus
+Times
+BitwiseAnd
+BitwiseOr
+BitwiseXOr
+LeftShift (<<)
+RightShift (>>)
+Not (!)
+Negate (soustract)
+BitwiseNot (~)
+
+Functions:
+abs
+acos
+asin
+atan
+ceiling
+cos
+exp
+floor
+IEEERemainder
+log
+log10
+pow
+round
+sign
+sin
+sqrt
+tan
+truncate
+max
+min
+if
+in
