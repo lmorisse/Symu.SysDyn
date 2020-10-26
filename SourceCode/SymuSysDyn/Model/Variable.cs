@@ -129,6 +129,39 @@ namespace Symu.SysDyn.Model
         /// </summary>
         public Range Scale { get; set; } = new Range(false);
 
+        public bool TryOptimize(bool setInitialValue)
+        {
+            if (Equation == null)
+            {
+                return true;
+            }
+            // No variables or itself
+            var canBeOptimized = !Children.Any() 
+                                 && (!Equation.Variables.Any() || (Equation.Variables.Count==1 && Equation.Variables[0] == Name));
+            if (canBeOptimized && Equation is ComplexEquation complexEquation)
+            {
+                canBeOptimized = !complexEquation.Functions.Any();
+            }
+            if (canBeOptimized)
+            {
+                if (setInitialValue)
+                {
+                    try
+                    {
+                        Value = Equation.InitialValue();
+                    }
+                    catch
+                    {
+                        // Should be removed
+                    }
+                }
+
+                Equation = null;
+            }
+
+            return canBeOptimized || Equation==null;
+        }
+
         #endregion
 
         public void Initialize()

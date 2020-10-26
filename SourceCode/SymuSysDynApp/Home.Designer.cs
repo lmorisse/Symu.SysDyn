@@ -28,13 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
-            Syncfusion.Windows.Forms.Chart.ChartSeries chartSeries1 = new Syncfusion.Windows.Forms.Chart.ChartSeries();
-            Syncfusion.Windows.Forms.Chart.ChartCustomShapeInfo chartCustomShapeInfo1 = new Syncfusion.Windows.Forms.Chart.ChartCustomShapeInfo();
-            Syncfusion.Windows.Forms.Chart.ChartLineInfo chartLineInfo1 = new Syncfusion.Windows.Forms.Chart.ChartLineInfo();
-            Syncfusion.Windows.Forms.Chart.ChartSeries chartSeries2 = new Syncfusion.Windows.Forms.Chart.ChartSeries();
-            Syncfusion.Windows.Forms.Chart.ChartCustomShapeInfo chartCustomShapeInfo2 = new Syncfusion.Windows.Forms.Chart.ChartCustomShapeInfo();
-            Syncfusion.Windows.Forms.Chart.ChartSeries chartSeries3 = new Syncfusion.Windows.Forms.Chart.ChartSeries();
-            Syncfusion.Windows.Forms.Chart.ChartCustomShapeInfo chartCustomShapeInfo3 = new Syncfusion.Windows.Forms.Chart.ChartCustomShapeInfo();
+            Syncfusion.Windows.Forms.Chart.ChartSeries chartSeries4 = new Syncfusion.Windows.Forms.Chart.ChartSeries();
+            Syncfusion.Windows.Forms.Chart.ChartCustomShapeInfo chartCustomShapeInfo4 = new Syncfusion.Windows.Forms.Chart.ChartCustomShapeInfo();
+            Syncfusion.Windows.Forms.Chart.ChartLineInfo chartLineInfo2 = new Syncfusion.Windows.Forms.Chart.ChartLineInfo();
+            Syncfusion.Windows.Forms.Chart.ChartSeries chartSeries5 = new Syncfusion.Windows.Forms.Chart.ChartSeries();
+            Syncfusion.Windows.Forms.Chart.ChartCustomShapeInfo chartCustomShapeInfo5 = new Syncfusion.Windows.Forms.Chart.ChartCustomShapeInfo();
+            Syncfusion.Windows.Forms.Chart.ChartSeries chartSeries6 = new Syncfusion.Windows.Forms.Chart.ChartSeries();
+            Syncfusion.Windows.Forms.Chart.ChartCustomShapeInfo chartCustomShapeInfo6 = new Syncfusion.Windows.Forms.Chart.ChartCustomShapeInfo();
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.cbResults = new System.Windows.Forms.ComboBox();
@@ -56,12 +56,14 @@
             this.label7 = new System.Windows.Forms.Label();
             this.cbGroups = new System.Windows.Forms.ComboBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.tbValue = new System.Windows.Forms.TextBox();
+            this.tbEquation = new System.Windows.Forms.TextBox();
+            this.label10 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
             this.cbVariables = new System.Windows.Forms.ComboBox();
             this.label8 = new System.Windows.Forms.Label();
-            this.tbEquation = new System.Windows.Forms.TextBox();
-            this.label9 = new System.Windows.Forms.Label();
-            this.tbValue = new System.Windows.Forms.TextBox();
-            this.label10 = new System.Windows.Forms.Label();
+            this.cbOptimized = new System.Windows.Forms.CheckBox();
+            this.btnClear = new System.Windows.Forms.Button();
             this.Simulation.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picImage)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -69,7 +71,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(200, 16);
+            this.button1.Location = new System.Drawing.Point(200, 50);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(130, 45);
             this.button1.TabIndex = 0;
@@ -91,7 +93,7 @@
             // 
             this.cbResults.Enabled = false;
             this.cbResults.FormattingEnabled = true;
-            this.cbResults.Location = new System.Drawing.Point(124, 136);
+            this.cbResults.Location = new System.Drawing.Point(124, 160);
             this.cbResults.Name = "cbResults";
             this.cbResults.Size = new System.Drawing.Size(206, 24);
             this.cbResults.TabIndex = 4;
@@ -100,7 +102,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(27, 143);
+            this.label1.Location = new System.Drawing.Point(27, 167);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(55, 17);
             this.label1.TabIndex = 5;
@@ -126,56 +128,56 @@
             this.chartControl1.PrimaryYAxis.LogLabelsDisplayMode = Syncfusion.Windows.Forms.Chart.LogLabelsDisplayMode.Default;
             this.chartControl1.PrimaryYAxis.Margin = true;
             this.chartControl1.PrimaryYAxis.TitleColor = System.Drawing.SystemColors.ControlText;
-            chartSeries1.FancyToolTip.ResizeInsideSymbol = true;
-            chartSeries1.Name = "Default0";
-            chartSeries1.Resolution = 0D;
-            chartSeries1.StackingGroup = "Default Group";
-            chartSeries1.Style.AltTagFormat = "";
-            chartSeries1.Style.Border.Width = 2F;
-            chartSeries1.Style.DisplayShadow = true;
-            chartSeries1.Style.DrawTextShape = false;
-            chartLineInfo1.Alignment = System.Drawing.Drawing2D.PenAlignment.Center;
-            chartLineInfo1.Color = System.Drawing.SystemColors.ControlText;
-            chartLineInfo1.DashPattern = null;
-            chartLineInfo1.DashStyle = System.Drawing.Drawing2D.DashStyle.Solid;
-            chartLineInfo1.Width = 1F;
-            chartCustomShapeInfo1.Border = chartLineInfo1;
-            chartCustomShapeInfo1.Color = System.Drawing.SystemColors.HighlightText;
-            chartCustomShapeInfo1.Type = Syncfusion.Windows.Forms.Chart.ChartCustomShape.Square;
-            chartSeries1.Style.TextShape = chartCustomShapeInfo1;
-            chartSeries1.Text = "Default0";
-            chartSeries1.Type = Syncfusion.Windows.Forms.Chart.ChartSeriesType.Spline;
-            chartSeries2.FancyToolTip.ResizeInsideSymbol = true;
-            chartSeries2.Name = "Default1";
-            chartSeries2.Resolution = 0D;
-            chartSeries2.StackingGroup = "Default Group";
-            chartSeries2.Style.AltTagFormat = "";
-            chartSeries2.Style.Border.Width = 2F;
-            chartSeries2.Style.DisplayShadow = true;
-            chartSeries2.Style.DrawTextShape = false;
-            chartCustomShapeInfo2.Border = chartLineInfo1;
-            chartCustomShapeInfo2.Color = System.Drawing.SystemColors.HighlightText;
-            chartCustomShapeInfo2.Type = Syncfusion.Windows.Forms.Chart.ChartCustomShape.Square;
-            chartSeries2.Style.TextShape = chartCustomShapeInfo2;
-            chartSeries2.Text = "Default1";
-            chartSeries2.Type = Syncfusion.Windows.Forms.Chart.ChartSeriesType.Spline;
-            chartSeries3.FancyToolTip.ResizeInsideSymbol = true;
-            chartSeries3.Name = "Default2";
-            chartSeries3.Resolution = 0D;
-            chartSeries3.StackingGroup = "Default Group";
-            chartSeries3.Style.AltTagFormat = "";
-            chartSeries3.Style.Border.Width = 2F;
-            chartSeries3.Style.DisplayShadow = true;
-            chartSeries3.Style.DrawTextShape = false;
-            chartCustomShapeInfo3.Border = chartLineInfo1;
-            chartCustomShapeInfo3.Color = System.Drawing.SystemColors.HighlightText;
-            chartCustomShapeInfo3.Type = Syncfusion.Windows.Forms.Chart.ChartCustomShape.Square;
-            chartSeries3.Style.TextShape = chartCustomShapeInfo3;
-            chartSeries3.Text = "Default2";
-            chartSeries3.Type = Syncfusion.Windows.Forms.Chart.ChartSeriesType.Spline;
-            this.chartControl1.Series.Add(chartSeries1);
-            this.chartControl1.Series.Add(chartSeries2);
-            this.chartControl1.Series.Add(chartSeries3);
+            chartSeries4.FancyToolTip.ResizeInsideSymbol = true;
+            chartSeries4.Name = "Default0";
+            chartSeries4.Resolution = 0D;
+            chartSeries4.StackingGroup = "Default Group";
+            chartSeries4.Style.AltTagFormat = "";
+            chartSeries4.Style.Border.Width = 2F;
+            chartSeries4.Style.DisplayShadow = true;
+            chartSeries4.Style.DrawTextShape = false;
+            chartLineInfo2.Alignment = System.Drawing.Drawing2D.PenAlignment.Center;
+            chartLineInfo2.Color = System.Drawing.SystemColors.ControlText;
+            chartLineInfo2.DashPattern = null;
+            chartLineInfo2.DashStyle = System.Drawing.Drawing2D.DashStyle.Solid;
+            chartLineInfo2.Width = 1F;
+            chartCustomShapeInfo4.Border = chartLineInfo2;
+            chartCustomShapeInfo4.Color = System.Drawing.SystemColors.HighlightText;
+            chartCustomShapeInfo4.Type = Syncfusion.Windows.Forms.Chart.ChartCustomShape.Square;
+            chartSeries4.Style.TextShape = chartCustomShapeInfo4;
+            chartSeries4.Text = "Default0";
+            chartSeries4.Type = Syncfusion.Windows.Forms.Chart.ChartSeriesType.Spline;
+            chartSeries5.FancyToolTip.ResizeInsideSymbol = true;
+            chartSeries5.Name = "Default1";
+            chartSeries5.Resolution = 0D;
+            chartSeries5.StackingGroup = "Default Group";
+            chartSeries5.Style.AltTagFormat = "";
+            chartSeries5.Style.Border.Width = 2F;
+            chartSeries5.Style.DisplayShadow = true;
+            chartSeries5.Style.DrawTextShape = false;
+            chartCustomShapeInfo5.Border = chartLineInfo2;
+            chartCustomShapeInfo5.Color = System.Drawing.SystemColors.HighlightText;
+            chartCustomShapeInfo5.Type = Syncfusion.Windows.Forms.Chart.ChartCustomShape.Square;
+            chartSeries5.Style.TextShape = chartCustomShapeInfo5;
+            chartSeries5.Text = "Default1";
+            chartSeries5.Type = Syncfusion.Windows.Forms.Chart.ChartSeriesType.Spline;
+            chartSeries6.FancyToolTip.ResizeInsideSymbol = true;
+            chartSeries6.Name = "Default2";
+            chartSeries6.Resolution = 0D;
+            chartSeries6.StackingGroup = "Default Group";
+            chartSeries6.Style.AltTagFormat = "";
+            chartSeries6.Style.Border.Width = 2F;
+            chartSeries6.Style.DisplayShadow = true;
+            chartSeries6.Style.DrawTextShape = false;
+            chartCustomShapeInfo6.Border = chartLineInfo2;
+            chartCustomShapeInfo6.Color = System.Drawing.SystemColors.HighlightText;
+            chartCustomShapeInfo6.Type = Syncfusion.Windows.Forms.Chart.ChartCustomShape.Square;
+            chartSeries6.Style.TextShape = chartCustomShapeInfo6;
+            chartSeries6.Text = "Default2";
+            chartSeries6.Type = Syncfusion.Windows.Forms.Chart.ChartSeriesType.Spline;
+            this.chartControl1.Series.Add(chartSeries4);
+            this.chartControl1.Series.Add(chartSeries5);
+            this.chartControl1.Series.Add(chartSeries6);
             this.chartControl1.Size = new System.Drawing.Size(671, 480);
             this.chartControl1.TabIndex = 6;
             this.chartControl1.Text = "chartControl1";
@@ -239,6 +241,8 @@
             // 
             // Simulation
             // 
+            this.Simulation.Controls.Add(this.btnClear);
+            this.Simulation.Controls.Add(this.cbOptimized);
             this.Simulation.Controls.Add(this.lblTime);
             this.Simulation.Controls.Add(this.label6);
             this.Simulation.Controls.Add(this.tbPause);
@@ -262,7 +266,7 @@
             // lblTime
             // 
             this.lblTime.AutoSize = true;
-            this.lblTime.Location = new System.Drawing.Point(272, 72);
+            this.lblTime.Location = new System.Drawing.Point(263, 103);
             this.lblTime.Name = "lblTime";
             this.lblTime.Size = new System.Drawing.Size(16, 17);
             this.lblTime.TabIndex = 16;
@@ -271,7 +275,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(206, 72);
+            this.label6.Location = new System.Drawing.Point(197, 103);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(39, 17);
             this.label6.TabIndex = 15;
@@ -350,6 +354,40 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Model";
             // 
+            // tbValue
+            // 
+            this.tbValue.Location = new System.Drawing.Point(106, 164);
+            this.tbValue.Name = "tbValue";
+            this.tbValue.Size = new System.Drawing.Size(95, 22);
+            this.tbValue.TabIndex = 18;
+            // 
+            // tbEquation
+            // 
+            this.tbEquation.Enabled = false;
+            this.tbEquation.Location = new System.Drawing.Point(106, 100);
+            this.tbEquation.Multiline = true;
+            this.tbEquation.Name = "tbEquation";
+            this.tbEquation.Size = new System.Drawing.Size(195, 62);
+            this.tbEquation.TabIndex = 18;
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(28, 167);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(44, 17);
+            this.label10.TabIndex = 17;
+            this.label10.Text = "Value";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(28, 121);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(64, 17);
+            this.label9.TabIndex = 17;
+            this.label9.Text = "Equation";
+            // 
             // cbVariables
             // 
             this.cbVariables.FormattingEnabled = true;
@@ -368,39 +406,26 @@
             this.label8.TabIndex = 19;
             this.label8.Text = "Variables";
             // 
-            // tbEquation
+            // cbOptimized
             // 
-            this.tbEquation.Enabled = false;
-            this.tbEquation.Location = new System.Drawing.Point(106, 100);
-            this.tbEquation.Multiline = true;
-            this.tbEquation.Name = "tbEquation";
-            this.tbEquation.Size = new System.Drawing.Size(195, 62);
-            this.tbEquation.TabIndex = 18;
+            this.cbOptimized.AutoSize = true;
+            this.cbOptimized.Location = new System.Drawing.Point(14, 124);
+            this.cbOptimized.Name = "cbOptimized";
+            this.cbOptimized.Size = new System.Drawing.Size(93, 21);
+            this.cbOptimized.TabIndex = 17;
+            this.cbOptimized.Text = "Optimized";
+            this.cbOptimized.UseVisualStyleBackColor = true;
             // 
-            // label9
+            // btnClear
             // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(28, 121);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(64, 17);
-            this.label9.TabIndex = 17;
-            this.label9.Text = "Equation";
-            // 
-            // tbValue
-            // 
-            this.tbValue.Location = new System.Drawing.Point(106, 164);
-            this.tbValue.Name = "tbValue";
-            this.tbValue.Size = new System.Drawing.Size(95, 22);
-            this.tbValue.TabIndex = 18;
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(28, 167);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(44, 17);
-            this.label10.TabIndex = 17;
-            this.label10.Text = "Value";
+            this.btnClear.Enabled = false;
+            this.btnClear.Location = new System.Drawing.Point(200, 19);
+            this.btnClear.Name = "btnClear";
+            this.btnClear.Size = new System.Drawing.Size(130, 25);
+            this.btnClear.TabIndex = 18;
+            this.btnClear.Text = "Clear";
+            this.btnClear.UseVisualStyleBackColor = true;
+            this.btnClear.Click += new System.EventHandler(this.btnClear_Click);
             // 
             // Home
             // 
@@ -451,6 +476,8 @@
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.TextBox tbValue;
         private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.CheckBox cbOptimized;
+        private System.Windows.Forms.Button btnClear;
     }
 }
 

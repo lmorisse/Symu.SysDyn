@@ -52,10 +52,11 @@ namespace Symu.SysDyn.Simulation
         }
 
         public SimSpecs Simulation { get; }
-        public Variables Variables { get; set; }
-        public Variables OptimizedVariables { get; } = new Variables();
+        public Variables ReferenceVariables { get; } = new Variables();
+        public Variables Variables { get; } 
         public ResultCollection Results { get; } = new ResultCollection();
         public bool StoreResults { get; set; } = true;
+        public bool Optimized { get; set; }
 
         #region Initialize
 
@@ -64,24 +65,34 @@ namespace Symu.SysDyn.Simulation
         {
             Compute(); // Initialize the model / don't store the result
             SetStocksEquations();
-            Optimize();
+            StoreReferenceVariables();
             Simulation.Clear();
         }
+
+        private void StoreReferenceVariables()
+        {
+            // Clone the Reference Variables
+            foreach (var variable in Variables)
+            {
+                ReferenceVariables.Add(variable.Clone());
+            }
+        }
+
         /// <summary>
         ///     Optimize variables
         /// </summary>
         public void Optimize()
         {
             Variables.Initialize();
-            foreach (var variable in Variables.GetNotUpdated)
+            List<Variable> waitingParents;
+            foreach (var variable in Variables.GetUpdated.Select(x => x.Name).ToImmutableList())
             {
-                OptimizedVariables.Add(variable.Clone());
+                Variables.Remove(variable);
             }
-            List<Variable> waitingParents ;
             do
             {
                 waitingParents = new List<Variable>();
-                foreach (var variable in OptimizedVariables.GetNotUpdated.ToImmutableList())
+                foreach (var variable in Variables.GetNotUpdated.ToImmutableList())
                 {
                     var withChildren = waitingParents;
                     withChildren.AddRange(OptimizeChildren(variable));
@@ -105,7 +116,7 @@ namespace Symu.SysDyn.Simulation
             parent.Updating = true;
             var readyToUpdate = true;
             var waitingParents = new List<Variable>();
-            foreach (var child in parent.Children.Select(childName => OptimizedVariables[childName]).Where(x => x != null && !x.Updated)) 
+            foreach (var child in parent.Children.Select(childName => Variables[childName]).Where(x => x != null && !x.Updated)) 
             {
                 switch (child.Updating)
                 {
@@ -121,14 +132,10 @@ namespace Symu.SysDyn.Simulation
             }
 
             // Update other variables
-            if (readyToUpdate)
+            if (readyToUpdate && TryOptimizeVariable(parent))
             {
-                OptimizeVariable(parent);
-                if (parent.Equation == null)
-                {
-                    Variables.SetValue(parent.Name, parent.Value);
-                    OptimizedVariables.Remove(parent.Name);
-                }
+                ReferenceVariables.SetValue(parent.Name, parent.Value);
+                Variables.Remove(parent.Name);
             }
 
             parent.Updating = false;
@@ -139,56 +146,35 @@ namespace Symu.SysDyn.Simulation
         ///     Take a variable and update the value of that node
         /// </summary>
         /// <param name="variable"></param>
-        public void OptimizeVariable(Variable variable)
+        public bool TryOptimizeVariable(Variable variable)
         {
             if (variable == null)
             {
                 throw new ArgumentNullException(nameof(variable));
             }
 
-            if (!variable.Children.Any())
+            if (variable.TryOptimize(false))
             {
-                variable.Equation = null;
-                return;
+                return true;
             }
-
-            if (variable.Equation == null)
+            foreach (var child in variable.Children.Select(childName => ReferenceVariables[childName]).ToImmutableList().
+                Where(child => !Variables.Exists(child.Name)))
             {
-                return;
-            }
-            foreach (var child in 
-                variable.Children.Select(childName => Variables[childName]).Where(x => x != null).ToImmutableList())
-            {
-                if (!OptimizedVariables.Exists(child.Name))
-                //if (child.Equation == null)
-                {
-                    variable.Equation.Replace(child.Name, child.Value.ToString(CultureInfo.InvariantCulture));
-                }
+                variable.Equation.Replace(child.Name, child.Value.ToString(CultureInfo.InvariantCulture));
                 variable.Children.Remove(child.Name);
             }
-
-            if (!variable.Children.Any())
-            {
-                try
-                {
-                    variable.Value = variable.Equation.InitialValue();
-                    variable.Equation = null;
-                }
-                catch
-                {
-                    // Equation may be a complexEquation and have still some functions
-                    // Children is not enough as a test
-                    // todo have a more robust test 
-                }
-            }
-
             variable.Updated = true;
+            return variable.TryOptimize(true);
         }
 
         public void Clear()
         {
             Simulation.Clear();
             Results.Clear();
+            foreach (var variable in Variables)
+            {
+                variable.Value = ReferenceVariables.GetValue(variable.Name);
+            }
         }
 
         /// <summary>
@@ -209,6 +195,11 @@ namespace Symu.SysDyn.Simulation
         /// </summary>
         public void Process()
         {
+            if (Optimized && Simulation.Step==0)
+            {
+                // Only the first step
+                Optimize();
+            }
             while (Simulation.Run())
             {
                 Compute();
@@ -315,7 +306,7 @@ namespace Symu.SysDyn.Simulation
         /// </summary>
         public Graph GetGraph()
         {
-            return Graph.CreateInstance(Variables);
+            return Graph.CreateInstance(ReferenceVariables);
         }
 
         /// <summary>
@@ -323,7 +314,7 @@ namespace Symu.SysDyn.Simulation
         /// </summary>
         public Graph GetSubGraph(string groupName)
         {
-            return Graph.CreateInstance(Variables.GetGroupVariables(groupName));
+            return Graph.CreateInstance(ReferenceVariables.GetGroupVariables(groupName));
         }
     }
 }

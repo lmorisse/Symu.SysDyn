@@ -26,6 +26,7 @@ namespace Symu.SysDyn.Model
         private readonly List<Variable> _variables = new List<Variable>();
         public Groups Groups { get; } = new Groups();
         public IEnumerable<Variable> GetNotUpdated => _variables.Where(x => !x.Updated);
+        public IEnumerable<Variable> GetUpdated => _variables.Where(x => x.Updated);
 
         public IEnumerable<string> Names => _variables.Select(x => x.Name);
         public IEnumerable<Stock> Stocks => _variables.OfType<Stock>();

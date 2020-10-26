@@ -34,8 +34,15 @@ namespace SymuSysDynApp
 
         private void button1_Click(object sender, EventArgs e)
         {
+            _stateMachine.Optimized = cbOptimized.Checked;
             _stateMachine.Process();
+            cbResults.Items.Clear();
+            if (_stateMachine.Variables.Names != null)
+            {
+                cbResults.Items.AddRange(_stateMachine.Variables.Names.ToArray());
+            }
             cbResults.Enabled = true;
+            btnClear.Enabled = true;
             lblTime.Text = _stateMachine.Simulation.Time.ToString(CultureInfo.InvariantCulture);
         }
 
@@ -50,24 +57,20 @@ namespace SymuSysDynApp
         private void InitializeStateMachine()
         {
             _stateMachine = new StateMachine(openFileDialog1.FileName, false);
-            cbResults.Items.Clear();
-            if (_stateMachine.Variables.Names != null)
-            {
-                cbResults.Items.AddRange(_stateMachine.Variables.Names.ToArray());
-            }
 
             cbGroups.Items.Clear();
-            if (_stateMachine.Variables.Groups.Any())
+            if (_stateMachine.ReferenceVariables.Groups.Any())
             {
-                cbGroups.Items.AddRange(_stateMachine.Variables.Groups.ToArray());
+                cbGroups.Items.AddRange(_stateMachine.ReferenceVariables.Groups.ToArray());
             }
 
             cbVariables.Items.Clear();
-            if (_stateMachine.Variables.Any())
+            if (_stateMachine.ReferenceVariables.Any())
             {
-                cbVariables.Items.AddRange(_stateMachine.Variables.ToArray());
+                cbVariables.Items.AddRange(_stateMachine.ReferenceVariables.ToArray());
             }
 
+            cbOptimized.Checked = _stateMachine.Optimized;
             tbStart.Text = _stateMachine.Simulation.Start.ToString(CultureInfo.InvariantCulture);
             tbStop.Text = _stateMachine.Simulation.Stop.ToString(CultureInfo.InvariantCulture);
             tbDt.Text = _stateMachine.Simulation.DeltaTime.ToString(CultureInfo.InvariantCulture);
@@ -163,9 +166,17 @@ namespace SymuSysDynApp
         {
 
             var variableName = cbVariables.SelectedItem.ToString();
-            var variable = _stateMachine.Variables.Get(variableName);
-            tbEquation.Text = variable.Equation.ToString();
+            var variable = _stateMachine.ReferenceVariables.Get(variableName);
+            tbEquation.Text = variable.Equation != null ? variable.Equation.ToString() : string.Empty;
             tbValue.Text = variable.Value.ToString(CultureInfo.InvariantCulture);
+        }
+
+        private void btnClear_Click(object sender, EventArgs e)
+        {
+            _stateMachine.Clear();
+            lblTime.Text = "0";
+            cbResults.SelectedText = string.Empty;
+            btnClear.Enabled = false;
         }
     }
 }

@@ -41,7 +41,7 @@ namespace Symu.SysDyn.Equations
         /// <summary>
         ///     List of all the nested functions used in the equation
         /// </summary>
-        private readonly List<BuiltInFunction> _functions;
+        public List<BuiltInFunction> Functions { get; }
 
         public ComplexEquation(string originalEquation, string initializedEquation, List<BuiltInFunction> functions, List<string> variables, Range range) : 
             this(originalEquation, initializedEquation, functions, variables)
@@ -54,7 +54,7 @@ namespace Symu.SysDyn.Equations
             OriginalEquation = originalEquation;
             InitializedEquation = initializedEquation;
             Variables = variables;
-            _functions = functions;
+            Functions = functions;
             _expression = new Expression(InitializedEquation);
         }
 
@@ -122,7 +122,7 @@ namespace Symu.SysDyn.Equations
             }
 
             // Built-in functions
-            foreach (var function in _functions)
+            foreach (var function in Functions)
             {
                 _expression.Parameters[function.IndexName] = function.Prepare(variables, sim);
             }
@@ -143,7 +143,7 @@ namespace Symu.SysDyn.Equations
         public void Replace(string child, string value)
         {
             //Replace functions
-            foreach (var function in _functions.ToImmutableList())
+            foreach (var function in Functions.ToImmutableList())
             {
                 function.Replace(child, value);
 
@@ -155,7 +155,7 @@ namespace Symu.SysDyn.Equations
                 try
                 {
                     InitializedEquation = InitializedEquation.Replace(function.IndexName, function.InitialValue().ToString(CultureInfo.InvariantCulture));
-                    _functions.Remove(function);
+                    Functions.Remove(function);
                 }
                 catch 
                 {
