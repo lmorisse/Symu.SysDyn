@@ -27,7 +27,7 @@ namespace Symu.SysDyn.Functions
     /// </summary>
     public class SmthN : Smth1
     {
-        public new const string Value = "SmthN";
+        public new const string Value = "Smthn";
         public SmthN(string function) : base(function)
         {
             Order = Convert.ToByte(GetParamFromOriginalEquation(2));

@@ -97,6 +97,7 @@ namespace SymuSysDynTests.Simulation
         [TestMethod()]
         public void OptimizeTest()
         {
+            Machine.Optimized = true;
             Machine.OptimizeVariables();
             //Variables
             var variable = Machine.ReferenceVariables.Get("Stock1");

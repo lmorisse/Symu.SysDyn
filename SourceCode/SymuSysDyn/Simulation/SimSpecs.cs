@@ -86,7 +86,6 @@ namespace Symu.SysDyn.Simulation
 
         public bool Run()
         {
-            State = SimState.Started;
             TimeManagement();
             // with pause
             if (Pause && Time > 0)

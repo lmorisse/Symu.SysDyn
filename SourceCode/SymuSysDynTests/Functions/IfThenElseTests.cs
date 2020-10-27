@@ -33,7 +33,7 @@ namespace SymuSysDynTests.Functions
         {
             var function = "";
             IfThenElse.Parse(ref function, out var parameters, out var args);
-            CheckKoTest(function, parameters, args);
+            CheckKoTest(parameters, args);
         }
 
         [TestMethod]
@@ -41,7 +41,7 @@ namespace SymuSysDynTests.Functions
         {
             var function = "IF x1 THEN x2";
             IfThenElse.Parse(ref function, out var parameters, out var args);
-            CheckKoTest(function, parameters, args);
+            CheckKoTest(parameters, args);
         }
 
         [TestMethod]
@@ -49,7 +49,7 @@ namespace SymuSysDynTests.Functions
         {
             var function = "IF x1 ELSE x3";
             IfThenElse.Parse(ref function, out var parameters, out var args);
-            CheckKoTest(function, parameters, args);
+            CheckKoTest(parameters, args);
         }
 
         private static void CheckOkTest(string function, IReadOnlyList<IEquation> parameters, IReadOnlyList<float> args)
@@ -65,7 +65,7 @@ namespace SymuSysDynTests.Functions
             Assert.AreEqual("if(X1,X2,X3)", function);
         }
 
-        private static void CheckKoTest(string function, IReadOnlyList<IEquation> parameters, IReadOnlyList<float> args)
+        private static void CheckKoTest(IReadOnlyCollection<IEquation> parameters, IReadOnlyCollection<float> args)
         {
             Assert.AreEqual(0, parameters.Count);
             Assert.AreEqual(0, args.Count);

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<xmile version="1.0" xmlns="http://docs.oasis-open.org/xmile/ns/XMILE/v1.0">
+  <header>
+    <name>Sales growth</name>
+    <options>
+      <uses_outputs />
+    </options>
+    <product version="1.0">Hand Coded XMILE from Strategic Modelling and Business Dynamics book</product>
+  </header>
+  <sim_specs method="Euler" time_units="Months" pause="5">
+    <start>0</start>
+    <stop>60</stop>
+    <dt>0.5</dt>
+  </sim_specs>
+  <model>
+    <variables>
+       <aux name="Sketch_of_Customer_Orders">
+            <eqn>TIME</eqn>
+            <gf>
+                <xscale min="0" max="60" />
+                <yscale min="0" max="4000" />
+                <xpts>0,15,30,45,60</xpts>
+                <ypts>100,750,1600,3000,3800</ypts>
+            </gf>
+        </aux>
+        <aux name="Authorized\nSales_Force">
+            <eqn> Budget_to_Sales_Force/Sales_Force_Salary   {salespeople}</eqn>
+            <scale min="0" max="400" />
+        </aux>
+        <aux name="Average\nOrder_Fill_Rate" flow_concept="true">
+            <eqn> SMTH3(Order_Fill_Rate,TimeTo_Average_Orders)   {systems per month}</eqn>
+        </aux>
+        <aux name="Budget_to\nSales_Force">
+            <eqn> Fraction_of_Revenue_to_Sales_Force*Reported_Sales_Revenue  {£ per month}</eqn>
+        </aux>
+        <aux name="Delivery\nDelay">
+            <eqn> 2  {months}</eqn>
+        </aux>
+        <flow name="Net_Sales_Force\nHiring">
+            <eqn> (Authorized_Sales_Force-Sales_Force)/TimeTo_Adjust_Sales_Force</eqn>
+        </flow>
+        <aux name="Fraction_of_Revenue\nto_Sales_Force">
+            <eqn> .1  {dimensionless}</eqn>
+        </aux>
+        <aux name="Sales_Force\nSalary">
+            <eqn> 4000  {salary expressed in £ per month per salesman, including overhead and support}</eqn>
+        </aux>
+        <flow name="Order\nFill\nRate">
+            <eqn> Order_Backlog/Delivery_Delay  {systems per month}</eqn>
+            <scale min="0" max="40000000" />
+            <non_negative />
+        </flow>
+        <aux name="Normal\nSales_Force\nProductivity">
+            <eqn> 10  {system orders per salesperson per month}</eqn>
+        </aux>
+        <flow name="Customer\nOrders">
+            <eqn>Sales_Force*Normal_Sales_Force_Productivity    {systems per month}</eqn>
+            <scale min="0" max="40000000" />
+            <non_negative />
+        </flow>
+        <aux name="Product\nPrice">
+            <eqn> 9600  {£ per system}</eqn>
+        </aux>
+        <aux name="TimeTo\nAdjust\nSales_Force">
+            <eqn> 12  {months}</eqn>
+        </aux>
+        <aux name="TimeTo\nAverage_Orders">
+            <eqn> 1  {month}</eqn>
+        </aux>
+        <stock name="Order\nBacklog">
+            <eqn> 80  {the initial backlog of orders is 80 systems, which results from a product order rate of 40 systems per month with a delivery delay of 2 months} </eqn>
+            <inflow>Customer_Orders</inflow>
+            <outflow>Order_Fill_Rate</outflow>
+        </stock>
+        <stock name="Sales\nForce">
+            <eqn> 4  {salespeople}</eqn>
+            <scale min="0" max="400" />
+            <inflow>Net_Sales_Force_Hiring</inflow>
+        </stock>
+        <aux name="Reported\nSales\nRevenue">
+            <eqn>Average_Order_Fill_Rate*Product_Price   {£ per month}</eqn>
+        </aux>
+    </variables>
+  </model>
+</xmile>

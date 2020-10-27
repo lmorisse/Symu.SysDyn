@@ -133,25 +133,23 @@ namespace SymuSysDynTests.Equations
         [TestMethod]
         public void SmthNTest()
         {
-            var equation = EquationFactory.CreateInstance("SMTHN(Input, Averaging, Order)", out _);
+            var equation = EquationFactory.CreateInstance("SMTHN(Input, Averaging, 2)", out _);
+            Assert.IsInstanceOfType(equation, typeof(ComplexEquation));
+            Assert.AreEqual("Smthn0", equation.InitializedEquation);
+            Assert.AreEqual(2, equation.Variables.Count);
+            Assert.AreEqual("Input", equation.Variables[0]);
+            Assert.AreEqual("Averaging", equation.Variables[1]);
+        }
+        [TestMethod]
+        public void SmthNTest1()
+        {
+            var equation = EquationFactory.CreateInstance("SMTHN(Input, Averaging, 3, Initial)", out _);
             Assert.IsInstanceOfType(equation, typeof(ComplexEquation));
             Assert.AreEqual("Smthn0", equation.InitializedEquation);
             Assert.AreEqual(3, equation.Variables.Count);
             Assert.AreEqual("Input", equation.Variables[0]);
             Assert.AreEqual("Averaging", equation.Variables[1]);
-            Assert.AreEqual("Order", equation.Variables[2]);
-        }
-        [TestMethod]
-        public void SmthNTest1()
-        {
-            var equation = EquationFactory.CreateInstance("SMTHN(Input, Averaging, Order, Initial)", out _);
-            Assert.IsInstanceOfType(equation, typeof(ComplexEquation));
-            Assert.AreEqual("Smthn0", equation.InitializedEquation);
-            Assert.AreEqual(4, equation.Variables.Count);
-            Assert.AreEqual("Input", equation.Variables[0]);
-            Assert.AreEqual("Averaging", equation.Variables[1]);
-            Assert.AreEqual("Order", equation.Variables[2]);
-            Assert.AreEqual("Initial", equation.Variables[3]);
+            Assert.AreEqual("Initial", equation.Variables[2]);
         }
         [TestMethod]
         public void AbsTest()
