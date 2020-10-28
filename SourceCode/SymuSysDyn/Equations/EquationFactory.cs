@@ -177,7 +177,7 @@ namespace Symu.SysDyn.Equations
                 return variables;
             }
 
-            if (float.TryParse(word, NumberStyles.Any, CultureInfo.InvariantCulture, out _))
+            if (float.TryParse(word, NumberStyles.Number, CultureInfo.InvariantCulture, out _))
             {
                 return variables;
             }

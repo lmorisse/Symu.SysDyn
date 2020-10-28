@@ -22,8 +22,6 @@ namespace Symu.SysDyn.Functions
     /// </summary>
     public static class FunctionUtils
     {
-
-
         /// <summary>
         /// Extract functions from a string as a list of BuiltIn functions
         /// </summary>

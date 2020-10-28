@@ -25,6 +25,7 @@ namespace SymuSysDynApp
 {
     public partial class Home : Form
     {
+        private const string AllGroups = "--All";
         private StateMachine _stateMachine;
 
         public Home()
@@ -61,6 +62,7 @@ namespace SymuSysDynApp
             cbGroups.Items.Clear();
             if (_stateMachine.ReferenceVariables.Groups.Any())
             {
+                cbGroups.Items.Add(AllGroups);
                 cbGroups.Items.AddRange(_stateMachine.ReferenceVariables.Groups.OrderBy(x => x.Name).ToArray());
             }
 
@@ -161,7 +163,7 @@ namespace SymuSysDynApp
         private void cbGroups_SelectedIndexChanged(object sender, EventArgs e)
         {
             var groupName = cbGroups.SelectedItem.ToString();
-            var dotString = GraphVizDot.GenerateDotString(_stateMachine.GetSubGraph(groupName));
+            var dotString = GraphVizDot.GenerateDotString(groupName == AllGroups ? _stateMachine.GetGraph() : _stateMachine.GetSubGraph(groupName));
             picImage.Image = GraphViz.RenderImage(dotString, "jpg");
         }
 

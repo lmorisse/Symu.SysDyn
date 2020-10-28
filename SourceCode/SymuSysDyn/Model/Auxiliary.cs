@@ -12,6 +12,7 @@ namespace Symu.SysDyn.Model
     /// <summary>
     ///     Auxiliaries allow the isolation of any algebraic function that is used. They can both clarify a model and
     ///     factor out important or repeated calculations
+    ///  a variable that is not a flow and is capable of changing its value instantaneously.
     /// </summary>
     public class Auxiliary : Variable
     {
@@ -22,5 +23,9 @@ namespace Symu.SysDyn.Model
             graph, range, scale)
         {
         }
+        //Auxiliaries have one OPTIONAL attribute:
+        // Flow concept: flow_concept="…" with true/false, which is true if the auxiliary represents a
+        //flow concept(default: false). Besides documenting that the variable is conceptually a flow, this
+        //affects how values are reported under certain integration methods and in tables.
     }
 }

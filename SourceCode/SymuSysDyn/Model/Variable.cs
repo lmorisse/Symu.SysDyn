@@ -54,27 +54,28 @@ namespace Symu.SysDyn.Model
             Units = Units.CreateInstanceFromEquation(eqn);
             // intentionally after Range assignment
             Equation = EquationFactory.CreateInstance(eqn, range, out var value);
-            Value = value;
+            SetValueWithGraphicalAndScale(value);
             Initialize();
             SetChildren();
         }
-
-        private float _value;
-        public float Value
+        /// <summary>
+        /// Adjust Value when a graphical function is defined
+        /// And when a scale is setted
+        /// </summary>
+        /// <param name="value"></param>
+        private void SetValueWithGraphicalAndScale(float value)
         {
-            get => _value;
-            set
+            if (float.IsNaN(value) || float.IsInfinity(value))
             {
-                if (float.IsNaN(value) || float.IsInfinity(value))
-                {
-                    throw new ArgumentOutOfRangeException();
-                }
-                // Graphical function
-                _value = _graphicalFunction?.GetOutputWithBounds(value) ?? value;
-                // Scale
-                _value = Scale.GetOutputInsideRange(_value);
+                throw new ArgumentOutOfRangeException();
             }
+            // Graphical function
+            value = _graphicalFunction?.GetOutputWithBounds(value) ?? value;
+            // Scale
+            Value = Scale.GetOutputInsideRange(value);
         }
+
+        public float Value { get; set; }
 
         public IEquation Equation { get; set; }
 
@@ -120,7 +121,7 @@ namespace Symu.SysDyn.Model
             }
 
             var eval = Equation.Evaluate(variables, simulation);
-            Value = eval;
+            SetValueWithGraphicalAndScale(eval);
             Updated = true;
         }
 
@@ -160,7 +161,8 @@ namespace Symu.SysDyn.Model
                 {
                     Equation.Replace(Name, Value.ToString(CultureInfo.InvariantCulture));
                 }
-                Value = Equation.InitialValue();
+                float value = Equation.InitialValue();
+                SetValueWithGraphicalAndScale(value);
             }
 
             Equation = null;

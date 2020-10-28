@@ -137,7 +137,7 @@ namespace Symu.SysDyn.Equations
                         {
                             output = Range?.GetOutputInsideRange(variable.Value) ?? variable.Value;
                         }
-                        else if (float.TryParse(word, NumberStyles.Any,CultureInfo.InvariantCulture, out var parse))
+                        else if (float.TryParse(word, NumberStyles.Number,CultureInfo.InvariantCulture, out var parse))
                         {
                             output = parse;
                         }

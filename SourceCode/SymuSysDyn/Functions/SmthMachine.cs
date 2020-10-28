@@ -47,6 +47,8 @@ namespace Symu.SysDyn.Functions
                 _stateMachine.Variables.Add(CreateStock(i));
                 _stateMachine.Variables.Add(CreateFlow(i));
             }
+
+            _stateMachine.Optimized = true;
         }
         public string Input { get; }
         public string Averaging { get; }

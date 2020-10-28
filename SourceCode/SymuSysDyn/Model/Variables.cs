@@ -24,7 +24,7 @@ namespace Symu.SysDyn.Model
     public class Variables : IEnumerable<Variable>
     {
         private readonly List<Variable> _variables = new List<Variable>();
-        public Groups Groups { get; } = new Groups();
+        public Groups Groups { get; private set; } = new Groups();
         public IEnumerable<Variable> GetNotUpdated => _variables.Where(x => !x.Updated);
         public IEnumerable<Variable> GetUpdated => _variables.Where(x => x.Updated);
 
@@ -173,6 +173,17 @@ namespace Symu.SysDyn.Model
         public void Clear()
         {
             _variables.Clear();
+        }
+
+        public Variables Clone()
+        {
+            var clone = new Variables {Groups = Groups};
+            foreach (var variable in _variables)
+            {
+                clone.Add(variable.Clone());
+            }
+
+            return clone;
         }
     }
 }

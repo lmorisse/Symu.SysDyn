@@ -58,8 +58,8 @@ namespace Symu.SysDyn.Simulation
         }
 
         public SimSpecs Simulation { get; }
-        public Variables ReferenceVariables { get; } = new Variables();
-        public Variables Variables { get; } 
+        public Variables ReferenceVariables { get; private set; } 
+        public Variables Variables { get; private set; } 
         public ResultCollection Results { get; } = new ResultCollection();
         public bool StoreResults { get; set; } = true;
         public bool Optimized { get; set; }
@@ -78,10 +78,8 @@ namespace Symu.SysDyn.Simulation
         private void StoreReferenceVariables()
         {
             // Clone the  Variables
-            foreach (var variable in Variables)
-            {
-                ReferenceVariables.Add(variable.Clone());
-            }
+            ReferenceVariables = Variables.Clone();
+
         }
         private void RetrieveFromReferenceVariables()
         {
@@ -90,22 +88,14 @@ namespace Symu.SysDyn.Simulation
                 return;
             }
 
-            foreach (var variable in ReferenceVariables)
-            {
-                Variables.Add(variable.Clone());
-            }
+            Variables = ReferenceVariables.Clone();
         }
         /// <summary>
         /// Store the optimized variables
         /// </summary>
         private void StoreOptimizedReferenceVariables()
         {
-            _optimizedVariablesReference = new Variables();
-            // Clone the Variables
-            foreach (var variable in Variables)
-            {
-                _optimizedVariablesReference.Add(variable.Clone());
-            }
+            _optimizedVariablesReference = Variables.Clone();
         }
         private void RetrieveFromOptimizedReferenceVariables()
         {

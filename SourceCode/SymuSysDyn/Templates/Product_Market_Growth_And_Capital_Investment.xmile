@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<xmile version="1.0" xmlns="http://docs.oasis-open.org/xmile/ns/XMILE/v1.0">
+  <header>
+    <name>Sales growth</name>
+    <options>
+      <uses_outputs />
+    </options>
+    <product version="1.0">Hand Coded XMILE from Strategic Modelling and Business Dynamics book</product>
+  </header>
+  <sim_specs method="Euler" time_units="Months" pause="0">
+    <start>0</start>
+    <stop>96</stop>
+    <dt>0.5</dt>
+  </sim_specs>
+  <model>
+    <variables>
+       <aux name="Sketch_of_Customer_Orders">
+            <eqn>TIME</eqn>
+            <gf>
+              <yscale min="0" max="4000" />
+              <xscale min="0" max="96" />
+                <ypts>100,4000</ypts>
+            </gf>
+        </aux>
+         <aux name="Delivery_Delay\nIndicated" flow_concept="true">
+            <eqn>Order_Backlog/Order_Fill_Rate {months}</eqn>
+        </aux>
+        <aux name="Authorized_\nSales_Force">
+            <eqn> Budget_to_Sales_Force/Sales_Force_Salary </eqn>
+            <scale min="0" max="400" />
+        </aux>
+        <aux name="Average\nOrder_Fill_Rate" flow_concept="true">
+            <eqn> SMTH1Suite(Order_Fill_Rate,TimeTo_Average_Orders)</eqn>
+        </aux>
+        <aux name="Budget_to\nSales_Force">
+            <eqn> Fraction_of_Revenue_to_Sales_Force*Reported_Sales_Revenue  {£ per month}</eqn>
+        </aux>
+        <aux name="Delivery_Delay\nRecognized">
+            <eqn> SMTH1Suite(Delivery_Delay_Indicated,Time_to_Recognize_Delivery_Delay,2)    {months}</eqn>
+        </aux>
+        <flow name="Net_Sales_Force\nHiring">
+            <eqn> (Authorized__Sales_Force-Sales_Force)/Time_To_Adjust_Sales_Force</eqn>
+        </flow>
+        <aux name="Fraction_of_Revenue\nto_Sales_Force">
+            <eqn> .1</eqn>
+        </aux>
+        <aux name="Sales_Force\nSalary">
+            <eqn> 4000  {salary expressed in £ per month per salesman, including overhead and support}</eqn>
+        </aux>
+        <flow name="Order\nFill\nRate">
+            <eqn>Production_Capacity*Utilization_of_Capacity   {systems per month}</eqn>
+            <scale min="0" max="40000000" />
+            <non_negative />
+        </flow>
+        <aux name="Normal\nSales_Force\nProductivity">
+            <eqn> 10 {system orders per salesperson per month}</eqn>
+        </aux>
+        <flow name="Customer\nOrders">
+            <eqn>Sales_Force*Normal_Sales_Force_Productivity*Effect_of_Delivery_Delay_on_Orders&#x0D;{systems per month}</eqn>
+            <scale min="0" max="40000000" />
+            <non_negative />
+        </flow>
+        <aux name="Product\nPrice">
+            <eqn> 9600  {£ per system}</eqn>
+        </aux>
+        <aux name="Time_To\nAdjust\nSales_Force">
+            <eqn> 12  {months}</eqn>
+        </aux>
+        <aux name="TimeTo\nAverage_Orders">
+            <eqn> 1  {month}&#x0D;&#x0D;</eqn>
+        </aux>
+        <stock name="Order\nBacklog">
+            <eqn> 160  {systems on order}</eqn>
+            <inflow>Customer_Orders</inflow>
+            <outflow>Order_Fill_Rate</outflow>
+        </stock>
+        <stock name="Sales\nForce">
+            <eqn> 4  {sales people}</eqn>
+            <scale min="0" max="400" />
+            <inflow>Net_Sales_Force_Hiring</inflow>
+        </stock>
+        <aux name="Reported\nSales\nRevenue">
+            <eqn>Average_Order_Fill_Rate*Product_Price   {£ per month}</eqn>
+        </aux>
+        <aux name="Time_to_Recognize\nDelivery_Delay">
+            <eqn> 10  {months}&#x0D;&#x0D;</eqn>
+        </aux>
+        <aux name="Effect_of\nDelivery_Delay\non_Orders">
+            <eqn>Delivery_Delay_Recognized</eqn>
+            <gf>
+                <yscale min="0" max="1" />
+                <xpts>0,1,2,3,4,5,6,7,8,9,10</xpts>
+                <ypts>1,0.96999999999999997,0.87,0.72999999999999998,0.53000000000000003,0.38,0.25,0.14999999999999999,0.080000000000000002,0.029999999999999999,0.02</ypts>
+            </gf>
+        </aux>
+        <aux name="Delivery\nDelay_Minimum">
+            <eqn> Order_Backlog/Production_Capacity&#x0D;{the minimum time to fill an order if capacity were 100% utilized, expressed in months}</eqn>
+        </aux>
+        <aux name="Utilization\nof_Capacity">
+            <eqn>Delivery_Delay_Minimum</eqn>
+            <gf>
+                <yscale min="0" max="1" />
+                <xpts>0,0.5,1,1.5,2,2.5,3,3.5,4,4.5,5</xpts>
+                <ypts>0,0.25,0.5,0.67000000000000004,0.80000000000000004,0.87,0.93000000000000005,0.94999999999999996,0.96999999999999997,0.97999999999999998,1</ypts>
+            </gf>
+        </aux>
+        <flow name="Capacity\nArrival_Rate">
+            <eqn> Capacity_Being_Built/Capacity_Lead_Time  {systems/month/month}</eqn>
+        </flow>
+        <flow name="Capacity\nOrder_Rate">
+            <eqn> Production_Capacity*Capacity_Expansion_Fraction  {systems/month/month)}</eqn>
+        </flow>
+        <aux name="Capacity\nLead_Time">
+            <eqn> 12   {months}</eqn>
+        </aux>
+        <aux name="Delivery_Delay\nBias">
+            <eqn>0.3   {dimensionless}</eqn>
+        </aux>
+        <aux name="Delivery_Delay\nCondition">
+            <eqn>Delivery_Delay_Recognized_by_Factory/Delivery_Delay_Operating_Goal   {dimensionless}</eqn>
+        </aux>
+        <aux name="Delivery_Delay\nManagement_Goal">
+            <eqn> 2 {months}</eqn>
+        </aux>
+        <aux name="Delivery_Delay\nOperating_Goal">
+            <eqn>Delivery_Delay_Tradition*Delivery_Delay_Weight+Delivery_Delay_Management_Goal*(1-Delivery_Delay_Weight)    {months}</eqn>
+        </aux>
+        <aux name="Delivery_Delay\nPressure">
+            <eqn> Delivery_Delay_Condition-Delivery_Delay_Bias  {dimensionless}</eqn>
+        </aux>
+        <aux name="Delivery_Delay\nTradition">
+            <eqn> SMTH1Suite(Delivery_Delay_Recognized_by_Factory,Time_For_Delivery_Delay_Tradition,2)   {months}</eqn>
+        </aux>
+        <aux name="Delivery_Delay\nWeight">
+            <eqn> 1 { dimensionless; delivery delay weight =1 puts all the weight onto tradition, =0 puts all the weight onto the fixed management goal} </eqn>
+        </aux>
+        <aux name="Time_For_Delivery_Delay_Tradition">
+            <eqn> 12  {months}</eqn>
+        </aux>
+        <stock name="Production\nCapacity">
+            <eqn>120   {systems/month}</eqn>
+            <inflow>Capacity_Arrival_Rate</inflow>
+        </stock>
+        <stock name="Capacity\nBeing_Built">
+            <eqn> Capacity_Order_Rate*Capacity_Lead_Time  {systems per month}</eqn>
+            <inflow>Capacity_Order_Rate</inflow>
+            <outflow>Capacity_Arrival_Rate</outflow>
+        </stock>
+        <aux name="Capacity_Expansion\nFraction">
+            <eqn>Delivery_Delay_Pressure</eqn>
+            <gf>
+                <yscale min="-0.1" max="0.15" />
+                <xpts>0,0.5,1,1.5,2,2.5</xpts>
+                <ypts>-0.070000000000000007,-0.02,0,0.02,0.070000000000000007,0.14999999999999999</ypts>
+            </gf>
+        </aux>
+
+        <aux name="Delivery_Delay_Recognized_by_Factory">
+            <eqn>SMTH1Suite(Delivery_Delay_Indicated, Time_for_Factory_to_Recognize_Delivery_Delay, 2)</eqn>
+        </aux>
+        <aux name="Time_for_Factory_to_Recognize_Delivery_Delay">
+            <eqn>2  {months}</eqn>
+        </aux>
+        <group name="SALES_FORCE__AND__CUSTOMER__ORDERS">
+            <entity name="Delivery_Delay_Indicated" />
+            <entity name="Authorized__Sales_Force" />
+            <entity name="Budget_to_Sales_Force" />
+            <entity name="Net_Sales_Force_Hiring" />
+            <entity name="Fraction_of_Revenue_to_Sales_Force" />
+            <entity name="Sales_Force_Salary" />
+            <entity name="Order_Fill_Rate" />
+            <entity name="Product_Price" />
+            <entity name="Time_To_Adjust_Sales_Force" />
+            <entity name="Sales_Force" />
+            <entity name="Reported_Sales_Revenue" />
+            <entity name="Delivery_Delay_Recognized" />
+            <entity name="Customer_Orders" />
+            <entity name="Order_Backlog" />
+            <entity name="Time_to_Recognize_Delivery_Delay" />
+            <entity name="Effect_of_Delivery_Delay_on_Orders" />
+            <entity name="Sketch_of_Customer_Orders" />
+            <entity name="Average_Order_Fill_Rate" />
+            <entity name="TimeTo_Average_Orders" />
+            <entity name="Normal_Sales_Force_Productivity" />
+            <entity name="Delivery_Delay_Minimum" />
+            <entity name="Utilization_of_Capacity" />
+        </group>
+        <group name="CAPACITY__PLANNING__AND__EXPANSION">
+            <entity name="Capacity_Arrival_Rate" />
+            <entity name="Capacity_Order_Rate" />
+            <entity name="Delivery_Delay_Bias" />
+            <entity name="Delivery_Delay_Condition" />
+            <entity name="Delivery_Delay_Operating_Goal" />
+            <entity name="Delivery_Delay_Pressure" />
+            <entity name="Capacity_Being_Built" />
+            <entity name="Capacity_Expansion_Fraction" />
+            <entity name="Delivery_Delay_Recognized_by_Factory" />
+            <entity name="Time_for_Factory_to_Recognize_Delivery_Delay" />
+            <entity name="Capacity_Lead_Time" />
+            <entity name="Delivery_Delay_Management_Goal" />
+            <entity name="Delivery_Delay_Tradition" />
+            <entity name="Delivery_Delay_Weight" />
+            <entity name="Time_For_Delivery_Delay_Tradition" />
+            <entity name="Production_Capacity" />
+        </group>
+    </variables>
+  </model>
+</xmile>
