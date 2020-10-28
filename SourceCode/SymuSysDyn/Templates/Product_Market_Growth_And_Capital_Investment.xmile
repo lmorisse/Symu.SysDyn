@@ -31,13 +31,13 @@
             <scale min="0" max="400" />
         </aux>
         <aux name="Average\nOrder_Fill_Rate" flow_concept="true">
-            <eqn> SMTH1Suite(Order_Fill_Rate,TimeTo_Average_Orders)</eqn>
+            <eqn> SMTH1(Order_Fill_Rate,TimeTo_Average_Orders)</eqn>
         </aux>
         <aux name="Budget_to\nSales_Force">
             <eqn> Fraction_of_Revenue_to_Sales_Force*Reported_Sales_Revenue  {£ per month}</eqn>
         </aux>
         <aux name="Delivery_Delay\nRecognized">
-            <eqn> SMTH1Suite(Delivery_Delay_Indicated,Time_to_Recognize_Delivery_Delay,2)    {months}</eqn>
+            <eqn> SMTH1(Delivery_Delay_Indicated,Time_to_Recognize_Delivery_Delay,2)    {months}</eqn>
         </aux>
         <flow name="Net_Sales_Force\nHiring">
             <eqn> (Authorized__Sales_Force-Sales_Force)/Time_To_Adjust_Sales_Force</eqn>
@@ -130,7 +130,7 @@
             <eqn> Delivery_Delay_Condition-Delivery_Delay_Bias  {dimensionless}</eqn>
         </aux>
         <aux name="Delivery_Delay\nTradition">
-            <eqn> SMTH1Suite(Delivery_Delay_Recognized_by_Factory,Time_For_Delivery_Delay_Tradition,2)   {months}</eqn>
+            <eqn> SMTH1(Delivery_Delay_Recognized_by_Factory,Time_For_Delivery_Delay_Tradition,2)   {months}</eqn>
         </aux>
         <aux name="Delivery_Delay\nWeight">
             <eqn> 1 { dimensionless; delivery delay weight =1 puts all the weight onto tradition, =0 puts all the weight onto the fixed management goal} </eqn>
@@ -157,7 +157,7 @@
         </aux>
 
         <aux name="Delivery_Delay_Recognized_by_Factory">
-            <eqn>SMTH1Suite(Delivery_Delay_Indicated, Time_for_Factory_to_Recognize_Delivery_Delay, 2)</eqn>
+            <eqn>SMTH1(Delivery_Delay_Indicated, Time_for_Factory_to_Recognize_Delivery_Delay, 2)</eqn>
         </aux>
         <aux name="Time_for_Factory_to_Recognize_Delivery_Delay">
             <eqn>2  {months}</eqn>

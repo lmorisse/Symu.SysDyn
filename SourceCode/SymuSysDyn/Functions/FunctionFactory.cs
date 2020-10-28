@@ -47,8 +47,6 @@ namespace Symu.SysDyn.Functions
                     return new Ramp(function);
                 case Smth1.Value:
                     return new Smth1(function);
-                case Smth1Suite.Value:
-                    return new Smth1Suite(function);
                 case Smth3.Value:
                     return new Smth3(function);
                 case SmthN.Value:

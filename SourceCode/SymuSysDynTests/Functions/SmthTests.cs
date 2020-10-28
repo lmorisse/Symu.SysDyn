@@ -6,7 +6,7 @@ using Symu.SysDyn.Simulation;
 namespace SymuSysDynTests.Functions
 {
     [TestClass()]
-    public class Smth1Tests
+    public class SmthTests
     {
         private readonly StateMachine _machine = new StateMachine();
 
@@ -33,9 +33,25 @@ namespace SymuSysDynTests.Functions
             Assert.AreEqual("5+Step(10,3)", smth.Input);
             Assert.AreEqual("5", smth.Averaging);
         }
-
+        /// <summary>
+        /// With Initial value
+        /// </summary>
         [TestMethod()]
         public void EvaluateTest()
+        {
+            var smth = new Smth1("SMTH1(5+Step(10,3),5,5)");
+            _machine.Simulation.Time = 1;
+            Assert.AreEqual(5, smth.Evaluate(_machine.Variables, _machine.Simulation));
+            _machine.Simulation.Time = 2;
+            Assert.AreEqual(5, smth.Evaluate(_machine.Variables, _machine.Simulation));
+            _machine.Simulation.Time = 4;
+            Assert.AreEqual(7, smth.Evaluate(_machine.Variables, _machine.Simulation));
+        }
+        /// <summary>
+        /// Without initial value
+        /// </summary>
+        [TestMethod()]
+        public void EvaluateTest1()
         {
             var smth = new Smth1("SMTH1(5+Step(10,3),5)");
             _machine.Simulation.Time = 1;
@@ -43,14 +59,14 @@ namespace SymuSysDynTests.Functions
             _machine.Simulation.Time = 2;
             Assert.AreEqual(5, smth.Evaluate(_machine.Variables, _machine.Simulation));
             _machine.Simulation.Time = 4;
-            Assert.AreEqual(6, smth.Evaluate(_machine.Variables, _machine.Simulation));
+            Assert.AreEqual(7, smth.Evaluate(_machine.Variables, _machine.Simulation));
         }
 
         /// <summary>
         /// With external parameter
         /// </summary>
         [TestMethod()]
-        public void EvaluateTest1()
+        public void EvaluateTest2()
         {
             var aux = new Auxiliary("aux", "5+Step(10,3)+aux2");
             _machine.Variables.Add(aux);
@@ -62,7 +78,7 @@ namespace SymuSysDynTests.Functions
             _machine.Simulation.Time = 4;
             _machine.Compute();
             //At step 4, Aux = 15 => Aux1 = SMTH1(15,5)
-            Assert.AreEqual(15, _machine.Variables[1].Value);
+            Assert.AreEqual(7, _machine.Variables[1].Value);
         }
     }
 }

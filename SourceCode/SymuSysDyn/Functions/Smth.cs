@@ -10,8 +10,9 @@
 #region using directives
 
 using System;
+using System.Collections.Generic;
 using System.Globalization;
-using NCalc2;
+using System.Linq;
 using Symu.SysDyn.Equations;
 using Symu.SysDyn.Model;
 using Symu.SysDyn.Simulation;
@@ -26,16 +27,19 @@ namespace Symu.SysDyn.Functions
     /// The other functions behave analogously.They return the value of the final smooth in the cascade.
     /// If you do not specify an initial value initial, they assume the value to be the initial value of input.
     /// </summary>
-    public class Smth1Suite : BuiltInFunction
-    {
-        public const string Value = "Smth1suite";
-
-        private float _previousValue;
+    public class Smth : BuiltInFunction
+    {   
 
         private bool _initialized;
-        public Smth1Suite(string function) : base(function)
+        private float[] _previousValues;
+        protected int InitialIndex { get; set; }
+        public Smth(string function) : base(function)
         {
-            Order = 1;
+        }
+        public Smth(string function, byte order) : base(function)
+        {
+            Order = order;
+            InitialIndex = Parameters.Count == 3 ? 2 : 0;
         }
         protected string GetParamFromOriginalEquation(int index)
         {
@@ -43,11 +47,22 @@ namespace Symu.SysDyn.Functions
         }
         public string Input => GetParamFromOriginalEquation(0);
         public string Averaging => GetParamFromOriginalEquation(1);
-        public string Initial => Parameters.Count == 3 ? GetParamFromOriginalEquation(2) : Input;
+        public string Initial => GetParamFromOriginalEquation(InitialIndex);
+
+        private byte _order;
+
         /// <summary>
         /// Nth order smooth
         /// </summary>
-        public byte Order { get; protected set; }
+        public byte Order
+        {
+            get => _order;
+            protected set
+            {
+                _order = value;
+                _previousValues = new float[value];
+            }
+        }
 
         public override float Evaluate(Variables variables, SimSpecs sim)
         {
@@ -58,16 +73,28 @@ namespace Symu.SysDyn.Functions
 
             if (!_initialized)
             {
-                _previousValue = Parameters.Count == 3 ? GetValue(2, variables, sim) : GetValue(0, variables, sim);
+                _previousValues[0] = GetValue(InitialIndex, variables, sim) ;
+
+                for (var i = 1; i < Order; i++)
+                {
+                    _previousValues[i] = _previousValues[0];
+                }
                 _initialized = true;
-                return _previousValue;
+                return _previousValues.Last();
             }
 
             var input = GetValue(0, variables, sim);
             var averaging = GetValue(1, variables, sim);
 
-            _previousValue += sim.DeltaTime * (input - _previousValue) / averaging;
-            return _previousValue;
+            for (var i = 0; i < Order; i++)
+            {
+                _previousValues[i] += sim.DeltaTime * (input - _previousValues[i]) * Order/ averaging;
+                input = _previousValues[i];
+            }
+
+            return _previousValues.Last();
+
         }
+
     }
 }

@@ -25,38 +25,13 @@ namespace Symu.SysDyn.Functions
     /// The other functions behave analogously.They return the value of the final smooth in the cascade.
     /// If you do not specify an initial value initial, they assume the value to be the initial value of input.
     /// </summary>
-    public class Smth1 : BuiltInFunction
+    public class Smth1 : Smth
     {
         public const string Value = "Smth1";
-        protected SmthMachine SmthMachine { get; set; }
 
-        public Smth1(string function) : base(function)
+        public Smth1(string function) : base(function, 1)
         {
-            Order = 1;
-        }
-        protected string GetParamFromOriginalEquation(int index)
-        {
-            return Parameters[index] != null ? Parameters[index].OriginalEquation : Args[index].ToString(CultureInfo.InvariantCulture);
         }
 
-        public string Input => GetParamFromOriginalEquation(0);
-        public string Averaging => GetParamFromOriginalEquation(1);
-        public string Initial => Parameters.Count == 3 ? GetParamFromOriginalEquation(2) : Input;
-        /// <summary>
-        /// Nth order smooth
-        /// </summary>
-        public byte Order { get; protected set; }
-
-        public override float Evaluate(Variables variables, SimSpecs sim)
-        {
-            if (sim == null)
-            {
-                throw new ArgumentNullException(nameof(sim));
-            }
-
-            SmthMachine = new SmthMachine(Input, Averaging, Order, Initial);
-            SmthMachine.AddVariables(variables);
-            return SmthMachine.Evaluate(sim.Time);
-        }
     }
 }

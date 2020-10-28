@@ -14,9 +14,6 @@
       <aux name="DirectSMTH1">
         <eqn>SMTH1(5+Step(10,3),5)</eqn>
       </aux>
-      <aux name="DirectSMTH1Suite">
-        <eqn>SMTH1Suite(5+Step(10,3),5,5)</eqn>
-      </aux>
       <aux name="DirectSMTH2">
         <eqn>SMTHN(5+Step(10,3),5,2)</eqn>
       </aux>

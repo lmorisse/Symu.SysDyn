@@ -19,12 +19,11 @@ namespace Symu.SysDyn.Functions
     /// The other functions behave analogously.They return the value of the final smooth in the cascade.
     /// If you do not specify an initial value initial, they assume the value to be the initial value of input.
     /// </summary>
-    public class Smth3 : Smth1
+    public class Smth3 : Smth
     {
-        public new const string Value = "Smth3";
-        public Smth3(string function) : base(function)
+        public const string Value = "Smth3";
+        public Smth3(string function) : base(function,3)
         {
-            Order = 3;
         }
     }
 }

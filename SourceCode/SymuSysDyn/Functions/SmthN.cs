@@ -25,24 +25,13 @@ namespace Symu.SysDyn.Functions
     /// The other functions behave analogously.They return the value of the final smooth in the cascade.
     /// If you do not specify an initial value initial, they assume the value to be the initial value of input.
     /// </summary>
-    public class SmthN : Smth1
+    public class SmthN : Smth
     {
-        public new const string Value = "Smthn";
+        public const string Value = "Smthn";
         public SmthN(string function) : base(function)
         {
             Order = Convert.ToByte(GetParamFromOriginalEquation(2));
-        }
-        public new string Initial => Parameters.Count == 4 ? GetParamFromOriginalEquation(3) : Input;
-        public override float Evaluate(Variables variables, SimSpecs sim)
-        {
-            if (sim == null)
-            {
-                throw new ArgumentNullException(nameof(sim));
-            }
-
-            SmthMachine = new SmthMachine(Input, Averaging, Order, Initial); // to have the correct Initial, we can't call Evaluate SMTH1
-            SmthMachine.AddVariables(variables);
-            return SmthMachine.Evaluate(sim.Time);
+            InitialIndex = Parameters.Count == 4 ? 3 : 0;
         }
     }
 }
