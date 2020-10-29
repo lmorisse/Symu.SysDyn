@@ -89,21 +89,9 @@ namespace Symu.SysDyn.Functions
 
         private static Match MatchRegex(string input)
         {
-            var regex = new Regex(@"IF (.*) THEN (.*) ELSE (.*)", RegexOptions.IgnoreCase);
+            var regex = new Regex(@"IF\s*(.*)\s*THEN\s*(.*)\s*ELSE\s*(.*)", RegexOptions.IgnoreCase);
             return regex.Match(input);
         }
-
-        ///// <summary>
-        ///// "if(Condition,ThenExpression,ElseExpression)"
-        ///// </summary>
-        ///// <returns></returns>
-        //public string SetEquation()
-        //{
-        //    var condition = Parameters.ElementAt(0);
-        //    var thenExpression = Parameters.ElementAt(1);
-        //    var elseExpression = Parameters.ElementAt(2);
-        //    return "if(" + condition + "," + thenExpression + "," + elseExpression + ")";
-        //}
 
         /// <summary>
         ///     Check if it is a IfThenElse function

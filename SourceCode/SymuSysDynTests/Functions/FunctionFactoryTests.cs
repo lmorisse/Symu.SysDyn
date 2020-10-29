@@ -115,6 +115,19 @@ namespace SymuSysDynTests.Functions
             Assert.IsTrue(results[0] is IfThenElse);
         }
 
+        /// <summary>
+        ///     If then else test with brackets
+        ///     If() may be identified as a function
+        /// </summary>
+        [TestMethod]
+        public void GetFunctionsTest22()
+        {
+            const string test = "If(x1) then x2 else x3";
+            var results = FunctionUtils.ParseFunctions(test).ToList();
+            Assert.AreEqual(1, results.Count);
+            Assert.IsTrue(results[0] is IfThenElse);
+        }
+
         [TestMethod]
         public void GetParametersTest()
         {

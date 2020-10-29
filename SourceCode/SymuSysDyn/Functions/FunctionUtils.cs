@@ -54,6 +54,11 @@ namespace Symu.SysDyn.Functions
         /// Functions Without Brackets ni lowercase
         /// </summary>
         private static readonly List<string> FunctionsWithoutBrackets= new List<string> {"dt","time"};
+
+        /// <summary>
+        /// Special names that are not functions as is
+        /// </summary>
+        private static readonly List<string> NotFunctions = new List<string> { "if("};
         /// <summary>
         /// 
         /// </summary>
@@ -107,7 +112,7 @@ namespace Symu.SysDyn.Functions
                         if (isFunction)
                         {
                             name += split;
-                            if (counter == 0)
+                            if (counter == 0 && !NotFunctions.Exists(x => name.ToLowerInvariant().StartsWith(x)))
                             {
                                 result.Add(name);
                                 name = string.Empty;

@@ -80,8 +80,17 @@ namespace SymuSysDynTests.Functions
             Assert.AreEqual("if(1,2,3)", function);
         }
 
+
         [TestMethod]
         public void ParseTest6()
+        {
+            var function = "IF(1)THEN(2)ELSE(3)";
+            IfThenElse.Parse(ref function, out _, out _);
+            Assert.AreEqual("if(1,2,3)", function);
+        }
+
+        [TestMethod]
+        public void ParseTest7()
         {
             var function = "IF (1+1) THEN (2+2) ELSE (3+3)";
             IfThenElse.Parse(ref function, out _, out _);
