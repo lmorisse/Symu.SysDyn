@@ -29,13 +29,5 @@ namespace SymuSysDynTests.Model
             Assert.IsTrue(_range.Check(_okPoints));
             Assert.IsFalse(_range.Check(_koPoints));
         }
-
-        [TestMethod]
-        public void GetOutputInsideRangeTest()
-        {
-            Assert.AreEqual(0, _range.GetOutputInsideRange(-1));
-            Assert.AreEqual(5, _range.GetOutputInsideRange(5));
-            Assert.AreEqual(10, _range.GetOutputInsideRange(15));
-        }
     }
 }

@@ -19,20 +19,17 @@ using System.Linq;
 namespace Symu.SysDyn.Model
 {
     /// <summary>
-    ///     Class for Range, scale, bounds, with a min and a max
+    ///     Class for Range and scale with a min and a max
+    ///     It is not use to compute a min and a max value, but of input and output device
+    ///     It is informative for visualization
     /// </summary>
     public class Range
     {
         /// <summary>
         ///     Constructor based on float values
         /// </summary>
-        public Range(bool nonNegative)
+        public Range()
         {
-            if (nonNegative)
-            {
-                // Value must be positive
-                Min = Math.Max(Min, 0);
-            }
         }
 
         /// <summary>
@@ -74,8 +71,7 @@ namespace Symu.SysDyn.Model
         /// </summary>
         /// <param name="min"></param>
         /// <param name="max"></param>
-        /// <param name="nonNegative"></param>
-        public Range(string min, string max, bool nonNegative)
+        public Range(string min, string max)
         {
             if (!string.IsNullOrEmpty(min))
             {
@@ -85,12 +81,6 @@ namespace Symu.SysDyn.Model
             if (!string.IsNullOrEmpty(max))
             {
                 Max = float.Parse(max, CultureInfo.InvariantCulture);
-            }
-
-            if (nonNegative)
-            {
-                // Value must be positive
-                Min = Math.Max(Min, 0);
             }
 
             Check();
@@ -116,22 +106,6 @@ namespace Symu.SysDyn.Model
         public bool Check(float[] points)
         {
             return Min <= points.Min() && Max >= points.Max();
-        }
-
-        public float GetOutputInsideRange(string input)
-        {
-            var floatInput = float.Parse(input, CultureInfo.InvariantCulture);
-            return GetOutputInsideRange(floatInput);
-        }
-
-        public float GetOutputInsideRange(float input)
-        {
-            if (input > Max)
-            {
-                return Max;
-            }
-
-            return input < Min ? Min : input;
         }
     }
 }

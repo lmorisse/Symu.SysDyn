@@ -104,7 +104,7 @@ namespace SymuSysDynTests.Parser
         public void ParseRangeTest()
         {
             XElement = XElement.Descendants(Ns + "stock").First();
-            var range = Parser.ParseRange(XElement);
+            var range = Parser.ParseRange(XElement, "range");
             Assert.AreEqual(-1, range.Min);
             Assert.AreEqual(10, range.Max);
         }
@@ -113,7 +113,7 @@ namespace SymuSysDynTests.Parser
         public void ParseRangeTest1()
         {
             XElement = XElement.Descendants(Ns + "flow").ElementAt(1);
-            var range = Parser.ParseRange(XElement);
+            var range = Parser.ParseRange(XElement, "range");
             Assert.AreEqual(float.NegativeInfinity, range.Min);
             Assert.AreEqual(10, range.Max);
         }
@@ -122,7 +122,7 @@ namespace SymuSysDynTests.Parser
         public void ParseRangeTest2()
         {
             XElement = XElement.Descendants(Ns + "stock").ElementAt(1);
-            var range = Parser.ParseRange(XElement);
+            var range = Parser.ParseRange(XElement, "range");
             Assert.AreEqual(float.NegativeInfinity, range.Min);
             Assert.AreEqual(float.PositiveInfinity, range.Max);
         }
@@ -131,8 +131,8 @@ namespace SymuSysDynTests.Parser
         public void ParseScaleTest()
         {
             XElement = XElement.Descendants(Ns + "stock").First();
-            var range = Parser.ParseScale(XElement);
-            Assert.AreEqual(0, range.Min);
+            var range = Parser.ParseRange(XElement, "scale");
+            Assert.AreEqual(-1, range.Min);
             Assert.AreEqual(10, range.Max);
         }
 
@@ -140,8 +140,8 @@ namespace SymuSysDynTests.Parser
         public void ParseScaleTest1()
         {
             XElement = XElement.Descendants(Ns + "flow").ElementAt(1);
-            var range = Parser.ParseScale(XElement);
-            Assert.AreEqual(0, range.Min);
+            var range = Parser.ParseRange(XElement, "scale");
+            Assert.AreEqual(-1, range.Min);
             Assert.AreEqual(float.PositiveInfinity, range.Max);
         }
 
@@ -149,8 +149,8 @@ namespace SymuSysDynTests.Parser
         public void ParseScaleTest2()
         {
             XElement = XElement.Descendants(Ns + "stock").ElementAt(1);
-            var range = Parser.ParseScale(XElement);
-            Assert.AreEqual(0, range.Min);
+            var range = Parser.ParseRange(XElement, "scale");
+            Assert.AreEqual(float.NegativeInfinity, range.Min);
             Assert.AreEqual(float.PositiveInfinity, range.Max);
         }
 

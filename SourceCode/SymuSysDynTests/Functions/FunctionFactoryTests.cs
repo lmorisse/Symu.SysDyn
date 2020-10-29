@@ -113,6 +113,10 @@ namespace SymuSysDynTests.Functions
             var results = FunctionUtils.ParseFunctions(test).ToList();
             Assert.AreEqual(1, results.Count);
             Assert.IsTrue(results[0] is IfThenElse);
+            Assert.AreEqual(3, results[0].Parameters.Count);
+            Assert.AreEqual("X1", results[0].Parameters[0].ToString());
+            Assert.AreEqual("X2", results[0].Parameters[1].ToString());
+            Assert.AreEqual("X3", results[0].Parameters[2].ToString());
         }
 
         /// <summary>
@@ -126,6 +130,10 @@ namespace SymuSysDynTests.Functions
             var results = FunctionUtils.ParseFunctions(test).ToList();
             Assert.AreEqual(1, results.Count);
             Assert.IsTrue(results[0] is IfThenElse);
+            Assert.AreEqual(3, results[0].Parameters.Count);
+            Assert.AreEqual("(X1)", results[0].Parameters[0].ToString());
+            Assert.AreEqual("X2", results[0].Parameters[1].ToString());
+            Assert.AreEqual("X3", results[0].Parameters[2].ToString());
         }
 
         [TestMethod]

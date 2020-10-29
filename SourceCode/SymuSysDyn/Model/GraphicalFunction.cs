@@ -163,7 +163,7 @@ namespace Symu.SysDyn.Model
         /// </summary>
         /// <param name="x"></param>
         /// <returns></returns>
-        private float GetOutput(float x)
+        public float GetOutput(float x)
         {
             var target = 0;
 
@@ -195,11 +195,6 @@ namespace Symu.SysDyn.Model
             var intercept = YPoints[target] - m * XPoints[target]; //b
 
             return m * x + intercept;
-        }
-
-        public float GetOutputWithBounds(float input)
-        {
-            return GetOutput(XScale.GetOutputInsideRange(input));
         }
     }
 }

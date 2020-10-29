@@ -142,8 +142,8 @@ namespace Symu.SysDyn.Parser
                     q.FirstAttribute.Value,
                     ParseEquation(q),
                     ParseGraphicalFunction(q),
-                    ParseRange(q),
-                    ParseScale(q)));
+                    ParseRange(q, "range"),
+                    ParseRange(q, "scale")));
 
             variables.AddRange(auxiliaries);
         }
@@ -165,8 +165,8 @@ namespace Symu.SysDyn.Parser
                     q.FirstAttribute.Value,
                     ParseEquation(q),
                     ParseGraphicalFunction(q),
-                    ParseRange(q),
-                    ParseScale(q)));
+                    ParseRange(q, "range"),
+                    ParseRange(q, "scale")));
 
             variables.AddRange(flows);
         }
@@ -190,8 +190,9 @@ namespace Symu.SysDyn.Parser
                     ParseInflows(q),
                     ParseOutflows(q),
                     ParseGraphicalFunction(q),
-                    ParseRange(q),
-                    ParseScale(q)
+                    ParseRange(q, "range"),
+                    ParseRange(q, "scale"),
+                    ParseNonNegative(q)
                 ));
 
             variables.AddRange(stocks);
@@ -247,31 +248,34 @@ namespace Symu.SysDyn.Parser
             return xContainer.Element(_ns + "eqn")?.Value;
         }
 
-        public Range ParseRange(XContainer xContainer)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="xContainer"></param>
+        /// <param name="element">range or scale</param>
+        /// <returns></returns>
+        public Range ParseRange(XContainer xContainer, string element)
         {
             if (xContainer == null)
             {
                 throw new ArgumentNullException(nameof(xContainer));
             }
 
-            var range = xContainer.Descendants(_ns + "range").FirstOrDefault();
+            var range = xContainer.Descendants(_ns + element).FirstOrDefault();
             return range == null
-                ? new Range(false)
-                : new Range(range.Attribute("min")?.Value, range.Attribute("max")?.Value, false);
+                ? new Range()
+                : new Range(range.Attribute("min")?.Value, range.Attribute("max")?.Value);
         }
 
-        public Range ParseScale(XContainer xContainer)
+        public NonNegative ParseNonNegative(XContainer xContainer)
         {
             if (xContainer == null)
             {
                 throw new ArgumentNullException(nameof(xContainer));
             }
 
-            var range = xContainer.Descendants(_ns + "scale").FirstOrDefault();
             var nonNegative = xContainer.Descendants(_ns + "non_negative").FirstOrDefault();
-            return range == null
-                ? new Range(nonNegative != null)
-                : new Range(range.Attribute("min")?.Value, range.Attribute("max")?.Value, nonNegative != null);
+            return new NonNegative(nonNegative != null);
         }
 
 

@@ -71,21 +71,5 @@ namespace SymuSysDynTests.Model
             Assert.AreEqual(1, _gf.YScale.Min);
             Assert.AreEqual(2, _gf.YScale.Max);
         }
-
-        [TestMethod]
-        public void GetOutputWithBoundsTest()
-        {
-            _gf = new GraphicalFunction(Xpts, Ypts, _xScaleList, _yScaleList);
-            Assert.AreEqual(1, _gf.GetOutputWithBounds(-1));
-            Assert.AreEqual(1, _gf.GetOutputWithBounds(0));
-            Assert.AreEqual(1.5F, _gf.GetOutputWithBounds(0.5F));
-            Assert.AreEqual(2, _gf.GetOutputWithBounds(1));
-            Assert.AreEqual(2, _gf.GetOutputWithBounds(2));
-        }
-
-        [TestMethod]
-        public void ChecksRangeTest()
-        {
-        }
     }
 }

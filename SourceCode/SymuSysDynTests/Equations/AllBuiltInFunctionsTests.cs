@@ -80,13 +80,13 @@ namespace SymuSysDynTests.Equations
         [TestMethod]
         public void IfThenElseTest()
         {
-            var equation = EquationFactory.CreateInstance("If condition then thenExpression else elseExpression", out _);
+            var equation = EquationFactory.CreateInstance("If condition then expression1 else expression2", out _);
             Assert.IsInstanceOfType(equation, typeof(ComplexEquation));
             Assert.AreEqual("If0", equation.InitializedEquation);
             Assert.AreEqual(3, equation.Variables.Count);
             Assert.AreEqual("Condition", equation.Variables[0]);
-            Assert.AreEqual("Thenexpression", equation.Variables[1]);
-            Assert.AreEqual("Elseexpression", equation.Variables[2]);
+            Assert.AreEqual("Expression1", equation.Variables[1]);
+            Assert.AreEqual("Expression2", equation.Variables[2]);
         }
         [TestMethod]
         public void Smth1Test()

@@ -26,23 +26,8 @@ namespace Symu.SysDyn.Equations
     /// <summary>
     /// IEquation with parameters and functions
     /// </summary>
-    public class ComplexEquation : IEquation
+    public class ComplexEquation : SimpleEquation
     {
-        public string OriginalEquation { get; }
-        public string InitializedEquation { get; set; }
-        /// <summary>
-        ///     Range of the output of the equation provide by the variable
-        /// </summary>
-        private readonly Range _range;
-
-        public List<string> Variables { get; }
-        /// <summary>
-        /// List of words that constitute the initialized equation
-        /// It is necessary for the replace method
-        /// </summary>
-        private readonly List<string> _words;
-        private Expression _expression;
-
         /// <summary>
         ///     List of all the nested functions used in the equation
         /// </summary>
@@ -55,51 +40,19 @@ namespace Symu.SysDyn.Equations
         }
 
         public ComplexEquation(string originalEquation, string initializedEquation, List<BuiltInFunction> functions, List<string> variables, List<string> words)
+            : base(originalEquation, initializedEquation, variables, words)
         {
-            OriginalEquation = originalEquation;
-            InitializedEquation = initializedEquation;
-            Variables = variables;
             Functions = functions;
-            _expression = new Expression(InitializedEquation);
-            _words = words;
         }
 
-        public IEquation Clone()
+        public override IEquation Clone()
         {
             return new ComplexEquation(OriginalEquation, InitializedEquation, Functions, Variables, _words, _range);
         }
 
-        /// <summary>Returns a string that represents the current object.</summary>
-        /// <returns>A string that represents the current object.</returns>
-        public override string ToString()
+        public override bool CanBeOptimized(string variableName)
         {
-            return InitializedEquation;
-        }
-        public bool CanBeOptimized(string variableName)
-        {
-            var itself = _words.Count == 1 && Variables.Count == 1 && Variables[0] == variableName;
-            return !Functions.Any() && (!Variables.Any() || itself);
-        }
-        /// <summary>
-        ///     Takes equation and the current variable values returns the result of the equation as the float
-        /// </summary>
-        /// <param name="variables"></param>
-        /// <param name="sim"></param>
-        /// <returns></returns>
-        public float Evaluate(Variables variables, SimSpecs sim)
-        {
-            try
-            {
-                Prepare(variables, sim);
-                return Convert.ToSingle(_expression.Evaluate());
-            }
-            catch (ArgumentException ex)
-            {
-                throw new ArgumentException(" the internal details for this exception are as follows: \r\n" +
-                                            ex.Message);
-            }
-
-            //todo Trace.WriteLineIf(World.LoggingSwitch.TraceVerbose, equation + "was calculate");
+            return !Functions.Any() && base.CanBeOptimized(variableName);
         }
         /// <summary>
         ///     Prepare equation to be computed
@@ -108,32 +61,14 @@ namespace Symu.SysDyn.Equations
         /// <param name="variables"></param>
         /// <param name="sim"></param>
         /// <returns></returns>
-        public void Prepare(Variables variables, SimSpecs sim)
+        public override void Prepare(Variables variables, SimSpecs sim)
         {
             if (variables == null)
             {
                 throw new ArgumentNullException(nameof(variables));
             }
 
-            // Variables
-            foreach (var variable in Variables)
-            {
-                if (!variables.Exists(variable))
-                {
-                    //In case of SmthMachine with parameters
-                    continue;
-                }
-
-                var output = variables[variable].Value;
-                if (_range != null)
-                {
-                    _expression.Parameters[variable] = _range.GetOutputInsideRange(output);
-                }
-                else
-                {
-                    _expression.Parameters[variable] = output;
-                }
-            }
+            base.Prepare(variables, sim);
 
             // Built-in functions
             foreach (var function in Functions)
@@ -142,19 +77,8 @@ namespace Symu.SysDyn.Equations
             }
         }
 
-        public float InitialValue()
-        {
-            var value = Convert.ToSingle(_expression.Evaluate());
-            if (float.IsNaN(value) || float.IsInfinity(value))
-            {
-                value = 0;
-            }
 
-            return value;
-        }
-
-
-        public void Replace(string child, string value)
+        public override void Replace(string child, string value)
         {
             //Replace functions
             foreach (var function in Functions.ToImmutableList())

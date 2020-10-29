@@ -14,7 +14,10 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Globalization;
 using System.Linq;
-using MathNet.Numerics.Financial;
+
+using NCalc2;
+
+using Symu.SysDyn.Functions;
 using Symu.SysDyn.Model;
 using Symu.SysDyn.Simulation;
 
@@ -23,32 +26,29 @@ using Symu.SysDyn.Simulation;
 namespace Symu.SysDyn.Equations
 {
     /// <summary>
-    /// IEquation that has parameters but no functions
+    /// IEquation with parameters without functions
     /// </summary>
     public class SimpleEquation : IEquation
     {
-
-        public string OriginalEquation { get; }
+        public string OriginalEquation { get; protected set; }
         public string InitializedEquation { get; set; }
-        /// <summary>
-        /// Result of the Prepare method
-        /// Simplified version of Expression
-        /// </summary>
-        private float _eval;
-
-        private readonly List<string> _words;
-
         /// <summary>
         ///     Range of the output of the equation provide by the variable
         /// </summary>
-        protected Range Range { get; set; }
+        protected Range _range { get; set; }
 
-        public List<string> Variables { get; } 
+        public List<string> Variables { get; protected set; }
+        /// <summary>
+        /// List of words that constitute the initialized equation
+        /// It is necessary for the replace method
+        /// </summary>
+        protected List<string> _words { get; set; }
+        protected Expression _expression;
 
-        public SimpleEquation(string originalEquation, string initializedEquation, List<string> variables, List<string> words, Range range) : 
+        public SimpleEquation(string originalEquation, string initializedEquation, List<string> variables, List<string> words, Range range) :
             this(originalEquation, initializedEquation, variables, words)
         {
-            Range = range;
+            _range = range;
         }
 
         public SimpleEquation(string originalEquation, string initializedEquation, List<string> variables, List<string> words)
@@ -56,12 +56,13 @@ namespace Symu.SysDyn.Equations
             OriginalEquation = originalEquation;
             InitializedEquation = initializedEquation;
             Variables = variables;
+            _expression = new Expression(InitializedEquation);
             _words = words;
         }
 
-        public IEquation Clone()
+        public virtual IEquation Clone()
         {
-            return new SimpleEquation(OriginalEquation, InitializedEquation, Variables, _words, Range);
+            return new SimpleEquation(OriginalEquation, InitializedEquation, Variables, _words, _range);
         }
 
         /// <summary>Returns a string that represents the current object.</summary>
@@ -70,41 +71,32 @@ namespace Symu.SysDyn.Equations
         {
             return InitializedEquation;
         }
-
-        public bool CanBeOptimized(string variableName)
+        public virtual bool CanBeOptimized(string variableName)
         {
             var itself = _words.Count == 1 && Variables.Count == 1 && Variables[0] == variableName;
             return !Variables.Any() || itself;
         }
-
         /// <summary>
         ///     Takes equation and the current variable values returns the result of the equation as the float
         /// </summary>
         /// <param name="variables"></param>
         /// <param name="sim"></param>
         /// <returns></returns>
-        public virtual float Evaluate(Variables variables, SimSpecs sim)
+        public float Evaluate(Variables variables, SimSpecs sim)
         {
-            Prepare(variables, sim);
-            return _eval;
-        }
-
-        public float InitialValue()
-        {
-            Prepare(new Variables(), null);
-            return _eval;
-        }
-
-        public void Replace(string child, string value)
-        {
-            while (_words.FindIndex(ind => ind.Equals(child)) >= 0)
+            try
             {
-                _words[_words.FindIndex(ind => ind.Equals(child))] = value;
+                Prepare(variables, sim);
+                return Convert.ToSingle(_expression.Evaluate());
             }
-            InitializedEquation = string.Join(string.Empty,_words);
-            Variables.Remove(child);
-        }
+            catch (ArgumentException ex)
+            {
+                throw new ArgumentException(" the internal details for this exception are as follows: \r\n" +
+                                            ex.Message);
+            }
 
+            //todo Trace.WriteLineIf(World.LoggingSwitch.TraceVerbose, equation + "was calculate");
+        }
         /// <summary>
         ///     Prepare equation to be computed
         ///     Replace all variables of the equation by its actual value
@@ -112,57 +104,49 @@ namespace Symu.SysDyn.Equations
         /// <param name="variables"></param>
         /// <param name="sim"></param>
         /// <returns></returns>
-        public void Prepare(Variables variables, SimSpecs sim)
+        public virtual void Prepare(Variables variables, SimSpecs sim)
         {
             if (variables == null)
             {
                 throw new ArgumentNullException(nameof(variables));
             }
-            _eval = 0;
-            var @operator=string.Empty;
-            foreach (var word in _words)
-            {
-                switch (word)
-                {
-                    case "+":
-                    case "-":
-                    case "*":
-                    case "/":
-                        @operator = word;
-                        break;
-                    default:
-                        var output = 0F;
-                        var variable = variables.Get(word);
-                        if (variable != null)
-                        {
-                            output = Range?.GetOutputInsideRange(variable.Value) ?? variable.Value;
-                        }
-                        else if (float.TryParse(word, NumberStyles.Number,CultureInfo.InvariantCulture, out var parse))
-                        {
-                            output = parse;
-                        }
-                        switch (@operator)
-                        {
-                            case "+":
-                                _eval += output;
-                                break;
-                            case "-":
-                                _eval -= output;
-                                break;
-                            case "/":
-                                _eval /= output;
-                                break;
-                            case "*":
-                                _eval *= output;
-                                break;
-                            default:
-                                _eval = output;
-                                break;
-                        }
 
-                        break;
+            // Variables
+            foreach (var variable in Variables)
+            {
+                if (!variables.Exists(variable))
+                {
+                    //In case of SmthMachine with parameters
+                    continue;
                 }
+
+                var output = variables[variable].Value;
+                _expression.Parameters[variable] = output;
             }
+        }
+
+        public float InitialValue()
+        {
+            var value = Convert.ToSingle(_expression.Evaluate());
+            if (float.IsNaN(value) || float.IsInfinity(value))
+            {
+                value = 0;
+            }
+
+            return value;
+        }
+
+
+        public virtual void Replace(string child, string value)
+        {
+            while (_words.FindIndex(ind => ind.Equals(child)) >= 0)
+            {
+                _words[_words.FindIndex(ind => ind.Equals(child))] = value;
+            }
+
+            InitializedEquation = string.Join(string.Empty, _words);
+            Variables.Remove(child);
+            _expression = new Expression(InitializedEquation);
         }
     }
 }

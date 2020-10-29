@@ -1,0 +1,539 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<xmile version="1.0" xmlns="http://docs.oasis-open.org/xmile/ns/XMILE/v1.0">
+  <header>
+    <name>Fliers</name>
+    <options>
+      <uses_outputs />
+    </options>
+    <product version="1.0">Hand Coded XMILE from Strategic Modelling and Business Dynamics book</product>
+  </header>
+  <sim_specs method="Euler" time_units="Years" >
+    <start>1996</start>
+    <stop>2020</stop>
+    <dt>0.0625</dt>
+  </sim_specs>
+  <model>
+    <variables>
+      <aux name="Average\nLifetime\nof_Field">
+        <eqn>10 {years}</eqn>
+      </aux>
+      <aux name="Average\nSize_of_Field">
+        <doc>It is not strictly necessary to know the average size of a field in order to calculate profitability -- the number &apos;1000&apos; cancels out.  But the concept of field size clarifies the steps of calculation.</doc>
+        <eqn>1000 {Millions of barrels}</eqn>
+      </aux>
+      <aux name="Benchmark\nDemand">
+        <doc>The long-term underlying demand for oil that changes only gradually as energy consuming devices are replaced.</doc>
+        <eqn>SMTH1(Base_Demand_for_Oil,10)</eqn>
+      </aux>
+      <aux name="Benchmark\nPrice">
+        <doc>The benchmark price against which shocks in oil price are guaged.  A 4-year average of ExpectedOilPrice.</doc>
+        <eqn>SMTH1(Oil_Price,4)</eqn>
+      </aux>
+      <aux name="Call_on_Cartel">
+        <eqn>Demand__for_Oil-Independents_Production {millions of barrels of oil per day}</eqn>
+      </aux>
+      <flow name="Capacity\nInitiation">
+        <doc>Approvals to add new capacity, measured in millions of barrels per day per year.  CapexOptimism modifies the baseline approvals calculated by project appraisal methods.</doc>
+        <eqn>Independents_Capacity*Viable_Fractional_Increase_in_Capacity*Capex_Optimism</eqn>
+        <scale min="-4" max="16" />
+      </flow>
+      <flow name="Capacity\nLoss_From\nDepletion">
+        <eqn>Independents_Capacity/Average_Lifetime_of_Field</eqn>
+      </flow>
+      <aux name="Capex_Optimism">
+        <doc>CapexBias represents the climate of opinion among top managers in the independents about the desireability of capacity expansion. &apos;&gt;1&apos; represents optimism, and &apos;&lt;1&apos; caution.</doc>
+        <eqn>0.6</eqn>
+      </aux>
+      <aux name="Cartel\nCapacity">
+        <eqn>Swing_Producer_Capacity+Opportunists_Capacity {Millions of barrels per day}</eqn>
+      </aux>
+      <aux name="Cartel_Production">
+        <eqn>Swing_Producer_Production+Opportunists_Production</eqn>
+      </aux>
+      <aux name="Cartel_Quota_Bias">
+        <doc>CartelQuotaBias represents the cartel&apos;s tendency to withhold production.  When the bias is -.05 then the cartel sets a quota that withholds 5% of the call.</doc>
+        <eqn>-0.05</eqn>
+      </aux>
+      <aux name="Cartel\nQuota_Imbalance">
+        <doc>The amount by which the &apos;adjusted&apos;  call on the cartel differs from CartelAgreedQuota.</doc>
+        <eqn>(Call_on_Cartel*(1+Cartel_Quota_Bias)-Cartel_Agreed_Quota)</eqn>
+      </aux>
+      <flow name="Change_in\nCartel_Quota">
+        <eqn>(Cartel_Quota_Imbalance/Time_to_Adjust_Cartel_Quota)</eqn>
+      </flow>
+      <flow name="Change_in\nDemand">
+        <eqn>(Indicated_Demand-Base_Demand_for_Oil)/Time_to_Adjust_Demand</eqn>
+      </flow>
+      <flow name="Change_in\nOil_Price">
+        <doc>Converts the monthly fractional change in the graph function to an annual rate of price change.</doc>
+        <eqn>Market_Oil_Price*Fractional_Change_in_Price*12</eqn>
+      </flow>
+      <flow name="Change_in\nOpportunists_Capacity">
+        <eqn>(Opportunists_Desired_Capcty-Opportunists_Capacity)/Time_to_Adjust_Capacity</eqn>
+      </flow>
+      <flow name="Change_in\nSwing_Production">
+        <eqn>IF (SwingMode=1) THEN ((Indicated_Swing_Production-Swing_Producer_Production)/Time_to_Adjust_Production)  ELSE (Swing_Producer_Production*Punitive_Production_Expansion*12)</eqn>
+      </flow>
+      <aux name="Current_Development\nCost_per_Barrel">
+        <eqn>Development_Cost_Per_Barrel_as_seen_in1995*Effect_of_Technology_on_Cost_as_seen_in_1995</eqn>
+      </aux>
+      <aux name="Demand_\nfor_Oil">
+        <eqn>Base_Demand_for_Oil</eqn>
+      </aux>
+      <aux name="Demand\nMinus_Production">
+        <eqn>SMTH1((Demand__for_Oil-Total_Production),.25) {millions of barrels per day}</eqn>
+        <scale min="-32" max="12" />
+      </aux>
+      <flow name="Development">
+        <eqn>Capacity_Initiation*360*Average_Lifetime_of_Field&#x0A;{millions of barrels per year}</eqn>
+      </flow>
+      <aux name="Development\nCost">
+        <doc>The average development cost of an &apos;average size&apos; field.</doc>
+        <eqn>Average_Size_of_Field*Current_Development_Cost_per_Barrel {millions of dollars}</eqn>
+      </aux>
+      <aux name="Effect_of_Global_Economy_\nand_Environment_on_Demand">
+        <doc>The net effect of GDP growth technology improvements and environmental issues on oil demand.  &apos;0&apos; means no change in energy intensity,  -.1 means  continual pressure to reduce energy intensity by 10%.</doc>
+        <eqn>0.1</eqn>
+      </aux>
+      <aux name="Fractional\nLoss_of\nCapacity">
+        <eqn>1/Average_Lifetime_of_Field</eqn>
+      </aux>
+      <aux name="Fraction_of_Cheaters">
+        <doc>The fraction of opportunist producers that &apos;cheat&apos; by using their excess capacity to produce over quota.</doc>
+        <eqn>0.5</eqn>
+      </aux>
+      <aux name="Hurdle_Rate">
+        <eqn>0.15</eqn>
+        <scale min="0" max="0.80000000000000004" />
+      </aux>
+      <aux name="Independents\nProduction">
+        <doc>Independents produce at capacity.</doc>
+        <eqn>Independents_Capacity</eqn>
+      </aux>
+      <flow name="Independents\nRevenue">
+        <doc>Initial value is (26*360*15)/1000 = 140.400</doc>
+        <eqn>(Independents_Production*360*Market_Oil_Price)/1000 {billions of $ per year}</eqn>
+        <scale min="0" max="800" />
+      </flow>
+      <aux name="Indicated\nDemand">
+        <eqn>Benchmark_Demand*(1+Effect_of_Global_Economy__and_Environment_on_Demand)*Effect_of_Price__on_Demand</eqn>
+      </aux>
+      <aux name="Indicated\nSwing_Production">
+        <eqn>Swing_Quota*Production_Pressure_from_Marker_Price</eqn>
+      </aux>
+      <aux name="Industry\nCumulative_Revenue">
+        <eqn>Opportunists_Cumulative_Revenue+Swing_Producer_Cumulative_Revenue+Independents_Cumulative_Revenue</eqn>
+      </aux>
+      <aux name="Industry\nRevenue" flow_concept="true">
+        <eqn>Opportunists_Revenue+Swing_Producer_Revenue+Independents_Revenue</eqn>
+        <scale min="0" max="800" />
+      </aux>
+      <aux name="Intended\nMarker_Price">
+        <doc>The marker price the Swing Producer would like to see. Based on a 2 year average of MarketOilPrice adjusted by the OilPriceBias and by the CartelQuotaBias.</doc>
+        <eqn>SMTH1(Market_Oil_Price,2)*(1+Oil_Price_Bias)/(1+Cartel_Quota_Bias)</eqn>
+      </aux>
+      <aux name="Margin_per_Barrel">
+        <eqn>Expected_Future_Oil_Price-Current_Development_Cost_per_Barrel</eqn>
+      </aux>
+      <aux name="Minimum_Quota_Share">
+        <doc>The Swing Producer&apos;s minimum acceptable market share.</doc>
+        <eqn>0.08+STEP(0,1993)</eqn>
+      </aux>
+      <aux name="Marker_Minus\nMarket_Price">
+        <doc>Indicates the pressure on the Swing Producer&apos;s production from the need to keep market price equal to the marker price.</doc>
+        <eqn>(Intended_Marker_Price-Market_Oil_Price)</eqn>
+      </aux>
+      <aux name="Net_Capacity\nInitiation" flow_concept="true">
+        <eqn>Capacity_Initiation-Capacity_Loss_From_Depletion</eqn>
+        <scale min="-4" max="16" />
+      </aux>
+      <aux name="Oil_Price">
+        <eqn>Market_Oil_Price</eqn>
+      </aux>
+      <aux name="Oil_Price_Bias">
+        <doc>A factor representing the amount by which the Swing Producer would like to increase market oil price.</doc>
+        <eqn>0</eqn>
+      </aux>
+      <flow name="Onstream\nRate">
+        <doc>The rate at which new capacity comes online. There is a 4 year lag in construction.</doc>
+        <eqn>Capacity_in_Construction/4</eqn>
+      </flow>
+      <aux name="Opportunists\nProduction">
+        <doc>Opportunists produce at quota (or at capacity limit), and in addition gamble on using a fraction of surplus capacity.</doc>
+        <eqn>MIN(Opportunists_Quota,Opportunists_Capacity)+(Opportunists_Capacity_Over_Quota*Opportunists_Surplus__Utilization)</eqn>
+        <scale min="0" max="40" />
+      </aux>
+      <aux name="Opportunists\nQuota">
+        <eqn>Cartel_Agreed_Quota*Opportunists_Negotiated_Share_of_Quota</eqn>
+      </aux>
+      <flow name="Opportunists\nRevenue">
+        <doc>Initial value is (17*360*15)/1000 = 91.800</doc>
+        <eqn>(Opportunists_Production*360*Market_Oil_Price)/1000 {billions of $ per year}</eqn>
+        <scale min="0" max="800" />
+      </flow>
+      <aux name="Opportunists\nCapacity_Over_Quota">
+        <doc>The amount by which Opportunists&apos; capacity exceeds quota.</doc>
+        <eqn>MAX((Opportunists_Capacity-Opportunists_Quota),0) {millions of barrels per day}</eqn>
+      </aux>
+      <aux name="Opportunists\nCapacity_Bias">
+        <doc>Represents the Opportunists intended reserve capacity above quota.  When the reserve is .1, the Opportunists aim for capacity that is 10% higher than quota.</doc>
+        <eqn>0.1</eqn>
+      </aux>
+      <aux name="Opportunists\nDesired\nCapcty">
+        <doc>Assumes that opportunists want to expand their capacity above quota, and use the &apos;excess&apos; to improve their bargaining position in quota negotiations.</doc>
+        <eqn>Opportunists_Quota*(1+Opportunists_Capacity_Bias) {millions of barrels per day}</eqn>
+      </aux>
+      <aux name="Opportunists\nFraction_of\nMaximum_Capacity">
+        <eqn>Opportunists_Capacity/Opportunists_Maximum_Feasible_Capacity</eqn>
+      </aux>
+      <aux name="Opportunists\nMaximum\nFeasible_Capacity">
+        <doc>The maximum capacity the opportunists could achieve.</doc>
+        <eqn>35 {millions of barrels per day}</eqn>
+      </aux>
+      <aux name="Opportunists\nNegotiated\nShare_of_Quota">
+        <doc>Quota is allocated in proportion to capacity.</doc>
+        <eqn>Opportunists_Capacity/Cartel_Capacity</eqn>
+      </aux>
+      <aux name="Opportunists_Surplus_\nUtilization">
+        <eqn>SMTH1(Opportunists_Desired_Surplus_Utilization,Time_to_Adjust_Utilization)*Fraction_of_Cheaters</eqn>
+      </aux>
+      <aux name="Price_Gap">
+        <eqn>Market_Oil_Price-Intended_Marker_Price</eqn>
+      </aux>
+      <aux name="Price\nRatio">
+        <eqn>Oil_Price/Benchmark_Price</eqn>
+      </aux>
+      <aux name="Profitability_of\nNew_Capacity">
+        <doc>The profitability is Total Profit/Development costs with a deduction for taxation.</doc>
+        <eqn>(1-Tax_Rate)*(Expected_Future_Oil_Price-Current_Development_Cost_per_Barrel)*Average_Size_of_Field/Development_Cost</eqn>
+        <scale min="0" max="0.80000000000000004" />
+      </aux>
+      <aux name="Profitability\nRatio">
+        <eqn>Profitability_of_New_Capacity/(Hurdle_Rate)</eqn>
+      </aux>
+      <aux name="Punitive_Price">
+        <doc>The minimum price that the Swing Producer will accept when operating in punitive mode.</doc>
+        <eqn>8 {dollars per barrel}</eqn>
+      </aux>
+      <aux name="Punitive\nPrice_Cut">
+        <doc>The  extent of price cut the Swing Producer can tolerate when operating in punitive mode.</doc>
+        <eqn>Market_Oil_Price-Punitive_Price</eqn>
+      </aux>
+      <aux name="Reference_Line">
+        <eqn>0</eqn>
+        <scale min="-4" max="16" />
+      </aux>
+      <aux name="SwingMode">
+        <doc>Sets the Swing Producer&apos;s production behaviour.  SwingMode = 1 represents normal swing behaviour, and 0 represents punitive behaviour.</doc>
+        <eqn>IF(Swing_Producer_Call_Share&gt;=Minimum_Quota_Share) THEN 1 ELSE 0</eqn>
+      </aux>
+      <aux name="Swing_Producer\nCall_Share">
+        <doc>CallShare is the signal the Swing Producer looks at when deciding whether to switch to punishment mode.</doc>
+        <eqn>SMTH1((Swing_Quota/Demand__for_Oil),.5)</eqn>
+      </aux>
+      <aux name="Swing\nProducer\nCapacity">
+        <doc>The swing producers capacity for the purpose of bargaining in quota allocation. Based on average production over the past  year.</doc>
+        <eqn>SMTH1(Swing_Producer_Production,1)</eqn>
+      </aux>
+      <flow name="Swing_Producer\nRevenue">
+        <doc>Initial value is (7*360*15)/1000 = 37.800</doc>
+        <eqn>(Swing_Producer_Production*360*Market_Oil_Price)/1000 {billions of $ per year}</eqn>
+        <scale min="0" max="800" />
+      </flow>
+      <aux name="Swing\nQuota">
+        <eqn>Cartel_Agreed_Quota-Opportunists_Quota</eqn>
+      </aux>
+      <aux name="Tax_Rate">
+        <eqn>0.7</eqn>
+      </aux>
+      <aux name="Time_to\nAdjust_Demand">
+        <doc>The average number of years for demand to adjust to price as a result of substitution and changes in energy intensity.  </doc>
+        <eqn>2.5 {years}</eqn>
+      </aux>
+      <aux name="Time_to_Adjust\nCapacity">
+        <doc>It takes, on average, 2 years for opportunists to add new production capacity. As capacity approaches the limit, time to adjust becomes much higher.</doc>
+        <eqn>2*Effect_of_Capacity_Limit_on_Time_to_Adjust</eqn>
+      </aux>
+      <aux name="Time_to_Adjust\nProduction">
+        <eqn>.25 {Years}</eqn>
+      </aux>
+      <aux name="Time_to_Adjust\nCartel_Quota">
+        <doc> Represents the interval of time between cartel meetings.</doc>
+        <eqn>.5 {years}</eqn>
+      </aux>
+      <aux name="Time_to_Adjust\nUtilization">
+        <doc>Time for Opportunists to adjust their utilization of surplus capacity.</doc>
+        <eqn>.5 {years}</eqn>
+      </aux>
+      <aux name="Total\nProduction">
+        <eqn>Swing_Producer_Production+Independents_Production+Opportunists_Production</eqn>
+      </aux>
+      <aux name="Expected\nFuture_Oil_Price">
+        <eqn>SMTH1(Market_Oil_Price,1) </eqn>
+      </aux>
+      <aux name="Year">
+        <eqn>TIME</eqn>
+      </aux>
+      <stock name="Base_Demand\nfor_Oil">
+        <eqn>67.5 {million barrels per day}</eqn>
+        <label>Base_Demand_for_Oil</label>
+        <inflow>Change_in_Demand</inflow>
+      </stock>
+      <stock name="Capacity_in\nConstruction">
+        <eqn>16 {millions of barrels per day}</eqn>
+        <inflow>Capacity_Initiation</inflow>
+        <outflow>Onstream_Rate</outflow>
+      </stock>
+      <stock name="Cartel\nAgreed_Quota">
+        <eqn>27.5 {Millions of barrels per day}</eqn>
+        <inflow>Change_in_Cartel_Quota</inflow>
+      </stock>
+      <stock name="Independents\nCapacity">
+        <doc>Independents current capacity.</doc>
+        <eqn>40 {millions of barrels per day}</eqn>
+        <scale min="0" max="40" />
+        <inflow>Onstream_Rate</inflow>
+        <outflow>Capacity_Loss_From_Depletion</outflow>
+      </stock>
+      <stock name="Independents\nCumulative_Revenue">
+        <eqn>0 {billions of $}</eqn>
+        <inflow>Independents_Revenue</inflow>
+      </stock>
+      <stock name="Independents\nUndeveloped\nReserves">
+        <eqn>471200  {millions of Barrels of discovered Oil}</eqn>
+        <inflow>Adoption_of_Russian_Reserves</inflow>
+        <outflow>Development</outflow>
+      </stock>
+      <stock name="Market_Oil_Price">
+        <eqn>16.1 {$ per Barrel}</eqn>
+        <scale min="0" max="60" />
+        <inflow>Change_in_Oil_Price</inflow>
+      </stock>
+      <stock name="Opportunists\nCumulative_Revenue">
+        <eqn>0 {billions of $}</eqn>
+        <inflow>Opportunists_Revenue</inflow>
+      </stock>
+      <stock name="Opportunists\nCapacity">
+        <eqn>18.4 {Millions of barrels per day}</eqn>
+        <inflow>Change_in_Opportunists_Capacity</inflow>
+      </stock>
+      <stock name="Swing_Producer\nProduction">
+        <doc>For initial balance set to CallOnCartel-OpptCapcty = (50-26) - 17 = 7 </doc>
+        <eqn>9.1 {Millions of barrels per day}</eqn>
+        <scale min="0" max="40" />
+        <label>Swing_Producer_Production</label>
+        <inflow>Change_in_Swing_Production</inflow>
+      </stock>
+      <stock name="Swing_Producer_Cumulative_Revenue">
+        <eqn>0 {billions of $}</eqn>
+        <inflow>Swing_Producer_Revenue</inflow>
+      </stock>
+      <aux name="Effect_of\nCapacity_Limit_on\nTime_to_Adjust">
+        <eqn>Opportunists_Fraction_of_Maximum_Capacity</eqn>
+        <gf>
+          <yscale min="0" max="10" />
+          <xpts>0.90000000000000002,0.91000000000000003,0.92000000000000004,0.93000000000000005,0.94000000000000006,0.94999999999999996,0.95999999999999996,0.96999999999999997,0.97999999999999998,0.98999999999999999,1</xpts>
+          <ypts>1,1,2,4,6,8,9,10,10,10,10</ypts>
+        </gf>
+      </aux>
+      <aux name="Effect_of_Price_\non_Demand">
+        <eqn>Price_Ratio</eqn>
+        <gf>
+          <yscale min="0" max="2" />
+          <xpts>0,0.5,1,1.5,2,2.5,3,3.5,4,4.5,5</xpts>
+          <ypts>1.8,1.3,1,0.80000000000000004,0.65000000000000002,0.5,0.45000000000000001,0.40000000000000002,0.40000000000000002,0.40000000000000002,0.40000000000000002</ypts>
+        </gf>
+      </aux>
+      <aux name="Fractional\nChange_in_Price">
+        <eqn>Demand_Minus_Production</eqn>
+        <gf>
+          <yscale min="-0.25" max="0.25" />
+          <xpts>-10,-8,-6,-4,-2,0,2,4,6,8,10</xpts>
+          <ypts>-0.11,-0.11,-0.10000000000000001,-0.074999999999999997,-0.040000000000000001,0,0.040000000000000001,0.074999999999999997,0.10000000000000001,0.11,0.11</ypts>
+        </gf>
+      </aux>
+      <aux name="Opportunists\nDesired_Surplus\nUtilization">
+        <eqn>Price_Gap</eqn>
+        <gf>
+          <yscale min="0" max="1" />
+          <xpts>-5,-4.5,-4,-3.5,-3,-2.5,-2,-1.5,-1,-0.5,0</xpts>
+          <ypts>0,0,0,0.014999999999999999,0.040000000000000001,0.070000000000000007,0.14499999999999999,0.27500000000000002,0.54000000000000004,0.92000000000000004,1</ypts>
+        </gf>
+      </aux>
+      <aux name="Production_Pressure\nfrom_Marker_Price">
+        <eqn>Marker_Minus_Market_Price</eqn>
+        <gf>
+          <yscale min="0" max="2" />
+          <xpts>-10,-8,-6,-4,-2,0,2,4,6,8,10</xpts>
+          <ypts>1.8,1.5,1.3,1.2,1.1000000000000001,1,0.90000000000000002,0.80000000000000004,0.71999999999999997,0.67000000000000004,0.65000000000000002</ypts>
+        </gf>
+      </aux>
+      <aux name="Punitive\nProduction\nExpansion">
+        <eqn>Punitive_Price_Cut</eqn>
+        <gf>
+          <yscale min="0" max="0.2" />
+          <xpts>0,1,2,3,4,5,6,7,8,9,10</xpts>
+          <ypts>0,0.050000000000000003,0.080000000000000002,0.095000000000000001,0.10000000000000001,0.10000000000000001,0.10000000000000001,0.10000000000000001,0.10000000000000001,0.10000000000000001,0.10000000000000001</ypts>
+        </gf>
+      </aux>
+      <aux name="Viable_Fractional\nIncrease_in_Capacity">
+        <eqn>Profitability_Ratio</eqn>
+        <gf>
+          <yscale min="0" max="0.5" />
+          <xpts>0,0.10000000000000001,0.20000000000000001,0.29999999999999999,0.40000000000000002,0.5,0.59999999999999998,0.69999999999999996,0.80000000000000004,0.90000000000000002,1,1.1000000000000001,1.2,1.3,1.3999999999999999,1.5,1.6000000000000001,1.7,1.8,1.8999999999999999,2</xpts>
+          <ypts>0,0,0,0,0,0,0,0.01,0.02,0.040000000000000001,0.059999999999999998,0.080000000000000002,0.10000000000000001,0.12,0.14999999999999999,0.17999999999999999,0.20000000000000001,0.22,0.23999999999999999,0.25,0.25</ypts>
+        </gf>
+      </aux>
+      <aux name="Development\nCost_Per_Barrel_as_seen_in1995">
+        <eqn>Independents_Undeveloped_Reserves</eqn>
+        <gf>
+          <yscale min="0" max="500" />
+          <xpts>10000,30000,50000,70000,90000,110000,130000,150000,170000,190000,210000,230000,250000,270000,290000,310000,330000,350000,370000,390000,410000,430000,450000,470000,490000,510000,530000,550000,570000,590000,610000,630000,650000,670000,690000,710000</xpts>
+          <ypts>500,24.800000000000001,22,21,20.399999999999999,20,19.199999999999999,19,18.699999999999999,18.375,17.899999999999999,17.625,17.199999999999999,16.625,16.199999999999999,15.6,15.199999999999999,15,14.699999999999999,14.199999999999999,14,13.5,12.9,11.699999999999999,10.300000000000001,9,8.125,7.375,6.625,6.125,5.875,5.625,5.5,5.25,5,4.875</ypts>
+        </gf>
+      </aux>
+      <stock name="Risky_Russian\nReserves">
+        <eqn>225100-Secure_Russian_Reserves {millions of barrels of risky undeveloped reserves in Russia}</eqn>
+        <outflow>Addition_of_Russian_Reserves</outflow>
+        <non_negative />
+      </stock>
+      <stock name="Secure_Russian\nReserves">
+        <eqn>15100 {millions of barrels of secure undeveloped reserves in Russia}</eqn>
+        <inflow>Addition_of_Russian_Reserves</inflow>
+        <outflow>Adoption_of_Russian_Reserves</outflow>
+      </stock>
+      <flow name="Adoption_of_Russian\nReserves">
+        <eqn>Secure_Russian_Reserves/Time_to__Agree_Rights {millions of barrels per year}</eqn>
+        <non_negative />
+      </flow>
+      <aux name="Time_to_\nAgree_Rights">
+        <eqn>3  {years}</eqn>
+      </aux>
+      <flow name="Addition_of\nRussian\nReserves">
+        <eqn>Risky_Russian_Reserves/Time_to_Build__Trust_in_Russia  {millions of barrels per year}</eqn>
+        <non_negative />
+      </flow>
+      <aux name="Time_to_Build_\nTrust_in_Russia">
+        <eqn>20  {years - time to establish a climate of trust and cooperation in Russia  essential for commercial  investment}</eqn>
+      </aux>
+      <aux name="Effect_of_Technology\non_Cost_as_seen_in_1995">
+        <eqn>Year</eqn>
+        <gf>
+          <yscale min="0" max="1" />
+          <xpts>1996,1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020</xpts>
+          <ypts>1,0.97599999999999998,0.95199999999999996,0.92900000000000005,0.90600000000000003,0.88400000000000001,0.86199999999999999,0.84099999999999997,0.82099999999999995,0.80000000000000004,0.78100000000000003,0.76200000000000001,0.74299999999999999,0.72499999999999998,0.70799999999999996,0.68999999999999995,0.67400000000000004,0.65800000000000003,0.64100000000000001,0.625,0.60999999999999999,0.59499999999999997,0.58099999999999996,0.56699999999999995,0.55300000000000005</ypts>
+        </gf>
+      </aux>
+      <group name="Price_and_Demand">
+        <entity name="Benchmark_Demand" />
+        <entity name="Benchmark_Price" />
+        <entity name="Change_in_Demand" />
+        <entity name="Demand__for_Oil" />
+        <entity name="Effect_of_Global_Economy__and_Environment_on_Demand" />
+        <entity name="Indicated_Demand" />
+        <entity name="Time_to_Adjust_Demand" />
+        <entity name="Base_Demand_for_Oil" />
+        <entity name="Change_in_Oil_Price" />
+        <entity name="Demand_Minus_Production" />
+        <entity name="Oil_Price" />
+        <entity name="Price_Ratio" />
+        <entity name="Total_Production" />
+        <entity name="Market_Oil_Price" />
+        <entity name="Effect_of_Price__on_Demand" />
+        <entity name="Fractional_Change_in_Price" />
+      </group>
+      <group name="OPEC_Quota_Setting">
+        <entity name="Cartel_Capacity" />
+        <entity name="Opportunists_Negotiated_Share_of_Quota" />
+        <entity name="Swing_Producer_Capacity" />
+        <entity name="Call_on_Cartel" />
+        <entity name="Cartel_Quota_Bias" />
+        <entity name="Cartel_Quota_Imbalance" />
+        <entity name="Change_in_Cartel_Quota" />
+        <entity name="Opportunists_Quota" />
+        <entity name="Swing_Quota" />
+        <entity name="Cartel_Agreed_Quota" />
+        <entity name="Time_to_Adjust_Cartel_Quota" />
+        <entity name="Cartel_Production" />
+      </group>
+      <group name="Swing_Producer">
+        <entity name="Indicated_Swing_Production" />
+        <entity name="Intended_Marker_Price" />
+        <entity name="Marker_Minus_Market_Price" />
+        <entity name="Oil_Price_Bias" />
+        <entity name="Production_Pressure_from_Marker_Price" />
+        <entity name="Punitive_Price" />
+        <entity name="Punitive_Price_Cut" />
+        <entity name="Punitive_Production_Expansion" />
+        <entity name="Change_in_Swing_Production" />
+        <entity name="Minimum_Quota_Share" />
+        <entity name="SwingMode" />
+        <entity name="Swing_Producer_Call_Share" />
+        <entity name="Time_to_Adjust_Production" />
+        <entity name="Swing_Producer_Production" />
+      </group>
+      <group name="Revenue_Calculations">
+        <entity name="Industry_Cumulative_Revenue" />
+        <entity name="Swing_Producer_Revenue" />
+        <entity name="Swing_Producer_Cumulative_Revenue" />
+        <entity name="Industry_Revenue" />
+        <entity name="Reference_Line" />
+        <entity name="Opportunists_Revenue" />
+        <entity name="Opportunists_Cumulative_Revenue" />
+        <entity name="Independents_Revenue" />
+        <entity name="Independents_Cumulative_Revenue" />
+      </group>
+      <group name="Opportunists">
+        <entity name="Opportunists_Production" />
+        <entity name="Fraction_of_Cheaters" />
+        <entity name="Opportunists_Surplus__Utilization" />
+        <entity name="Time_to_Adjust_Utilization" />
+        <entity name="Change_in_Opportunists_Capacity" />
+        <entity name="Opportunists_Capacity_Over_Quota" />
+        <entity name="Opportunists_Capacity_Bias" />
+        <entity name="Opportunists_Desired_Capcty" />
+        <entity name="Time_to_Adjust_Capacity" />
+        <entity name="Opportunists_Capacity" />
+        <entity name="Effect_of_Capacity_Limit_on_Time_to_Adjust" />
+        <entity name="Opportunists_Fraction_of_Maximum_Capacity" />
+        <entity name="Opportunists_Maximum_Feasible_Capacity" />
+        <entity name="Price_Gap" />
+        <entity name="Opportunists_Desired_Surplus_Utilization" />
+      </group>
+      <group name="Independents">
+        <entity name="Capex_Optimism" />
+        <entity name="Risky_Russian_Reserves" />
+        <entity name="Capacity_Initiation" />
+        <entity name="Development" />
+        <entity name="Onstream_Rate" />
+        <entity name="Capacity_in_Construction" />
+        <entity name="Independents_Capacity" />
+        <entity name="Independents_Undeveloped_Reserves" />
+        <entity name="Secure_Russian_Reserves" />
+        <entity name="Adoption_of_Russian_Reserves" />
+        <entity name="Time_to__Agree_Rights" />
+        <entity name="Addition_of_Russian_Reserves" />
+        <entity name="Time_to_Build__Trust_in_Russia" />
+        <entity name="Capacity_Loss_From_Depletion" />
+        <entity name="Independents_Production" />
+        <entity name="Average_Size_of_Field" />
+        <entity name="Current_Development_Cost_per_Barrel" />
+        <entity name="Development_Cost" />
+        <entity name="Hurdle_Rate" />
+        <entity name="Margin_per_Barrel" />
+        <entity name="Net_Capacity_Initiation" />
+        <entity name="Profitability_of_New_Capacity" />
+        <entity name="Profitability_Ratio" />
+        <entity name="Tax_Rate" />
+        <entity name="Expected_Future_Oil_Price" />
+        <entity name="Viable_Fractional_Increase_in_Capacity" />
+        <entity name="Development_Cost_Per_Barrel_as_seen_in1995" />
+        <entity name="Average_Lifetime_of_Field" />
+        <entity name="Fractional_Loss_of_Capacity" />
+        <entity name="Effect_of_Technology_on_Cost_as_seen_in_1995" />
+        <entity name="Year" />
+      </group>
+    </variables>
+  </model>
+</xmile>

@@ -54,25 +54,22 @@ namespace Symu.SysDyn.Model
             Units = Units.CreateInstanceFromEquation(eqn);
             // intentionally after Range assignment
             Equation = EquationFactory.CreateInstance(eqn, range, out var value);
-            SetValueWithGraphicalAndScale(value);
+            AdjustValue(value);
             Initialize();
             SetChildren();
         }
         /// <summary>
         /// Adjust Value when a graphical function is defined
-        /// And when a scale is setted
         /// </summary>
         /// <param name="value"></param>
-        private void SetValueWithGraphicalAndScale(float value)
+        protected virtual void AdjustValue(float value)
         {
             if (float.IsNaN(value) || float.IsInfinity(value))
             {
                 throw new ArgumentOutOfRangeException();
             }
             // Graphical function
-            value = _graphicalFunction?.GetOutputWithBounds(value) ?? value;
-            // Scale
-            Value = Scale.GetOutputInsideRange(value);
+            Value = _graphicalFunction?.GetOutput(value) ?? value;
         }
 
         public float Value { get; set; }
@@ -121,7 +118,7 @@ namespace Symu.SysDyn.Model
             }
 
             var eval = Equation.Evaluate(variables, simulation);
-            SetValueWithGraphicalAndScale(eval);
+            AdjustValue(eval);
             Updated = true;
         }
 
@@ -134,12 +131,12 @@ namespace Symu.SysDyn.Model
         /// <summary>
         ///     Input range
         /// </summary>
-        public Range Range { get; set; } = new Range(false);
+        public Range Range { get; set; } = new Range();
 
         /// <summary>
         ///     Output scale
         /// </summary>
-        public Range Scale { get; set; } = new Range(false);
+        public Range Scale { get; set; } = new Range();
 
         public bool TryOptimize(bool setInitialValue)
         {
@@ -162,7 +159,7 @@ namespace Symu.SysDyn.Model
                     Equation.Replace(Name, Value.ToString(CultureInfo.InvariantCulture));
                 }
                 float value = Equation.InitialValue();
-                SetValueWithGraphicalAndScale(value);
+                AdjustValue(value);
             }
 
             Equation = null;
