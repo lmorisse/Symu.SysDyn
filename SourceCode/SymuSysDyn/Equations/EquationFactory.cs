@@ -122,7 +122,8 @@ namespace Symu.SysDyn.Equations
             // Only variables without brackets
             if (variables.Any())
             {
-                return new SimpleEquation(eqn, initializedEquation, variables, words, range);
+                return new ComplexEquation(eqn, initializedEquation, functions, variables, words, range);
+                //return new SimpleEquation(eqn, initializedEquation, variables, words, range);
             }
             // Only constants
             value = sumEval;
