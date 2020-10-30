@@ -73,6 +73,7 @@ namespace Symu.SysDyn.Simulation
             SetStocksEquations();
             StoreReferenceVariables();
             Simulation.Clear();
+            Results.Clear();
         }
 
         private void StoreReferenceVariables()

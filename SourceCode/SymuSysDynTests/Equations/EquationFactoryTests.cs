@@ -162,7 +162,7 @@ namespace SymuSysDynTests.Equations
         [TestMethod()]
         public void GetParametersTest5()
         {
-            const string function = @"SMTH1((Junior_doctor&apos;s__base_salary*Annual__Pay_Change),.5)";
+            const string function = @"SMTH1((Junior_doctor's__base_salary*Annual__Pay_Change),.5)";
             _equation = EquationFactory.CreateInstance(function, out _);
             Assert.AreEqual(2, _equation.Variables.Count);
             Assert.AreEqual("Junior_doctors_base_salary", _equation.Variables[0]);
