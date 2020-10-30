@@ -1,0 +1,527 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<xmile version="1.0" xmlns="http://docs.oasis-open.org/xmile/ns/XMILE/v1.0">
+  <header>
+    <name>Fliers</name>
+    <options>
+      <uses_outputs />
+    </options>
+    <product version="1.0">Hand Coded XMILE from Strategic Modelling and Business Dynamics book</product>
+  </header>
+  <sim_specs method="Euler" time_units="Years" >
+    <start>0</start>
+    <stop>15</stop>
+    <dt>0.25</dt>
+  </sim_specs>
+  <dimensions>
+    <dim name="Dim_Name_1" size="1" />
+  </dimensions>
+  <model_units>
+    <units name="Dimensionless">
+      <eqn>1</eqn>
+      <alias>dmnl</alias>
+      <alias>unitless</alias>
+    </units>
+    <units name="Hours">
+      <eqn />
+      <alias>hr</alias>
+      <alias>hour</alias>
+    </units>
+    <units name="Weeks">
+      <eqn />
+      <alias>wk</alias>
+      <alias>week</alias>
+    </units>
+    <units name="Years">
+      <eqn />
+      <alias>yr</alias>
+      <alias>year</alias>
+    </units>
+    <units name="Per Year">
+      <eqn>1/Years</eqn>
+    </units>
+  </model_units>
+  <model>
+    <variables>
+      <stock name="Medical_Students">
+        <doc>Reference: Department of Health Census September 2002&#x0D;&#x0D;Reference: Review Body on Doctors and Dentists Renumeration 33rd Report 2004&#x0D;</doc>
+        <eqn>25000</eqn>
+        <inflow>Rate_of__Medical_Student_Recruitment</inflow>
+        <outflow>Rate_of__Medical_Student_Training</outflow>
+        <non_negative />
+        <units>doctors</units>
+      </stock>
+      <stock name="Junior_\nDoctors">
+        <doc>Stock of all Post-Graduation Junior doctors (Pre- registration HOuse officers, Senior House officers, Registrars and Specialist Registrars) undergoing specialist training.&#x0D;&#x0D;Reference: Department of Health Census September 2002</doc>
+        <eqn>39000</eqn>
+        <inflow>Rate_of__Medical_Student_Training</inflow>
+        <outflow>Rate_of__Junior_Doctor_Training</outflow>
+        <outflow>Rate_of_Non_Hospital_Appointments</outflow>
+        <outflow>Junior_Doctor_Attrition</outflow>
+        <non_negative />
+        <units>doctors</units>
+      </stock>
+      <stock name="Specialist_\nDoctors">
+        <doc>Reference: Department of Health Census September 2002</doc>
+        <eqn>31790</eqn>
+        <inflow>Rate_of__Junior_Doctor_Training</inflow>
+        <outflow>Rate_of_Specialist_Doctor_Retirement</outflow>
+        <non_negative />
+        <units>doctors</units>
+      </stock>
+      <flow name="Rate_of_\nMedical_Student\nRecruitment">
+        <doc>Annual intake of medical students from secondary school and mature student populations is strictly governed by Government quotas. &#x0D;The number of medical student places offered can only be increased by building further capacity, which has already occured between 1997-2005 (55% increase from 1997) to approximately 6000 medical students per year &#x0D;&#x0D;&#x0D;Reference: Medical schools delivering doctors of the future, Department of Health Report March 2004&#x0D;</doc>
+        <eqn>6000</eqn>
+        <scale min="0" max="10000" />
+        <non_negative />
+        <units>doctors/yr</units>
+      </flow>
+      <flow name="Rate_of_\nMedical_Student\nTraining">
+        <doc>United Kingdom Medical Training takes 5 years</doc>
+        <eqn>Medical_Students/Duration_of_Medical_School_Training</eqn>
+        <non_negative />
+        <units>doctors/yr</units>
+      </flow>
+      <flow name="Rate_of_\nJunior_Doctor\nTraining">
+        <doc>Post-graduate training consists of a mandetory 1 year as a Pre-registration House officer, an average of 3 years as a Senior House officer and Calman Specialist Registrar training which is currently a standardised 5 years, but dependent on the availability of training during the working week (affected by the average duration of Specialist Training). &#x0D;Currently the minimum total average Specialist training from Graduation is 9 years.</doc>
+        <eqn>Junior__Doctors/Duration_of__Specialist__Training</eqn>
+        <non_negative />
+        <units>doctors/yr</units>
+      </flow>
+      <flow name="Rate_of\nSpecialist_Doctor\nRetirement">
+        <doc>Data showing the overall wastage rate for hospital medical consultants indicates that the rate has remained almost unchanged since 1995, and that there is no clear trend in the leaving rate for the 55-59 age group.&#x0D;&#x0D;Reference: Review Body on Doctors and Dentists Renumeration 33rd Report 2004</doc>
+        <eqn>0.063*Specialist__Doctors</eqn>
+        <non_negative />
+        <units>doctors/yr</units>
+      </flow>
+      <flow name="Rate_of\nNon_Hospital\nAppointments">
+        <doc>Non Hospital appointments consist of all those jobs that are in the Community or in General Practice and do not follow the traditional Hospital Calman Specialist training schedule.&#x0D;&#x0D;Reference: Review Body on Doctors and Dentists Renumeration 33rd Report 2004</doc>
+        <eqn>Annual_fractional__loss_to_NonHospital__Appointments*Junior__Doctors</eqn>
+        <non_negative />
+        <units>doctors/yr</units>
+      </flow>
+      <flow name="Junior_Doctor\nAttrition">
+        <doc>Percentage of Junior Doctors who leave the medical profession in the United Kingdom (excluding sebbatical periods of study or maternity leave). &#x0D;&#x0D;Reference: Trevor W Lambert, Jean M Davidson, Julie Evans &amp; Michael J Goldacre.&#x0D;Doctors&apos; reasons for rejecting initial choices of specialties as long-term&#x0D;careers. Medical Education 37: 4, 312-318&#x0D;- suggests between 1-9.4% leave or intend to leave medicine over 8 years since qualification.&#x0D;&#x0D;Reference: Review Body on Doctors and Dentists Renumeration 33rd Report 2004</doc>
+        <eqn>Annual_Attrition__Fraction*Junior__Doctors*(1/Morale)</eqn>
+        <non_negative />
+        <units>doctors/yr</units>
+      </flow>
+      <aux name="Time_to_\nRecruit">
+        <eqn>0.5</eqn>
+        <units>years</units>
+      </aux>
+      <aux name="Duration_of_\nSpecialist_\nTraining">
+        <eqn>(Percentage_of__Workforce_Compliant_with__EUWTD*Duration_of_Training_under_EUWTD__Compliant_Rota)+((1-Percentage_of__Workforce_Compliant_with__EUWTD)*Traditional__Duration_of__Specialist_Training)</eqn>
+        <units>years</units>
+      </aux>
+      <aux name="Duration_of\nTraining_under_EUWTD_\nCompliant_Rota">
+        <doc>Post-graduate and Specialist training is likely to increase from 9 to 11.45 years because of a 79% reduction in the number of daytime working hours under a full shift system working a 48 hour week. The time frame for this change will be over 5 years as not all specialities will ammend their training requirements at once.&#x0D;&#x0D;References: Chesser S, Bowman K and Phillips H. The European Working Time Directive and the training of surgeons. BMJ Careers Focus 31/8/02 s69-70.</doc>
+        <eqn>SMTH1(11.45,5,9)</eqn>
+        <units>years</units>
+      </aux>
+      <aux name="Hours_worked_\nper_week">
+        <eqn>(Percentage_of__Workforce_Compliant_with__EUWTD*EU_Compliant_Rota)+(Average_Non_EUWTD_Compliant_Rota*(1-Percentage_of__Workforce_Compliant_with__EUWTD))</eqn>
+        <units>hours/weeks</units>
+      </aux>
+      <aux name="Relative_\nDuration_\nof_Training">
+        <eqn>Duration_of__Specialist__Training/Traditional__Duration_of__Specialist_Training</eqn>
+        <scale min="1" max="2.6000000000000001" />
+        <units>Unitless</units>
+      </aux>
+      <aux name="Actual_Work_\nSchedule_\nPressure">
+        <doc>Average time taken to admit and manage the acutely presenting patient from the time of&#x0D;registration to the Casulty Department to the initiation of treatment in Hospital.</doc>
+        <eqn>Expected_Patient__Waiting_time*Patient__Doctor_Ratio</eqn>
+        <units>hours/doctors</units>
+      </aux>
+      <aux name="Expected_\nWork_schedule_\nPressure">
+        <doc>Pre-EUWTD doctor-patient ratio = 28.4 patients/ 2.8 doctors per 24 hour shift, multiplied by the average consultation time.</doc>
+        <eqn>PreEUWTD_Patient_Doctor_ratio*Expected_Patient__Waiting_time</eqn>
+        <units>hours/doctors</units>
+      </aux>
+      <aux name="Time_to_change\nMorale">
+        <eqn>1</eqn>
+        <units>years</units>
+      </aux>
+      <aux name="Quality_of\nPatient_Care">
+        <doc>A qualitative measure of patient care as a function of average time to consultation, the average level of clinical competence of the managing physician and the average number of clinical errors made by the service.</doc>
+        <eqn>(1/Relative_Work_schedule__Pressure)*(1/Relative__Error_rate)</eqn>
+        <units>Unitless</units>
+      </aux>
+      <aux name="PreEUWTD\nPatient_Doctor_ratio">
+        <doc>Pre-EUWTD doctor-patient ratio = 28.4 patients/ 2.8 doctors per 24 hour shift, multiplied by the average consultation time.</doc>
+        <eqn>6000000/(39000+4000)</eqn>
+        <units>patients/doctors</units>
+      </aux>
+      <aux name="Relative_\nError_rate">
+        <doc>Measured as the average incidence of clinical errors made per doctor, dependent on the number of years of specialist training.</doc>
+        <eqn>Actual__Error_Rate/Expected_Error_Rate</eqn>
+        <units>Unitless</units>
+      </aux>
+      <aux name="Traditional_\nDuration_of_\nSpecialist_Training">
+        <eqn>9</eqn>
+        <units>years</units>
+      </aux>
+      <stock name="Patient_\nadmissions">
+        <doc>On average 28.4 patients are seen by a doctor per day.&#x0D;&#x0D;Reference: Staffing Levels in Acute Medicine- RCP Survey January 2004</doc>
+        <eqn>6000000</eqn>
+        <inflow>Change_in_daily_admissions</inflow>
+        <non_negative />
+        <units>patients</units>
+      </stock>
+      <aux name="Patient_\nDoctor\nRatio">
+        <eqn>Patient__admissions/(Non_UK_Resident__Doctors+Junior__Doctors)</eqn>
+        <units>patients/doctors</units>
+      </aux>
+      <flow name="Change_in\ndaily_admissions">
+        <eqn>Patient__admissions*Annual_Growth_fraction_in_Hospital_Admissions</eqn>
+        <non_negative />
+        <units>patients/yr</units>
+      </flow>
+      <aux name="Relative\nWork_schedule_\nPressure">
+        <eqn>Actual_Work__Schedule__Pressure/Expected__Work_schedule__Pressure</eqn>
+        <units>Unitless</units>
+      </aux>
+      <aux name="Workforce_\nDeficit">
+        <eqn>MAX(0,Target_EUWTD_Compliant_Workforce-(Junior__Doctors+Non_UK_Resident__Doctors))</eqn>
+        <units>doctors</units>
+      </aux>
+      <aux name="Pay_drift">
+        <doc>Percentage change in annual pay through increases in payscale from career progression&#x0D;&#x0D;Reference: Review Body on Doctors and Dentists Renumeration 28th Report 1999</doc>
+        <eqn>0.01</eqn>
+        <units>Unitless</units>
+      </aux>
+      <stock name="Future_Salary\nExpectation">
+        <doc>Average of incremental basic salaries and commitment rewards&#x0D;&#x0D;Reference: Review Body on Doctors and Dentists Renumeration 33rd Report 2004&#x0D;</doc>
+        <eqn>87985</eqn>
+        <inflow>Change_in__Future_Salary</inflow>
+        <non_negative />
+        <units>UnitedKingdomPounds/years</units>
+      </stock>
+      <stock name="Non_UK_Resident\n_Doctors">
+        <doc>UK non resident doctors consist of doctors from overseas who temporarily work in the UK.&#x0D;&#x0D;Reference: BMA Hospital Doctors- European WOrking Time Directive May 2004</doc>
+        <eqn>4000</eqn>
+        <inflow>Non_UK_Resident__Doctor_Recruitment_rate</inflow>
+        <outflow>Non_UK_Resident__Doctor_Attrition</outflow>
+        <non_negative />
+        <units>doctors</units>
+      </stock>
+      <aux name="Duration_of_\nWorking_Visa">
+        <doc>Duration of overseas Doctor&apos;s training Visa is ususally 4 years.</doc>
+        <eqn>4</eqn>
+        <units>years</units>
+      </aux>
+      <flow name="Change_in_\nFuture_Salary">
+        <eqn>Future_Salary_Expectation*Annual__Pay_Change</eqn>
+        <non_negative />
+        <units>unitedkingdompounds/(years-yr)</units>
+      </flow>
+      <stock name="Comparative_Future\nSalary_Expectation">
+        <eqn>100000</eqn>
+        <inflow>Change_in__Comparative_Future_Salary</inflow>
+        <non_negative />
+        <units>UnitedKingdomPounds/years</units>
+      </stock>
+      <aux name="EU_Compliant_Rota">
+        <eqn>SMTH1(48,Time_interval_to_EUWTD__amendment,58)</eqn>
+        <units>hours/weeks</units>
+      </aux>
+      <flow name="Change_in_\nComparative_Future_Salary">
+        <eqn>Comparative_Future_Salary_Expectation*Average_Annual_Comparative_Earnings_Growth</eqn>
+        <non_negative />
+        <units>unitedkingdompounds/(years-yr)</units>
+      </flow>
+      <aux name="Junior_doctor&apos;s_\nsalary">
+        <eqn>Junior_doctor&apos;s__base_salary*Overtime_Multiplier</eqn>
+        <units>UnitedKingdomPounds/years</units>
+      </aux>
+      <aux name="Annual_fractional\n_loss_to_NonHospital_\nAppointments">
+        <eqn>0.025</eqn>
+        <units>Unitless/years</units>
+      </aux>
+      <aux name="Percentage_of_\nWorkforce\nCompliant_with_\nEUWTD">
+        <doc>Aggregated percentage compliance across all grades of Junior Doctors 2002 is about 57%  from zero compliance in 1991 and is exponentially increasing.&#x0D;&#x0D;Reference: Implementation of the european working time directive by august 2004 for specialist registrars in acute hospital medicine, royal college of physicians 2003</doc>
+        <eqn>SMTH1(1.0,Workforce_Rota_Planning_Delay,0.57)</eqn>
+        <units>Unitless</units>
+      </aux>
+      <aux name="Average_Non_EUWTD\nCompliant_Rota">
+        <doc>Average number of hours worked per week of all hospital rotas in excess of the current European Working Time Directive of 56 Hours, and then 48 Hours from 2009. &#x0D;&#x0D;Reference: BMA Cohort Study of 1995 Ninth Report 2004</doc>
+        <eqn>61.6</eqn>
+        <units>hours/weeks</units>
+      </aux>
+      <aux name="Indicated_Morale">
+        <eqn>Aggregate__Pay_discrepancy_on_Morale*Flexibility__of_Rota*Quality_of_Patient_Care*Relative_Work_Life__Balance*Relative__Duration__of_Training</eqn>
+        <units>Unitless</units>
+      </aux>
+      <aux name="Length\nof_Shift">
+        <eqn>(Percentage_of__Workforce_Compliant_with__EUWTD*EU_Compliant_Shift_Duration)+((1-Percentage_of__Workforce_Compliant_with__EUWTD)*Average_Non_EU_Compliant_Shift_Duration)</eqn>
+        <units>hours/shifts</units>
+      </aux>
+      <aux name="Average\nShifts_per_Week">
+        <eqn>Hours_worked__per_week/Length_of_Shift</eqn>
+        <units>shifts/weeks</units>
+      </aux>
+      <aux name="Flexibility_\nof_Rota">
+        <doc>Ability to swap shifts among colleagues for study and annual leave, which becomes more difficult as the average number of shifts per week increase.</doc>
+        <eqn>Pre_EUWTD_On_call_Shifts_per_Week2/Average_Shifts_per_Week</eqn>
+        <units>Unitless</units>
+      </aux>
+      <flow name="Change_in_Morale">
+        <eqn>(Indicated_Morale-Morale)*Switch_for_Morale/Time_to_change_Morale</eqn>
+        <units>per year</units>
+      </flow>
+      <aux name="Socially_\nAdvantageous\nHours_per_week">
+        <eqn>21.3</eqn>
+        <units>hours/weeks</units>
+      </aux>
+      <aux name="Annual_Growth_fraction\nin_Hospital_Admissions">
+        <doc>Annual percentage increase is 8.9%&#x0D;&#x0D;Reference:&#x0D;BMJ 1998;316:437-438 (7 February)  Is the emergency (999) service being misused? retrospective analysis, Clifford Mann and Henry Guly </doc>
+        <eqn>0.05</eqn>
+        <units>Unitless/years</units>
+      </aux>
+      <aux name="Work_Life_\nBalance">
+        <doc>Ratio of hours spent at work and time available for social/ family interation.</doc>
+        <eqn>Socially__Advantageous_Hours_per_week/Average_Shifts_per_Week</eqn>
+        <units>hours/shifts</units>
+      </aux>
+      <aux name="Relative\nWork_Life_\nBalance">
+        <eqn>Work_Life__Balance/Expected_Work_Life_Balance</eqn>
+        <units>Unitless</units>
+      </aux>
+      <aux name="Expected\nError_Rate">
+        <doc>Reference: Department of Health. An organisation with a memory. Report of an expert group on learning from adverse events in the NHS. 2000</doc>
+        <eqn>0.05</eqn>
+        <units>errors/years</units>
+      </aux>
+      <aux name="Target_EUWTD\nCompliant_Workforce">
+        <doc>Reference: BMA Hospital Doctors- European WOrking Time Directive May 2004&#x0D;&#x0D;With 58 Hrs working week 213,000 hours of doctor cover will be unfilled, the equivalent of 3700 Junior doctors working a 58 hrs working week. When the weekly hours reduce to 48 hrs per week the equivalent doctor cover will equal 476,638 hours or 9900 additional junior doctors working a 48 hrs week.</doc>
+        <eqn>SMTH1(56600,Time_interval_to_EUWTD__amendment,46700)</eqn>
+        <units>doctors</units>
+      </aux>
+      <aux name="Annual_\nPay_Change">
+        <doc>Reference: Review Body on Doctors and Dentists Renumeration 33rd Report 2004</doc>
+        <eqn>0.025</eqn>
+        <units>Unitless/years</units>
+      </aux>
+      <flow name="Change_in_\ncomparative_\nearnings">
+        <eqn>Comparative_Pay*Average_Annual_Comparative_Earnings_Growth</eqn>
+        <non_negative />
+        <units>unitedkingdompounds/(years-yr)</units>
+      </flow>
+      <aux name="Current_\nPay_Comparison">
+        <eqn>(Junior_doctor&apos;s__salary*Pay_drift)/Comparative_Pay</eqn>
+        <units>Unitless</units>
+      </aux>
+      <aux name="Aggregate_\nPay_discrepancy\non_Morale">
+        <eqn>(Future_Pay_Comparison*0.6)+(Current__Pay_Comparison*0.4)</eqn>
+        <units>Unitless</units>
+      </aux>
+      <stock name="Morale">
+        <eqn>1</eqn>
+        <inflow>Change_in_Morale</inflow>
+        <non_negative />
+        <units>Unitless</units>
+      </stock>
+      <flow name="Non_UK_Resident_\nDoctor\nRecruitment_rate">
+        <eqn>Workforce__Deficit/Time_to__Recruit</eqn>
+        <non_negative />
+        <units>doctors/yr</units>
+      </flow>
+      <aux name="Actual_\nError_Rate">
+        <doc>The greater the frequency of Handover of patient information between shifts of doctors, the more likely the incidence of clinical error.</doc>
+        <eqn>Expected_Error_Rate*Proportional_increase_in_Handovers</eqn>
+        <units>errors/years</units>
+      </aux>
+      <flow name="Non_UK_Resident_\nDoctor_Attrition">
+        <eqn>Non_UK_Resident__Doctors/Duration_of__Working_Visa</eqn>
+        <non_negative />
+        <units>doctors/yr</units>
+      </flow>
+      <aux name="Proportional\nincrease_in\nHandovers">
+        <eqn>((EUWTD_shifts_per_week*Percentage_of__Workforce_Compliant_with__EUWTD)+(Pre_EUWTD_On_call_Shifts_per_Week1*(1-Percentage_of__Workforce_Compliant_with__EUWTD)))/Pre_EUWTD_On_call_Shifts_per_Week1</eqn>
+        <units>Unitless</units>
+      </aux>
+      <aux name="EU_Compliant\nShift_Duration">
+        <eqn>13</eqn>
+        <units>hours/shifts</units>
+      </aux>
+      <aux name="Average_Non_EU_Compliant\nShift_Duration">
+        <eqn>24</eqn>
+        <units>hours/shifts</units>
+      </aux>
+      <aux name="Expected_Patient_\nWaiting_time">
+        <doc>The Patients&apos; Charter proposees that every patient attending an Accident and Emergency department should be seen with in 3 hours.</doc>
+        <eqn>3</eqn>
+        <units>hours/patients</units>
+      </aux>
+      <aux name="Expected_Work_Life\nBalance">
+        <doc>Based on an average 1 in 6 Rota working an average of 61.1 hrs/week, averaged over 7 weeks.&#x0D;Assumes 1 day of rest after a 24 hr on-call shift, socialising hours are between 5pm - 11pm (although post on-call time off may be available during the day, it does not coincide with regular free-time patterns and is therefore ignored for these purposes) and return travel time is 1 hr to work form home.&#x0D;&#x0D;Work-Life measured as the number of social hours per shift (hrs/ shift)</doc>
+        <eqn>8.1</eqn>
+        <units>hours/shifts</units>
+      </aux>
+      <aux name="Time_interval\nto_EUWTD_\namendment">
+        <eqn>5</eqn>
+        <units>years</units>
+      </aux>
+      <aux name="Workforce_Rota\nPlanning_Delay">
+        <doc>The adoption of a EUWTD compliant Rota in all hospitals is far from complete. Although the deadline has already been reached, it will probably take another 2 years before 100% complaince is achieved.</doc>
+        <eqn>2</eqn>
+        <units>years</units>
+      </aux>
+      <aux name="Pre_EUWTD_On_call_Shifts_per_Week1">
+        <doc>PRE- European Working Time Directive (EUWTD- limits working hours to a maximum of 13 hours in any 24 hours) ) working hours consisted of On-Call shifts for 24-36 hours duration</doc>
+        <eqn>7</eqn>
+        <units>shifts/weeks</units>
+      </aux>
+      <aux name="Pre_EUWTD_On_call_shifts_per_week2">
+        <doc>Working an average 1 in 5 rota, each week a doctor will work 1.4 shifts (including 1 weekend of 48 hours every 5 weeks)</doc>
+        <eqn>1.4</eqn>
+        <units>shifts/weeks</units>
+      </aux>
+      <aux name="Duration_of\nMedical_School\nTraining">
+        <eqn>5</eqn>
+        <units>years</units>
+      </aux>
+      <aux name="Banding_Multiplier\nfor_Non_EUWTD_Compliant\nRota">
+        <eqn>2</eqn>
+        <units>Unitless</units>
+      </aux>
+      <aux name="Overtime_Multiplier">
+        <eqn>((1-Percentage_of__Workforce_Compliant_with__EUWTD)*Banding_Multiplier_for_Non_EUWTD_Compliant_Rota)+(Percentage_of__Workforce_Compliant_with__EUWTD*Banding_Multiplier__for_EUWTD_Compliant_Rota)</eqn>
+        <units>Unitless</units>
+      </aux>
+      <aux name="Average_Annual\nComparative\nEarnings_Growth">
+        <doc>Reference: Industrial relations Services August 2003</doc>
+        <eqn>0.032</eqn>
+        <units>Unitless/years</units>
+      </aux>
+      <aux name="Future_Pay\nComparison">
+        <eqn>Future_Salary_Expectation/Comparative_Future_Salary_Expectation</eqn>
+        <units>Unitless</units>
+      </aux>
+      <aux name="Banding_Multiplier_\nfor_EUWTD_Compliant\nRota">
+        <eqn>1.2</eqn>
+        <units>Unitless</units>
+      </aux>
+      <aux name="Annual_Attrition_\nFraction">
+        <eqn>0.012</eqn>
+        <units>Unitless/years</units>
+      </aux>
+      <aux name="EUWTD_shifts_per_week">
+        <eqn>14</eqn>
+        <units>shifts/weeks</units>
+      </aux>
+      <stock name="Comparative_Pay">
+        <doc>Average Annual pay of comparative professionals&#x0D;&#x0D;BMA suggest that The Senior Salaries review body uses private sector sector groups for its comparisons Review Body on Senior Salaries.  Report No.46 Cm4995. Paragraph 46. and we urge the Review body to do likewise. &#x0D;&#x0D;Reference: New Earnings Survey 2000&#x0D;&#x0D;&#x0D;Reference: Review Body on Doctors and Dentists Renumeration 33rd Report 2004</doc>
+        <eqn>50000</eqn>
+        <inflow>Change_in__comparative__earnings</inflow>
+        <non_negative />
+        <units>UnitedKingdomPounds/years</units>
+      </stock>
+      <stock name="Junior_doctor&apos;s_\nbase_salary">
+        <doc>Average annual pay across all junior doctor grades (Pre Registration House Officer, Senior House Officer, Registrar and Specialist Registrar).&#x0D;&#x0D;Reference: Review Body on Doctors and Dentists Renumeration 33rd Report 2004</doc>
+        <eqn>30000</eqn>
+        <inflow>Change_in__earnings</inflow>
+        <non_negative />
+        <units>UnitedKingdomPounds/years</units>
+      </stock>
+      <flow name="Change_in_\nearnings">
+        <eqn>Junior_doctor&apos;s__base_salary*Annual__Pay_Change</eqn>
+        <non_negative />
+        <units>unitedkingdompounds/(years-yr)</units>
+      </flow>
+      <aux name="Switch_for_Morale">
+        <eqn>1 {if &apos;0&apos; then morale has no effect on hospital operations; if &apos;1&apos; then morale has a detrimental effects on the attrition of junior doctors as described Chapter 9 of Strategic Modelling and Business Dynamics in the section entitled &apos;Intangible Effects of the European Working Time Directive}</eqn>
+      </aux>
+      <group name="Work_Life_Balance_and_Flexibility">
+        <entity name="Hours_worked__per_week" />
+        <entity name="EU_Compliant_Rota" />
+        <entity name="Average_Non_EUWTD_Compliant_Rota" />
+        <entity name="Time_interval_to_EUWTD__amendment" />
+        <entity name="Percentage_of__Workforce_Compliant_with__EUWTD" />
+        <entity name="Length_of_Shift" />
+        <entity name="EU_Compliant_Shift_Duration" />
+        <entity name="Average_Non_EU_Compliant_Shift_Duration" />
+        <entity name="Workforce_Rota_Planning_Delay" />
+        <entity name="Average_Shifts_per_Week" />
+        <entity name="Socially__Advantageous_Hours_per_week" />
+        <entity name="Work_Life__Balance" />
+        <entity name="Expected_Work_Life_Balance" />
+        <entity name="Pre_EUWTD_On_call_Shifts_per_Week2" />
+        <entity name="Flexibility__of_Rota" />
+        <entity name="Relative_Work_Life__Balance" />
+      </group>
+      <group name="Factors_Influencing_Morale">
+        <entity name="Time_to_change_Morale" />
+        <entity name="Indicated_Morale" />
+        <entity name="Change_in_Morale" />
+        <entity name="Switch_for_Morale" />
+        <entity name="Morale" />
+      </group>
+      <group name="Junior_Doctor_Renumeration">
+        <entity name="Change_in__Future_Salary" />
+        <entity name="Junior_doctor&apos;s__salary" />
+        <entity name="Annual__Pay_Change" />
+        <entity name="Change_in__comparative__earnings" />
+        <entity name="Overtime_Multiplier" />
+        <entity name="Average_Annual_Comparative_Earnings_Growth" />
+        <entity name="Comparative_Pay" />
+        <entity name="Junior_doctor&apos;s__base_salary" />
+        <entity name="Change_in__earnings" />
+        <entity name="Pay_drift" />
+        <entity name="Future_Salary_Expectation" />
+        <entity name="Comparative_Future_Salary_Expectation" />
+        <entity name="Change_in__Comparative_Future_Salary" />
+        <entity name="Current__Pay_Comparison" />
+        <entity name="Aggregate__Pay_discrepancy_on_Morale" />
+        <entity name="Banding_Multiplier_for_Non_EUWTD_Compliant_Rota" />
+        <entity name="Future_Pay_Comparison" />
+        <entity name="Banding_Multiplier__for_EUWTD_Compliant_Rota" />
+      </group>
+      <group name="Quality_of_Patient_Care_Management">
+        <run>true</run>
+        <entity name="Actual_Work__Schedule__Pressure" />
+        <entity name="Patient__Doctor_Ratio" />
+        <entity name="Expected_Error_Rate" />
+        <entity name="Actual__Error_Rate" />
+        <entity name="Proportional_increase_in_Handovers" />
+        <entity name="Pre_EUWTD_On_call_Shifts_per_Week1" />
+        <entity name="EUWTD_shifts_per_week" />
+        <entity name="Quality_of_Patient_Care" />
+        <entity name="Relative__Error_rate" />
+        <entity name="Relative_Work_schedule__Pressure" />
+        <entity name="Annual_Growth_fraction_in_Hospital_Admissions" />
+        <entity name="Expected__Work_schedule__Pressure" />
+        <entity name="PreEUWTD_Patient_Doctor_ratio" />
+        <entity name="Patient__admissions" />
+        <entity name="Change_in_daily_admissions" />
+        <entity name="Expected_Patient__Waiting_time" />
+      </group>
+      <group name="Medical_Workforce_Planning">
+        <run>true</run>
+        <entity name="Medical_Students" />
+        <entity name="Junior__Doctors" />
+        <entity name="Rate_of__Medical_Student_Recruitment" />
+        <entity name="Rate_of__Medical_Student_Training" />
+        <entity name="Rate_of__Junior_Doctor_Training" />
+        <entity name="Rate_of_Non_Hospital_Appointments" />
+        <entity name="Junior_Doctor_Attrition" />
+        <entity name="Time_to__Recruit" />
+        <entity name="Non_UK_Resident__Doctors" />
+        <entity name="Duration_of__Working_Visa" />
+        <entity name="Annual_fractional__loss_to_NonHospital__Appointments" />
+        <entity name="Non_UK_Resident__Doctor_Recruitment_rate" />
+        <entity name="Non_UK_Resident__Doctor_Attrition" />
+        <entity name="Duration_of_Medical_School_Training" />
+        <entity name="Specialist__Doctors" />
+        <entity name="Rate_of_Specialist_Doctor_Retirement" />
+        <entity name="Duration_of__Specialist__Training" />
+        <entity name="Relative__Duration__of_Training" />
+        <entity name="Traditional__Duration_of__Specialist_Training" />
+        <entity name="Annual_Attrition__Fraction" />
+        <entity name="Workforce__Deficit" />
+        <entity name="Target_EUWTD_Compliant_Workforce" />
+        <entity name="Duration_of_Training_under_EUWTD__Compliant_Rota" />
+      </group>
+    </variables>
+  </model>
+</xmile>

@@ -19,8 +19,8 @@ namespace Symu.SysDyn.Model
         public Auxiliary(string name, string eqn) : base(name, eqn)
         {
         }
-        public Auxiliary(string name, string eqn, GraphicalFunction graph, Range range, Range scale) : base(name, eqn,
-            graph, range, scale)
+        public Auxiliary(string name, string eqn, GraphicalFunction graph, Range range, Range scale, NonNegative nonNegative) : base(name, eqn,
+            graph, range, scale, nonNegative)
         {
         }
         //Auxiliaries have one OPTIONAL attribute:

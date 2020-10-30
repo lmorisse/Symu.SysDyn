@@ -42,18 +42,19 @@ namespace Symu.SysDyn.Model
             Units = Units.CreateInstanceFromEquation(eqn);
             Equation = EquationFactory.CreateInstance(eqn, null, out var value);
             Value = value;
+            NonNegative = new NonNegative(false);
             Initialize();
             SetChildren();
         }
 
-        public Variable(string name, string eqn, GraphicalFunction graph, Range range, Range scale) : this(name)
+        public Variable(string name, string eqn, GraphicalFunction graph, Range range, Range scale, NonNegative nonNegative) : this(name)
         {
             _graphicalFunction = graph;
             Range = range;
             Scale = scale;
             Units = Units.CreateInstanceFromEquation(eqn);
-            // intentionally after Range assignment
             Equation = EquationFactory.CreateInstance(eqn, range, out var value);
+            NonNegative = nonNegative;
             AdjustValue(value);
             Initialize();
             SetChildren();
@@ -62,7 +63,7 @@ namespace Symu.SysDyn.Model
         /// Adjust Value when a graphical function is defined
         /// </summary>
         /// <param name="value"></param>
-        protected virtual void AdjustValue(float value)
+        protected void AdjustValue(float value)
         {
             if (float.IsNaN(value) || float.IsInfinity(value))
             {
@@ -70,6 +71,10 @@ namespace Symu.SysDyn.Model
             }
             // Graphical function
             Value = _graphicalFunction?.GetOutput(value) ?? value;
+            if (NonNegative != null)
+            {
+                Value = NonNegative.GetOutputInsideRange(Value);
+            }
         }
 
         public float Value { get; set; }
@@ -137,7 +142,7 @@ namespace Symu.SysDyn.Model
         ///     Output scale
         /// </summary>
         public Range Scale { get; set; } = new Range();
-
+        public NonNegative NonNegative { get; }
         public bool TryOptimize(bool setInitialValue)
         {
             if (Equation == null)

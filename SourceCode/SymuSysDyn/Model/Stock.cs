@@ -39,20 +39,14 @@ namespace Symu.SysDyn.Model
         {
             Inflow = StringUtils.CleanNames(inflow);
             Outflow = StringUtils.CleanNames(outflow);
-            NonNegative = new NonNegative(false);
-            //todo refactor : not a good design
-            AdjustValue(Value);
             SetChildren();
         }
 
         public Stock(string name, string eqn, List<string> inflow, List<string> outflow, GraphicalFunction graph,
-            Range range, Range scale, NonNegative nonNegative) : base(name, eqn, graph, range, scale)
+            Range range, Range scale, NonNegative nonNegative) : base(name, eqn, graph, range, scale, nonNegative)
         {
             Inflow = StringUtils.CleanNames(inflow);
             Outflow = StringUtils.CleanNames(outflow);
-            NonNegative = nonNegative;
-            //todo refactor : not a good design
-            AdjustValue(Value);
             SetChildren();
         }
 
@@ -99,24 +93,12 @@ namespace Symu.SysDyn.Model
 
             return flow;
         }
-        /// <summary>
-        /// Adjust Value when a graphical function is defined
-        /// </summary>
-        /// <param name="value"></param>
-        protected override void AdjustValue(float value)
-        {
-            base.AdjustValue(value);
-            if (NonNegative != null)
-            {
-                Value = NonNegative.GetOutputInsideRange(Value);
-            }
-        }
+
 
         #region Xml attributes
 
         public List<string> Inflow { get; }
         public List<string> Outflow { get; }
-        public NonNegative NonNegative { get;  } 
 
         #endregion
 

@@ -26,7 +26,7 @@ namespace SymuSysDynTests.Parser
         public void CleanNameTest()
         {
             Assert.AreEqual("Test_avec_plein_de_problemes",
-                StringUtils.CleanName("\rtest  Avec_____plein\nde\\nProblemes\r"));
+                StringUtils.CleanName("\rtest  Avec_____plein\nde\\nProbleme's\r"));
         }
 
         [TestMethod]

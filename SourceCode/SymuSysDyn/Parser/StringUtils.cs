@@ -59,6 +59,7 @@ namespace Symu.SysDyn.Parser
             name = name.Replace("\n", "_");
             name = name.Replace("\\n", "_");
             name = name.Replace("\r", "");
+            name = name.Replace("'", "");
             // Can have multiple underscores
             while (name.Contains("__"))
             {

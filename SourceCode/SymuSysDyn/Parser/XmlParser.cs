@@ -143,7 +143,8 @@ namespace Symu.SysDyn.Parser
                     ParseEquation(q),
                     ParseGraphicalFunction(q),
                     ParseRange(q, "range"),
-                    ParseRange(q, "scale")));
+                    ParseRange(q, "scale"),
+                    ParseNonNegative(q)));
 
             variables.AddRange(auxiliaries);
         }
@@ -166,7 +167,8 @@ namespace Symu.SysDyn.Parser
                     ParseEquation(q),
                     ParseGraphicalFunction(q),
                     ParseRange(q, "range"),
-                    ParseRange(q, "scale")));
+                    ParseRange(q, "scale"),
+                    ParseNonNegative(q)));
 
             variables.AddRange(flows);
         }

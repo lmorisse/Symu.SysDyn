@@ -12,6 +12,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NCalc2;
 using Symu.SysDyn.Equations;
+using Symu.SysDyn.Functions;
 
 #endregion
 
@@ -154,6 +155,18 @@ namespace SymuSysDynTests.Equations
             Assert.AreEqual("Name", _equation.Variables[0]);
             Assert.AreEqual("Variable_1", _equation.Variables[1]);
             Assert.AreEqual("Variable2", _equation.Variables[2]);
+        }
+
+
+
+        [TestMethod()]
+        public void GetParametersTest5()
+        {
+            const string function = @"SMTH1((Junior_doctor&apos;s__base_salary*Annual__Pay_Change),.5)";
+            _equation = EquationFactory.CreateInstance(function, out _);
+            Assert.AreEqual(2, _equation.Variables.Count);
+            Assert.AreEqual("Junior_doctors_base_salary", _equation.Variables[0]);
+            Assert.AreEqual("Annual_pay_change", _equation.Variables[1]);
         }
     }
 }

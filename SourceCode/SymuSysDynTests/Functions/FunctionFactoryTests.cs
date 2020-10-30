@@ -192,16 +192,5 @@ namespace SymuSysDynTests.Functions
             Assert.AreEqual(7, parameters.Count);
             Assert.AreEqual("Somefunc", name);
         }
-
-        [TestMethod()]
-        public void GetParametersTest5()
-        {
-            var function = @"SMTH1((Actual_Passenger_Miles/Available_Passenger_Miles),.5)";
-
-            FunctionUtils.ParseParameters(ref function, out var name, out var parameters, out var args); 
-            //var results = FunctionUtils.ParseParameters(ref function, out var name);
-            Assert.AreEqual(2, parameters.Count);
-            Assert.AreEqual("Smth1", name);
-        }
     }
 }

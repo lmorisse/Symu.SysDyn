@@ -36,6 +36,7 @@ namespace Symu.SysDyn.Equations
                 return null;
             }
 
+            //Clean eqn
             // Remove string in Braces which are units, not equation
             var index = eqn.IndexOf('{');
             if (index > 0)
@@ -43,6 +44,8 @@ namespace Symu.SysDyn.Equations
                 eqn = eqn.Remove(index);
             }
             eqn = eqn.Trim();
+            eqn = eqn.Replace("'", "");
+
             if (float.TryParse(eqn, NumberStyles.Number, CultureInfo.InvariantCulture, out var floatEqn))
             //NumberStyles.Any => doesn't work for (1) => success and floatEqn = -1!
             {

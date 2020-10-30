@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<xmile version="1.0" xmlns="http://docs.oasis-open.org/xmile/ns/XMILE/v1.0">
+  <header>
+    <name>FishModel</name>
+    <options>
+      <uses_outputs />
+    </options>
+    <product version="1.0">Hand Coded XMILE from Strategic Modelling and Business Dynamics book</product>
+  </header>
+  <sim_specs method="Euler" time_units="Years" pause="5">
+    <start>0</start>
+    <stop>40</stop>
+    <dt>0.25</dt>
+  </sim_specs>
+  <model>
+    <variables>
+      <stock name="Fish_stock">
+        <eqn>3000  {fish}</eqn>
+        <scale min="0" max="4000" />
+        <inflow>New_fish_per_year</inflow>
+        <outflow>Harvest_rate</outflow>
+        <non_negative />
+      </stock>
+      <flow name="New_fish_per_year">
+        <eqn>Net_regeneration  {fish/year}</eqn>
+        <scale min="0" max="4000" />
+        <non_negative />
+      </flow>
+      <aux name="Net_regeneration">
+        <eqn>Fish_density</eqn>
+        <gf>
+          <yscale min="0" max="600" />
+          <xpts>0,0.10000000000000001,0.20000000000000001,0.30000000000000004,0.40000000000000002,0.5,0.59999999999999998,0.69999999999999996,0.79999999999999993,0.89999999999999991,0.99999999999999989</xpts>
+          <ypts>0,50,100,200,320,500,550,480,300,180,0</ypts>
+        </gf>
+      </aux>
+      <flow name="Harvest_rate">
+        <eqn>Catch  {fish/year}</eqn>
+        <non_negative />
+      </flow>
+      <aux name="Maximum\nfishery_size">
+        <eqn>4000  {fish}</eqn>
+        <display x="73" y="253" color="black" />
+      </aux>
+      <stock name="Ships\nat_sea">
+        <eqn>10  {ships}</eqn>
+        <scale min="0" max="80" />
+        <inflow>Purchase_or_sale_of_ships</inflow>
+        <outflow>Ships_moved_to_harbour</outflow>
+        <non_negative />
+      </stock>
+      <aux name="Catch">
+        <eqn>Ships_at_sea*Catch__per_ship  {fish/year}</eqn>
+        <scale min="0" max="4000" />
+      </aux>
+      <aux name="Catch_\nper_ship">
+        <eqn>Effect_of_fish_density_on_catch_per_ship*Normal_catch__per_ship  {fish per ship/year}</eqn>
+      </aux>
+      <aux name="Normal_catch_\nper_ship">
+        <eqn>25  {fish per ship/year}</eqn>
+      </aux>
+      <flow name="Purchase_or_sale\nof_ships">
+        <eqn>Gap_in_fleet_size/Time_to_adjust_fleet</eqn>
+        <scale min="0" max="20" />
+      </flow>
+      <flow name="Ships_moved\nto_harbour">
+        <eqn>(Ships_at_sea-Recommended_ships_at_sea)*Effectiveness_of_fisheries_management_regime&#x0D;/Time_to_achieve_compliance  {ships/year}</eqn>
+        <scale min="0" max="20" />
+      </flow>
+      <stock name="Ships_\nin_harbour">
+        <eqn>0  {ships}</eqn>
+        <inflow>Ships_moved_to_harbour</inflow>
+        <outflow>Scrap_rate_of_ships</outflow>
+        <non_negative />
+      </stock>
+      <aux name="Effectiveness_of_fisheries\nmanagement_regime">
+        <eqn>1  {dimensionless}</eqn>
+      </aux>
+      <aux name="Estimated\nfish_density">
+        <eqn>SMTH1(Fish_stock/Maximum_fishery_size,Time_to_estimate_fish_density)  {dimensionless}</eqn>
+      </aux>
+      <aux name="Assumed_optimal\nfish_density">
+        <eqn>.6  {dimensionless}</eqn>
+      </aux>
+      <aux name="Sustainability_index">
+        <eqn>Estimated_fish_density/Assumed_optimal_fish_density</eqn>
+        <scale min="0" max="1" />
+        <gf>
+          <yscale min="0" max="1" />
+          <xpts>0,0.099999999999999992,0.19999999999999998,0.29999999999999999,0.39999999999999997,0.49999999999999994,0.59999999999999998,0.69999999999999996,0.79999999999999993,0.89999999999999991,0.99999999999999989,1.0999999999999999,1.2</xpts>
+          <ypts>0,0,0,0,0.0050000000000000001,0.029999999999999999,0.10000000000000001,0.29999999999999999,0.76000000000000001,0.92000000000000004,1,1,1</ypts>
+        </gf>
+      </aux>
+      <aux name="Recommended\nships_at_sea">
+        <eqn>Total_ships*Sustainability_index  {ships}</eqn>
+      </aux>
+      <aux name="Effect_of_fish_density_on_catch_per_ship">
+        <eqn>Fish_density  {dimensionless}</eqn>
+        <gf>
+          <yscale min="0" max="1" />
+          <xpts>0,0.10000000000000001,0.20000000000000001,0.30000000000000004,0.40000000000000002,0.5,0.59999999999999998,0.69999999999999996,0.79999999999999993,0.89999999999999991,0.99999999999999989</xpts>
+          <ypts>0,0.40000000000000002,0.68000000000000005,0.80000000000000004,0.88,0.95999999999999996,1,1,1,1,1</ypts>
+        </gf>
+      </aux>
+      <aux name="Time_to_achieve\ncompliance">
+        <eqn>.5  {years}</eqn>
+      </aux>
+      <aux name="Time_to\nestimate\nfish_density">
+        <eqn>.5  {years}</eqn>
+      </aux>
+      <aux name="Total_ships">
+        <eqn>Ships_at_sea+Ships__in_harbour  {ships}</eqn>
+      </aux>
+      <flow name="Scrap_rate\nof_ships">
+        <eqn>Ships__in_harbour/Lifetime_of_idle_ships  {ships/year}</eqn>
+        <scale min="0" max="20" />
+        <non_negative />
+      </flow>
+      <aux name="Lifetime\nof_idle_ships">
+        <eqn>5  {years}</eqn>
+      </aux>
+      <aux name="Fish_density">
+        <eqn>Fish_stock/Maximum_fishery_size  {dimensionless}</eqn>
+      </aux>
+      <aux name="Desired\nfleet_size">
+        <eqn>Ships_at_sea * (1 + Propensity_for_growth)  {ships}</eqn>
+      </aux>
+      <aux name="Time_to\nadjust_fleet">
+        <eqn>1  {year}</eqn>
+      </aux>
+      <aux name="Effect_of_catch_per_ship\non_propensity_for_growth">
+        <eqn>Catch__per_ship</eqn>
+        <gf>
+          <yscale min="-1" max="1" />
+          <xpts>0,2.5,5,7.5,10,12.5,15,17.5,20,22.5,25</xpts>
+          <ypts>-0.47999999999999998,-0.44999999999999996,-0.37,-0.27000000000000002,0,0.64000000000000012,0.90000000000000013,0.995,0.995,1,1</ypts>
+        </gf>
+      </aux>
+      <aux name="Normal_propensity\nfor_growth">
+        <eqn>.1  {fraction}</eqn>
+      </aux>
+      <aux name="Propensity\nfor_growth">
+        <eqn>Normal_propensity_for_growth*Effect_of_catch_per_ship_on_propensity_for_growth  {dimensionless}</eqn>
+      </aux>
+      <aux name="Gap_in\nfleet_size">
+        <eqn>Desired_fleet_size - Ships_at_sea  {ships}</eqn>
+      </aux>
+    </variables>
+  </model>
+</xmile>
