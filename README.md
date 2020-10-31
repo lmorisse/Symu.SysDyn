@@ -1,7 +1,6 @@
 # Symu.OrgMod as Organizational modeling
 
-``Develop your own application of system dynamics<br>
-``Symu.SysDyn`` is part of ``Symu Suite``, for organizational modeling, analysis and simulating.
+``Develop your own application of system dynamics. ``Symu.SysDyn`` is part of ``Symu Suite``, for organizational modeling, analysis and simulating.
 ``Symu.SysDyn`` is a core of system dynamics models library, written in C#.
 
 Some useful links:
