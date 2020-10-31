@@ -25,6 +25,14 @@ namespace SymuSysDynTests.Equations
             _variables.Add(_variable1);
             _variables.Add(_variable2);
         }
+        [TestMethod()]
+        public void CloneTest()
+        {
+            var variable = new Variable("X", PlusEquation);
+            _variables.Add(variable);
+            var cloneEquation = variable.Equation.Clone();
+            Assert.AreEqual(3, cloneEquation.Evaluate(null, _variables, null));
+        }
 
         #region Evaluate
         [TestMethod()]

@@ -34,6 +34,12 @@ namespace Symu.SysDyn.Functions
         {
         }
 
+        public override IBuiltInFunction Clone()
+        {
+            var clone = new Ramp(OriginalFunction);
+            CopyTo(clone);
+            return clone;
+        }
         public string Time => GetParam(0);
         public string Slope => GetParam(1);
 

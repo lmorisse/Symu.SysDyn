@@ -33,6 +33,13 @@ namespace Symu.SysDyn.Functions
         {
         }
 
+        public override IBuiltInFunction Clone()
+        {
+            var clone = new Step(OriginalFunction);
+            CopyTo(clone);
+            return clone;
+        }
+
         public string Height => GetParam(0);
         public string StartTime => GetParam(1);
 

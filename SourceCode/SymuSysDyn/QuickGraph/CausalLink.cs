@@ -20,7 +20,7 @@ namespace Symu.SysDyn.QuickGraph
     /// </summary>
     public sealed class CausalLink : VariableEdge
     {
-        public CausalLink(Variable source, Variable target) : base(source, target)
+        public CausalLink(IVariable source, IVariable target) : base(source, target)
         {
         }
     }

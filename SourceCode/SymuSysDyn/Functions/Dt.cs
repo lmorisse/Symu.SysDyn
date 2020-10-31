@@ -28,6 +28,12 @@ namespace Symu.SysDyn.Functions
         public Dt(string function) : base(function)
         {
         }
+        public override IBuiltInFunction Clone()
+        {
+            var clone = new Dt(OriginalFunction);
+            CopyTo(clone);
+            return clone;
+        }
 
         public override float Evaluate(Variable selfVariable, Variables variables, SimSpecs sim)
         {

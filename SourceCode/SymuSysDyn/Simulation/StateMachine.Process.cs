@@ -51,10 +51,10 @@ namespace Symu.SysDyn.Simulation
         {
             Variables.Initialize();
 
-            List<Variable> waitingParents;
+            List<IVariable> waitingParents;
             do
             {
-                waitingParents = new List<Variable>();
+                waitingParents = new List<IVariable>();
                 foreach (var variable in Variables.GetNotUpdated)
                 {
                     var withChildren = waitingParents;
@@ -82,7 +82,7 @@ namespace Symu.SysDyn.Simulation
         /// </summary>
         /// <param name="parent"></param>
         /// <returns></returns>
-        public List<Variable> UpdateChildren(Variable parent)
+        public List<IVariable> UpdateChildren(IVariable parent)
         {
             if (parent == null)
             {
@@ -98,7 +98,7 @@ namespace Symu.SysDyn.Simulation
             }
 
             var readyToUpdate = true;
-            var waitingParents = new List<Variable>();
+            var waitingParents = new List<IVariable>();
             foreach (var child in parent.Children.Select(childName => Variables[childName]).Where(x => x != null && !x.Updated))
             {
                 switch (child.Updating)
@@ -128,7 +128,7 @@ namespace Symu.SysDyn.Simulation
         ///     Take a variable and update the value of that node
         /// </summary>
         /// <param name="variable"></param>
-        public void UpdateVariable(Variable variable)
+        public void UpdateVariable(IVariable variable)
         {
             if (variable == null)
             {

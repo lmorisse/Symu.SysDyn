@@ -33,6 +33,12 @@ namespace Symu.SysDyn.Functions
         public Normal(string function) : base(function)
         {
         }
+        public override IBuiltInFunction Clone()
+        {
+            var clone = new Normal(OriginalFunction);
+            CopyTo(clone);
+            return clone;
+        }
 
         public string Mean => GetParam(0);
 

@@ -14,6 +14,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
+using MathNet.Numerics.LinearAlgebra.Solvers;
+using MathNet.Numerics.Optimization;
 using NCalc2;
 using Symu.SysDyn.Equations;
 using Symu.SysDyn.Model;
@@ -25,6 +27,7 @@ using Symu.SysDyn.Simulation;
 namespace Symu.SysDyn.Functions
 {
     /// <summary>
+    ///     Default implementation of IBuiltInFunction
     ///     A built in function defined by string
     ///     Works with nested functions, i.e. if the parameters of the function are functions
     /// </summary>
@@ -34,7 +37,7 @@ namespace Symu.SysDyn.Functions
     /// add a unit test class for the function
     /// add a unit test in AllBuiltInFUnctionsTests to have the list of all available functions</remarks>
     /// <remarks>https://www.simulistics.com/help/equations/builtin.htm</remarks>
-    public class BuiltInFunction
+    public class BuiltInFunction : IBuiltInFunction
     {        
         public BuiltInFunction() { }
 
@@ -78,6 +81,23 @@ namespace Symu.SysDyn.Functions
         /// If it is an IEquation, the value is stored in Parameters
         /// </summary>
         public List<float> Args { get; protected set; }
+
+        public virtual IBuiltInFunction Clone()
+        {
+            var clone = new BuiltInFunction(OriginalFunction);
+            CopyTo(clone);
+            return clone;
+        }
+
+        protected void CopyTo(IBuiltInFunction copy)
+        {
+            if (copy == null)
+            {
+                throw new ArgumentNullException(nameof(copy));
+            }
+
+            copy.IndexName = IndexName;
+        }
 
         protected float GetValue(int index, Variable variable, Variables variables, SimSpecs sim)
         {
@@ -159,7 +179,7 @@ namespace Symu.SysDyn.Functions
                 }
 
                 parameter.Replace(child, value);
-                if (parameter.Variables.Any())
+                if (!parameter.CanBeOptimized(child))
                 {
                     continue;
                 }

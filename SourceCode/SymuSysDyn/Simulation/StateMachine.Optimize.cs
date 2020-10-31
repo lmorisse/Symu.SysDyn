@@ -71,7 +71,7 @@ namespace Symu.SysDyn.Simulation
             RetrieveFromReferenceVariables();
 
             Variables.Initialize();
-            List<Variable> waitingParents;
+            List<IVariable> waitingParents;
             //First remove all constant variables
             foreach (var variable in Variables.GetUpdated.Select(x => x.Name).ToImmutableList())
             {
@@ -79,7 +79,7 @@ namespace Symu.SysDyn.Simulation
             }
             do
             {
-                waitingParents = new List<Variable>();
+                waitingParents = new List<IVariable>();
                 foreach (var variable in Variables.GetNotUpdated.ToImmutableList())
                 {
                     var withChildren = waitingParents;
@@ -95,7 +95,7 @@ namespace Symu.SysDyn.Simulation
         /// </summary>
         /// <param name="parent"></param>
         /// <returns></returns>
-        public List<Variable> OptimizeChildren(Variable parent)
+        public List<IVariable> OptimizeChildren(IVariable parent)
         {
             if (parent == null)
             {
@@ -104,7 +104,7 @@ namespace Symu.SysDyn.Simulation
 
             parent.Updating = true;
             var readyToUpdate = true;
-            var waitingParents = new List<Variable>();
+            var waitingParents = new List<IVariable>();
             foreach (var child in parent.Children.Select(childName => Variables[childName]).Where(x => x != null && !x.Updated)) 
             {
                 switch (child.Updating)
@@ -135,7 +135,7 @@ namespace Symu.SysDyn.Simulation
         ///     Take a variable and update the value of that node
         /// </summary>
         /// <param name="variable"></param>
-        public bool TryOptimizeVariable(Variable variable)
+        public bool TryOptimizeVariable(IVariable variable)
         {
             if (variable == null)
             {

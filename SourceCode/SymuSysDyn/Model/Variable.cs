@@ -23,9 +23,9 @@ using Symu.SysDyn.Simulation;
 namespace Symu.SysDyn.Model
 {
     /// <summary>
-    ///     Base class for the variable of the model
+    ///     Default implementation of IVariable
     /// </summary>
-    public class Variable
+    public class Variable : IVariable
     {
         public Variable(string name)
         {
@@ -49,7 +49,7 @@ namespace Symu.SysDyn.Model
 
         public Variable(string name, string eqn, GraphicalFunction graph, Range range, Range scale, NonNegative nonNegative) : this(name)
         {
-            _graphicalFunction = graph;
+            GraphicalFunction = graph;
             Range = range;
             Scale = scale;
             Units = Units.CreateInstanceFromEquation(eqn);
@@ -70,7 +70,7 @@ namespace Symu.SysDyn.Model
                 throw new ArgumentOutOfRangeException();
             }
             // Graphical function
-            Value = _graphicalFunction?.GetOutput(value) ?? value;
+            Value = GraphicalFunction?.GetOutput(value) ?? value;
             if (NonNegative != null)
             {
                 Value = NonNegative.GetOutputInsideRange(Value);
@@ -81,7 +81,7 @@ namespace Symu.SysDyn.Model
 
         public IEquation Equation { get; set; }
 
-        private GraphicalFunction _graphicalFunction;
+        public GraphicalFunction GraphicalFunction { get; set; }
 
         /// <summary>
         ///     The variable has been updated
@@ -97,7 +97,7 @@ namespace Symu.SysDyn.Model
         ///     Children are Equation's Variables except itself
         /// </summary>
         /// <remarks>Could be a computed property, but for performance, it is setted once</remarks>
-        public List<string> Children { get; private set; }
+        public List<string> Children { get; set; }
 
         /// <summary>
         ///     Find all children of a variable
@@ -179,20 +179,27 @@ namespace Symu.SysDyn.Model
             Updated = Equation == null;
         }
 
-        public Variable Clone()
+        public virtual IVariable Clone()
         {
-            var clone = new Variable(Name)
-            {
-                _graphicalFunction = _graphicalFunction,
-                Range = Range,
-                Scale = Scale,
-                Units = Units,
-                Equation = Equation?.Clone(),
-                Value = Value,
-                Children = new List<string>()
-            };
-            clone.Children.AddRange(Children);
+            var clone = new Variable(Name);
+            CopyTo(clone);
             return clone;
+        }
+        protected void CopyTo(IVariable copy)
+        {
+            if (copy == null)
+            {
+                throw new ArgumentNullException(nameof(copy));
+            }
+
+            copy.GraphicalFunction = GraphicalFunction;
+            copy.Range = Range;
+            copy.Scale = Scale;
+            copy.Units = Units;
+            copy.Equation = Equation?.Clone();
+            copy.Value = Value;
+            copy.Children = new List<string>();
+            copy.Children.AddRange(Children);
         }
     }
 }

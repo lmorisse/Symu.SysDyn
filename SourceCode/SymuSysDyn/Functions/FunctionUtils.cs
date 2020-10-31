@@ -27,13 +27,13 @@ namespace Symu.SysDyn.Functions
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        public static IEnumerable<BuiltInFunction> ParseFunctions(string input)
+        public static IEnumerable<IBuiltInFunction> ParseFunctions(string input)
         {
             if (input == null)
             {
                 throw new ArgumentNullException(nameof(input));
             }
-            var builtInFunctions = new List<BuiltInFunction>();
+            var builtInFunctions = new List<IBuiltInFunction>();
 
             var functions = ParseStringFunctions(input);
 

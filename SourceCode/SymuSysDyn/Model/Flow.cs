@@ -16,12 +16,22 @@ namespace Symu.SysDyn.Model
     /// </summary>
     public class Flow : Variable
     {
+        public Flow(string name) : base(name)
+        {
+        }
         public Flow(string name, string eqn) : base(name, eqn)
         {
         }
         public Flow(string name, string eqn, GraphicalFunction graph, Range range, Range scale, NonNegative nonNegative) : base(name, eqn, graph,
             range, scale, nonNegative)
         {
+        }
+
+        public override IVariable Clone()
+        {
+            var clone = new Flow(Name);
+            CopyTo(clone);
+            return clone;
         }
     }
 }

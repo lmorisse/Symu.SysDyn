@@ -28,6 +28,9 @@ namespace Symu.SysDyn.Model
     /// </summary>
     public class Stock : Variable, IComparable
     {
+        public Stock(string name) : base(name)
+        {
+        }
         public Stock(string name, string eqn, string inflow) : this(name, eqn, new List<string> { inflow }, new List<string>())
         {
         }
@@ -48,6 +51,14 @@ namespace Symu.SysDyn.Model
             Inflow = StringUtils.CleanNames(inflow);
             Outflow = StringUtils.CleanNames(outflow);
             SetChildren();
+        }
+        public override IVariable Clone()
+        {
+            var clone = new Stock(Name);
+            CopyTo(clone);
+            clone.Inflow = Inflow;
+            clone.Outflow = Outflow;
+            return clone;
         }
 
         /// <summary>
@@ -97,8 +108,8 @@ namespace Symu.SysDyn.Model
 
         #region Xml attributes
 
-        public List<string> Inflow { get; }
-        public List<string> Outflow { get; }
+        public List<string> Inflow { get; private set; }
+        public List<string> Outflow { get; private set; }
 
         #endregion
 

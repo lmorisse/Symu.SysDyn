@@ -40,6 +40,13 @@ namespace Symu.SysDyn.Functions
             Expression = new Expression(function);
         }
 
+        public override IBuiltInFunction Clone()
+        {
+            var clone = new IfThenElse(OriginalFunction);
+            CopyTo(clone);
+            return clone;
+        }
+
         /// <summary>
         /// Parse the string function to extract the if-then-else conditions in the parameters
         /// </summary>

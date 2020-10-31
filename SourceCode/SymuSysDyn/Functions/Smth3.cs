@@ -25,5 +25,12 @@ namespace Symu.SysDyn.Functions
         public Smth3(string function) : base(function,3)
         {
         }
+
+        public override IBuiltInFunction Clone()
+        {
+            var clone = new Smth3(OriginalFunction);
+            CopyTo(clone);
+            return clone;
+        }
     }
 }

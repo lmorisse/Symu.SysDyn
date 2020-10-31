@@ -7,6 +7,8 @@
 
 #endregion
 
+using System.Collections.Generic;
+
 namespace Symu.SysDyn.Model
 {
     /// <summary>
@@ -16,6 +18,9 @@ namespace Symu.SysDyn.Model
     /// </summary>
     public class Auxiliary : Variable
     {
+        public Auxiliary(string name) : base(name)
+        {
+        }
         public Auxiliary(string name, string eqn) : base(name, eqn)
         {
         }
@@ -23,6 +28,15 @@ namespace Symu.SysDyn.Model
             graph, range, scale, nonNegative)
         {
         }
+
+        public override IVariable Clone()
+        {
+            var clone = new Auxiliary(Name);
+            CopyTo(clone);
+            return clone;
+        }
+
+        //todo
         //Auxiliaries have one OPTIONAL attribute:
         // Flow concept: flow_concept="…" with true/false, which is true if the auxiliary represents a
         //flow concept(default: false). Besides documenting that the variable is conceptually a flow, this

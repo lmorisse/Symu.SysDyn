@@ -75,7 +75,6 @@ namespace Symu.SysDyn.Simulation
         {
             // Clone the  Variables
             ReferenceVariables = Variables.Clone();
-
         }
         private void RetrieveFromReferenceVariables()
         {

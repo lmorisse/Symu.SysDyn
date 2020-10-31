@@ -20,7 +20,7 @@ namespace Symu.SysDyn.QuickGraph
     /// </summary>
     public sealed class InformationFlow : VariableEdge
     {
-        public InformationFlow(Variable source, Variable target) : base(source, target)
+        public InformationFlow(IVariable source, IVariable target) : base(source, target)
         {
         }
     }

@@ -32,6 +32,12 @@ namespace Symu.SysDyn.Functions
         public ExternalUpdate(string function) : base(function)
         {
         }
+        public override IBuiltInFunction Clone()
+        {
+            var clone = new ExternalUpdate(OriginalFunction);
+            CopyTo(clone);
+            return clone;
+        }
 
         public override float Evaluate(Variable variable, Variables variables, SimSpecs sim)
         {

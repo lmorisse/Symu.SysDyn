@@ -37,6 +37,18 @@ namespace SymuSysDynTests.Model
             Assert.AreEqual(0, _stock.Children.Count);
         }
 
+        [TestMethod]
+        public void CloneTest()
+        {
+            _stock = new Stock("name", "SET(param1, param2)", _inflows, _outflows);
+            var clone = _stock.Clone() as Stock;
+            Assert.IsNotNull(clone);
+            Assert.AreEqual(clone.Name, _stock.Name);
+            CollectionAssert.AreEqual(_inflows, clone.Inflow);
+            CollectionAssert.AreEqual(_outflows, clone.Outflow);
+            Assert.IsNotNull(clone.Equation);
+            Assert.AreEqual(2, clone.Children.Count);
+        }
         /// <summary>
         ///     No inflow nor outflow
         /// </summary>

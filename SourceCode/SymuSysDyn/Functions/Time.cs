@@ -29,6 +29,13 @@ namespace Symu.SysDyn.Functions
         {
         }
 
+        public override IBuiltInFunction Clone()
+        {
+            var clone = new Time(OriginalFunction);
+            CopyTo(clone);
+            return clone;
+        }
+
         public override float Evaluate(Variable selfVariable, Variables variables, SimSpecs sim)
         {
             if (sim == null)

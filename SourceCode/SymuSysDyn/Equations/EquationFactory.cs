@@ -141,7 +141,7 @@ namespace Symu.SysDyn.Equations
         /// <param name="variables"></param>
         /// <param name="words"></param>
         /// <returns>Initialized equation</returns>
-        public static string Initialize(string originalEquation, out List<BuiltInFunction> functions, out List<string> variables, out List<string> words)
+        public static string Initialize(string originalEquation, out List<IBuiltInFunction> functions, out List<string> variables, out List<string> words)
         {
             if (originalEquation == null)
             {
@@ -172,7 +172,7 @@ namespace Symu.SysDyn.Equations
             return string.Join(string.Empty, words);
         }
 
-        private static IEnumerable<string> SetVariables(string word, List<BuiltInFunction> functions)
+        private static IEnumerable<string> SetVariables(string word, List<IBuiltInFunction> functions)
         {
             var variables = new List<string>();
             if (word.Length <= 1)

@@ -33,5 +33,12 @@ namespace Symu.SysDyn.Functions
         {
         }
 
+        public override IBuiltInFunction Clone()
+        {
+            var clone = new Smth1(OriginalFunction);
+            CopyTo(clone);
+            return clone;
+        }
+
     }
 }

@@ -27,20 +27,21 @@ namespace Symu.SysDyn.Functions
     /// The other functions behave analogously.They return the value of the final smooth in the cascade.
     /// If you do not specify an initial value initial, they assume the value to be the initial value of input.
     /// </summary>
-    public class Smth : BuiltInFunction
+    public abstract class Smth : BuiltInFunction
     {   
 
         private bool _initialized;
         private float[] _previousValues;
         protected int InitialIndex { get; set; }
-        public Smth(string function) : base(function)
+        protected Smth(string function) : base(function)
         {
         }
-        public Smth(string function, byte order) : base(function)
+        protected Smth(string function, byte order) : base(function)
         {
             Order = order;
             InitialIndex = Parameters.Count == 3 ? 2 : 0;
         }
+
         protected string GetParamFromOriginalEquation(int index)
         {
             return Parameters[index] != null ? Parameters[index].OriginalEquation : Args[index].ToString(CultureInfo.InvariantCulture);

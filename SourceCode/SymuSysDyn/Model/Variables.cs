@@ -21,12 +21,12 @@ namespace Symu.SysDyn.Model
     /// <summary>
     ///     List of the variables of the model
     /// </summary>
-    public class Variables : IEnumerable<Variable>
+    public class Variables : IEnumerable<IVariable>
     {
-        private readonly List<Variable> _variables = new List<Variable>();
+        private readonly List<IVariable> _variables = new List<IVariable>();
         public Groups Groups { get; private set; } = new Groups();
-        public IEnumerable<Variable> GetNotUpdated => _variables.Where(x => !x.Updated);
-        public IEnumerable<Variable> GetUpdated => _variables.Where(x => x.Updated);
+        public IEnumerable<IVariable> GetNotUpdated => _variables.Where(x => !x.Updated);
+        public IEnumerable<IVariable> GetUpdated => _variables.Where(x => x.Updated);
 
         public IEnumerable<string> Names => _variables.Select(x => x.Name);
         public IEnumerable<Stock> Stocks => _variables.OfType<Stock>();
@@ -36,16 +36,16 @@ namespace Symu.SysDyn.Model
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        public Variable this[string name] => Get(name);
+        public IVariable this[string name] => Get(name);
 
         /// <summary>
         ///     Gets or sets the node with the specified index
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        public Variable this[int index] => _variables[index];
+        public IVariable this[int index] => _variables[index];
 
-        public void Add(Variable variable)
+        public void Add(IVariable variable)
         {
             if (!Contains(variable))
             {
@@ -53,12 +53,12 @@ namespace Symu.SysDyn.Model
             }
         }
 
-        public void AddRange(IEnumerable<Variable> variables)
+        public void AddRange(IEnumerable<IVariable> variables)
         {
             _variables.AddRange(variables);
         }
 
-        public bool Contains(Variable variable)
+        public bool Contains(IVariable variable)
         {
             return _variables.Contains(variable);
         }
@@ -68,7 +68,7 @@ namespace Symu.SysDyn.Model
             return _variables.Exists(x => x.Name == name);
         }
 
-        public Variable Get(string name)
+        public IVariable Get(string name)
         {
             return _variables.Find(x => x.Name == name);
         }
@@ -151,7 +151,7 @@ namespace Symu.SysDyn.Model
 
         /// <summary>Returns an enumerator that iterates through the collection.</summary>
         /// <returns>An enumerator that can be used to iterate through the collection.</returns>
-        public IEnumerator<Variable> GetEnumerator()
+        public IEnumerator<IVariable> GetEnumerator()
         {
             return _variables.GetEnumerator();
         }

@@ -33,5 +33,11 @@ namespace Symu.SysDyn.Functions
             Order = Convert.ToByte(GetParamFromOriginalEquation(2));
             InitialIndex = Parameters.Count == 4 ? 3 : 0;
         }
+        public override IBuiltInFunction Clone()
+        {
+            var clone = new SmthN(OriginalFunction);
+            CopyTo(clone);
+            return clone;
+        }
     }
 }

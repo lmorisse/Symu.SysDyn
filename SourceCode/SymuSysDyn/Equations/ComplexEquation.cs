@@ -29,25 +29,25 @@ namespace Symu.SysDyn.Equations
     public class ComplexEquation : SimpleEquation
     {
         /// <summary>
-        ///     List of all the nested functions used in the equation
+        /// ComplexEquation inherits from SimpleEquation and adds a list of nested functions
         /// </summary>
-        public List<BuiltInFunction> Functions { get; }
+        public BuiltInFunctionCollection Functions { get; }
 
-        public ComplexEquation(string originalEquation, string initializedEquation, List<BuiltInFunction> functions, List<string> variables, List<string> words, Range range) : 
+        public ComplexEquation(string originalEquation, string initializedEquation, List<IBuiltInFunction> functions, List<string> variables, List<string> words, Range range) : 
             this(originalEquation, initializedEquation, functions, variables, words)
         {
-            _range = range;
+            Range = range;
         }
 
-        public ComplexEquation(string originalEquation, string initializedEquation, List<BuiltInFunction> functions, List<string> variables, List<string> words)
+        public ComplexEquation(string originalEquation, string initializedEquation, IEnumerable<IBuiltInFunction> functions, List<string> variables, List<string> words)
             : base(originalEquation, initializedEquation, variables, words)
         {
-            Functions = functions;
+            Functions = new BuiltInFunctionCollection(functions);
         }
 
         public override IEquation Clone()
         {
-            return new ComplexEquation(OriginalEquation, InitializedEquation, Functions, Variables, _words, _range);
+            return new ComplexEquation(OriginalEquation, InitializedEquation, Functions.Clone(), Variables, Words, Range);
         }
 
         public override bool CanBeOptimized(string variableName)
@@ -75,10 +75,9 @@ namespace Symu.SysDyn.Equations
             // Built-in functions
             foreach (var function in Functions)
             {
-                _expression.Parameters[function.IndexName] = function.Prepare(selfVariable, variables, sim);
+                Expression.Parameters[function.IndexName] = function.Prepare(selfVariable, variables, sim);
             }
         }
-
 
         public override void Replace(string child, string value)
         {
@@ -94,9 +93,9 @@ namespace Symu.SysDyn.Equations
 
                 try
                 {
-                    while (_words.FindIndex(ind => ind.Equals(function.IndexName)) >= 0)
+                    while (Words.FindIndex(ind => ind.Equals(function.IndexName)) >= 0)
                     {
-                        _words[_words.FindIndex(ind => ind.Equals(function.IndexName))] = function.InitialValue().ToString(CultureInfo.InvariantCulture);
+                        Words[Words.FindIndex(ind => ind.Equals(function.IndexName))] = function.InitialValue().ToString(CultureInfo.InvariantCulture);
                     }
                     Functions.Remove(function);
                 }
@@ -106,14 +105,14 @@ namespace Symu.SysDyn.Equations
 
             }
             
-            while (_words.FindIndex(ind => ind.Equals(child)) >=0)
+            while (Words.FindIndex(ind => ind.Equals(child)) >=0)
             {
-                _words[_words.FindIndex(ind => ind.Equals(child))] = value;
+                Words[Words.FindIndex(ind => ind.Equals(child))] = value;
             }
 
-            InitializedEquation = string.Join(string.Empty, _words);
+            InitializedEquation = string.Join(string.Empty, Words);
             Variables.Remove(child);
-            _expression = new Expression(InitializedEquation);
+            Expression = new Expression(InitializedEquation);
         }
     }
 }

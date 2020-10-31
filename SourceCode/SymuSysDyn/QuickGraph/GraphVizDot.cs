@@ -26,7 +26,7 @@ namespace Symu.SysDyn.QuickGraph
     {
         public static string GenerateDotString(Graph graph)
         {
-            var viz = new GraphvizAlgorithm<Variable, VariableEdge>(graph);
+            var viz = new GraphvizAlgorithm<IVariable, VariableEdge>(graph);
 
             viz.FormatVertex += FormatVertex;
             viz.FormatEdge += FormatEdge;

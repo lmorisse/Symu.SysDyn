@@ -18,7 +18,7 @@ using Symu.SysDyn.Model;
 
 namespace Symu.SysDyn.QuickGraph
 {
-    public class Graph : BidirectionalGraph<Variable, VariableEdge>
+    public class Graph : BidirectionalGraph<IVariable, VariableEdge>
     {
         public Graph(bool allowParallelEdges) : base(allowParallelEdges)
         {
