@@ -1,17 +1,27 @@
-﻿using System.Collections;
+﻿#region Licence
+
+// Description: SymuSysDyn - SymuSysDynTests
+// Website: https://symu.org
+// Copyright: (c) 2020 laurent Morisseau
+// License : the program is distributed under the terms of the GNU General Public License
+
+#endregion
+
+#region using directives
+
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Symu.SysDyn.Equations;
 using Symu.SysDyn.Functions;
-using Symu.SysDyn.Model;
+
+#endregion
 
 namespace SymuSysDynTests.Functions
 {
-    [TestClass()]
+    [TestClass]
     public class IfThenElseTests
     {
-
         [TestMethod]
         public void ParseTest()
         {

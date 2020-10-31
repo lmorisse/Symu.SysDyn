@@ -2,20 +2,25 @@
 
 // Description: SymuSysDyn - SymuSysDyn
 // Website: https://symu.org
-// Copyright: (c) 2020 laurent morisseau
+// Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
 
 #endregion
 
+#region using directives
+
 using System;
+
+#endregion
 
 namespace Symu.SysDyn.Model
 {
     /// <summary>
-    /// Prevents the stock from going negative
+    ///     Prevents the stock from going negative
     /// </summary>
     public class NonNegative
-    {/// <summary>
+    {
+        /// <summary>
         ///     Constructor based on float values
         /// </summary>
         public NonNegative(bool nonNegative)

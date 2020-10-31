@@ -2,7 +2,7 @@
 
 // Description: SymuSysDyn - SymuSysDyn
 // Website: https://symu.org
-// Copyright: (c) 2020 laurent morisseau
+// Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
 
 #endregion
@@ -12,7 +12,6 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Text.RegularExpressions;
 using NCalc2;
 using Symu.SysDyn.Equations;
@@ -23,14 +22,12 @@ namespace Symu.SysDyn.Functions
 {
     /// <summary>
     ///     IF condition THEN expression ELSE expression
-    ///      all non-zero values are true, while zero is false.
-    /// Generally, condition is an expression involving the logical, relational, and equality operators.
-
+    ///     all non-zero values are true, while zero is false.
+    ///     Generally, condition is an expression involving the logical, relational, and equality operators.
     /// </summary>
     public class IfThenElse : BuiltInFunction
     {
-
-        public IfThenElse(string function) 
+        public IfThenElse(string function)
         {
             OriginalFunction = function ?? throw new ArgumentNullException(nameof(function));
             Name = "If";
@@ -48,7 +45,7 @@ namespace Symu.SysDyn.Functions
         }
 
         /// <summary>
-        /// Parse the string function to extract the if-then-else conditions in the parameters
+        ///     Parse the string function to extract the if-then-else conditions in the parameters
         /// </summary>
         /// <param name="input"></param>
         /// <param name="parameters"></param>
@@ -78,7 +75,8 @@ namespace Symu.SysDyn.Functions
             input = equation + ")";
         }
 
-        private static string UpdateEquation(ICollection<IEquation> parameters, ICollection<float> args, IEquation elseExpression, float value, string equation)
+        private static string UpdateEquation(ICollection<IEquation> parameters, ICollection<float> args,
+            IEquation elseExpression, float value, string equation)
         {
             parameters.Add(elseExpression);
             args.Add(value);

@@ -2,7 +2,7 @@
 
 // Description: SymuSysDyn - SymuSysDynTests
 // Website: https://symu.org
-// Copyright: (c) 2020 laurent morisseau
+// Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
 
 #endregion
@@ -17,9 +17,8 @@ using Symu.SysDyn.Functions;
 namespace SymuSysDynTests.Functions
 {
     [TestClass]
-    public class RampTests: BaseClassTest
+    public class RampTests : BaseClassTest
     {
-
         [TestMethod]
         public void RampTest()
         {
@@ -27,8 +26,9 @@ namespace SymuSysDynTests.Functions
             Assert.AreEqual("20", function.Time);
             Assert.AreEqual("-7", function.Slope);
         }
+
         /// <summary>
-        /// Non passing test
+        ///     Non passing test
         /// </summary>
         [TestMethod]
         public void EvaluateTest()

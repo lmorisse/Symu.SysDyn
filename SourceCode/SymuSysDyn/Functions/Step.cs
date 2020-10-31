@@ -2,7 +2,7 @@
 
 // Description: SymuSysDyn - SymuSysDyn
 // Website: https://symu.org
-// Copyright: (c) 2020 laurent morisseau
+// Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
 
 #endregion
@@ -10,8 +10,6 @@
 #region using directives
 
 using System;
-using System.Globalization;
-using System.Linq;
 using Symu.SysDyn.Model;
 using Symu.SysDyn.Simulation;
 
@@ -33,6 +31,9 @@ namespace Symu.SysDyn.Functions
         {
         }
 
+        public string Height => GetParam(0);
+        public string StartTime => GetParam(1);
+
         public override IBuiltInFunction Clone()
         {
             var clone = new Step(OriginalFunction);
@@ -40,15 +41,13 @@ namespace Symu.SysDyn.Functions
             return clone;
         }
 
-        public string Height => GetParam(0);
-        public string StartTime => GetParam(1);
-
-        public override float Evaluate(Variable selfVariable, Variables variables, SimSpecs sim)
+        public override float Evaluate(IVariable selfVariable, Variables variables, SimSpecs sim)
         {
             if (sim == null)
             {
                 throw new ArgumentNullException(nameof(sim));
             }
+
             //Height can be either a literal or a numeric
             var height = GetValue(0, selfVariable, variables, sim);
 

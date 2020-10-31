@@ -2,7 +2,7 @@
 
 // Description: SymuSysDyn - SymuSysDyn
 // Website: https://symu.org
-// Copyright: (c) 2020 laurent morisseau
+// Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
 
 #endregion
@@ -31,12 +31,6 @@ namespace Symu.SysDyn.Model
         public Stock(string name) : base(name)
         {
         }
-        public Stock(string name, string eqn, string inflow) : this(name, eqn, new List<string> { inflow }, new List<string>())
-        {
-        }
-        public Stock(string name, string eqn, string inflow, string outflow) : this(name, eqn, new List<string> {inflow}, new List<string> { outflow })
-        {
-        }
 
         public Stock(string name, string eqn, List<string> inflow, List<string> outflow) : base(name, eqn)
         {
@@ -52,6 +46,7 @@ namespace Symu.SysDyn.Model
             Outflow = StringUtils.CleanNames(outflow);
             SetChildren();
         }
+
         public override IVariable Clone()
         {
             var clone = new Stock(Name);

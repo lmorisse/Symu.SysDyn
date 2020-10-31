@@ -2,25 +2,17 @@
 
 // Description: SymuSysDyn - SymuSysDyn
 // Website: https://symu.org
-// Copyright: (c) 2020 laurent morisseau
+// Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
 
 #endregion
 
 #region using directives
 
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Globalization;
 using System.Linq;
-using System.Text.RegularExpressions;
-using NCalc2;
-using Symu.SysDyn.Equations;
-using Symu.SysDyn.Model;
-using Symu.SysDyn.Parser;
-using Symu.SysDyn.Simulation;
 
 #endregion
 
@@ -30,11 +22,9 @@ namespace Symu.SysDyn.Functions
     ///     A list of built in functions
     /// </summary>
     public class BuiltInFunctionCollection : IEnumerable<IBuiltInFunction>
-    {        
+    {
         private readonly List<IBuiltInFunction> _functions = new List<IBuiltInFunction>();
-        public BuiltInFunctionCollection()
-        {
-        }
+
         public BuiltInFunctionCollection(IEnumerable<IBuiltInFunction> functions)
         {
             _functions.AddRange(functions);
@@ -45,7 +35,10 @@ namespace Symu.SysDyn.Functions
             return _functions.Select(function => function.Clone()).ToList();
         }
 
-        public bool Any() => _functions.Any();
+        public bool Any()
+        {
+            return _functions.Any();
+        }
 
         public IEnumerable<IBuiltInFunction> ToImmutableList()
         {

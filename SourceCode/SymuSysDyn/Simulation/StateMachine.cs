@@ -2,25 +2,17 @@
 
 // Description: SymuSysDyn - SymuSysDyn
 // Website: https://symu.org
-// Copyright: (c) 2020 laurent morisseau
+// Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
 
 #endregion
 
 #region using directives
 
-using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Globalization;
 using System.Linq;
-using NCalc2;
-using Symu.SysDyn.Equations;
-using Symu.SysDyn.Functions;
 using Symu.SysDyn.Model;
 using Symu.SysDyn.Parser;
 using Symu.SysDyn.QuickGraph;
-using Symu.SysDyn.Results;
 
 #endregion
 
@@ -29,12 +21,13 @@ namespace Symu.SysDyn.Simulation
     public partial class StateMachine
     {
         /// <summary>
-        /// Immutable List of the optimized variables if optimized option is on
+        ///     Immutable List of the optimized variables if optimized option is on
         /// </summary>
         private Variables _optimizedVariablesReference;
+
         /// <summary>
-        /// Create an instance of the state machine from an xml File
-        /// The stateMachine is Not Initialized - you have to call Initialize after having filled the variables
+        ///     Create an instance of the state machine from an xml File
+        ///     The stateMachine is Not Initialized - you have to call Initialize after having filled the variables
         /// </summary>
         public StateMachine()
         {
@@ -42,9 +35,10 @@ namespace Symu.SysDyn.Simulation
             Simulation = new SimSpecs();
             Simulation.OnTimer += OnTimer;
         }
+
         /// <summary>
-        /// Create an instance of the state machine from an xml File
-        /// The stateMachine is Initialized
+        ///     Create an instance of the state machine from an xml File
+        ///     The stateMachine is Initialized
         /// </summary>
         /// <param name="xmlFile"></param>
         /// <param name="validate"></param>
@@ -58,11 +52,26 @@ namespace Symu.SysDyn.Simulation
         }
 
         public SimSpecs Simulation { get; }
-        public Variables ReferenceVariables { get; private set; } 
-        public Variables Variables { get; private set; } 
+        public Variables ReferenceVariables { get; private set; }
+        public Variables Variables { get; private set; }
+
+        /// <summary>
+        ///     Create Graph of variables using QuickGraph
+        /// </summary>
+        public Graph GetGraph()
+        {
+            return Graph.CreateInstance(Variables);
+        }
+
+        /// <summary>
+        ///     Create a SubGraph of variables via a group name using QuickGraph
+        /// </summary>
+        public Graph GetSubGraph(string groupName)
+        {
+            return Graph.CreateInstance(Variables.GetGroupVariables(groupName));
+        }
 
         #region Initialize
-
 
         public void Initialize()
         {
@@ -76,6 +85,7 @@ namespace Symu.SysDyn.Simulation
             // Clone the  Variables
             ReferenceVariables = Variables.Clone();
         }
+
         private void RetrieveFromReferenceVariables()
         {
             if (Variables.Any())
@@ -103,23 +113,7 @@ namespace Symu.SysDyn.Simulation
                 stock.SetStockEquation();
             }
         }
+
         #endregion
-
-        /// <summary>
-        ///     Create Graph of variables using QuickGraph
-        /// </summary>
-        public Graph GetGraph()
-        {
-            return Graph.CreateInstance(Variables);
-        }
-
-        /// <summary>
-        ///     Create a SubGraph of variables via a group name using QuickGraph
-        /// </summary>
-        public Graph GetSubGraph(string groupName)
-        {
-            return Graph.CreateInstance(Variables.GetGroupVariables(groupName));
-        }
-
     }
 }

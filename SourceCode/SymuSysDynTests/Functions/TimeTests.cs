@@ -2,7 +2,7 @@
 
 // Description: SymuSysDyn - SymuSysDynTests
 // Website: https://symu.org
-// Copyright: (c) 2020 laurent morisseau
+// Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
 
 #endregion
@@ -17,7 +17,7 @@ using Symu.SysDyn.Functions;
 namespace SymuSysDynTests.Functions
 {
     [TestClass]
-    public class TimeTests: BaseClassTest
+    public class TimeTests : BaseClassTest
     {
         [DataRow(0)]
         [DataRow(10)]
@@ -26,9 +26,8 @@ namespace SymuSysDynTests.Functions
         public void TimeTest(int time)
         {
             var timeFunction = new Time("TIME");
-            Machine.Simulation.Time = (ushort)time;
+            Machine.Simulation.Time = (ushort) time;
             Assert.AreEqual(time, timeFunction.Evaluate(null, Machine.Variables, Machine.Simulation));
         }
-
     }
 }

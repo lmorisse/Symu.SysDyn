@@ -2,7 +2,7 @@
 
 // Description: SymuSysDyn - SymuSysDyn
 // Website: https://symu.org
-// Copyright: (c) 2020 laurent morisseau
+// Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
 
 #endregion
@@ -17,7 +17,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Symu.SysDyn.Model;
 
 #endregion
 
@@ -26,7 +25,6 @@ namespace Symu.SysDyn.Parser
     //todo Maybe try a framework like https://github.com/IronyProject to have a real grammar more than regex
     public static class StringUtils
     {
-
         #region Names
 
         public static List<string> CleanNames(List<string> names)

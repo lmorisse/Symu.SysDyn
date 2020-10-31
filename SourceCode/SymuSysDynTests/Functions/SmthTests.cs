@@ -1,11 +1,24 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿#region Licence
+
+// Description: SymuSysDyn - SymuSysDynTests
+// Website: https://symu.org
+// Copyright: (c) 2020 laurent Morisseau
+// License : the program is distributed under the terms of the GNU General Public License
+
+#endregion
+
+#region using directives
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Symu.SysDyn.Functions;
 using Symu.SysDyn.Model;
 using Symu.SysDyn.Simulation;
 
+#endregion
+
 namespace SymuSysDynTests.Functions
 {
-    [TestClass()]
+    [TestClass]
     public class SmthTests
     {
         private readonly StateMachine _machine = new StateMachine();
@@ -16,7 +29,7 @@ namespace SymuSysDynTests.Functions
             _machine.Simulation.Stop = 20;
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void Smth1Test()
         {
             var smth = new Smth1("SMTH1(5+Step(10,3),5)");
@@ -25,7 +38,7 @@ namespace SymuSysDynTests.Functions
             Assert.AreEqual("5", smth.Averaging);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void Smth1Test1()
         {
             var smth = new Smth1("SMTH1(5+Step(10,3),5,2)");
@@ -33,10 +46,11 @@ namespace SymuSysDynTests.Functions
             Assert.AreEqual("5+Step(10,3)", smth.Input);
             Assert.AreEqual("5", smth.Averaging);
         }
+
         /// <summary>
-        /// With Initial value
+        ///     With Initial value
         /// </summary>
-        [TestMethod()]
+        [TestMethod]
         public void EvaluateTest()
         {
             var smth = new Smth1("SMTH1(5+Step(10,3),5,5)");
@@ -47,10 +61,11 @@ namespace SymuSysDynTests.Functions
             _machine.Simulation.Time = 4;
             Assert.AreEqual(7, smth.Evaluate(null, _machine.Variables, _machine.Simulation));
         }
+
         /// <summary>
-        /// Without initial value
+        ///     Without initial value
         /// </summary>
-        [TestMethod()]
+        [TestMethod]
         public void EvaluateTest1()
         {
             var smth = new Smth1("SMTH1(5+Step(10,3),5)");
@@ -63,9 +78,9 @@ namespace SymuSysDynTests.Functions
         }
 
         /// <summary>
-        /// With external parameter
+        ///     With external parameter
         /// </summary>
-        [TestMethod()]
+        [TestMethod]
         public void EvaluateTest2()
         {
             var aux = new Auxiliary("aux", "5+Step(10,3)+aux2");

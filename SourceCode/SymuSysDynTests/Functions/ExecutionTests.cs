@@ -1,27 +1,28 @@
-﻿using System;
+﻿#region Licence
+
+// Description: SymuSysDyn - SymuSysDynTests
+// Website: https://symu.org
+// Copyright: (c) 2020 laurent Morisseau
+// License : the program is distributed under the terms of the GNU General Public License
+
+#endregion
+
+#region using directives
+
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NCalc2;
+
+#endregion
 
 namespace SymuSysDynTests.Functions
 {
     /// <summary>
-    /// Use to explore the capabilities of NCalc2
+    ///     Use to explore the capabilities of NCalc2
     /// </summary>
-    [TestClass()]
+    [TestClass]
     public class ExecutionTests
     {
-        
-        [TestMethod]
-        public void NestedFunctionTest0()
-        {
-            var function = @"max(i,min(k,l))-abs(h)+pow(1,2)";
-
-            var e = new Expression(function);
-            bool err = e.HasErrors();
-            var param = e.Parameters;
-            var parsed = e.ParsedExpression;
-            //Assert.AreEqual(1F, Convert.ToUInt16(e.Evaluate()));
-        }
 
 
         [TestMethod]
@@ -31,12 +32,14 @@ namespace SymuSysDynTests.Functions
 
             Assert.AreEqual(1F, Convert.ToUInt16(e.Evaluate()));
         }
+
         [TestMethod]
         public void NoSeparatorTest()
         {
             var e = new Expression("Abs(5)+Pow(2,2)-5");
             Assert.AreEqual(4F, Convert.ToUInt16(e.Evaluate()));
         }
+
         [TestMethod]
         public void ParametersTest()
         {
@@ -46,7 +49,6 @@ namespace SymuSysDynTests.Functions
 
 
         #region BuilIn functions
-
 
         [TestMethod]
         public void IfThenElseTest()
@@ -60,8 +62,7 @@ namespace SymuSysDynTests.Functions
             e = new Expression("if(1,1,2)");
             Assert.AreEqual(1, Convert.ToUInt16(e.Evaluate()));
         }
+
         #endregion
-
-
     }
 }

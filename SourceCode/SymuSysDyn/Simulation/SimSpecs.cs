@@ -2,7 +2,7 @@
 
 // Description: SymuSysDyn - SymuSysDyn
 // Website: https://symu.org
-// Copyright: (c) 2020 laurent morisseau
+// Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
 
 #endregion
@@ -26,6 +26,7 @@ namespace Symu.SysDyn.Simulation
         Pause,
         Stopped
     }
+
     /// <summary>
     ///     SimSpecs is the structure to define and store information about the simulation
     ///     It is based on sim_specs element of the xmile schema (schema.xsd)
@@ -68,7 +69,7 @@ namespace Symu.SysDyn.Simulation
             }
         }
 
-        public SimState State { get; private set; } = SimState.NotStarted; 
+        public SimState State { get; private set; } = SimState.NotStarted;
         public bool OnPause => State == SimState.Pause;
         public ushort Step { get; set; }
         public ushort Time { get; set; }
@@ -80,7 +81,7 @@ namespace Symu.SysDyn.Simulation
 
         public void Clear()
         {
-            Step = (ushort)Math.Floor(Start / DeltaTime);
+            Step = (ushort) Math.Floor(Start / DeltaTime);
             State = SimState.NotStarted;
         }
 

@@ -1,22 +1,25 @@
 ﻿#region Licence
 
-// Description: SymuBiz - SymuSysDyn
+// Description: SymuSysDyn - SymuSysDyn
 // Website: https://symu.org
 // Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
 
 #endregion
 
+#region using directives
+
 using System.Collections.Generic;
-using NCalc2;
 using Symu.SysDyn.Equations;
 using Symu.SysDyn.Model;
 using Symu.SysDyn.Simulation;
 
+#endregion
+
 namespace Symu.SysDyn.Functions
 {
     /// <summary>
-    /// Interface for built in function defined by string
+    ///     Interface for built in function defined by string
     ///     Works with nested functions, i.e. if the parameters of the function are functions
     /// </summary>
     public interface IBuiltInFunction
@@ -26,34 +29,21 @@ namespace Symu.SysDyn.Functions
         /// </summary>
         string OriginalFunction { get; }
 
-        string InitializedFunction { get; set; }
-
-        /// <summary>
-        ///     The entire cleaned function ready to be evaluated
-        /// </summary>
-        Expression Expression { get; set; }
-
         /// <summary>
         ///     The function name
         /// </summary>
         string Name { get; set; }
 
         /// <summary>
-        ///     The function name indexed 
+        ///     The function name indexed
         /// </summary>
         string IndexName { get; set; }
 
         /// <summary>
-        /// List of arguments that are IEquation or null if it is a constant
-        /// If it is a constant, the value is stored in Args
+        ///     List of arguments that are IEquation or null if it is a constant
+        ///     If it is a constant, the value is stored in Args
         /// </summary>
         List<IEquation> Parameters { get; }
-
-        /// <summary>
-        /// List of arguments that are constants
-        /// If it is an IEquation, the value is stored in Parameters
-        /// </summary>
-        List<float> Args { get; }
 
         IBuiltInFunction Clone();
 
@@ -64,11 +54,10 @@ namespace Symu.SysDyn.Functions
         /// <param name="variables"></param>
         /// <param name="sim"></param>
         /// <returns></returns>
-        float Prepare(Variable selfVariable, Variables variables, SimSpecs sim);
+        float Prepare(IVariable selfVariable, Variables variables, SimSpecs sim);
 
         float InitialValue();
-        float Evaluate(Variable selfVariable, Variables variables, SimSpecs sim);
-        bool TryEvaluate(Variable variable, Variables variables, SimSpecs sim, out float result);
+        bool TryEvaluate(IVariable variable, Variables variables, SimSpecs sim, out float result);
         void Replace(string child, string value);
     }
 }

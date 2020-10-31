@@ -59,7 +59,7 @@
       </aux>
       <stock name="Tap_Setting_2">
         <eqn>21/60  {dimensionless fraction of scale range}</eqn>
-        <scale min="0" max="1"/>
+        <scale min="0" max="1" />
         <inflow>Change_in__Tap_Setting_2</inflow>
       </stock>
       <flow name="Change_in_\nTap_Setting_2">

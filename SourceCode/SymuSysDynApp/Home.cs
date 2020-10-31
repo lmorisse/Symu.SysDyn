@@ -2,7 +2,7 @@
 
 // Description: SymuSysDyn - SymuSysDynApp
 // Website: https://symu.org
-// Copyright: (c) 2020 laurent morisseau
+// Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
 
 #endregion
@@ -42,6 +42,7 @@ namespace SymuSysDynApp
             {
                 cbResults.Items.AddRange(_stateMachine.Variables.Names.OrderBy(x => x).ToArray());
             }
+
             cbResults.Enabled = true;
             btnClear.Enabled = true;
             lblTime.Text = _stateMachine.Simulation.Time.ToString(CultureInfo.InvariantCulture);
@@ -163,13 +164,14 @@ namespace SymuSysDynApp
         private void cbGroups_SelectedIndexChanged(object sender, EventArgs e)
         {
             var groupName = cbGroups.SelectedItem.ToString();
-            var dotString = GraphVizDot.GenerateDotString(groupName == AllGroups ? _stateMachine.GetGraph() : _stateMachine.GetSubGraph(groupName));
+            var dotString = GraphVizDot.GenerateDotString(groupName == AllGroups
+                ? _stateMachine.GetGraph()
+                : _stateMachine.GetSubGraph(groupName));
             picImage.Image = GraphViz.RenderImage(dotString, "jpg");
         }
 
         private void cbVariables_SelectedIndexChanged_1(object sender, EventArgs e)
         {
-
             var variableName = cbVariables.SelectedItem.ToString();
             var variable = _stateMachine.ReferenceVariables.Get(variableName);
             tbEquation.Text = variable.Equation != null ? variable.Equation.ToString() : string.Empty;

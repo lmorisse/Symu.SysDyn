@@ -2,7 +2,7 @@
 
 // Description: SymuSysDyn - SymuSysDyn
 // Website: https://symu.org
-// Copyright: (c) 2020 laurent morisseau
+// Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
 
 #endregion
@@ -14,13 +14,9 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Globalization;
 using System.Linq;
-using NCalc2;
 using Symu.SysDyn.Equations;
 using Symu.SysDyn.Functions;
 using Symu.SysDyn.Model;
-using Symu.SysDyn.Parser;
-using Symu.SysDyn.QuickGraph;
-using Symu.SysDyn.Results;
 
 #endregion
 
@@ -28,16 +24,16 @@ namespace Symu.SysDyn.Simulation
 {
     public partial class StateMachine
     {
-       
         public bool Optimized { get; set; }
 
         /// <summary>
-        /// Store the optimized variables
+        ///     Store the optimized variables
         /// </summary>
         private void StoreOptimizedReferenceVariables()
         {
             _optimizedVariablesReference = Variables.Clone();
         }
+
         private void RetrieveFromOptimizedReferenceVariables()
         {
             foreach (var variable in _optimizedVariablesReference)
@@ -64,7 +60,7 @@ namespace Symu.SysDyn.Simulation
 
             if (_optimizedVariablesReference != null)
             {
-               RetrieveFromOptimizedReferenceVariables();
+                RetrieveFromOptimizedReferenceVariables();
                 return;
             }
 
@@ -77,6 +73,7 @@ namespace Symu.SysDyn.Simulation
             {
                 Variables.Remove(variable);
             }
+
             do
             {
                 waitingParents = new List<IVariable>();
@@ -87,6 +84,7 @@ namespace Symu.SysDyn.Simulation
                     waitingParents = withChildren.Distinct().ToList(); //no duplicates
                 }
             } while (waitingParents.Any());
+
             StoreOptimizedReferenceVariables();
         }
 
@@ -105,7 +103,8 @@ namespace Symu.SysDyn.Simulation
             parent.Updating = true;
             var readyToUpdate = true;
             var waitingParents = new List<IVariable>();
-            foreach (var child in parent.Children.Select(childName => Variables[childName]).Where(x => x != null && !x.Updated)) 
+            foreach (var child in parent.Children.Select(childName => Variables[childName])
+                .Where(x => x != null && !x.Updated))
             {
                 switch (child.Updating)
                 {
@@ -146,21 +145,23 @@ namespace Symu.SysDyn.Simulation
             {
                 return true;
             }
+
             // Replace function Dt
             if (variable.Equation is ComplexEquation complexEquation)
             {
                 complexEquation.Replace(Dt.Value, Simulation.DeltaTime.ToString(CultureInfo.InvariantCulture));
             }
+
             // Replace variable per its value
-            foreach (var child in variable.Children.Select(childName => ReferenceVariables[childName]).ToImmutableList().
-                Where(child => !Variables.Exists(child.Name)))
+            foreach (var child in variable.Children.Select(childName => ReferenceVariables[childName]).ToImmutableList()
+                .Where(child => !Variables.Exists(child.Name)))
             {
                 variable.Equation.Replace(child.Name, child.Value.ToString(CultureInfo.InvariantCulture));
                 variable.Children.Remove(child.Name);
             }
+
             variable.Updated = true;
             return variable.TryOptimize(true);
         }
-
     }
 }

@@ -2,7 +2,7 @@
 
 // Description: SymuSysDyn - SymuSysDynTests
 // Website: https://symu.org
-// Copyright: (c) 2020 laurent morisseau
+// Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
 
 #endregion
@@ -10,8 +10,6 @@
 #region using directives
 
 using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Symu.SysDyn.Parser;
 
@@ -67,6 +65,5 @@ namespace SymuSysDynTests.Parser
             Assert.IsNotNull(test);
             Assert.AreEqual("test2", test);
         }
-
     }
 }

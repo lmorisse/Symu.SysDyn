@@ -2,7 +2,7 @@
 
 // Description: SymuSysDyn - SymuSysDynTests
 // Website: https://symu.org
-// Copyright: (c) 2020 laurent morisseau
+// Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
 
 #endregion
@@ -27,6 +27,7 @@ namespace SymuSysDynTests.Equations
             Assert.AreEqual("Time0", equation.InitializedEquation);
             Assert.AreEqual(0, equation.Variables.Count);
         }
+
         [TestMethod]
         public void DtTest()
         {
@@ -35,6 +36,7 @@ namespace SymuSysDynTests.Equations
             Assert.AreEqual("Dt0", equation.InitializedEquation);
             Assert.AreEqual(0, equation.Variables.Count);
         }
+
         [TestMethod]
         public void StepTest()
         {
@@ -45,6 +47,7 @@ namespace SymuSysDynTests.Equations
             Assert.AreEqual("Height", equation.Variables[0]);
             Assert.AreEqual("Starttime", equation.Variables[1]);
         }
+
         [TestMethod]
         public void RampTest()
         {
@@ -56,6 +59,7 @@ namespace SymuSysDynTests.Equations
             Assert.AreEqual("Starttime", equation.Variables[0]);
             Assert.AreEqual("Slope", equation.Variables[1]);
         }
+
         [TestMethod]
         public void NormalTest()
         {
@@ -66,6 +70,7 @@ namespace SymuSysDynTests.Equations
             Assert.AreEqual("Mean", equation.Variables[0]);
             Assert.AreEqual("Standarddeviation", equation.Variables[1]);
         }
+
         [TestMethod]
         public void NormalTest1()
         {
@@ -77,6 +82,7 @@ namespace SymuSysDynTests.Equations
             Assert.AreEqual("Standarddeviation", equation.Variables[1]);
             Assert.AreEqual("Seed", equation.Variables[2]);
         }
+
         [TestMethod]
         public void IfThenElseTest()
         {
@@ -88,6 +94,7 @@ namespace SymuSysDynTests.Equations
             Assert.AreEqual("Expression1", equation.Variables[1]);
             Assert.AreEqual("Expression2", equation.Variables[2]);
         }
+
         [TestMethod]
         public void Smth1Test()
         {
@@ -98,6 +105,7 @@ namespace SymuSysDynTests.Equations
             Assert.AreEqual("Input", equation.Variables[0]);
             Assert.AreEqual("Averaging", equation.Variables[1]);
         }
+
         [TestMethod]
         public void Smth1Test1()
         {
@@ -109,6 +117,7 @@ namespace SymuSysDynTests.Equations
             Assert.AreEqual("Averaging", equation.Variables[1]);
             Assert.AreEqual("Initial", equation.Variables[2]);
         }
+
         [TestMethod]
         public void Smth3Test()
         {
@@ -119,6 +128,7 @@ namespace SymuSysDynTests.Equations
             Assert.AreEqual("Input", equation.Variables[0]);
             Assert.AreEqual("Averaging", equation.Variables[1]);
         }
+
         [TestMethod]
         public void Smth3Test1()
         {
@@ -130,6 +140,7 @@ namespace SymuSysDynTests.Equations
             Assert.AreEqual("Averaging", equation.Variables[1]);
             Assert.AreEqual("Initial", equation.Variables[2]);
         }
+
         [TestMethod]
         public void SmthNTest()
         {
@@ -140,6 +151,7 @@ namespace SymuSysDynTests.Equations
             Assert.AreEqual("Input", equation.Variables[0]);
             Assert.AreEqual("Averaging", equation.Variables[1]);
         }
+
         [TestMethod]
         public void SmthNTest1()
         {
@@ -151,6 +163,7 @@ namespace SymuSysDynTests.Equations
             Assert.AreEqual("Averaging", equation.Variables[1]);
             Assert.AreEqual("Initial", equation.Variables[2]);
         }
+
         [TestMethod]
         public void AbsTest()
         {
@@ -160,6 +173,7 @@ namespace SymuSysDynTests.Equations
             Assert.AreEqual(1, equation.Variables.Count);
             Assert.AreEqual("Variable", equation.Variables[0]);
         }
+
         [TestMethod]
         public void MinTest()
         {
@@ -170,6 +184,7 @@ namespace SymuSysDynTests.Equations
             Assert.AreEqual("Variable1", equation.Variables[0]);
             Assert.AreEqual("Variable2", equation.Variables[1]);
         }
+
         [TestMethod]
         public void MaxTest()
         {
@@ -180,6 +195,7 @@ namespace SymuSysDynTests.Equations
             Assert.AreEqual("Variable1", equation.Variables[0]);
             Assert.AreEqual("Variable2", equation.Variables[1]);
         }
+
         [TestMethod]
         public void PowTest()
         {

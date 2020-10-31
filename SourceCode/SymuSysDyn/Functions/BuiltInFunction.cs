@@ -2,7 +2,7 @@
 
 // Description: SymuSysDyn - SymuSysDyn
 // Website: https://symu.org
-// Copyright: (c) 2020 laurent morisseau
+// Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
 
 #endregion
@@ -13,13 +13,9 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text.RegularExpressions;
-using MathNet.Numerics.LinearAlgebra.Solvers;
-using MathNet.Numerics.Optimization;
 using NCalc2;
 using Symu.SysDyn.Equations;
 using Symu.SysDyn.Model;
-using Symu.SysDyn.Parser;
 using Symu.SysDyn.Simulation;
 
 #endregion
@@ -31,15 +27,19 @@ namespace Symu.SysDyn.Functions
     ///     A built in function defined by string
     ///     Works with nested functions, i.e. if the parameters of the function are functions
     /// </summary>
-    /// <remarks>When adding a new buildIn function,
-    /// create an inherited class of BuiltInFunction
-    /// add it in FunctionUtils.ParseStringFunctions
-    /// add a unit test class for the function
-    /// add a unit test in AllBuiltInFUnctionsTests to have the list of all available functions</remarks>
+    /// <remarks>
+    ///     When adding a new buildIn function,
+    ///     create an inherited class of BuiltInFunction
+    ///     add it in FunctionUtils.ParseStringFunctions
+    ///     add a unit test class for the function
+    ///     add a unit test in AllBuiltInFUnctionsTests to have the list of all available functions
+    /// </remarks>
     /// <remarks>https://www.simulistics.com/help/equations/builtin.htm</remarks>
     public class BuiltInFunction : IBuiltInFunction
-    {        
-        public BuiltInFunction() { }
+    {
+        public BuiltInFunction()
+        {
+        }
 
         public BuiltInFunction(string function)
         {
@@ -52,10 +52,13 @@ namespace Symu.SysDyn.Functions
             Expression = new Expression(function);
         }
 
+        #region IBuiltInFunction Members
+
         /// <summary>
         ///     The entire function included brackets and parameters
         /// </summary>
         public string OriginalFunction { get; protected set; }
+
         public string InitializedFunction { get; set; }
 
         /// <summary>
@@ -67,18 +70,21 @@ namespace Symu.SysDyn.Functions
         ///     The function name
         /// </summary>
         public string Name { get; set; }
+
         /// <summary>
-        ///     The function name indexed 
+        ///     The function name indexed
         /// </summary>
         public string IndexName { get; set; }
+
         /// <summary>
-        /// List of arguments that are IEquation or null if it is a constant
-        /// If it is a constant, the value is stored in Args
+        ///     List of arguments that are IEquation or null if it is a constant
+        ///     If it is a constant, the value is stored in Args
         /// </summary>
         public List<IEquation> Parameters { get; protected set; }
+
         /// <summary>
-        /// List of arguments that are constants
-        /// If it is an IEquation, the value is stored in Parameters
+        ///     List of arguments that are constants
+        ///     If it is an IEquation, the value is stored in Parameters
         /// </summary>
         public List<float> Args { get; protected set; }
 
@@ -89,26 +95,6 @@ namespace Symu.SysDyn.Functions
             return clone;
         }
 
-        protected void CopyTo(IBuiltInFunction copy)
-        {
-            if (copy == null)
-            {
-                throw new ArgumentNullException(nameof(copy));
-            }
-
-            copy.IndexName = IndexName;
-        }
-
-        protected float GetValue(int index, Variable variable, Variables variables, SimSpecs sim)
-        {
-            return Parameters[index] != null ? Parameters[index].Evaluate(variable, variables, sim) : Args[index];
-        }
-
-        protected string GetParam(int index)
-        {
-            return Parameters[index] != null ? Parameters[index].InitializedEquation : Args[index].ToString(CultureInfo.InvariantCulture);
-        }
-
         /// <summary>
         ///     Prepare the function for the Equation.Prepare()
         /// </summary>
@@ -116,7 +102,7 @@ namespace Symu.SysDyn.Functions
         /// <param name="variables"></param>
         /// <param name="sim"></param>
         /// <returns></returns>
-        public float Prepare(Variable selfVariable, Variables variables, SimSpecs sim)
+        public float Prepare(IVariable selfVariable, Variables variables, SimSpecs sim)
         {
             if (variables == null)
             {
@@ -147,12 +133,12 @@ namespace Symu.SysDyn.Functions
             return Convert.ToSingle(Expression.Evaluate());
         }
 
-        public virtual float Evaluate(Variable selfVariable, Variables variables, SimSpecs sim)
+        public virtual float Evaluate(IVariable selfVariable, Variables variables, SimSpecs sim)
         {
             return InitialValue();
         }
 
-        public bool TryEvaluate(Variable variable, Variables variables, SimSpecs sim, out float result)
+        public bool TryEvaluate(IVariable variable, Variables variables, SimSpecs sim, out float result)
         {
             try
             {
@@ -202,6 +188,30 @@ namespace Symu.SysDyn.Functions
 
             InitializedFunction = FunctionUtils.GetInitializedFunction(Name, Parameters, Args);
             Expression = new Expression(InitializedFunction);
+        }
+
+        #endregion
+
+        protected void CopyTo(IBuiltInFunction copy)
+        {
+            if (copy == null)
+            {
+                throw new ArgumentNullException(nameof(copy));
+            }
+
+            copy.IndexName = IndexName;
+        }
+
+        protected float GetValue(int index, IVariable variable, Variables variables, SimSpecs sim)
+        {
+            return Parameters[index] != null ? Parameters[index].Evaluate(variable, variables, sim) : Args[index];
+        }
+
+        protected string GetParam(int index)
+        {
+            return Parameters[index] != null
+                ? Parameters[index].InitializedEquation
+                : Args[index].ToString(CultureInfo.InvariantCulture);
         }
     }
 }

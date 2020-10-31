@@ -2,7 +2,7 @@
 
 // Description: SymuSysDyn - SymuSysDynTests
 // Website: https://symu.org
-// Copyright: (c) 2020 laurent morisseau
+// Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
 
 #endregion
@@ -21,12 +21,12 @@ using Symu.SysDyn.Simulation;
 namespace SymuSysDynTests
 {
     [TestClass]
-    public abstract class SMTH3ClassTest
+    public abstract class Smth3ClassTest
     {
         protected const string TestFile =
             @"C:\Users\laure\Dropbox\Symu\SourceCode\Symu.SysDyn\Github\SourceCode\SymuSysDynTests\Templates\SMTH3.xmile";
 
-        protected SMTH3ClassTest()
+        protected Smth3ClassTest()
         {
             Machine = new StateMachine(TestFile);
             XDoc = XDocument.Load(TestFile);
@@ -34,11 +34,11 @@ namespace SymuSysDynTests
             XElement = XDoc.Root?.Descendants(Ns + "variables").First();
         }
 
-        protected XmlParser Parser { get; } = new XmlParser(TestFile);
         /// <summary>
-        /// It is not the Machine.Variables
+        ///     It is not the Machine.Variables
         /// </summary>
         protected Variables Variables { get; } = new Variables();
+
         protected XDocument XDoc { get; }
         protected XNamespace Ns { get; }
         protected XElement XElement { get; set; }

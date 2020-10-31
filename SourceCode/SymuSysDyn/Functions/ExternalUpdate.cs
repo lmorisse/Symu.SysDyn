@@ -2,7 +2,7 @@
 
 // Description: SymuSysDyn - SymuSysDyn
 // Website: https://symu.org
-// Copyright: (c) 2020 laurent morisseau
+// Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
 
 #endregion
@@ -10,7 +10,6 @@
 #region using directives
 
 using System;
-using System.Text.RegularExpressions;
 using Symu.SysDyn.Model;
 using Symu.SysDyn.Simulation;
 
@@ -32,6 +31,7 @@ namespace Symu.SysDyn.Functions
         public ExternalUpdate(string function) : base(function)
         {
         }
+
         public override IBuiltInFunction Clone()
         {
             var clone = new ExternalUpdate(OriginalFunction);
@@ -39,7 +39,7 @@ namespace Symu.SysDyn.Functions
             return clone;
         }
 
-        public override float Evaluate(Variable variable, Variables variables, SimSpecs sim)
+        public override float Evaluate(IVariable variable, Variables variables, SimSpecs sim)
         {
             if (variable == null)
             {

@@ -2,7 +2,7 @@
 
 // Description: SymuSysDyn - SymuSysDynTests
 // Website: https://symu.org
-// Copyright: (c) 2020 laurent morisseau
+// Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
 
 #endregion
@@ -22,6 +22,7 @@ namespace SymuSysDynTests.Simulation
     {
         private SimSpecs _sim = new SimSpecs(0, 10);
         private bool _triggered;
+
         [TestMethod]
         public void SimSpecsTest()
         {
@@ -30,6 +31,7 @@ namespace SymuSysDynTests.Simulation
             Assert.AreEqual(0, _sim.Step);
             Assert.AreEqual(100, _sim.Stop);
         }
+
         [TestMethod]
         public void ClearTest()
         {
@@ -95,7 +97,7 @@ namespace SymuSysDynTests.Simulation
         }
 
         /// <summary>
-        ///     DT < 1, no pause
+        ///     DT inferior 1, no pause
         /// </summary>
         [TestMethod]
         public void RunTest3()
@@ -110,7 +112,7 @@ namespace SymuSysDynTests.Simulation
         }
 
         /// <summary>
-        ///     DT < 1, pause 5
+        ///     DT inferior 1, pause 5
         /// </summary>
         [TestMethod]
         public void RunTest4()
@@ -148,7 +150,7 @@ namespace SymuSysDynTests.Simulation
         }
 
         /// <summary>
-        ///     Start = stop , DT < 1
+        ///     Start = stop , DT inferior 1
         /// </summary>
         [TestMethod]
         public void RunTest6()
@@ -175,7 +177,7 @@ namespace SymuSysDynTests.Simulation
         }
 
         /// <summary>
-        ///     DT < 1
+        ///     DT inferior 1
         /// </summary>
         [TestMethod]
         public void TimeManagementTest1()

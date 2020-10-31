@@ -2,7 +2,7 @@
 
 // Description: SymuSysDyn - SymuSysDyn
 // Website: https://symu.org
-// Copyright: (c) 2020 laurent morisseau
+// Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
 
 #endregion
@@ -11,15 +11,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Globalization;
 using System.Linq;
-using NCalc2;
-using Symu.SysDyn.Equations;
-using Symu.SysDyn.Functions;
 using Symu.SysDyn.Model;
-using Symu.SysDyn.Parser;
-using Symu.SysDyn.QuickGraph;
 using Symu.SysDyn.Results;
 
 #endregion
@@ -28,7 +21,6 @@ namespace Symu.SysDyn.Simulation
 {
     public partial class StateMachine
     {
-       
         public ResultCollection Results { get; } = new ResultCollection();
         public bool StoreResults { get; set; } = true;
 
@@ -99,7 +91,8 @@ namespace Symu.SysDyn.Simulation
 
             var readyToUpdate = true;
             var waitingParents = new List<IVariable>();
-            foreach (var child in parent.Children.Select(childName => Variables[childName]).Where(x => x != null && !x.Updated))
+            foreach (var child in parent.Children.Select(childName => Variables[childName])
+                .Where(x => x != null && !x.Updated))
             {
                 switch (child.Updating)
                 {

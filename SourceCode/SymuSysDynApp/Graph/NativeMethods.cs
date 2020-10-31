@@ -1,7 +1,7 @@
 ﻿#region Licence
 // Description: SymuSysDyn - SymuSysDynApp
 // Website: https://symu.org
-// Copyright: (c) 2020 laurent morisseau
+// Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
 #endregion
 

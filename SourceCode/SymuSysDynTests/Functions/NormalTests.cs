@@ -1,10 +1,23 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿#region Licence
+
+// Description: SymuSysDyn - SymuSysDynTests
+// Website: https://symu.org
+// Copyright: (c) 2020 laurent Morisseau
+// License : the program is distributed under the terms of the GNU General Public License
+
+#endregion
+
+#region using directives
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Symu.SysDyn.Functions;
 using Symu.SysDyn.Model;
 
+#endregion
+
 namespace SymuSysDynTests.Functions
 {
-    [TestClass()]
+    [TestClass]
     public class NormalTests : BaseClassTest
     {
         [TestMethod]
@@ -15,6 +28,7 @@ namespace SymuSysDynTests.Functions
             Assert.AreEqual("2", function.StandardDeviation);
             Assert.AreEqual(string.Empty, function.Seed);
         }
+
         [TestMethod]
         public void NormalTest1()
         {
@@ -23,8 +37,9 @@ namespace SymuSysDynTests.Functions
             Assert.AreEqual("2", function.StandardDeviation);
             Assert.AreEqual("3", function.Seed);
         }
+
         /// <summary>
-        /// Without seed
+        ///     Without seed
         /// </summary>
         [TestMethod]
         public void EvaluateTest()
@@ -32,8 +47,9 @@ namespace SymuSysDynTests.Functions
             var function = new Normal("Normal(0, 0)");
             Assert.AreEqual(0, function.Evaluate(null, Machine.Variables, Machine.Simulation));
         }
+
         /// <summary>
-        /// With seed
+        ///     With seed
         /// </summary>
         [TestMethod]
         public void EvaluateTest1()
@@ -41,8 +57,9 @@ namespace SymuSysDynTests.Functions
             var function = new Normal("Normal(0, 0, 1)");
             Assert.AreEqual(0, function.Evaluate(null, Machine.Variables, Machine.Simulation));
         }
+
         /// <summary>
-        /// With seed
+        ///     With seed
         /// </summary>
         [TestMethod]
         public void EvaluateTest2()
@@ -51,8 +68,10 @@ namespace SymuSysDynTests.Functions
             Machine.Variables.Add(new Variable("variable1", "1"));
             Machine.Variables.Add(new Variable("variable2", "2"));
             Assert.AreEqual(3, function.Evaluate(null, Machine.Variables, Machine.Simulation));
-        }        /// <summary>
-        /// With seed
+        }
+
+        /// <summary>
+        ///     With seed
         /// </summary>
         [TestMethod]
         public void EvaluateTest3()

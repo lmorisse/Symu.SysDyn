@@ -2,14 +2,15 @@
 
 // Description: SymuSysDyn - SymuSysDyn
 // Website: https://symu.org
-// Copyright: (c) 2020 laurent morisseau
+// Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
 
 #endregion
 
+#region using directives
+
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -17,7 +18,8 @@ using NCalc2;
 using Symu.SysDyn.Functions;
 using Symu.SysDyn.Model;
 using Symu.SysDyn.Parser;
-using Symu.SysDyn.Simulation;
+
+#endregion
 
 namespace Symu.SysDyn.Equations
 {
@@ -43,11 +45,12 @@ namespace Symu.SysDyn.Equations
             {
                 eqn = eqn.Remove(index);
             }
+
             eqn = eqn.Trim();
             eqn = eqn.Replace("'", "");
 
             if (float.TryParse(eqn, NumberStyles.Number, CultureInfo.InvariantCulture, out var floatEqn))
-            //NumberStyles.Any => doesn't work for (1) => success and floatEqn = -1!
+                //NumberStyles.Any => doesn't work for (1) => success and floatEqn = -1!
             {
                 value = floatEqn;
                 return null;
@@ -56,7 +59,7 @@ namespace Symu.SysDyn.Equations
             try
             {
                 // Test literal such as "1/10"
-                var expression =new Expression(eqn);
+                var expression = new Expression(eqn);
                 var eval = expression.Evaluate();
                 value = Convert.ToSingle(eval);
                 return null;
@@ -65,8 +68,9 @@ namespace Symu.SysDyn.Equations
             {
                 // not an constant
             }
-           Initialize(eqn, out var functions, out var variables, out var words);
-            float sumEval=0;
+
+            Initialize(eqn, out var functions, out var variables, out var words);
+            float sumEval = 0;
 
             for (var i = 0; i < words.Count; i++)
             {
@@ -76,7 +80,7 @@ namespace Symu.SysDyn.Equations
                     continue;
                 }
 
-                float eval = 0;
+                float eval ;
                 var function = functions.Find(x => x.IndexName == word);
                 if (function != null)
                 {
@@ -106,6 +110,7 @@ namespace Symu.SysDyn.Equations
                 words[i] = eval.ToString(CultureInfo.InvariantCulture);
                 sumEval += eval;
             }
+
             var initializedEquation = string.Join(string.Empty, words);
 
             // Equation with functions or only variables with brackets
@@ -122,11 +127,13 @@ namespace Symu.SysDyn.Equations
                     return complexEquation;
                 }
             }
+
             // Only variables without brackets
             if (variables.Any())
             {
                 return new SimpleEquation(eqn, initializedEquation, variables, words, range);
             }
+
             // Only constants
             value = sumEval;
             return null;
@@ -141,7 +148,8 @@ namespace Symu.SysDyn.Equations
         /// <param name="variables"></param>
         /// <param name="words"></param>
         /// <returns>Initialized equation</returns>
-        public static string Initialize(string originalEquation, out List<IBuiltInFunction> functions, out List<string> variables, out List<string> words)
+        public static string Initialize(string originalEquation, out List<IBuiltInFunction> functions,
+            out List<string> variables, out List<string> words)
         {
             if (originalEquation == null)
             {
@@ -156,8 +164,11 @@ namespace Symu.SysDyn.Equations
                 function.Name = StringUtils.CleanName(function.Name);
                 originalEquation = originalEquation.Replace(function.OriginalFunction, function.IndexName);
             }
+
             // split equation in words
-            var regexWords = new Regex(@"[a-zA-Z0-9_]*\.?\,?[a-zA-Z0-9_]+|[-^+*\/()<>=]|\w+");//@"[0-9]*\.?\,?[0-9]+|[-^+*\/()<>=]|\w+");
+            var regexWords =
+                new Regex(
+                    @"[a-zA-Z0-9_]*\.?\,?[a-zA-Z0-9_]+|[-^+*\/()<>=]|\w+"); //@"[0-9]*\.?\,?[0-9]+|[-^+*\/()<>=]|\w+");
             var matches = regexWords.Matches(originalEquation);
             words = new List<string>();
             variables = new List<string>();

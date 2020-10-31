@@ -2,28 +2,42 @@
 
 // Description: SymuSysDyn - SymuSysDyn
 // Website: https://symu.org
-// Copyright: (c) 2020 laurent morisseau
+// Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
 
 #endregion
 
+#region using directives
+
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Symu.SysDyn.Equations;
 using Symu.SysDyn.Parser;
 
+#endregion
+
 namespace Symu.SysDyn.Functions
 {
     /// <summary>
-    /// Utils method to parse string for functions and theirs parameters
+    ///     Utils method to parse string for functions and theirs parameters
     /// </summary>
     public static class FunctionUtils
     {
         /// <summary>
-        /// Extract functions from a string as a list of BuiltIn functions
+        ///     Functions Without Brackets ni lowercase
+        /// </summary>
+        private static readonly List<string> FunctionsWithoutBrackets =
+            new List<string> {"dt", "time", "externalupdate"};
+
+        /// <summary>
+        ///     Special names that are not functions as is
+        /// </summary>
+        private static readonly List<string> NotFunctions = new List<string> {"if("};
+
+        /// <summary>
+        ///     Extract functions from a string as a list of BuiltIn functions
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
@@ -33,6 +47,7 @@ namespace Symu.SysDyn.Functions
             {
                 throw new ArgumentNullException(nameof(input));
             }
+
             var builtInFunctions = new List<IBuiltInFunction>();
 
             var functions = ParseStringFunctions(input);
@@ -51,16 +66,6 @@ namespace Symu.SysDyn.Functions
         }
 
         /// <summary>
-        /// Functions Without Brackets ni lowercase
-        /// </summary>
-        private static readonly List<string> FunctionsWithoutBrackets= new List<string> {"dt","time", "externalupdate"};
-
-        /// <summary>
-        /// Special names that are not functions as is
-        /// </summary>
-        private static readonly List<string> NotFunctions = new List<string> { "if("};
-        /// <summary>
-        /// 
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
@@ -72,11 +77,12 @@ namespace Symu.SysDyn.Functions
             {
                 return null;
             }
+
             var result = new List<string>();
-            
+
             var name = string.Empty;
             var counter = 0;
-            var isFunction=true;
+            var isFunction = true;
             foreach (var split in input.ToCharArray())
             {
                 switch (split)
@@ -92,12 +98,14 @@ namespace Symu.SysDyn.Functions
                             {
                                 result.Add(name);
                             }
+
                             name = string.Empty;
                         }
                         else if (isFunction)
                         {
                             name += split;
                         }
+
                         break;
                     case '(':
                         isFunction = !string.IsNullOrEmpty(name);
@@ -105,6 +113,7 @@ namespace Symu.SysDyn.Functions
                         {
                             name += split;
                         }
+
                         counter++;
                         break;
                     case ')':
@@ -133,11 +142,13 @@ namespace Symu.SysDyn.Functions
                         break;
                 }
             }
+
             // Case of a single BuiltInFunction without brackets
             if (!result.Any() && FunctionsWithoutBrackets.Contains(name.ToLowerInvariant()))
             {
                 result.Add(name);
             }
+
             return result;
         }
 
@@ -150,14 +161,15 @@ namespace Symu.SysDyn.Functions
         /// <param name="args"></param>
         /// <returns>input = "function(func(param1, param2), param3)" - return {func(param1, param2), param3}</returns>
         //public static List<IEquation> ParseParameters(ref string function,  out string name)
-        public static void ParseParameters(ref string function, out string name, out List<IEquation> parameters, out List<float> args)
+        public static void ParseParameters(ref string function, out string name, out List<IEquation> parameters,
+            out List<float> args)
         {
             if (function == null)
             {
                 throw new ArgumentNullException(nameof(function));
             }
 
-            parameters= new List<IEquation>();
+            parameters = new List<IEquation>();
             args = new List<float>();
             name = StringUtils.CleanName(function.Split('(')[0]);
             const string extractFuncRegex = @"\b[^()]+\((.*)\)$";
@@ -167,7 +179,7 @@ namespace Symu.SysDyn.Functions
 
             if (string.IsNullOrEmpty(match.Groups[1].Value))
             {
-                return;// parameters;
+                return; // parameters;
             }
 
             var innerArgs = match.Groups[1].Value;
@@ -178,6 +190,7 @@ namespace Symu.SysDyn.Functions
                 parameters.Add(equation);
                 args.Add(value);
             }
+
             function = GetInitializedFunction(name, parameters, args);
         }
 
@@ -210,12 +223,13 @@ namespace Symu.SysDyn.Functions
                 {
                     initializedFunction += args[i];
                 }
+
                 if (i < parameters.Count - 1)
                 {
-
                     initializedFunction += ",";
                 }
             }
+
             initializedFunction += ")";
             return initializedFunction;
         }

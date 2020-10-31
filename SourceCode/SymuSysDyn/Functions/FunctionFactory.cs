@@ -2,7 +2,7 @@
 
 // Description: SymuSysDyn - SymuSysDyn
 // Website: https://symu.org
-// Copyright: (c) 2020 laurent morisseau
+// Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
 
 #endregion
@@ -15,10 +15,12 @@
 
 #endregion
 
+#region using directives
+
 using System;
-using System.Diagnostics;
-using System.Xml;
 using Symu.SysDyn.Parser;
+
+#endregion
 
 namespace Symu.SysDyn.Functions
 {

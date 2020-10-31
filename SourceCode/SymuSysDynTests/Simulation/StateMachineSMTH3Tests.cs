@@ -2,7 +2,7 @@
 
 // Description: SymuSysDyn - SymuSysDynTests
 // Website: https://symu.org
-// Copyright: (c) 2020 laurent morisseau
+// Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
 
 #endregion
@@ -17,7 +17,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace SymuSysDynTests.Simulation
 {
     [TestClass]
-    public class StateMachineSMTH3Tests : SMTH3ClassTest
+    public class StateMachineSmth3Tests : Smth3ClassTest
     {
         [TestMethod]
         public void StateMachineTest()
@@ -38,7 +38,7 @@ namespace SymuSysDynTests.Simulation
             Assert.AreEqual(0, Machine.ReferenceVariables["Flow3"].Value);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void OptimizeTest()
         {
             Machine.Optimized = true;
@@ -73,6 +73,5 @@ namespace SymuSysDynTests.Simulation
             Assert.AreEqual(0, variable.Value);
             Assert.AreEqual("(Comp2-Comp3)*3/5", variable.Equation.InitializedEquation);
         }
-
     }
 }

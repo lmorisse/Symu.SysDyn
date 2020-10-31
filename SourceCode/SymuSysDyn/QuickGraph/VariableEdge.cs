@@ -2,7 +2,7 @@
 
 // Description: SymuSysDyn - SymuSysDyn
 // Website: https://symu.org
-// Copyright: (c) 2020 laurent morisseau
+// Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
 
 #endregion
@@ -28,7 +28,7 @@ namespace Symu.SysDyn.QuickGraph
             Target = target;
         }
 
-        #region IEdge<Variable> Members
+        #region IEdge<IVariable> Members
 
         /// <summary>
         ///     Source stock is the outflow property of a stock

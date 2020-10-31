@@ -2,7 +2,7 @@
 
 // Description: SymuSysDyn - SymuSysDyn
 // Website: https://symu.org
-// Copyright: (c) 2020 laurent morisseau
+// Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
 
 #endregion
@@ -11,7 +11,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Globalization;
 using System.Linq;
 using NCalc2;
@@ -24,30 +23,33 @@ using Symu.SysDyn.Simulation;
 namespace Symu.SysDyn.Equations
 {
     /// <summary>
-    /// IEquation with parameters and functions
+    ///     IEquation with parameters and functions
     /// </summary>
     public class ComplexEquation : SimpleEquation
     {
-        /// <summary>
-        /// ComplexEquation inherits from SimpleEquation and adds a list of nested functions
-        /// </summary>
-        public BuiltInFunctionCollection Functions { get; }
-
-        public ComplexEquation(string originalEquation, string initializedEquation, List<IBuiltInFunction> functions, List<string> variables, List<string> words, Range range) : 
+        public ComplexEquation(string originalEquation, string initializedEquation, IEnumerable<IBuiltInFunction> functions,
+            List<string> variables, List<string> words, Range range) :
             this(originalEquation, initializedEquation, functions, variables, words)
         {
             Range = range;
         }
 
-        public ComplexEquation(string originalEquation, string initializedEquation, IEnumerable<IBuiltInFunction> functions, List<string> variables, List<string> words)
+        public ComplexEquation(string originalEquation, string initializedEquation,
+            IEnumerable<IBuiltInFunction> functions, List<string> variables, List<string> words)
             : base(originalEquation, initializedEquation, variables, words)
         {
             Functions = new BuiltInFunctionCollection(functions);
         }
 
+        /// <summary>
+        ///     ComplexEquation inherits from SimpleEquation and adds a list of nested functions
+        /// </summary>
+        public BuiltInFunctionCollection Functions { get; }
+
         public override IEquation Clone()
         {
-            return new ComplexEquation(OriginalEquation, InitializedEquation, Functions.Clone(), Variables, Words, Range);
+            return new ComplexEquation(OriginalEquation, InitializedEquation, Functions.Clone(), Variables, Words,
+                Range);
         }
 
         public override bool CanBeOptimized(string variableName)
@@ -63,7 +65,7 @@ namespace Symu.SysDyn.Equations
         /// <param name="variables"></param>
         /// <param name="sim"></param>
         /// <returns></returns>
-        public override void Prepare(Variable selfVariable, Variables variables, SimSpecs sim)
+        public override void Prepare(IVariable selfVariable, Variables variables, SimSpecs sim)
         {
             if (variables == null)
             {
@@ -95,17 +97,18 @@ namespace Symu.SysDyn.Equations
                 {
                     while (Words.FindIndex(ind => ind.Equals(function.IndexName)) >= 0)
                     {
-                        Words[Words.FindIndex(ind => ind.Equals(function.IndexName))] = function.InitialValue().ToString(CultureInfo.InvariantCulture);
+                        Words[Words.FindIndex(ind => ind.Equals(function.IndexName))] =
+                            function.InitialValue().ToString(CultureInfo.InvariantCulture);
                     }
+
                     Functions.Remove(function);
                 }
-                catch 
+                catch
                 {
                 }
-
             }
-            
-            while (Words.FindIndex(ind => ind.Equals(child)) >=0)
+
+            while (Words.FindIndex(ind => ind.Equals(child)) >= 0)
             {
                 Words[Words.FindIndex(ind => ind.Equals(child))] = value;
             }

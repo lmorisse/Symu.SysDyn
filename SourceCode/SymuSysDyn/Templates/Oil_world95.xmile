@@ -8,7 +8,7 @@
     </options>
     <product version="1.0">Hand Coded XMILE from Strategic Modelling and Business Dynamics book</product>
   </header>
-  <sim_specs method="Euler" time_units="Years" >
+  <sim_specs method="Euler" time_units="Years">
     <start>1996</start>
     <stop>2020</stop>
     <dt>0.0625</dt>

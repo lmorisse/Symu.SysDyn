@@ -2,7 +2,7 @@
 
 // Description: SymuSysDyn - SymuSysDyn
 // Website: https://symu.org
-// Copyright: (c) 2020 laurent morisseau
+// Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
 
 #endregion
@@ -147,24 +147,6 @@ namespace Symu.SysDyn.Model
             return variables;
         }
 
-        #region IEnumerator members
-
-        /// <summary>Returns an enumerator that iterates through the collection.</summary>
-        /// <returns>An enumerator that can be used to iterate through the collection.</returns>
-        public IEnumerator<IVariable> GetEnumerator()
-        {
-            return _variables.GetEnumerator();
-        }
-
-        /// <summary>Returns an enumerator that iterates through a collection.</summary>
-        /// <returns>An object that can be used to iterate through the collection.</returns>
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return _variables.GetEnumerator();
-        }
-
-        #endregion
-
         public void Remove(string name)
         {
             _variables.RemoveAll(x => x.Name == name);
@@ -185,5 +167,23 @@ namespace Symu.SysDyn.Model
 
             return clone;
         }
+
+        #region IEnumerator members
+
+        /// <summary>Returns an enumerator that iterates through the collection.</summary>
+        /// <returns>An enumerator that can be used to iterate through the collection.</returns>
+        public IEnumerator<IVariable> GetEnumerator()
+        {
+            return _variables.GetEnumerator();
+        }
+
+        /// <summary>Returns an enumerator that iterates through a collection.</summary>
+        /// <returns>An object that can be used to iterate through the collection.</returns>
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return _variables.GetEnumerator();
+        }
+
+        #endregion
     }
 }

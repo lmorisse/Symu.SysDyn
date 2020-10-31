@@ -2,7 +2,7 @@
 
 // Description: SymuSysDyn - SymuSysDyn
 // Website: https://symu.org
-// Copyright: (c) 2020 laurent morisseau
+// Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
 
 #endregion
@@ -66,34 +66,39 @@ namespace Symu.SysDyn.Model
 
             ChecksRange();
         }
+
         /// <summary>
-        /// specifies the exact x-values corresponding to the y-values given in the YPoints
-        /// default: the x-axis XScale evenly divided into the number of points in YPoints creating a(fixed) increment along the x - axis).
-        /// Note that when this is specified, the number of points given MUST exactly match the number of points in YPoints,
-        /// one x - value for each and every y - value, corresponding positionally,
-        /// and the values must be sorted in ascending order(from smallest to largest).
-        /// By default, these values are comma - separated.
-        /// REQUIRED when no x - axis scale.
+        ///     specifies the exact x-values corresponding to the y-values given in the YPoints
+        ///     default: the x-axis XScale evenly divided into the number of points in YPoints creating a(fixed) increment along
+        ///     the x - axis).
+        ///     Note that when this is specified, the number of points given MUST exactly match the number of points in YPoints,
+        ///     one x - value for each and every y - value, corresponding positionally,
+        ///     and the values must be sorted in ascending order(from smallest to largest).
+        ///     By default, these values are comma - separated.
+        ///     REQUIRED when no x - axis scale.
         /// </summary>
         public float[] XPoints { get; }
+
         /// <summary>
-        /// specifies the y-values for the graphical function, starting with the y-value for the smallest x-value
-        /// and continuing as x increases until ending with the y-value corresponding to the largest x-value.
-        /// By default, these values are comma-separated.
-        /// REQUIRED
+        ///     specifies the y-values for the graphical function, starting with the y-value for the smallest x-value
+        ///     and continuing as x increases until ending with the y-value corresponding to the largest x-value.
+        ///     By default, these values are comma-separated.
+        ///     REQUIRED
         /// </summary>
         public float[] YPoints { get; }
+
         /// <summary>
-        /// defines the scale of the x-axis
-        /// default: smallest and largest values in XPoints
-        /// REQUIRED when no x-axis points.
+        ///     defines the scale of the x-axis
+        ///     default: smallest and largest values in XPoints
+        ///     REQUIRED when no x-axis points.
         /// </summary>
         public Range XScale { get; }
+
         /// <summary>
-        ///  defines the scale of the y-axis
-        /// default: smallest and largest values in YPoints.
-        /// This only affects the scale of the graph as shown in a user interface;
-        /// it has no impact on the behavior or interpretation of the graphical function.
+        ///     defines the scale of the y-axis
+        ///     default: smallest and largest values in YPoints.
+        ///     This only affects the scale of the graph as shown in a user interface;
+        ///     it has no impact on the behavior or interpretation of the graphical function.
         /// </summary>
         public Range YScale { get; }
 
@@ -158,8 +163,9 @@ namespace Symu.SysDyn.Model
 
             return xTable;
         }
+
         /// <summary>
-        /// find which line segment our x fits into 
+        ///     find which line segment our x fits into
         /// </summary>
         /// <param name="x"></param>
         /// <returns></returns>
@@ -171,10 +177,12 @@ namespace Symu.SysDyn.Model
             {
                 return YPoints[0];
             }
+
             if (x > XPoints.Last())
             {
                 return YPoints.Last();
             }
+
             for (var counter = 0; counter < XPoints.Length; counter++)
             {
                 if (x < XPoints[counter])

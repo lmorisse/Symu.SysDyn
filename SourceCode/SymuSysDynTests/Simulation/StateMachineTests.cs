@@ -2,7 +2,7 @@
 
 // Description: SymuSysDyn - SymuSysDynTests
 // Website: https://symu.org
-// Copyright: (c) 2020 laurent morisseau
+// Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
 
 #endregion
@@ -51,7 +51,7 @@ namespace SymuSysDynTests.Simulation
         {
             var stock = Machine.Variables["Stock1"];
             Machine.UpdateVariable(stock);
-            Assert.AreEqual(1, stock.Value); 
+            Assert.AreEqual(1, stock.Value);
             Assert.IsTrue(stock.Updated);
         }
 
@@ -90,11 +90,12 @@ namespace SymuSysDynTests.Simulation
             Assert.AreEqual(6, graph.VertexCount);
             Assert.AreEqual(6, graph.EdgeCount);
         }
+
         /// <summary>
-        /// Optimize with constants
+        ///     Optimize with constants
         /// </summary>
         /// <remarks>See StateMachineSMTH3Tests for non constant variables</remarks>
-        [TestMethod()]
+        [TestMethod]
         public void OptimizeTest()
         {
             Machine.Optimized = true;
@@ -124,6 +125,5 @@ namespace SymuSysDynTests.Simulation
             Assert.AreEqual(1, Machine.Variables[0].Equation.Variables.Count);
             Assert.AreEqual("Stock1+1*(1-5)", Machine.Variables[0].Equation.InitializedEquation);
         }
-
     }
 }

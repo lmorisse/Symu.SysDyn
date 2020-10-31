@@ -2,7 +2,7 @@
 
 // Description: SymuSysDyn - SymuSysDyn
 // Website: https://symu.org
-// Copyright: (c) 2020 laurent morisseau
+// Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
 
 #endregion
@@ -14,7 +14,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Symu.SysDyn.Equations;
-using Symu.SysDyn.Functions;
 using Symu.SysDyn.Parser;
 using Symu.SysDyn.Simulation;
 
@@ -47,7 +46,8 @@ namespace Symu.SysDyn.Model
             SetChildren();
         }
 
-        public Variable(string name, string eqn, GraphicalFunction graph, Range range, Range scale, NonNegative nonNegative) : this(name)
+        public Variable(string name, string eqn, GraphicalFunction graph, Range range, Range scale,
+            NonNegative nonNegative) : this(name)
         {
             GraphicalFunction = graph;
             Range = range;
@@ -59,23 +59,8 @@ namespace Symu.SysDyn.Model
             Initialize();
             SetChildren();
         }
-        /// <summary>
-        /// Adjust Value when a graphical function is defined
-        /// </summary>
-        /// <param name="value"></param>
-        protected void AdjustValue(float value)
-        {
-            if (float.IsNaN(value) || float.IsInfinity(value))
-            {
-                throw new ArgumentOutOfRangeException();
-            }
-            // Graphical function
-            Value = GraphicalFunction?.GetOutput(value) ?? value;
-            if (NonNegative != null)
-            {
-                Value = NonNegative.GetOutputInsideRange(Value);
-            }
-        }
+
+        #region IVariable Members
 
         public float Value { get; set; }
 
@@ -99,15 +84,6 @@ namespace Symu.SysDyn.Model
         /// <remarks>Could be a computed property, but for performance, it is setted once</remarks>
         public List<string> Children { get; set; }
 
-        /// <summary>
-        ///     Find all children of a variable
-        /// </summary>
-        /// <returns></returns>
-        protected void SetChildren()
-        {
-            Children = Equation?.Variables.Where(word => !word.Equals(Name)).ToList() ?? new List<string>();
-        }
-
         /// <summary>Returns a string that represents the current object.</summary>
         /// <returns>A string that represents the current object.</returns>
         public override string ToString()
@@ -127,53 +103,6 @@ namespace Symu.SysDyn.Model
             Updated = true;
         }
 
-        #region Xml attributes
-
-        public string Name { get; }
-
-        public Units Units { get; set; }
-
-        /// <summary>
-        ///     Input range
-        /// </summary>
-        public Range Range { get; set; } = new Range();
-
-        /// <summary>
-        ///     Output scale
-        /// </summary>
-        public Range Scale { get; set; } = new Range();
-        public NonNegative NonNegative { get; }
-        public bool TryOptimize(bool setInitialValue)
-        {
-            if (Equation == null)
-            {
-                return true;
-            }
-            // No variables or itself
-            var canBeOptimized = !Children.Any() && Equation.CanBeOptimized(Name);
-
-            if (!canBeOptimized)
-            {
-                return Equation == null;
-            }
-
-            if (setInitialValue)
-            {
-                if (Equation.Variables.Count == 1 && Equation.Variables[0] == Name)
-                {
-                    Equation.Replace(Name, Value.ToString(CultureInfo.InvariantCulture));
-                }
-                float value = Equation.InitialValue();
-                AdjustValue(value);
-            }
-
-            Equation = null;
-
-            return true;
-        }
-
-        #endregion
-
         public void Initialize()
         {
             Updated = Equation == null;
@@ -185,6 +114,37 @@ namespace Symu.SysDyn.Model
             CopyTo(clone);
             return clone;
         }
+
+        #endregion
+
+        /// <summary>
+        ///     Adjust Value when a graphical function is defined
+        /// </summary>
+        /// <param name="value"></param>
+        protected void AdjustValue(float value)
+        {
+            if (float.IsNaN(value) || float.IsInfinity(value))
+            {
+                throw new ArgumentOutOfRangeException();
+            }
+
+            // Graphical function
+            Value = GraphicalFunction?.GetOutput(value) ?? value;
+            if (NonNegative != null)
+            {
+                Value = NonNegative.GetOutputInsideRange(Value);
+            }
+        }
+
+        /// <summary>
+        ///     Find all children of a variable
+        /// </summary>
+        /// <returns></returns>
+        protected void SetChildren()
+        {
+            Children = Equation?.Variables.Where(word => !word.Equals(Name)).ToList() ?? new List<string>();
+        }
+
         protected void CopyTo(IVariable copy)
         {
             if (copy == null)
@@ -201,5 +161,56 @@ namespace Symu.SysDyn.Model
             copy.Children = new List<string>();
             copy.Children.AddRange(Children);
         }
+
+        #region Xml attributes
+
+        public string Name { get; }
+
+        public Units Units { get; set; }
+
+        /// <summary>
+        ///     Input range
+        /// </summary>
+        public Range Range { get; set; } = new Range();
+
+        /// <summary>
+        ///     Output scale
+        /// </summary>
+        public Range Scale { get; set; } = new Range();
+
+        public NonNegative NonNegative { get; }
+
+        public bool TryOptimize(bool setInitialValue)
+        {
+            if (Equation == null)
+            {
+                return true;
+            }
+
+            // No variables or itself
+            var canBeOptimized = !Children.Any() && Equation.CanBeOptimized(Name);
+
+            if (!canBeOptimized)
+            {
+                return Equation == null;
+            }
+
+            if (setInitialValue)
+            {
+                if (Equation.Variables.Count == 1 && Equation.Variables[0] == Name)
+                {
+                    Equation.Replace(Name, Value.ToString(CultureInfo.InvariantCulture));
+                }
+
+                var value = Equation.InitialValue();
+                AdjustValue(value);
+            }
+
+            Equation = null;
+
+            return true;
+        }
+
+        #endregion
     }
 }

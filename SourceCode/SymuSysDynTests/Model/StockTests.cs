@@ -2,7 +2,7 @@
 
 // Description: SymuSysDyn - SymuSysDynTests
 // Website: https://symu.org
-// Copyright: (c) 2020 laurent morisseau
+// Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
 
 #endregion
@@ -49,6 +49,7 @@ namespace SymuSysDynTests.Model
             Assert.IsNotNull(clone.Equation);
             Assert.AreEqual(2, clone.Children.Count);
         }
+
         /// <summary>
         ///     No inflow nor outflow
         /// </summary>

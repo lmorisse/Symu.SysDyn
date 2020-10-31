@@ -2,7 +2,7 @@
 
 // Description: SymuSysDyn - SymuSysDynTests
 // Website: https://symu.org
-// Copyright: (c) 2020 laurent morisseau
+// Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
 
 #endregion
@@ -10,9 +10,7 @@
 #region using directives
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NCalc2;
 using Symu.SysDyn.Equations;
-using Symu.SysDyn.Functions;
 
 #endregion
 
@@ -31,7 +29,10 @@ namespace SymuSysDynTests.Equations
         private const string SimpleEquation = "variable_1 + variable2";
         private const string SimpleEquation1 = "variable_1 + Abs(1)"; // with builtin function
         private const string ComplexEquation = ".3 + name + Dt *(variable_1 - variable2)-TIME+SET(3,5) {test}";
-        private const string ComplexEquation1 = "variable_1/(variable2*variable3)"; // not a simple equation because of the brackets
+
+        private const string
+            ComplexEquation1 = "variable_1/(variable2*variable3)"; // not a simple equation because of the brackets
+
         private IEquation _equation;
 
         [TestMethod]
@@ -40,6 +41,7 @@ namespace SymuSysDynTests.Equations
             _equation = EquationFactory.CreateInstance(EmptyEquation, out _);
             Assert.IsNull(_equation);
         }
+
         [TestMethod]
         public void CreateInstanceTest1()
         {
@@ -52,6 +54,7 @@ namespace SymuSysDynTests.Equations
             //Assert.AreEqual(0, _equation.Variables.Count);
             //Assert.IsInstanceOfType(_equation, typeof(ConstantEquation));
         }
+
         [TestMethod]
         public void CreateInstanceTest2()
         {
@@ -62,6 +65,7 @@ namespace SymuSysDynTests.Equations
             //Assert.AreEqual(0, _equation.Variables.Count);
             //Assert.IsInstanceOfType(_equation, typeof(ConstantEquation));
         }
+
         [TestMethod]
         public void CreateInstanceTest3()
         {
@@ -72,6 +76,7 @@ namespace SymuSysDynTests.Equations
             //Assert.AreEqual(0, _equation.Variables.Count);
             //Assert.IsInstanceOfType(_equation, typeof(ConstantEquation));
         }
+
         [TestMethod]
         public void CreateInstanceTest4()
         {
@@ -82,6 +87,7 @@ namespace SymuSysDynTests.Equations
             //Assert.AreEqual(0, _equation.Variables.Count);
             //Assert.IsInstanceOfType(_equation, typeof(ConstantEquation));
         }
+
         [TestMethod]
         public void CreateInstanceTest5()
         {
@@ -92,6 +98,7 @@ namespace SymuSysDynTests.Equations
             //Assert.AreEqual(0, _equation.Variables.Count);
             //Assert.IsInstanceOfType(_equation, typeof(ConstantEquation));
         }
+
         [TestMethod]
         public void CreateInstanceTest6()
         {
@@ -102,6 +109,7 @@ namespace SymuSysDynTests.Equations
             //Assert.AreEqual(0, _equation.Variables.Count);
             //Assert.IsInstanceOfType(_equation, typeof(ConstantEquation));
         }
+
         [TestMethod]
         public void CreateInstanceTest7()
         {
@@ -112,6 +120,7 @@ namespace SymuSysDynTests.Equations
             Assert.AreEqual("Variable_1", _equation.Variables[0]);
             Assert.AreEqual("Variable2", _equation.Variables[1]);
         }
+
         [TestMethod]
         public void CreateInstanceTest8()
         {
@@ -158,8 +167,7 @@ namespace SymuSysDynTests.Equations
         }
 
 
-
-        [TestMethod()]
+        [TestMethod]
         public void GetParametersTest5()
         {
             const string function = @"SMTH1((Junior_doctor's__base_salary*Annual__Pay_Change),.5)";

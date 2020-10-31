@@ -2,7 +2,7 @@
 
 // Description: SymuSysDyn - SymuSysDyn
 // Website: https://symu.org
-// Copyright: (c) 2020 laurent morisseau
+// Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
 
 #endregion
@@ -251,7 +251,6 @@ namespace Symu.SysDyn.Parser
         }
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="xContainer"></param>
         /// <param name="element">range or scale</param>

@@ -2,7 +2,7 @@
 
 // Description: SymuSysDyn - SymuSysDynTests
 // Website: https://symu.org
-// Copyright: (c) 2020 laurent morisseau
+// Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
 
 #endregion
@@ -35,10 +35,12 @@ namespace SymuSysDynTests
         }
 
         protected XmlParser Parser { get; } = new XmlParser(TestFile);
+
         /// <summary>
-        /// It is not the Machine.Variables
+        ///     It is not the Machine.Variables
         /// </summary>
         protected Variables Variables { get; } = new Variables();
+
         protected XDocument XDoc { get; }
         protected XNamespace Ns { get; }
         protected XElement XElement { get; set; }

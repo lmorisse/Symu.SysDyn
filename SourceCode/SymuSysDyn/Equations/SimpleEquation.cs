@@ -2,7 +2,7 @@
 
 // Description: SymuSysDyn - SymuSysDyn
 // Website: https://symu.org
-// Copyright: (c) 2020 laurent morisseau
+// Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
 
 #endregion
@@ -11,13 +11,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Globalization;
 using System.Linq;
-
 using NCalc2;
-
-using Symu.SysDyn.Functions;
 using Symu.SysDyn.Model;
 using Symu.SysDyn.Simulation;
 
@@ -26,32 +21,19 @@ using Symu.SysDyn.Simulation;
 namespace Symu.SysDyn.Equations
 {
     /// <summary>
-    /// IEquation with parameters without functions
+    ///     IEquation with parameters without functions
     /// </summary>
     public class SimpleEquation : IEquation
     {
-        public string OriginalEquation { get; protected set; }
-        public string InitializedEquation { get; set; }
-        /// <summary>
-        ///     Range of the output of the equation provide by the variable
-        /// </summary>
-        protected Range Range { get; set;}
-
-        public List<string> Variables { get; }
-        /// <summary>
-        /// List of words that constitute the initialized equation
-        /// It is necessary for the replace method
-        /// </summary>
-        protected List<string> Words { get; }
-        protected Expression Expression { get; set; }
-
-        public SimpleEquation(string originalEquation, string initializedEquation, List<string> variables, List<string> words, Range range) :
+        public SimpleEquation(string originalEquation, string initializedEquation, List<string> variables,
+            List<string> words, Range range) :
             this(originalEquation, initializedEquation, variables, words)
         {
             Range = range;
         }
 
-        public SimpleEquation(string originalEquation, string initializedEquation, List<string> variables, List<string> words)
+        public SimpleEquation(string originalEquation, string initializedEquation, List<string> variables,
+            List<string> words)
         {
             OriginalEquation = originalEquation;
             InitializedEquation = initializedEquation;
@@ -60,17 +42,31 @@ namespace Symu.SysDyn.Equations
             Words = words;
         }
 
+        /// <summary>
+        ///     Range of the output of the equation provide by the variable
+        /// </summary>
+        protected Range Range { get; set; }
+
+        /// <summary>
+        ///     List of words that constitute the initialized equation
+        ///     It is necessary for the replace method
+        /// </summary>
+        protected List<string> Words { get; }
+
+        protected Expression Expression { get; set; }
+
+        #region IEquation Members
+
+        public string OriginalEquation { get; protected set; }
+        public string InitializedEquation { get; set; }
+
+        public List<string> Variables { get; }
+
         public virtual IEquation Clone()
         {
             return new SimpleEquation(OriginalEquation, InitializedEquation, Variables, Words, Range);
         }
 
-        /// <summary>Returns a string that represents the current object.</summary>
-        /// <returns>A string that represents the current object.</returns>
-        public override string ToString()
-        {
-            return InitializedEquation;
-        }
         public virtual bool CanBeOptimized(string variableName)
         {
             var itself = Words.Count == 1 && Variables.Count == 1 && Variables[0] == variableName;
@@ -84,7 +80,7 @@ namespace Symu.SysDyn.Equations
         /// <param name="variables"></param>
         /// <param name="sim"></param>
         /// <returns></returns>
-        public float Evaluate(Variable selfVariable, Variables variables, SimSpecs sim)
+        public float Evaluate(IVariable selfVariable, Variables variables, SimSpecs sim)
         {
             try
             {
@@ -108,7 +104,7 @@ namespace Symu.SysDyn.Equations
         /// <param name="variables"></param>
         /// <param name="sim"></param>
         /// <returns></returns>
-        public virtual void Prepare(Variable selfVariable, Variables variables, SimSpecs sim)
+        public virtual void Prepare(IVariable selfVariable, Variables variables, SimSpecs sim)
         {
             if (variables == null)
             {
@@ -150,6 +146,15 @@ namespace Symu.SysDyn.Equations
             InitializedEquation = string.Join(string.Empty, Words);
             Variables.Remove(child);
             Expression = new Expression(InitializedEquation);
+        }
+
+        #endregion
+
+        /// <summary>Returns a string that represents the current object.</summary>
+        /// <returns>A string that represents the current object.</returns>
+        public override string ToString()
+        {
+            return InitializedEquation;
         }
     }
 }

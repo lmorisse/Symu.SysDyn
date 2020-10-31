@@ -1,13 +1,25 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿#region Licence
+
+// Description: SymuSysDyn - SymuSysDynTests
+// Website: https://symu.org
+// Copyright: (c) 2020 laurent Morisseau
+// License : the program is distributed under the terms of the GNU General Public License
+
+#endregion
+
+#region using directives
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Symu.SysDyn.Functions;
 using Symu.SysDyn.Simulation;
 
+#endregion
+
 namespace SymuSysDynTests.Functions
 {
-    [TestClass()]
+    [TestClass]
     public class SmthNTests
     {
-
         private readonly StateMachine _machine = new StateMachine();
 
         [TestInitialize]
@@ -15,7 +27,8 @@ namespace SymuSysDynTests.Functions
         {
             _machine.Simulation.Stop = 20;
         }
-        [TestMethod()]
+
+        [TestMethod]
         public void SmthNTest()
         {
             var smth = new SmthN("SMTHN(5+Step(10,3),5,3)");
@@ -24,7 +37,8 @@ namespace SymuSysDynTests.Functions
             Assert.AreEqual("5", smth.Averaging);
             Assert.AreEqual(3, smth.Order);
         }
-        [TestMethod()]
+
+        [TestMethod]
         public void SmthNTest1()
         {
             var smth = new SmthN("SMTHN(5+Step(10,3),5,3,2)");
@@ -34,14 +48,14 @@ namespace SymuSysDynTests.Functions
             Assert.AreEqual(3, smth.Order);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void EvaluateTest()
         {
             var smth = new SmthN("SMTHN(5+Step(10,3),5,3)");
             _machine.Simulation.Time = 2;
             Assert.AreEqual(5, smth.Evaluate(null, _machine.Variables, _machine.Simulation));
             _machine.Simulation.Time = 4;
-            Assert.IsTrue(5< smth.Evaluate(null, _machine.Variables, _machine.Simulation));
+            Assert.IsTrue(5 < smth.Evaluate(null, _machine.Variables, _machine.Simulation));
         }
     }
 }
