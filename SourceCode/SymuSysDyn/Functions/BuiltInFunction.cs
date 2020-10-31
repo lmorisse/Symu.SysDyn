@@ -79,9 +79,9 @@ namespace Symu.SysDyn.Functions
         /// </summary>
         public List<float> Args { get; protected set; }
 
-        protected float GetValue(int index, Variables variables, SimSpecs sim)
+        protected float GetValue(int index, Variable variable, Variables variables, SimSpecs sim)
         {
-            return Parameters[index] != null ? Parameters[index].Evaluate(variables, sim) : Args[index];
+            return Parameters[index] != null ? Parameters[index].Evaluate(variable, variables, sim) : Args[index];
         }
 
         protected string GetParam(int index)
@@ -92,10 +92,11 @@ namespace Symu.SysDyn.Functions
         /// <summary>
         ///     Prepare the function for the Equation.Prepare()
         /// </summary>
+        /// <param name="selfVariable"></param>
         /// <param name="variables"></param>
         /// <param name="sim"></param>
         /// <returns></returns>
-        public float Prepare(Variables variables, SimSpecs sim)
+        public float Prepare(Variable selfVariable, Variables variables, SimSpecs sim)
         {
             if (variables == null)
             {
@@ -105,20 +106,20 @@ namespace Symu.SysDyn.Functions
             var prepareParams = new List<string>();
             foreach (var parameter in Parameters.Where(x => x != null))
             {
-                parameter.Prepare(variables, sim);
+                parameter.Prepare(selfVariable, variables, sim);
                 prepareParams.AddRange(parameter.Variables);
             }
 
             foreach (var name in prepareParams.Distinct().ToList())
             {
-                var variable = variables.Get(name);
-                if (variable != null)
+                var parameter = variables.Get(name);
+                if (parameter != null)
                 {
-                    Expression.Parameters[name] = variable.Value;
+                    Expression.Parameters[name] = parameter.Value;
                 }
             }
 
-            return Evaluate(variables, sim);
+            return Evaluate(selfVariable, variables, sim);
         }
 
         public virtual float InitialValue()
@@ -126,16 +127,16 @@ namespace Symu.SysDyn.Functions
             return Convert.ToSingle(Expression.Evaluate());
         }
 
-        public virtual float Evaluate(Variables variables, SimSpecs sim)
+        public virtual float Evaluate(Variable selfVariable, Variables variables, SimSpecs sim)
         {
             return InitialValue();
         }
 
-        public bool TryEvaluate(Variables variables, SimSpecs sim, out float result)
+        public bool TryEvaluate(Variable variable, Variables variables, SimSpecs sim, out float result)
         {
             try
             {
-                result = Evaluate(variables, sim);
+                result = Evaluate(variable, variables, sim);
                 return true;
             }
             catch

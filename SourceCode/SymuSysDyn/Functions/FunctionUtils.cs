@@ -53,7 +53,7 @@ namespace Symu.SysDyn.Functions
         /// <summary>
         /// Functions Without Brackets ni lowercase
         /// </summary>
-        private static readonly List<string> FunctionsWithoutBrackets= new List<string> {"dt","time"};
+        private static readonly List<string> FunctionsWithoutBrackets= new List<string> {"dt","time", "externalupdate"};
 
         /// <summary>
         /// Special names that are not functions as is
@@ -191,6 +191,12 @@ namespace Symu.SysDyn.Functions
             if (args == null)
             {
                 throw new ArgumentNullException(nameof(args));
+            }
+
+            //todo refactor in directly in NCalc2 Fork
+            if (name == "If")
+            {
+                name = "if";
             }
 
             var initializedFunction = name + "(";

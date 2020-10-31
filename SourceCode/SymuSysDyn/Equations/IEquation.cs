@@ -22,8 +22,8 @@ namespace Symu.SysDyn.Equations
         string InitializedEquation { get; set; }
         List<string> Variables { get; }
         float InitialValue();
-        float Evaluate(Variables variables, SimSpecs sim);
-        void Prepare(Variables variables, SimSpecs sim);
+        float Evaluate(Variable variable, Variables variables, SimSpecs sim);
+        void Prepare(Variable variable, Variables variables, SimSpecs sim);
         void Replace(string child, string value);
         bool CanBeOptimized(string variableName);
         IEquation Clone();

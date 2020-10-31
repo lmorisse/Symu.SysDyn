@@ -9,26 +9,24 @@
 
 #region using directives
 
+using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Symu.SysDyn.Functions;
+using Symu.SysDyn.Model;
 
 #endregion
 
 namespace SymuSysDynTests.Functions
 {
     [TestClass]
-    public class TimeTests: BaseClassTest
+    public class ExternalUpdateTests : BaseClassTest
     {
-        [DataRow(0)]
-        [DataRow(10)]
-        [DataRow(100)]
         [TestMethod]
-        public void TimeTest(int time)
+        public void ExternalUpdateTest1()
         {
-            var timeFunction = new Time("TIME");
-            Machine.Simulation.Time = (ushort)time;
-            Assert.AreEqual(time, timeFunction.Evaluate(null, Machine.Variables, Machine.Simulation));
+            var function = new ExternalUpdate("ExternalUpdate");
+            var variable = new Variable("variable","1");
+            Assert.AreEqual(1, function.Evaluate(variable, Machine.Variables, Machine.Simulation));
         }
-
     }
 }

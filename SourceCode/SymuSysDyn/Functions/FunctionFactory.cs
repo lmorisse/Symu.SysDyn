@@ -55,6 +55,8 @@ namespace Symu.SysDyn.Functions
                     return new Dt(function);
                 case Time.Value:
                     return new Time(function);
+                case ExternalUpdate.Value:
+                    return new ExternalUpdate(function);
                 default:
                     return new BuiltInFunction(function);
             }

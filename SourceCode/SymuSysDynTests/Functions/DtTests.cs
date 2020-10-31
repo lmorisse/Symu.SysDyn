@@ -29,7 +29,7 @@ namespace SymuSysDynTests.Functions
         {
             var dtFunction = new Dt("DT");
             Machine.Simulation.DeltaTime = dt;
-            Assert.AreEqual(dt, dtFunction.Evaluate(Machine.Variables, Machine.Simulation));
+            Assert.AreEqual(dt, dtFunction.Evaluate(null, Machine.Variables, Machine.Simulation));
         }
     }
 }

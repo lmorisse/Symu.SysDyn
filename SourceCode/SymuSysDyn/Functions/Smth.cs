@@ -64,7 +64,7 @@ namespace Symu.SysDyn.Functions
             }
         }
 
-        public override float Evaluate(Variables variables, SimSpecs sim)
+        public override float Evaluate(Variable selfVariable, Variables variables, SimSpecs sim)
         {
             if (sim == null)
             {
@@ -73,7 +73,7 @@ namespace Symu.SysDyn.Functions
 
             if (!_initialized)
             {
-                _previousValues[0] = GetValue(InitialIndex, variables, sim) ;
+                _previousValues[0] = GetValue(InitialIndex, selfVariable, variables, sim) ;
 
                 for (var i = 1; i < Order; i++)
                 {
@@ -83,8 +83,8 @@ namespace Symu.SysDyn.Functions
                 return _previousValues.Last();
             }
 
-            var input = GetValue(0, variables, sim);
-            var averaging = GetValue(1, variables, sim);
+            var input = GetValue(0, selfVariable, variables, sim);
+            var averaging = GetValue(1, selfVariable, variables, sim);
 
             for (var i = 0; i < Order; i++)
             {

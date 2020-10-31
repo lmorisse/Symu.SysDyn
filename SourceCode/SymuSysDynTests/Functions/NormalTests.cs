@@ -30,7 +30,7 @@ namespace SymuSysDynTests.Functions
         public void EvaluateTest()
         {
             var function = new Normal("Normal(0, 0)");
-            Assert.AreEqual(0, function.Evaluate(Machine.Variables, Machine.Simulation));
+            Assert.AreEqual(0, function.Evaluate(null, Machine.Variables, Machine.Simulation));
         }
         /// <summary>
         /// With seed
@@ -39,7 +39,7 @@ namespace SymuSysDynTests.Functions
         public void EvaluateTest1()
         {
             var function = new Normal("Normal(0, 0, 1)");
-            Assert.AreEqual(0, function.Evaluate(Machine.Variables, Machine.Simulation));
+            Assert.AreEqual(0, function.Evaluate(null, Machine.Variables, Machine.Simulation));
         }
         /// <summary>
         /// With seed
@@ -50,7 +50,7 @@ namespace SymuSysDynTests.Functions
             var function = new Normal("Normal(variable1+variable2, 0)");
             Machine.Variables.Add(new Variable("variable1", "1"));
             Machine.Variables.Add(new Variable("variable2", "2"));
-            Assert.AreEqual(3, function.Evaluate(Machine.Variables, Machine.Simulation));
+            Assert.AreEqual(3, function.Evaluate(null, Machine.Variables, Machine.Simulation));
         }        /// <summary>
         /// With seed
         /// </summary>
@@ -60,7 +60,7 @@ namespace SymuSysDynTests.Functions
             var function = new Normal("Normal(variable1, variable2)");
             Machine.Variables.Add(new Variable("variable1", "1"));
             Machine.Variables.Add(new Variable("variable2", "0"));
-            Assert.AreEqual(1, function.Evaluate(Machine.Variables, Machine.Simulation));
+            Assert.AreEqual(1, function.Evaluate(null, Machine.Variables, Machine.Simulation));
         }
     }
 }

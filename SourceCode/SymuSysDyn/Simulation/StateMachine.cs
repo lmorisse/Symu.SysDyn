@@ -72,8 +72,8 @@ namespace Symu.SysDyn.Simulation
             Compute(); // Initialize the model / don't store the result
             SetStocksEquations();
             StoreReferenceVariables();
-            Simulation.Clear();
-            Results.Clear();
+            //Simulation.Clear();
+            //Results.Clear();
         }
 
         private void StoreReferenceVariables()
@@ -354,7 +354,7 @@ namespace Symu.SysDyn.Simulation
         /// </summary>
         public Graph GetGraph()
         {
-            return Graph.CreateInstance(ReferenceVariables);
+            return Graph.CreateInstance(Variables);
         }
 
         /// <summary>
@@ -362,7 +362,8 @@ namespace Symu.SysDyn.Simulation
         /// </summary>
         public Graph GetSubGraph(string groupName)
         {
-            return Graph.CreateInstance(ReferenceVariables.GetGroupVariables(groupName));
+            return Graph.CreateInstance(Variables.GetGroupVariables(groupName));
         }
+
     }
 }

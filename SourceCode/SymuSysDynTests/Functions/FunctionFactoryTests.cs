@@ -77,9 +77,9 @@ namespace SymuSysDynTests.Functions
         public void GetFunctionsTest()
         {
             const string test =
-                "Func1((param1),(param2))+DT + TIME + STEP( 1 , 2)-Normal(1,2)*RAMP(2,1)";
+                "Func1((param1),(param2))+DT + TIME + STEP( 1 , 2)-Normal(1,2)*RAMP(2,1)-ExternalUpdate+2";
             var results = FunctionUtils.ParseFunctions(test).ToList();
-            Assert.AreEqual(6, results.Count);
+            Assert.AreEqual(7, results.Count);
             Assert.AreEqual("Func1", results[0].Name);
             Assert.IsTrue(results[1] is Dt);
             Assert.IsTrue(results[2] is Time);
@@ -89,6 +89,8 @@ namespace SymuSysDynTests.Functions
             Assert.AreEqual("Normal", results[4].Name);
             Assert.IsTrue(results[5] is Ramp);
             Assert.AreEqual("Ramp", results[5].Name);
+            Assert.IsTrue(results[6] is ExternalUpdate);
+            Assert.AreEqual("Externalupdate", results[6].Name);
         }
 
         /// <summary>

@@ -35,9 +35,9 @@ namespace SymuSysDynTests.Functions
         {
             var function = new Ramp("RAMP(20, -7)");
             Machine.Simulation.Time = 20;
-            Assert.AreEqual(0, function.Evaluate(Machine.Variables, Machine.Simulation));
+            Assert.AreEqual(0, function.Evaluate(null, Machine.Variables, Machine.Simulation));
             Machine.Simulation.Time = 30;
-            Assert.AreEqual(-70, function.Evaluate(Machine.Variables, Machine.Simulation));
+            Assert.AreEqual(-70, function.Evaluate(null, Machine.Variables, Machine.Simulation));
         }
 
         [TestMethod]
@@ -45,9 +45,9 @@ namespace SymuSysDynTests.Functions
         {
             var function = new Ramp("RAMP(20, aux1)");
             Machine.Simulation.Time = 30;
-            function.Prepare(Machine.Variables, Machine.Simulation);
+            function.Prepare(null, Machine.Variables, Machine.Simulation);
             Assert.AreEqual(1F, function.Expression.Parameters["Aux1"]);
-            Assert.AreEqual(10F, function.Evaluate(Machine.Variables, Machine.Simulation));
+            Assert.AreEqual(10F, function.Evaluate(null, Machine.Variables, Machine.Simulation));
         }
 
         [TestMethod]
@@ -55,9 +55,9 @@ namespace SymuSysDynTests.Functions
         {
             var function = new Ramp("RAMP(aux1, -7)");
             Machine.Simulation.Time = 1;
-            function.Prepare(Machine.Variables, Machine.Simulation);
+            function.Prepare(null, Machine.Variables, Machine.Simulation);
             Assert.AreEqual(1F, function.Expression.Parameters["Aux1"]);
-            Assert.AreEqual(0F, function.Evaluate(Machine.Variables, Machine.Simulation));
+            Assert.AreEqual(0F, function.Evaluate(null, Machine.Variables, Machine.Simulation));
         }
 
         [TestMethod]
@@ -65,9 +65,9 @@ namespace SymuSysDynTests.Functions
         {
             var function = new Ramp("RAMP(aux1, aux1)");
             Machine.Simulation.Time = 10;
-            function.Prepare(Machine.Variables, Machine.Simulation);
+            function.Prepare(null, Machine.Variables, Machine.Simulation);
             Assert.AreEqual(1F, function.Expression.Parameters["Aux1"]);
-            Assert.AreEqual(9F, function.Evaluate(Machine.Variables, Machine.Simulation));
+            Assert.AreEqual(9F, function.Evaluate(null, Machine.Variables, Machine.Simulation));
         }
     }
 }

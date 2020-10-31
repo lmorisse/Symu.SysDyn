@@ -39,18 +39,18 @@ namespace Symu.SysDyn.Functions
         public string StandardDeviation => GetParam(1);
         public string Seed => Parameters.Count == 3 ? GetParam(2) : string.Empty;
 
-        public override float Evaluate(Variables variables, SimSpecs sim)
+        public override float Evaluate(Variable selfVariable, Variables variables, SimSpecs sim)
         {
-            var mean = GetValue(0,variables, sim);
+            var mean = GetValue(0, selfVariable, variables, sim);
 
-            var standardDeviation = GetValue(1, variables, sim);
+            var standardDeviation = GetValue(1, selfVariable, variables, sim);
 
             if (string.IsNullOrEmpty(Seed))
             {
                 return Common.Math.ProbabilityDistributions.Normal.Sample(mean, standardDeviation);
             }
             // with seed parameter
-            var seed = Convert.ToInt32(GetValue(2, variables, sim));
+            var seed = Convert.ToInt32(GetValue(2, selfVariable, variables, sim));
 
             return Common.Math.ProbabilityDistributions.Normal.Sample(mean, standardDeviation, seed);
         }

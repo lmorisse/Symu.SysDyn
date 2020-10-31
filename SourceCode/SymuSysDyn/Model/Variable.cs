@@ -122,7 +122,7 @@ namespace Symu.SysDyn.Model
                 return;
             }
 
-            var eval = Equation.Evaluate(variables, simulation);
+            var eval = Equation.Evaluate(this, variables, simulation);
             AdjustValue(eval);
             Updated = true;
         }

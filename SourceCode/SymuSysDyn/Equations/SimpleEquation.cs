@@ -76,17 +76,19 @@ namespace Symu.SysDyn.Equations
             var itself = _words.Count == 1 && Variables.Count == 1 && Variables[0] == variableName;
             return !Variables.Any() || itself;
         }
+
         /// <summary>
         ///     Takes equation and the current variable values returns the result of the equation as the float
         /// </summary>
+        /// <param name="selfVariable"></param>
         /// <param name="variables"></param>
         /// <param name="sim"></param>
         /// <returns></returns>
-        public float Evaluate(Variables variables, SimSpecs sim)
+        public float Evaluate(Variable selfVariable, Variables variables, SimSpecs sim)
         {
             try
             {
-                Prepare(variables, sim);
+                Prepare(selfVariable, variables, sim);
                 return Convert.ToSingle(_expression.Evaluate());
             }
             catch (ArgumentException ex)
@@ -104,7 +106,7 @@ namespace Symu.SysDyn.Equations
         /// <param name="variables"></param>
         /// <param name="sim"></param>
         /// <returns></returns>
-        public virtual void Prepare(Variables variables, SimSpecs sim)
+        public virtual void Prepare(Variable selfVariable, Variables variables, SimSpecs sim)
         {
             if (variables == null)
             {

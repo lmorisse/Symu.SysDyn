@@ -54,26 +54,28 @@ namespace Symu.SysDyn.Equations
         {
             return !Functions.Any() && base.CanBeOptimized(variableName);
         }
+
         /// <summary>
         ///     Prepare equation to be computed
         ///     Replace all variables of the equation by its actual value
         /// </summary>
+        /// <param name="selfVariable"></param>
         /// <param name="variables"></param>
         /// <param name="sim"></param>
         /// <returns></returns>
-        public override void Prepare(Variables variables, SimSpecs sim)
+        public override void Prepare(Variable selfVariable, Variables variables, SimSpecs sim)
         {
             if (variables == null)
             {
                 throw new ArgumentNullException(nameof(variables));
             }
 
-            base.Prepare(variables, sim);
+            base.Prepare(selfVariable, variables, sim);
 
             // Built-in functions
             foreach (var function in Functions)
             {
-                _expression.Parameters[function.IndexName] = function.Prepare(variables, sim);
+                _expression.Parameters[function.IndexName] = function.Prepare(selfVariable, variables, sim);
             }
         }
 

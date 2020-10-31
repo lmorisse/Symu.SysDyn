@@ -32,7 +32,7 @@ namespace SymuSysDynTests.Equations
         {
             var variable = new Variable("X", PlusEquation);
             _variables.Add(variable);
-            Assert.AreEqual(3, variable.Equation.Evaluate(_variables, null));
+            Assert.AreEqual(3, variable.Equation.Evaluate(null, _variables, null));
         }
 
         [TestMethod()]
@@ -40,7 +40,7 @@ namespace SymuSysDynTests.Equations
         {
             var variable = new Variable("X", MinusEquation);
             _variables.Add(variable);
-            Assert.AreEqual(-1, variable.Equation.Evaluate(_variables, null));
+            Assert.AreEqual(-1, variable.Equation.Evaluate(null, _variables, null));
         }
 
         [TestMethod()]
@@ -48,7 +48,7 @@ namespace SymuSysDynTests.Equations
         {
             var variable = new Variable("X", MultiplicationEquation);
             _variables.Add(variable);
-            Assert.AreEqual(2, variable.Equation.Evaluate(_variables, null));
+            Assert.AreEqual(2, variable.Equation.Evaluate(null, _variables, null));
         }
 
         [TestMethod()]
@@ -56,7 +56,7 @@ namespace SymuSysDynTests.Equations
         {
             var variable = new Variable("X", DivisionEquation);
             _variables.Add(variable);
-            Assert.AreEqual(0.5F, variable.Equation.Evaluate(_variables, null));
+            Assert.AreEqual(0.5F, variable.Equation.Evaluate(null, _variables, null));
         }
 
         [TestMethod()]
@@ -64,7 +64,7 @@ namespace SymuSysDynTests.Equations
         {
             var variable = new Variable("X", Equation);
             _variables.Add(variable);
-            Assert.AreEqual(1, variable.Equation.Evaluate(_variables, null));
+            Assert.AreEqual(1, variable.Equation.Evaluate(null, _variables, null));
         }
 
         [TestMethod()]
@@ -72,7 +72,7 @@ namespace SymuSysDynTests.Equations
         {
             var variable = new Variable("X", MixEquation);
             _variables.Add(variable);
-            Assert.AreEqual(2, variable.Equation.Evaluate(_variables, null));
+            Assert.AreEqual(2, variable.Equation.Evaluate(null, _variables, null));
         }
 
         #endregion

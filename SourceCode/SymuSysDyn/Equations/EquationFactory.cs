@@ -80,7 +80,7 @@ namespace Symu.SysDyn.Equations
                 var function = functions.Find(x => x.IndexName == word);
                 if (function != null)
                 {
-                    var success = function.TryEvaluate(null, null, out eval);
+                    var success = function.TryEvaluate(null, null, null, out eval);
                     if (!success)
                     {
                         continue;

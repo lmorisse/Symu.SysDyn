@@ -29,7 +29,7 @@ namespace Symu.SysDyn.Functions
         {
         }
 
-        public override float Evaluate(Variables variables, SimSpecs sim)
+        public override float Evaluate(Variable selfVariable, Variables variables, SimSpecs sim)
         {
             if (sim == null)
             {

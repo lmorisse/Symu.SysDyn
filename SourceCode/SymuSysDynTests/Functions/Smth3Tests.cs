@@ -36,9 +36,9 @@ namespace SymuSysDynTests.Functions
         {
             var smth = new Smth3("SMTH3(5+Step(10,3),5)");
             _machine.Simulation.Time = 2;
-            Assert.AreEqual(5, smth.Evaluate(_machine.Variables, _machine.Simulation));
+            Assert.AreEqual(5, smth.Evaluate(null, _machine.Variables, _machine.Simulation));
             _machine.Simulation.Time = 4;
-            Assert.IsTrue(5< smth.Evaluate(_machine.Variables, _machine.Simulation));
+            Assert.IsTrue(5< smth.Evaluate(null, _machine.Variables, _machine.Simulation));
         }
     }
 }

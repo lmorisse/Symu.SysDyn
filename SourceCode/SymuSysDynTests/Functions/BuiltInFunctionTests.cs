@@ -80,8 +80,8 @@ namespace SymuSysDynTests.Functions
         public void EvaluateTest()
         {
             var function = new BuiltInFunction("abs(-5)");
-            function.Prepare(_machine.Variables, _machine.Simulation);
-            Assert.AreEqual(5F, function.Evaluate(_machine.Variables, _machine.Simulation));
+            function.Prepare(null, _machine.Variables, _machine.Simulation);
+            Assert.AreEqual(5F, function.Evaluate(null, _machine.Variables, _machine.Simulation));
         }
 
         /// <summary>
@@ -92,9 +92,9 @@ namespace SymuSysDynTests.Functions
         {
             var function = new BuiltInFunction("abs(aux1)");
             _machine.Variables.Add(new Variable("Aux1","1"));
-            function.Prepare(_machine.Variables, _machine.Simulation);
+            function.Prepare(null, _machine.Variables, _machine.Simulation);
             Assert.AreEqual(1F, function.Expression.Parameters["Aux1"]);
-            Assert.AreEqual(1F, function.Evaluate(_machine.Variables, _machine.Simulation));
+            Assert.AreEqual(1F, function.Evaluate(null, _machine.Variables, _machine.Simulation));
         }
         #endregion
 

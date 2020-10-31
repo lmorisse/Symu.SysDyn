@@ -36,16 +36,16 @@ namespace Symu.SysDyn.Functions
         public string Height => GetParam(0);
         public string StartTime => GetParam(1);
 
-        public override float Evaluate(Variables variables, SimSpecs sim)
+        public override float Evaluate(Variable selfVariable, Variables variables, SimSpecs sim)
         {
             if (sim == null)
             {
                 throw new ArgumentNullException(nameof(sim));
             }
             //Height can be either a literal or a numeric
-            var height = GetValue(0,variables, sim);
+            var height = GetValue(0, selfVariable, variables, sim);
 
-            var startTime = Convert.ToUInt16(GetValue(1,variables, sim));
+            var startTime = Convert.ToUInt16(GetValue(1, selfVariable, variables, sim));
 
             return sim.Time >= startTime ? height : 0;
         }
