@@ -27,13 +27,16 @@ namespace Symu.SysDyn.Simulation
         /// <summary>
         ///     Process compute all iterations from Simulation.Start to Simulation.Stop
         /// </summary>
-        public void Process()
+        /// <remarks>true if the process was successful</remarks>
+        public bool Process()
         {
             OptimizeVariables();
             while (Simulation.Run())
             {
                 Compute();
             }
+
+            return true;
         }
 
         /// <summary>

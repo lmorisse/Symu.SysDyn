@@ -79,10 +79,11 @@ namespace Symu.SysDyn.Simulation
             SetStocksEquations();
             StoreReferenceVariables();
         }
-
+        /// <summary>
+        /// Clone the  Variables
+        /// </summary>
         private void StoreReferenceVariables()
         {
-            // Clone the  Variables
             ReferenceVariables = Variables.Clone();
         }
 

@@ -85,6 +85,10 @@ namespace Symu.SysDyn.Model
         private static string AggregateFlows(IReadOnlyList<string> list, string @operator)
         {
             var flow = string.Empty;
+            if (list == null)
+            {
+                return flow;
+            }
             for (var i = 0; i < list.Count; i++)
             {
                 if (i == 0)
