@@ -28,8 +28,19 @@ namespace Symu.SysDyn.Model
     /// </summary>
     public class Stock : Variable, IComparable
     {
-        public Stock(string name) : base(name)
+        private Stock(string name) : base(name)
         {
+        }
+        public static Stock CreateInstance(List<IVariable> variables, string name)
+        {
+            if (variables == null)
+            {
+                throw new ArgumentNullException(nameof(variables));
+            }
+
+            var variable = new Stock(name);
+            variables.Add(variable);
+            return variable;
         }
 
         public Stock(string name, string eqn, List<string> inflow, List<string> outflow) : base(name, eqn)
@@ -38,13 +49,36 @@ namespace Symu.SysDyn.Model
             Outflow = StringUtils.CleanNames(outflow);
             SetChildren();
         }
+        public static Stock CreateInstance(Variables variables, string name, string eqn, List<string> inflow, List<string> outflow)
+        {
+            if (variables == null)
+            {
+                throw new ArgumentNullException(nameof(variables));
+            }
 
-        public Stock(string name, string eqn, List<string> inflow, List<string> outflow, GraphicalFunction graph,
+            var variable = new Stock(name, eqn, inflow, outflow);
+            variables.Add(variable);
+            return variable;
+        }
+
+        private Stock(string name, string eqn, List<string> inflow, List<string> outflow, GraphicalFunction graph,
             Range range, Range scale, NonNegative nonNegative) : base(name, eqn, graph, range, scale, nonNegative)
         {
             Inflow = StringUtils.CleanNames(inflow);
             Outflow = StringUtils.CleanNames(outflow);
             SetChildren();
+        }
+        public static Stock CreateInstance(Variables variables, string name, string eqn, List<string> inflow, List<string> outflow, GraphicalFunction graph,
+            Range range, Range scale, NonNegative nonNegative)
+        {
+            if (variables == null)
+            {
+                throw new ArgumentNullException(nameof(variables));
+            }
+
+            var variable = new Stock(name, eqn, inflow, outflow, graph, range, scale, nonNegative);
+            variables.Add(variable);
+            return variable;
         }
 
         public override IVariable Clone()

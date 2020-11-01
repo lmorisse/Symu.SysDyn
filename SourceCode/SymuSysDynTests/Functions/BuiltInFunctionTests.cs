@@ -111,7 +111,7 @@ namespace SymuSysDynTests.Functions
         public void EvaluateTest1()
         {
             var function = new BuiltInFunction("abs(aux1)");
-            _machine.Variables.Add(new Variable("Aux1", "1"));
+            Variable.CreateInstance(_machine.Variables, "Aux1", "1");
             function.Prepare(null, _machine.Variables, _machine.Simulation);
             Assert.AreEqual(1F, function.Expression.Parameters["Aux1"]);
             Assert.AreEqual(1F, function.Evaluate(null, _machine.Variables, _machine.Simulation));

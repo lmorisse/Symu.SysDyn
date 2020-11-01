@@ -24,7 +24,7 @@ namespace SymuSysDynTests.Functions
         public void ExternalUpdateTest1()
         {
             var function = new ExternalUpdate("ExternalUpdate");
-            var variable = new Variable("variable", "1");
+            var variable = Variable.CreateInstance(Machine.Variables, "variable", "1");
             Assert.AreEqual(1, function.Evaluate(variable, Machine.Variables, Machine.Simulation));
         }
     }

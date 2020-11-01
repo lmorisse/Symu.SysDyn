@@ -45,6 +45,17 @@ namespace Symu.SysDyn.Model
             Initialize();
             SetChildren();
         }
+        public static IVariable CreateInstance(Variables variables, string name, string eqn)
+        {
+            if (variables == null)
+            {
+                throw new ArgumentNullException(nameof(variables));
+            }
+
+            var variable = new Variable(name, eqn);
+            variables.Add(variable);
+            return variable;
+        }
 
         public Variable(string name, string eqn, GraphicalFunction graph, Range range, Range scale,
             NonNegative nonNegative) : this(name)

@@ -137,16 +137,16 @@ namespace Symu.SysDyn.Parser
                 throw new ArgumentNullException(nameof(variables));
             }
 
-            var auxiliaries = xContainer.Descendants(_ns + "aux")
-                .Select(q => new Auxiliary(
-                    q.FirstAttribute.Value,
-                    ParseEquation(q),
-                    ParseGraphicalFunction(q),
-                    ParseRange(q, "range"),
-                    ParseRange(q, "scale"),
-                    ParseNonNegative(q)));
-
-            variables.AddRange(auxiliaries);
+            foreach (var auxiliary in xContainer.Descendants(_ns + "aux"))
+            {
+                Auxiliary.CreateInstance(variables,
+                    auxiliary.FirstAttribute.Value,
+                    ParseEquation(auxiliary),
+                    ParseGraphicalFunction(auxiliary),
+                    ParseRange(auxiliary, "range"),
+                    ParseRange(auxiliary, "scale"),
+                    ParseNonNegative(auxiliary));
+            }
         }
 
         public void ParseFlows(XContainer xContainer, Variables variables)
@@ -160,17 +160,16 @@ namespace Symu.SysDyn.Parser
             {
                 throw new ArgumentNullException(nameof(variables));
             }
-
-            var flows = xContainer.Descendants(_ns + "flow")
-                .Select(q => new Flow(
-                    q.FirstAttribute.Value,
-                    ParseEquation(q),
-                    ParseGraphicalFunction(q),
-                    ParseRange(q, "range"),
-                    ParseRange(q, "scale"),
-                    ParseNonNegative(q)));
-
-            variables.AddRange(flows);
+            foreach (var flow in xContainer.Descendants(_ns + "flow"))
+            {
+                Flow.CreateInstance(variables,
+                    flow.FirstAttribute.Value,
+                    ParseEquation(flow),
+                    ParseGraphicalFunction(flow),
+                    ParseRange(flow, "range"),
+                    ParseRange(flow, "scale"),
+                    ParseNonNegative(flow));
+            }
         }
 
         public void ParseStocks(XContainer xContainer, Variables variables)
@@ -184,20 +183,18 @@ namespace Symu.SysDyn.Parser
             {
                 throw new ArgumentNullException(nameof(variables));
             }
-
-            var stocks = xContainer.Descendants(_ns + "stock")
-                .Select(q => new Stock(
-                    q.FirstAttribute.Value,
-                    ParseEquation(q),
-                    ParseInflows(q),
-                    ParseOutflows(q),
-                    ParseGraphicalFunction(q),
-                    ParseRange(q, "range"),
-                    ParseRange(q, "scale"),
-                    ParseNonNegative(q)
-                ));
-
-            variables.AddRange(stocks);
+            foreach (var stock in xContainer.Descendants(_ns + "stock"))
+            {
+                Stock.CreateInstance(variables,
+                    stock.FirstAttribute.Value,
+                    ParseEquation(stock),
+                    ParseInflows(stock),
+                    ParseOutflows(stock),
+                    ParseGraphicalFunction(stock),
+                    ParseRange(stock, "range"),
+                    ParseRange(stock, "scale"),
+                    ParseNonNegative(stock));
+            }
         }
 
         public GraphicalFunction ParseGraphicalFunction(XContainer xContainer)

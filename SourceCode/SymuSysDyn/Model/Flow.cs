@@ -7,6 +7,8 @@
 
 #endregion
 
+using System;
+
 namespace Symu.SysDyn.Model
 {
     /// <summary>
@@ -18,7 +20,7 @@ namespace Symu.SysDyn.Model
     /// </summary>
     public class Flow : Variable
     {
-        public Flow(string name) : base(name)
+        private Flow(string name) : base(name)
         {
         }
 
@@ -26,6 +28,18 @@ namespace Symu.SysDyn.Model
             NonNegative nonNegative) : base(name, eqn, graph,
             range, scale, nonNegative)
         {
+        }
+        public static Flow CreateInstance(Variables variables, string name, string eqn, GraphicalFunction graph, Range range, Range scale,
+            NonNegative nonNegative)
+        {
+            if (variables == null)
+            {
+                throw new ArgumentNullException(nameof(variables));
+            }
+
+            var variable = new Flow(name, eqn, graph, range, scale, nonNegative);
+            variables.Add(variable);
+            return variable;
         }
 
         public override IVariable Clone()

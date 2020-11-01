@@ -41,8 +41,7 @@ namespace SymuSysDynTests.Equations
         [TestMethod]
         public void CloneTest()
         {
-            var variable = new Variable("X", NormalEquation);
-            _variables.Add(variable);
+            var variable = Variable.CreateInstance(_variables, "X", NormalEquation);
             var cloneEquation = variable.Equation.Clone();
             Assert.AreEqual(1, cloneEquation.Evaluate(null, _variables, null));
         }
@@ -52,32 +51,28 @@ namespace SymuSysDynTests.Equations
         [TestMethod]
         public void EvaluateTest()
         {
-            var variable = new Variable("X", NormalEquation);
-            _variables.Add(variable);
+            var variable = Variable.CreateInstance(_variables, "X", NormalEquation);
             Assert.AreEqual(1, variable.Equation.Evaluate(null, _variables, null));
         }
 
         [TestMethod]
         public void EvaluateTest1()
         {
-            var variable = new Variable("X", MinEquation);
-            _variables.Add(variable);
+            var variable = Variable.CreateInstance(_variables, "X", MinEquation);
             Assert.AreEqual(1, variable.Equation.Evaluate(null, _variables, null));
         }
 
         [TestMethod]
         public void EvaluateTest3()
         {
-            var variable = new Variable("X", PlusEquation);
-            _variables.Add(variable);
+            var variable = Variable.CreateInstance(_variables, "X", PlusEquation);
             Assert.AreEqual(3, variable.Equation.Evaluate(null, _variables, null));
         }
 
         [TestMethod]
         public void EvaluateTest4()
         {
-            var variable = new Variable("X", BracketsEquation);
-            _variables.Add(variable);
+            var variable = Variable.CreateInstance(_variables, "X", BracketsEquation);
             Assert.AreEqual(0.5F, variable.Equation.Evaluate(null, _variables, null));
         }
 
@@ -88,7 +83,7 @@ namespace SymuSysDynTests.Equations
         [TestMethod]
         public void ReplaceTest()
         {
-            var variable = new Variable("X", NormalEquation);
+            var variable = Variable.CreateInstance(_variables, "X", NormalEquation);
             variable.Equation.Replace("Variable1", "1");
             Assert.AreEqual(1, variable.Equation.InitialValue());
         }
@@ -96,7 +91,7 @@ namespace SymuSysDynTests.Equations
         [TestMethod]
         public void ReplaceTest1()
         {
-            var variable = new Variable("X", MinEquation);
+            var variable = Variable.CreateInstance(_variables, "X", MinEquation);
             variable.Equation.Replace("Variable1", "1");
             variable.Equation.Replace("Variable2", "2");
             Assert.AreEqual(1, variable.Equation.InitialValue());
@@ -105,7 +100,7 @@ namespace SymuSysDynTests.Equations
         [TestMethod]
         public void ReplaceTest2()
         {
-            var variable = new Variable("X", PlusEquation);
+            var variable = Variable.CreateInstance(_variables, "X", PlusEquation);
             variable.Equation.Replace("Variable1", "1");
             variable.Equation.Replace("Variable2", "2");
             Assert.AreEqual(3, variable.Equation.InitialValue());
@@ -114,7 +109,7 @@ namespace SymuSysDynTests.Equations
         [TestMethod]
         public void ReplaceTest3()
         {
-            var variable = new Variable("X", BracketsEquation);
+            var variable = Variable.CreateInstance(_variables, "X", BracketsEquation);
             variable.Equation.Replace("Variable1", "1");
             variable.Equation.Replace("Variable2", "1");
             Assert.AreEqual(1, variable.Equation.InitialValue());
@@ -123,7 +118,7 @@ namespace SymuSysDynTests.Equations
         [TestMethod]
         public void ReplaceTest4()
         {
-            var variable = new Variable("X", SameVariableEquation);
+            var variable = Variable.CreateInstance(_variables, "X", SameVariableEquation);
             variable.Equation.Replace("Variable1", "1");
             Assert.AreEqual(2, variable.Equation.InitialValue());
         }
@@ -131,7 +126,7 @@ namespace SymuSysDynTests.Equations
         [TestMethod]
         public void ReplaceTest5()
         {
-            var variable = new Variable("X", SameStartEquation);
+            var variable = Variable.CreateInstance(_variables, "X", SameStartEquation);
             variable.Equation.Replace("Variable1", "1");
             Assert.AreEqual("((1)+(Variable1_1))", variable.Equation.InitializedEquation);
         }

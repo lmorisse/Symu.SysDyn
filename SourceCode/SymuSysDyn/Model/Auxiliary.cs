@@ -7,6 +7,9 @@
 
 #endregion
 
+using System;
+using System.Collections.Generic;
+
 namespace Symu.SysDyn.Model
 {
     /// <summary>
@@ -16,18 +19,52 @@ namespace Symu.SysDyn.Model
     /// </summary>
     public class Auxiliary : Variable
     {
-        public Auxiliary(string name) : base(name)
+        private Auxiliary(string name) : base(name)
         {
         }
 
-        public Auxiliary(string name, string eqn) : base(name, eqn)
+        private Auxiliary(string name, string eqn) : base(name, eqn)
         {
         }
+        public new static Auxiliary CreateInstance(Variables variables, string name, string eqn)
+        {
+            if (variables == null)
+            {
+                throw new ArgumentNullException(nameof(variables));
+            }
 
-        public Auxiliary(string name, string eqn, GraphicalFunction graph, Range range, Range scale,
+            var variable = new Auxiliary(name, eqn);
+            variables.Add(variable);
+            return variable;
+        }
+        public static Auxiliary CreateInstance(List<IVariable> variables, string name, string eqn)
+        {
+            if (variables == null)
+            {
+                throw new ArgumentNullException(nameof(variables));
+            }
+
+            var variable = new Auxiliary(name, eqn);
+            variables.Add(variable);
+            return variable;
+        }
+        private Auxiliary(string name, string eqn, GraphicalFunction graph, Range range, Range scale,
             NonNegative nonNegative) : base(name, eqn,
             graph, range, scale, nonNegative)
         {
+        }
+
+        public static Auxiliary CreateInstance(Variables variables, string name, string eqn, GraphicalFunction graph, Range range, Range scale,
+            NonNegative nonNegative)
+        {
+            if (variables == null)
+            {
+                throw new ArgumentNullException(nameof(variables));
+            }
+
+            var variable = new Auxiliary(name, eqn, graph, range, scale, nonNegative);
+            variables.Add(variable);
+            return variable;
         }
 
         public override IVariable Clone()

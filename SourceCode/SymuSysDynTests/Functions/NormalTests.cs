@@ -65,8 +65,8 @@ namespace SymuSysDynTests.Functions
         public void EvaluateTest2()
         {
             var function = new Normal("Normal(variable1+variable2, 0)");
-            Machine.Variables.Add(new Variable("variable1", "1"));
-            Machine.Variables.Add(new Variable("variable2", "2"));
+            Variable.CreateInstance(Machine.Variables, "variable1", "1");
+            Variable.CreateInstance(Machine.Variables, "variable2", "2");
             Assert.AreEqual(3, function.Evaluate(null, Machine.Variables, Machine.Simulation));
         }
 
@@ -77,8 +77,8 @@ namespace SymuSysDynTests.Functions
         public void EvaluateTest3()
         {
             var function = new Normal("Normal(variable1, variable2)");
-            Machine.Variables.Add(new Variable("variable1", "1"));
-            Machine.Variables.Add(new Variable("variable2", "0"));
+            Variable.CreateInstance(Machine.Variables, "variable1", "1");
+            Variable.CreateInstance(Machine.Variables, "variable2", "0");
             Assert.AreEqual(1, function.Evaluate(null, Machine.Variables, Machine.Simulation));
         }
     }
