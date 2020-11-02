@@ -71,7 +71,7 @@ namespace Symu.SysDyn.Simulation
 
         public SimState State { get; private set; } = SimState.NotStarted;
         public bool OnPause => State == SimState.Pause;
-        public ushort Step { get; set; }
+        public uint Step { get; set; }
         public ushort Time { get; set; }
 
         /// <summary>
@@ -81,7 +81,7 @@ namespace Symu.SysDyn.Simulation
 
         public void Clear()
         {
-            Step = (ushort) Math.Floor(Start / DeltaTime);
+            Step = (uint) Math.Floor(Start / DeltaTime);
             State = SimState.NotStarted;
         }
 

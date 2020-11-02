@@ -72,10 +72,15 @@ namespace Symu.SysDyn.Simulation
         }
 
         #region Initialize
-
+        /// <summary>
+        /// Initialize the model
+        /// Don't store the result
+        /// Store the reference variables
+        /// </summary>
         public void Initialize()
         {
-            Compute(); // Initialize the model / don't store the result
+            Simulation.Clear();
+            Compute(); 
             SetStocksEquations();
             StoreReferenceVariables();
         }

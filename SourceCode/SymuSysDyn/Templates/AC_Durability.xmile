@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<xmile version="1.0" xmlns="http://docs.oasis-open.org/xmile/ns/XMILE/v1.0">
+  <header>
+    <name>Hares and Lynxes</name>
+    <options>
+      <uses_outputs />
+    </options>
+    <product version="1.0">From https://sdlabs.io/</product>
+  </header>
+  <sim_specs time_units="Years">
+    <start>1950</start>
+    <stop>2050</stop>
+    <dt>0.0125</dt>
+    <savestep>1</savestep>
+  </sim_specs>
+  <model>
+    <variables>
+      <stock name="Homes\nwithout_AC">
+        <eqn>Initial_Housing_Stock*(1-0.0003)</eqn>
+        <inflow>adding_Net_New_Homes</inflow>
+        <outflow>adopting_AC</outflow>
+        <units>Homes</units>
+      </stock>
+      <stock name="Homes\nwith_AC">
+        <eqn>Initial_Housing_Stock*0.0003</eqn>
+        <inflow>adopting_AC</inflow>
+        <inflow>replacing_AC</inflow>
+        <outflow>retiring_AC</outflow>
+        <units>Homes</units>
+      </stock>
+      <flow name="adding\nNet_New_Homes">
+        <eqn>Total_Homes*fractional_Rate_Net_New_Home_Construction</eqn>
+        <units>Homes/yr</units>
+      </flow>
+      <flow name="adopting_AC">
+        <eqn>Potential_WOM_Sales * Fraction_of_Homes_without_AC </eqn>
+        <units>Homes/yr</units>
+      </flow>
+      <flow name="retiring_AC">
+        <eqn>Homes_with_AC/AC_Useful_Life</eqn>
+        <units>Homes/yr</units>
+      </flow>
+      <flow name="replacing_AC">
+        <eqn>retiring_AC</eqn>
+        <units>Homes/yr</units>
+      </flow>
+      <aux name="AC_Useful_Life">
+        <eqn>20</eqn>
+        <units>Years</units>
+      </aux>
+      <aux name="Total_AC_Sales">
+        <eqn>adopting_AC+replacing_AC</eqn>
+        <units>Homes/yr</units>
+      </aux>
+      <aux name="Total_Homes">
+        <eqn>Homes_without_AC+Homes_with_AC</eqn>
+        <units>Homes</units>
+      </aux>
+      <aux name="Fraction_of_Homes\nwithout_AC">
+        <eqn>IF(Total_Homes&gt;0)&#xA;THEN(Homes_without_AC/Total_Homes)&#xA;ELSE (0)</eqn>
+      </aux>
+      <aux name="fractional_Rate\nNet_New_Home\nConstruction">
+        <doc>High of 2.5%&#xA;Low (forward looking) of 0.5%</doc>
+        <eqn>0.005</eqn>
+      </aux>
+      <aux name="People\nLiving_in_Homes\nwith_AC">
+        <eqn>Homes_with_AC*Average_People_per_Home</eqn>
+      </aux>
+      <aux name="Average_People\nper_Home">
+        <eqn>2.5</eqn>
+        <units>People per Home</units>
+      </aux>
+      <aux name="Potential\nWOM_Sales">
+        <eqn>People_Living_in_Homes_with_AC*(WOM_Sales_effectiveness/100)</eqn>
+        <units>Homes/yr</units>
+      </aux>
+      <aux name="WOM_Sales\neffectiveness">
+        <doc>0.040,   0.055,   0.070</doc>
+        <eqn>7</eqn>
+      </aux>
+      <aux name="Initial\nHousing_Stock">
+        <eqn>1e6</eqn>
+        <units>Homes</units>
+      </aux>
+      <stock name="Max_AC_Sales">
+        <eqn>Total_AC_Sales</eqn>
+        <inflow>increasing</inflow>
+        <outflow>decreasing</outflow>
+        <units>Homes/yr</units>
+      </stock>
+      <flow name="increasing">
+        <eqn>IF (Total_AC_Sales&gt;Max_AC_Sales)&#xA;THEN (Total_AC_Sales)&#xA;ELSE (0)</eqn>
+        <units>Homes/yr^2</units>
+      </flow>
+      <flow name="decreasing">
+        <eqn>IF (Total_AC_Sales&gt;Max_AC_Sales)&#xA;THEN (Max_AC_Sales)&#xA;ELSE (0)</eqn>
+        <units>Homes/yr^2</units>
+      </flow>
+      <aux name="Percent_of\nMax_Sales">
+        <eqn>MIN(1,Total_AC_Sales/Max_AC_Sales)</eqn>
+      </aux>
+    </variables>
+  </model>
+</xmile>

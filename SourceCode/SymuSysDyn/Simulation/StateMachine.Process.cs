@@ -30,6 +30,8 @@ namespace Symu.SysDyn.Simulation
         /// <remarks>true if the process was successful</remarks>
         public bool Process()
         {
+            //Simulation Start or DeltaTime may have change since the intialization
+            Simulation.Clear();
             OptimizeVariables();
             while (Simulation.Run())
             {
