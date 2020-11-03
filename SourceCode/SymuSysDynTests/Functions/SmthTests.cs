@@ -11,7 +11,7 @@
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Symu.SysDyn.Functions;
-using Symu.SysDyn.Model;
+using Symu.SysDyn.Models;
 using Symu.SysDyn.Simulation;
 
 #endregion
@@ -32,7 +32,7 @@ namespace SymuSysDynTests.Functions
         [TestMethod]
         public void Smth1Test()
         {
-            var smth = new Smth1("SMTH1(5+Step(10,3),5)");
+            var smth = new Smth1(string.Empty, "SMTH1(5+Step(10,3),5)");
             Assert.AreEqual("5+Step(10,3)", smth.Initial);
             Assert.AreEqual("5+Step(10,3)", smth.Input);
             Assert.AreEqual("5", smth.Averaging);
@@ -41,7 +41,7 @@ namespace SymuSysDynTests.Functions
         [TestMethod]
         public void Smth1Test1()
         {
-            var smth = new Smth1("SMTH1(5+Step(10,3),5,2)");
+            var smth = new Smth1(string.Empty, "SMTH1(5+Step(10,3),5,2)");
             Assert.AreEqual("2", smth.Initial);
             Assert.AreEqual("5+Step(10,3)", smth.Input);
             Assert.AreEqual("5", smth.Averaging);
@@ -53,13 +53,13 @@ namespace SymuSysDynTests.Functions
         [TestMethod]
         public void EvaluateTest()
         {
-            var smth = new Smth1("SMTH1(5+Step(10,3),5,5)");
+            var smth = new Smth1(string.Empty, "SMTH1(5+Step(10,3),5,5)");
             _machine.Simulation.Time = 1;
-            Assert.AreEqual(5, smth.Evaluate(null, _machine.Variables, _machine.Simulation));
+            Assert.AreEqual(5, smth.Evaluate(null, _machine.Models.GetVariables(), _machine.Simulation));
             _machine.Simulation.Time = 2;
-            Assert.AreEqual(5, smth.Evaluate(null, _machine.Variables, _machine.Simulation));
+            Assert.AreEqual(5, smth.Evaluate(null, _machine.Models.GetVariables(), _machine.Simulation));
             _machine.Simulation.Time = 4;
-            Assert.AreEqual(7, smth.Evaluate(null, _machine.Variables, _machine.Simulation));
+            Assert.AreEqual(7, smth.Evaluate(null, _machine.Models.GetVariables(), _machine.Simulation));
         }
 
         /// <summary>
@@ -68,13 +68,13 @@ namespace SymuSysDynTests.Functions
         [TestMethod]
         public void EvaluateTest1()
         {
-            var smth = new Smth1("SMTH1(5+Step(10,3),5)");
+            var smth = new Smth1(string.Empty, "SMTH1(5+Step(10,3),5)");
             _machine.Simulation.Time = 1;
-            Assert.AreEqual(5, smth.Evaluate(null, _machine.Variables, _machine.Simulation));
+            Assert.AreEqual(5, smth.Evaluate(null, _machine.Models.GetVariables(), _machine.Simulation));
             _machine.Simulation.Time = 2;
-            Assert.AreEqual(5, smth.Evaluate(null, _machine.Variables, _machine.Simulation));
+            Assert.AreEqual(5, smth.Evaluate(null, _machine.Models.GetVariables(), _machine.Simulation));
             _machine.Simulation.Time = 4;
-            Assert.AreEqual(7, smth.Evaluate(null, _machine.Variables, _machine.Simulation));
+            Assert.AreEqual(7, smth.Evaluate(null, _machine.Models.GetVariables(), _machine.Simulation));
         }
 
         /// <summary>
@@ -83,14 +83,14 @@ namespace SymuSysDynTests.Functions
         [TestMethod]
         public void EvaluateTest2()
         {
-            Auxiliary.CreateInstance(_machine.Variables, "aux", "5+Step(10,3)+aux2");
-            Auxiliary.CreateInstance(_machine.Variables, "aux1", "SMTH1(aux, 5)");
-            Auxiliary.CreateInstance(_machine.Variables, "aux2", "0");
+            Auxiliary.CreateInstance("aux", _machine.Models.RootModel, "5+Step(10,3)+aux2");
+            Auxiliary.CreateInstance("aux1", _machine.Models.RootModel, "SMTH1(aux, 5)");
+            Auxiliary.CreateInstance("aux2", _machine.Models.RootModel, "0");
             _machine.Initialize();
             _machine.Simulation.Time = 4;
             _machine.Compute();
             //At step 4, Aux = 15 => Aux1 = SMTH1(15,5)
-            Assert.AreEqual(7, _machine.Variables[1].Value);
+            Assert.AreEqual(7, _machine.Models.RootModel.Variables[1].Value);
         }
     }
 }

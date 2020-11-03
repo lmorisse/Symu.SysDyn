@@ -10,7 +10,7 @@
 #region using directives
 
 using System;
-using Symu.SysDyn.Model;
+using Symu.SysDyn.Models;
 using Symu.SysDyn.Simulation;
 
 #endregion
@@ -28,7 +28,7 @@ namespace Symu.SysDyn.Functions
     {
         public const string Value = "Ramp";
 
-        public Ramp(string function) : base(function)
+        public Ramp(string model, string function) : base(model, function)
         {
         }
 
@@ -37,12 +37,12 @@ namespace Symu.SysDyn.Functions
 
         public override IBuiltInFunction Clone()
         {
-            var clone = new Ramp(OriginalFunction);
+            var clone = new Ramp(Model, OriginalFunction);
             CopyTo(clone);
             return clone;
         }
 
-        public override float Evaluate(IVariable selfVariable, Variables variables, SimSpecs sim)
+        public override float Evaluate(IVariable selfVariable, VariableCollection variables, SimSpecs sim)
         {
             if (sim == null)
             {
@@ -57,7 +57,7 @@ namespace Symu.SysDyn.Functions
             return sim.Time >= time ? slope * (sim.Time - time) : 0;
         }
 
-        public override float InitialValue()
+        public override float InitialValue(SimSpecs sim)
         {
             return 0;
         }

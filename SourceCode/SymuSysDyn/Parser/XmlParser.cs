@@ -16,7 +16,7 @@ using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
-using Symu.SysDyn.Model;
+using Symu.SysDyn.Models;
 using Symu.SysDyn.Simulation;
 
 #endregion
@@ -82,26 +82,42 @@ namespace Symu.SysDyn.Parser
                 });
             }
         }
-
-        public Variables ParseVariables()
+        public ModelCollection ParseModels()
         {
             if (_xDoc.Root == null)
             {
                 throw new NullReferenceException(nameof(_xDoc.Root));
             }
 
-            var xElements = _xDoc.Root.Descendants(_ns + "variables");
+            var models = _xDoc.Root.Elements(_ns + "model");
 
-            var variables = new Variables();
-            foreach (var xElement in xElements)
+            var modelCollection = new ModelCollection();
+            foreach (var model in models)
             {
-                ParseStocks(xElement, variables);
-                ParseFlows(xElement, variables);
-                ParseAuxiliaries(xElement, variables);
-                ParseGroups(xElement, variables);
+                modelCollection.Add(ParseModel(model));
+            }
+            return modelCollection;
+        }
+
+        public Model ParseModel(XElement xModel)
+        {
+            if (xModel == null)
+            {
+                throw new NullReferenceException(nameof(_xDoc.Root));
             }
 
-            return variables;
+            var variables = xModel.Descendants(_ns + "variables");
+
+            var model = new Model(xModel.FirstAttribute?.Value);
+            foreach (var variable in variables)
+            {
+                ParseStocks(variable, model);
+                ParseFlows(variable, model);
+                ParseAuxiliaries(variable, model);
+                ParseGroups(variable, model);
+                ParseModules(variable, model);
+            }
+            return model;
         }
 
         public SimSpecs ParseSimSpecs()
@@ -125,86 +141,135 @@ namespace Symu.SysDyn.Parser
             return new SimSpecs(start, stop, dt, pause, timeUnits);
         }
 
-        public void ParseAuxiliaries(XContainer xContainer, Variables variables)
+        public void ParseAuxiliaries(XContainer variables, Model model)
         {
-            if (xContainer == null)
-            {
-                throw new ArgumentNullException(nameof(xContainer));
-            }
-
             if (variables == null)
             {
                 throw new ArgumentNullException(nameof(variables));
             }
 
-            foreach (var auxiliary in xContainer.Descendants(_ns + "aux"))
+            if (model == null)
             {
-                Auxiliary.CreateInstance(variables,
-                    auxiliary.FirstAttribute.Value,
+                throw new ArgumentNullException(nameof(model));
+            }
+
+            foreach (var auxiliary in variables.Descendants(_ns + "aux"))
+            {
+                Auxiliary.CreateInstance(auxiliary.FirstAttribute.Value,
+                    model,
                     ParseEquation(auxiliary),
                     ParseGraphicalFunction(auxiliary),
                     ParseRange(auxiliary, "range"),
                     ParseRange(auxiliary, "scale"),
-                    ParseNonNegative(auxiliary));
+                    ParseNonNegative(auxiliary), ParseAccess(auxiliary));
             }
         }
 
-        public void ParseFlows(XContainer xContainer, Variables variables)
+        public void ParseFlows(XContainer variables, Model model)
         {
-            if (xContainer == null)
-            {
-                throw new ArgumentNullException(nameof(xContainer));
-            }
-
             if (variables == null)
             {
                 throw new ArgumentNullException(nameof(variables));
             }
-            foreach (var flow in xContainer.Descendants(_ns + "flow"))
+
+            if (model == null)
             {
-                Flow.CreateInstance(variables,
-                    flow.FirstAttribute.Value,
+                throw new ArgumentNullException(nameof(model));
+            }
+            foreach (var flow in variables.Descendants(_ns + "flow"))
+            {
+                Flow.CreateInstance(flow.FirstAttribute.Value,
+                    model,
                     ParseEquation(flow),
                     ParseGraphicalFunction(flow),
                     ParseRange(flow, "range"),
                     ParseRange(flow, "scale"),
-                    ParseNonNegative(flow));
+                    ParseNonNegative(flow), ParseAccess(flow));
             }
         }
 
-        public void ParseStocks(XContainer xContainer, Variables variables)
+        public void ParseStocks(XContainer variables, Model model)
         {
-            if (xContainer == null)
-            {
-                throw new ArgumentNullException(nameof(xContainer));
-            }
-
             if (variables == null)
             {
                 throw new ArgumentNullException(nameof(variables));
             }
-            foreach (var stock in xContainer.Descendants(_ns + "stock"))
+
+            if (model == null)
             {
-                Stock.CreateInstance(variables,
-                    stock.FirstAttribute.Value,
+                throw new ArgumentNullException(nameof(model));
+            }
+            foreach (var stock in variables.Descendants(_ns + "stock"))
+            {
+                Stock.CreateInstance(stock.FirstAttribute.Value,
+                    model,
                     ParseEquation(stock),
                     ParseInflows(stock),
                     ParseOutflows(stock),
                     ParseGraphicalFunction(stock),
                     ParseRange(stock, "range"),
                     ParseRange(stock, "scale"),
-                    ParseNonNegative(stock));
+                    ParseNonNegative(stock), ParseAccess(stock));
             }
         }
 
-        public GraphicalFunction ParseGraphicalFunction(XContainer xContainer)
+
+        public void ParseModules(XContainer variables, Model model)
         {
-            if (xContainer == null)
+            if (variables == null)
             {
-                throw new ArgumentNullException(nameof(xContainer));
+                throw new ArgumentNullException(nameof(variables));
             }
 
-            var gf = from q in xContainer.Descendants(_ns + "gf")
+            if (model == null)
+            {
+                throw new ArgumentNullException(nameof(model));
+            }
+            foreach (var module in variables.Descendants(_ns + "module"))
+            {
+                Module.CreateInstance(model,
+                    module.FirstAttribute.Value,
+                    ParseConnects(module));
+            }
+        }
+
+        public ConnectCollection ParseConnects(XElement module)
+        {
+            if (module == null)
+            {
+                throw new ArgumentNullException(nameof(module));
+            }
+
+            var moduleName = module.FirstAttribute.Value;
+            var xConnects = from q in module.Descendants(_ns + "connect")
+                select new
+                {
+                    connectTo = q.FirstAttribute.Value,
+                    connectFrom = q.LastAttribute.Value
+                };
+            var connects = new ConnectCollection();
+            foreach (var connect in xConnects)
+            {
+                var to = connect.connectTo;
+                if (!to.Contains('.'))
+                {
+                    to = moduleName + "." + to;
+                }
+                var from = connect.connectFrom;
+                connects.Add(new Connect(to, from));
+            }
+
+            return connects;
+        }
+
+        public GraphicalFunction ParseGraphicalFunction(XContainer variable)
+        {
+            if (variable == null)
+            {
+                throw new ArgumentNullException(nameof(variable));
+            }
+
+            var gf = from q in variable.Descendants(_ns + "gf")
                 select new
                 {
                     xpts = q.Element(_ns + "xpts")?.Value,
@@ -217,65 +282,87 @@ namespace Symu.SysDyn.Parser
                 .FirstOrDefault();
         }
 
-        public List<string> ParseInflows(XContainer xContainer)
+        public List<string> ParseInflows(XContainer stock)
         {
-            if (xContainer == null)
+            if (stock == null)
             {
-                throw new ArgumentNullException(nameof(xContainer));
+                throw new ArgumentNullException(nameof(stock));
             }
 
-            return xContainer.Elements(_ns + "inflow").Select(el => el.Value).ToList();
+            return stock.Elements(_ns + "inflow").Select(el => el.Value).ToList();
         }
 
-        public List<string> ParseOutflows(XContainer xContainer)
+        public List<string> ParseOutflows(XContainer stock)
         {
-            if (xContainer == null)
+            if (stock == null)
             {
-                throw new ArgumentNullException(nameof(xContainer));
+                throw new ArgumentNullException(nameof(stock));
             }
 
-            return xContainer.Elements(_ns + "outflow").Select(el => el.Value).ToList();
+            return stock.Elements(_ns + "outflow").Select(el => el.Value).ToList();
         }
 
-        public string ParseEquation(XContainer xContainer)
+        public string ParseEquation(XContainer variable)
         {
-            if (xContainer == null)
+            if (variable == null)
             {
-                throw new ArgumentNullException(nameof(xContainer));
+                throw new ArgumentNullException(nameof(variable));
             }
 
-            return xContainer.Element(_ns + "eqn")?.Value;
+            return variable.Element(_ns + "eqn")?.Value;
         }
 
         /// <summary>
         /// </summary>
-        /// <param name="xContainer"></param>
+        /// <param name="variable"></param>
         /// <param name="element">range or scale</param>
         /// <returns></returns>
-        public Range ParseRange(XContainer xContainer, string element)
+        public Range ParseRange(XContainer variable, string element)
         {
-            if (xContainer == null)
+            if (variable == null)
             {
-                throw new ArgumentNullException(nameof(xContainer));
+                throw new ArgumentNullException(nameof(variable));
             }
 
-            var range = xContainer.Descendants(_ns + element).FirstOrDefault();
+            var range = variable.Descendants(_ns + element).FirstOrDefault();
             return range == null
                 ? new Range()
                 : new Range(range.Attribute("min")?.Value, range.Attribute("max")?.Value);
         }
 
-        public NonNegative ParseNonNegative(XContainer xContainer)
+        public NonNegative ParseNonNegative(XContainer variable)
         {
-            if (xContainer == null)
+            if (variable == null)
             {
-                throw new ArgumentNullException(nameof(xContainer));
+                throw new ArgumentNullException(nameof(variable));
             }
 
-            var nonNegative = xContainer.Descendants(_ns + "non_negative").FirstOrDefault();
+            var nonNegative = variable.Descendants(_ns + "non_negative").FirstOrDefault();
             return new NonNegative(nonNegative != null);
         }
 
+        public static VariableAccess ParseAccess(XElement variable)
+        {
+            if (variable == null)
+            {
+                throw new ArgumentNullException(nameof(variable));
+            }
+
+            var access = variable.Attribute("access");
+            if (access == null)
+            {
+                return VariableAccess.None;
+            }
+            switch (access.Value)
+            {
+                case "input":
+                    return VariableAccess.Input;
+                case "output":
+                    return VariableAccess.Output;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
 
         private string[] GetScale(XContainer xContainer, string scale)
         {
@@ -294,25 +381,26 @@ namespace Symu.SysDyn.Parser
             return getScale;
         }
 
-        public void ParseGroups(XContainer xContainer, Variables variables)
+        public void ParseGroups(XContainer variables, Model model)
         {
-            if (xContainer == null)
-            {
-                throw new ArgumentNullException(nameof(xContainer));
-            }
-
             if (variables == null)
             {
                 throw new ArgumentNullException(nameof(variables));
             }
 
-            var groups = xContainer.Descendants(_ns + "group")
+            if (model == null)
+            {
+                throw new ArgumentNullException(nameof(model));
+            }
+
+            var groups = variables.Descendants(_ns + "group")
                 .Select(q => new Group(
                     q.FirstAttribute.Value,
+                    model.Name,
                     ParseEntities(q)
                 ));
 
-            variables.Groups.AddRange(groups);
+            model.Groups.AddRange(groups);
         }
 
         public List<string> ParseEntities(XContainer xContainer)

@@ -11,11 +11,11 @@
 
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Symu.SysDyn.Model;
+using Symu.SysDyn.Models;
 
 #endregion
 
-namespace SymuSysDynTests.Model
+namespace SymuSysDynTests.Models
 {
     [TestClass]
     public class GroupTests
@@ -23,12 +23,12 @@ namespace SymuSysDynTests.Model
         [TestMethod]
         public void GroupTest()
         {
-            var group = new Group("name", new List<string> {"variable1", "variable2"});
+            var group = new Group("name", string.Empty, new List<string> {"variable1", "variable2"});
             Assert.AreEqual("Name", group.Name);
             Assert.AreEqual("Name", group.ToString());
             Assert.AreEqual(2, group.Entities.Count);
-            Assert.AreEqual("Variable1", group.Entities[0]);
-            Assert.AreEqual("Variable2", group.Entities[1]);
+            Assert.AreEqual("_Variable1", group.Entities[0]);
+            Assert.AreEqual("_Variable2", group.Entities[1]);
         }
     }
 }

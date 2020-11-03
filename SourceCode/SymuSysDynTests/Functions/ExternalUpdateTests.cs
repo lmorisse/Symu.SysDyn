@@ -11,7 +11,7 @@
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Symu.SysDyn.Functions;
-using Symu.SysDyn.Model;
+using Symu.SysDyn.Models;
 
 #endregion
 
@@ -23,9 +23,9 @@ namespace SymuSysDynTests.Functions
         [TestMethod]
         public void ExternalUpdateTest1()
         {
-            var function = new ExternalUpdate("ExternalUpdate");
-            var variable = Variable.CreateInstance(Machine.Variables, "variable", "1");
-            Assert.AreEqual(1, function.Evaluate(variable, Machine.Variables, Machine.Simulation));
+            var function = new ExternalUpdate(string.Empty, "ExternalUpdate");
+            var variable = Variable.CreateInstance("variable", Machine.Models.RootModel, "1");
+            Assert.AreEqual(1, function.Evaluate(variable, Machine.Models.GetVariables(), Machine.Simulation));
         }
     }
 }

@@ -11,6 +11,10 @@
   </sim_specs>
   <model>
     <variables>
+      <module name="hares">
+        <connect to="area" from=".aux3"/>
+        <connect to="lynxes" from=".aux2"/>
+      </module>
       <stock name="stock1">
         <eqn>1</eqn>
         <inflow>inflow1</inflow>
@@ -30,7 +34,7 @@
         <scale min="-1" />
         <non_negative />
       </flow>
-      <stock name="stock2">
+      <stock name="stock2" >
         <eqn>2</eqn>
         <non_negative />
       </stock>
@@ -42,8 +46,11 @@
           <ypts>0,1</ypts>
         </gf>
       </aux>
-      <aux name="aux2">
+      <aux name="aux2" access="output">
         <eqn>ABS(aux1)</eqn>
+      </aux>
+      <aux name="aux3" access="output">
+        <eqn>3</eqn>
       </aux>
       <group name="group1">
         <entity name="stock1" />
@@ -52,6 +59,16 @@
       <group name="group2">
         <entity name="stock2" />
       </group>
+    </variables>
+  </model>
+  <model name="hares">
+    <variables>
+      <aux name="area" access="input">
+        <eqn>1</eqn>
+      </aux>
+      <aux name="lynxes" access="input">
+        <eqn>TIME</eqn>
+      </aux>
     </variables>
   </model>
 </xmile>

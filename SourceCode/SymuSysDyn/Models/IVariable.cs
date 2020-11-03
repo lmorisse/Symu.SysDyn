@@ -9,18 +9,19 @@
 
 #region using directives
 
+using System;
 using System.Collections.Generic;
 using Symu.SysDyn.Equations;
 using Symu.SysDyn.Simulation;
 
 #endregion
 
-namespace Symu.SysDyn.Model
+namespace Symu.SysDyn.Models
 {
     /// <summary>
     ///     Interface for the variable of the model
     /// </summary>
-    public interface IVariable
+    public interface IVariable 
     {
         float Value { get; set; }
         IEquation Equation { get; set; }
@@ -43,7 +44,10 @@ namespace Symu.SysDyn.Model
 
         GraphicalFunction GraphicalFunction { get; set; }
 
+
         string Name { get; }
+        string Model { get; }
+        string FullName { get; }
         Units Units { get; set; }
 
         /// <summary>
@@ -55,14 +59,18 @@ namespace Symu.SysDyn.Model
         ///     Output scale
         /// </summary>
         Range Scale { get; set; }
+        NonNegative NonNegative { get; set; }
+
+        VariableAccess Access { get; set; }
 
         /// <summary>Returns a string that represents the current object.</summary>
         /// <returns>A string that represents the current object.</returns>
         string ToString();
 
-        void Update(Variables variables, SimSpecs simulation);
-        bool TryOptimize(bool setInitialValue);
+        void Update(VariableCollection variables, SimSpecs simulation);
+        bool TryOptimize(bool setInitialValue, SimSpecs sim);
         void Initialize();
         IVariable Clone();
+        bool Equals(string fullName);
     }
 }

@@ -12,11 +12,11 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Symu.SysDyn.Model;
+using Symu.SysDyn.Models;
 
 #endregion
 
-namespace SymuSysDynTests.Model
+namespace SymuSysDynTests.Models
 {
     [TestClass]
     public class GraphicalFunctionTests

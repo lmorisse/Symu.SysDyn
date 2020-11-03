@@ -16,7 +16,7 @@ using System.Globalization;
 using System.Linq;
 using Symu.SysDyn.Equations;
 using Symu.SysDyn.Functions;
-using Symu.SysDyn.Model;
+using Symu.SysDyn.Models;
 
 #endregion
 
@@ -31,12 +31,12 @@ namespace Symu.SysDyn.Simulation
         /// </summary>
         private void StoreOptimizedReferenceVariables()
         {
-            _optimizedVariablesReference = Variables.Clone();
+            _referenceOptimizedVariables = Variables.Clone();
         }
 
         private void RetrieveFromOptimizedReferenceVariables()
         {
-            foreach (var variable in _optimizedVariablesReference)
+            foreach (var variable in _referenceOptimizedVariables)
             {
                 Variables.Add(variable.Clone());
             }
@@ -47,29 +47,10 @@ namespace Symu.SysDyn.Simulation
         /// </summary>
         public void OptimizeVariables()
         {
-            if (!Optimized)
-            {
-                RetrieveFromReferenceVariables();
-                return;
-            }
-
-            if (Simulation.State != SimState.NotStarted)
-            {
-                return;
-            }
-
-            if (_optimizedVariablesReference != null)
-            {
-                RetrieveFromOptimizedReferenceVariables();
-                return;
-            }
-
-            RetrieveFromReferenceVariables();
-
             Variables.Initialize();
             List<IVariable> waitingParents;
             //First remove all constant variables
-            foreach (var variable in Variables.GetUpdated.Select(x => x.Name).ToImmutableList())
+            foreach (var variable in Variables.GetUpdated.Select(x => x.FullName).ToImmutableList())
             {
                 Variables.Remove(variable);
             }
@@ -120,10 +101,10 @@ namespace Symu.SysDyn.Simulation
             }
 
             // Update other variables
-            if (readyToUpdate && TryOptimizeVariable(parent))
+            if (readyToUpdate && TryOptimizeVariable(parent, Simulation))
             {
-                ReferenceVariables.SetValue(parent.Name, parent.Value);
-                Variables.Remove(parent.Name);
+                ReferenceVariables.SetValue(parent.FullName, parent.Value);
+                Variables.Remove(parent.FullName);
             }
 
             parent.Updating = false;
@@ -134,14 +115,15 @@ namespace Symu.SysDyn.Simulation
         ///     Take a variable and update the value of that node
         /// </summary>
         /// <param name="variable"></param>
-        public bool TryOptimizeVariable(IVariable variable)
+        /// <param name="sim"></param>
+        public bool TryOptimizeVariable(IVariable variable, SimSpecs sim)
         {
             if (variable == null)
             {
                 throw new ArgumentNullException(nameof(variable));
             }
 
-            if (variable.TryOptimize(false))
+            if (variable.TryOptimize(false, sim))
             {
                 return true;
             }
@@ -149,19 +131,19 @@ namespace Symu.SysDyn.Simulation
             // Replace function Dt
             if (variable.Equation is ComplexEquation complexEquation)
             {
-                complexEquation.Replace(Dt.Value, Simulation.DeltaTime.ToString(CultureInfo.InvariantCulture));
+                complexEquation.Replace(Dt.Value, Simulation.DeltaTime.ToString(CultureInfo.InvariantCulture), Simulation);
             }
 
             // Replace variable per its value
             foreach (var child in variable.Children.Select(childName => ReferenceVariables[childName]).ToImmutableList()
-                .Where(child => !Variables.Exists(child.Name)))
+                .Where(child => !Variables.Exists(child.FullName)))
             {
-                variable.Equation.Replace(child.Name, child.Value.ToString(CultureInfo.InvariantCulture));
-                variable.Children.Remove(child.Name);
+                variable.Equation.Replace(child.FullName, child.Value.ToString(CultureInfo.InvariantCulture), Simulation);
+                variable.Children.Remove(child.FullName);
             }
 
             variable.Updated = true;
-            return variable.TryOptimize(true);
+            return variable.TryOptimize(true, sim);
         }
     }
 }

@@ -6,11 +6,21 @@
 // License : the program is distributed under the terms of the GNU General Public License
 
 #endregion
+#region Licence
+
+// Description: SymuSysDyn - SymuSysDyn
+// Website: https://symu.org
+// Copyright: (c) 2020 laurent Morisseau
+// License : the program is distributed under the terms of the GNU General Public License
+
+#endregion
 
 #region using directives
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Linq;
 using Symu.SysDyn.Equations;
@@ -19,14 +29,23 @@ using Symu.SysDyn.Simulation;
 
 #endregion
 
-namespace Symu.SysDyn.Model
+namespace Symu.SysDyn.Models
 {
     /// <summary>
     ///     Default implementation of IVariable
     /// </summary>
     public class Variable : IVariable
     {
-        public Variable(string name)
+        /// <summary>
+        /// Constructor for root model
+        /// </summary>
+        /// <param name="name"></param>
+        public Variable(string name): this(name, string.Empty)
+        {
+
+        }
+
+        public Variable(string name, string model)
         {
             if (name == null)
             {
@@ -34,38 +53,41 @@ namespace Symu.SysDyn.Model
             }
 
             Name = StringUtils.CleanName(name);
+            Model = model;
+            FullName = StringUtils.FullName(Model, Name);
         }
 
-        public Variable(string name, string eqn) : this(name)
+        public Variable(string name, string model, string eqn) : this(name, model)
         {
             Units = Units.CreateInstanceFromEquation(eqn);
-            Equation = EquationFactory.CreateInstance(eqn, null, out var value);
+            Equation = EquationFactory.CreateInstance(Model, eqn, null, out var value);
             Value = value;
             NonNegative = new NonNegative(false);
             Initialize();
             SetChildren();
         }
-        public static IVariable CreateInstance(Variables variables, string name, string eqn)
+        public static IVariable CreateInstance(string name, Model model, string eqn)
         {
-            if (variables == null)
+            if (model == null)
             {
-                throw new ArgumentNullException(nameof(variables));
+                throw new ArgumentNullException(nameof(model));
             }
 
-            var variable = new Variable(name, eqn);
-            variables.Add(variable);
+            var variable = new Variable(name, model.Name, eqn);
+            model.Variables.Add(variable);
             return variable;
         }
 
-        public Variable(string name, string eqn, GraphicalFunction graph, Range range, Range scale,
-            NonNegative nonNegative) : this(name)
+        public Variable(string name, string model, string eqn, GraphicalFunction graph, Range range, Range scale,
+            NonNegative nonNegative, VariableAccess access) : this(name, model)
         {
             GraphicalFunction = graph;
             Range = range;
             Scale = scale;
             Units = Units.CreateInstanceFromEquation(eqn);
-            Equation = EquationFactory.CreateInstance(eqn, range, out var value);
+            Equation = EquationFactory.CreateInstance(Model, eqn, range, out var value);
             NonNegative = nonNegative;
+            Access = access;
             AdjustValue(value);
             Initialize();
             SetChildren();
@@ -99,10 +121,10 @@ namespace Symu.SysDyn.Model
         /// <returns>A string that represents the current object.</returns>
         public override string ToString()
         {
-            return Name;
+            return FullName;
         }
 
-        public void Update(Variables variables, SimSpecs simulation)
+        public void Update(VariableCollection variables, SimSpecs simulation)
         {
             if (Updated)
             {
@@ -121,7 +143,7 @@ namespace Symu.SysDyn.Model
 
         public virtual IVariable Clone()
         {
-            var clone = new Variable(Name);
+            var clone = new Variable(Name, Model);
             CopyTo(clone);
             return clone;
         }
@@ -149,11 +171,12 @@ namespace Symu.SysDyn.Model
 
         /// <summary>
         ///     Find all children of a variable
+        ///     Except itself
         /// </summary>
         /// <returns></returns>
         protected void SetChildren()
         {
-            Children = Equation?.Variables.Where(word => !word.Equals(Name)).ToList() ?? new List<string>();
+            Children = Equation?.Variables.Where(x => x != FullName).ToList() ?? new List<string>();
         }
 
         protected void CopyTo(IVariable copy)
@@ -169,13 +192,69 @@ namespace Symu.SysDyn.Model
             copy.Units = Units;
             copy.Equation = Equation?.Clone();
             copy.Value = Value;
+            copy.NonNegative = NonNegative;
+            copy.Access = Access;
             copy.Children = new List<string>();
             copy.Children.AddRange(Children);
         }
 
+        /// <summary>Determines whether the specified object is equal to the current object.</summary>
+        /// <param name="obj">The object to compare with the current object.</param>
+        /// <returns>true if the specified object  is equal to the current object; otherwise, false.</returns>
+        public override bool Equals(object obj)
+        {
+            return obj is Variable variable
+                   && variable.FullName == FullName;
+        }        
+        public bool Equals(string fullName)
+        {
+            return fullName == FullName;
+        }
+
+        public bool TryOptimize(bool setInitialValue, SimSpecs sim)
+        {
+            if (Equation == null)
+            {
+                return true;
+            }
+
+            // No variables or itself
+            var canBeOptimized = !Children.Any() && Equation.CanBeOptimized(FullName);
+
+            if (!canBeOptimized)
+            {
+                return Equation == null;
+            }
+
+            if (setInitialValue)
+            {
+                if (Equation.Variables.Count == 1 && Equation.Variables[0] == FullName)
+                {
+                    Equation.Replace(FullName, Value.ToString(CultureInfo.InvariantCulture), sim);
+                }
+
+                var value = Equation.InitialValue();
+                AdjustValue(value);
+            }
+
+            Equation = null;
+
+            return true;
+        }
+
+        /// <summary>
+        /// Model name
+        /// </summary>
+        public string Model { get; protected set; }
+
+        /// <summary>
+        /// Module and Connect are using FullName = ModelName.VariableName
+        /// </summary>
+        public string FullName { get; set; }
+
         #region Xml attributes
 
-        public string Name { get; }
+        public string Name { get; protected set; }
 
         public Units Units { get; set; }
 
@@ -189,38 +268,9 @@ namespace Symu.SysDyn.Model
         /// </summary>
         public Range Scale { get; set; } = new Range();
 
-        public NonNegative NonNegative { get; }
+        public NonNegative NonNegative { get; set; }
 
-        public bool TryOptimize(bool setInitialValue)
-        {
-            if (Equation == null)
-            {
-                return true;
-            }
-
-            // No variables or itself
-            var canBeOptimized = !Children.Any() && Equation.CanBeOptimized(Name);
-
-            if (!canBeOptimized)
-            {
-                return Equation == null;
-            }
-
-            if (setInitialValue)
-            {
-                if (Equation.Variables.Count == 1 && Equation.Variables[0] == Name)
-                {
-                    Equation.Replace(Name, Value.ToString(CultureInfo.InvariantCulture));
-                }
-
-                var value = Equation.InitialValue();
-                AdjustValue(value);
-            }
-
-            Equation = null;
-
-            return true;
-        }
+        public VariableAccess Access { get; set; }
 
         #endregion
     }

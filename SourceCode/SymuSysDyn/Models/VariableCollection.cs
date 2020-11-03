@@ -12,31 +12,49 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using Symu.SysDyn.Equations;
+using Symu.SysDyn.Parser;
+using Symu.SysDyn.Simulation;
 
 #endregion
 
-namespace Symu.SysDyn.Model
+namespace Symu.SysDyn.Models
 {
     /// <summary>
     ///     List of the variables of the model
     /// </summary>
-    public class Variables : IEnumerable<IVariable>
+    public class VariableCollection : IEnumerable<IVariable>
     {
         private readonly List<IVariable> _variables = new List<IVariable>();
-        public Groups Groups { get; private set; } = new Groups();
-        public IEnumerable<IVariable> GetNotUpdated => _variables.Where(x => !x.Updated);
+        public IEnumerable<IVariable> GetNotUpdated => _variables.Where(x => !x.Updated && !(x is Module));
         public IEnumerable<IVariable> GetUpdated => _variables.Where(x => x.Updated);
 
-        public IEnumerable<string> Names => _variables.Select(x => x.Name);
+        public IEnumerable<string> FullNames => _variables.Select(x => x.FullName);
+        /// <summary>
+        /// Get the list of the stocks
+        /// </summary>
         public IEnumerable<Stock> Stocks => _variables.OfType<Stock>();
+        /// <summary>
+        /// Get the ist of the modules
+        /// </summary>
+        public IEnumerable<Module> Modules => _variables.OfType<Module>();
 
         /// <summary>
-        ///     Gets or sets the node with the specified name
+        ///     Gets or sets the node with the specified fullName
         /// </summary>
-        /// <param name="name"></param>
+        /// <param name="fullName"></param>
         /// <returns></returns>
-        public IVariable this[string name] => Get(name);
+        public IVariable this[string fullName]
+        {
+            get => Get(fullName);
+            set
+            {
+                var index = _variables.FindIndex(x => x.Equals(fullName));
+                _variables[index] = value;
+            }
+        }
 
         /// <summary>
         ///     Gets or sets the node with the specified index
@@ -63,14 +81,14 @@ namespace Symu.SysDyn.Model
             return _variables.Contains(variable);
         }
 
-        public bool Exists(string name)
+        public bool Exists(string fullName)
         {
-            return _variables.Exists(x => x.Name == name);
+            return _variables.Exists(x => x.Equals(fullName));
         }
 
-        public IVariable Get(string name)
+        public IVariable Get(string fullName)
         {
-            return _variables.Find(x => x.Name == name);
+            return _variables.Find(x => x.Equals(fullName));
         }
 
         /// <summary>
@@ -116,40 +134,9 @@ namespace Symu.SysDyn.Model
             }
         }
 
-        /// <summary>
-        ///     Get the list of variables of a group
-        /// </summary>
-        /// <param name="groupName"></param>
-        /// <returns></returns>
-        public Variables GetGroupVariables(string groupName)
+        public void Remove(string fullName)
         {
-            return GetGroupVariables(Groups.Get(groupName));
-        }
-
-        /// <summary>
-        ///     Get the list of variables of a group
-        /// </summary>
-        /// <param name="group"></param>
-        /// <returns></returns>
-        public Variables GetGroupVariables(Group group)
-        {
-            if (group == null)
-            {
-                throw new ArgumentNullException(nameof(group));
-            }
-
-            var variables = new Variables();
-            foreach (var entity in group.Entities)
-            {
-                variables.Add(Get(entity));
-            }
-
-            return variables;
-        }
-
-        public void Remove(string name)
-        {
-            _variables.RemoveAll(x => x.Name == name);
+            _variables.RemoveAll(x => x.Equals(fullName));
         }
 
         public void Clear()
@@ -157,9 +144,9 @@ namespace Symu.SysDyn.Model
             _variables.Clear();
         }
 
-        public Variables Clone()
+        public VariableCollection Clone()
         {
-            var clone = new Variables {Groups = Groups};
+            var clone = new VariableCollection();
             foreach (var variable in _variables)
             {
                 clone.Add(variable.Clone());

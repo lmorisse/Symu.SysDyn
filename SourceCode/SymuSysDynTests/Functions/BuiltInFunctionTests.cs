@@ -13,7 +13,7 @@ using System;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Symu.SysDyn.Functions;
-using Symu.SysDyn.Model;
+using Symu.SysDyn.Models;
 using Symu.SysDyn.Simulation;
 
 #endregion
@@ -28,13 +28,14 @@ namespace SymuSysDynTests.Functions
         [TestMethod]
         public void BuiltInFunctionTest()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new BuiltInFunction(null));
+            Assert.ThrowsException<ArgumentNullException>(() => new BuiltInFunction(string.Empty, null));
+            Assert.ThrowsException<ArgumentNullException>(() => new BuiltInFunction(null, string.Empty));
         }
 
         [TestMethod]
         public void BuiltInFunctionTest1()
         {
-            var function = new BuiltInFunction("Func");
+            var function = new BuiltInFunction(string.Empty, "Func");
             Assert.AreEqual("Func", function.Name);
             Assert.AreEqual(0, function.Parameters.Count);
         }
@@ -45,7 +46,7 @@ namespace SymuSysDynTests.Functions
         [TestMethod]
         public void BuiltInFunctionTest2()
         {
-            var function = new BuiltInFunction("Func()");
+            var function = new BuiltInFunction(string.Empty, "Func()");
             Assert.AreEqual("Func", function.Name);
             Assert.AreEqual(0, function.Parameters.Count);
         }
@@ -56,10 +57,10 @@ namespace SymuSysDynTests.Functions
         [TestMethod]
         public void BuiltInFunctionTest3()
         {
-            var function = new BuiltInFunction("Func(param1)");
+            var function = new BuiltInFunction(string.Empty, "Func(param1)");
             Assert.AreEqual("Func", function.Name);
             Assert.AreEqual(1, function.Parameters.Count);
-            Assert.AreEqual("Param1", function.Parameters[0].Variables.First());
+            Assert.AreEqual("_Param1", function.Parameters[0].Variables.First());
         }
 
         /// <summary>
@@ -68,11 +69,11 @@ namespace SymuSysDynTests.Functions
         [TestMethod]
         public void BuiltInFunctionTest4()
         {
-            var function = new BuiltInFunction("Func(param1, param2)");
+            var function = new BuiltInFunction(string.Empty, "Func(param1, param2)");
             Assert.AreEqual("Func", function.Name);
             Assert.AreEqual(2, function.Parameters.Count);
-            Assert.AreEqual("Param1", function.Parameters[0].Variables.First());
-            Assert.AreEqual("Param2", function.Parameters[1].Variables.First());
+            Assert.AreEqual("_Param1", function.Parameters[0].Variables.First());
+            Assert.AreEqual("_Param2", function.Parameters[1].Variables.First());
         }
 
         /// <summary>
@@ -81,10 +82,10 @@ namespace SymuSysDynTests.Functions
         [TestMethod]
         public void BuiltInFunctionTest5()
         {
-            var function = new BuiltInFunction("func(param1,5)");
+            var function = new BuiltInFunction(string.Empty, "func(param1,5)");
             Assert.AreEqual("Func", function.Name);
             Assert.AreEqual(2, function.Parameters.Count);
-            Assert.AreEqual("Param1", function.Parameters[0].Variables.First());
+            Assert.AreEqual("_Param1", function.Parameters[0].Variables.First());
             Assert.IsNull(function.Parameters[1]);
             Assert.AreEqual(2, function.Args.Count);
             Assert.AreEqual(0, function.Args[0]);
@@ -99,9 +100,9 @@ namespace SymuSysDynTests.Functions
         [TestMethod]
         public void EvaluateTest()
         {
-            var function = new BuiltInFunction("abs(-5)");
-            function.Prepare(null, _machine.Variables, _machine.Simulation);
-            Assert.AreEqual(5F, function.Evaluate(null, _machine.Variables, _machine.Simulation));
+            var function = new BuiltInFunction(string.Empty, "abs(-5)");
+            function.Prepare(null, _machine.Models.GetVariables(), _machine.Simulation);
+            Assert.AreEqual(5F, function.Evaluate(null, _machine.Models.GetVariables(), _machine.Simulation));
         }
 
         /// <summary>
@@ -110,11 +111,11 @@ namespace SymuSysDynTests.Functions
         [TestMethod]
         public void EvaluateTest1()
         {
-            var function = new BuiltInFunction("abs(aux1)");
-            Variable.CreateInstance(_machine.Variables, "Aux1", "1");
-            function.Prepare(null, _machine.Variables, _machine.Simulation);
-            Assert.AreEqual(1F, function.Expression.Parameters["Aux1"]);
-            Assert.AreEqual(1F, function.Evaluate(null, _machine.Variables, _machine.Simulation));
+            var function = new BuiltInFunction(string.Empty, "abs(aux1)");
+            Variable.CreateInstance("Aux1", _machine.Models.RootModel, "1");
+            function.Prepare(null, _machine.Models.GetVariables(), _machine.Simulation);
+            Assert.AreEqual(1F, function.Expression.Parameters["_Aux1"]);
+            Assert.AreEqual(1F, function.Evaluate(null, _machine.Models.GetVariables(), _machine.Simulation));
         }
 
         #endregion
@@ -124,27 +125,27 @@ namespace SymuSysDynTests.Functions
         [TestMethod]
         public void ReplaceTest()
         {
-            var function = new BuiltInFunction("abs(param1)");
-            function.Replace("Param1", "1");
-            Assert.AreEqual(1, function.InitialValue());
+            var function = new BuiltInFunction(string.Empty, "abs(param1)");
+            function.Replace("_Param1", "1", _machine.Simulation);
+            Assert.AreEqual(1, function.InitialValue(_machine.Simulation));
         }
 
         [TestMethod]
         public void ReplaceTest1()
         {
-            var function = new BuiltInFunction("Min(param1, param2)");
-            function.Replace("Param1", "1");
-            function.Replace("Param2", "2");
-            Assert.AreEqual(1, function.InitialValue());
+            var function = new BuiltInFunction(string.Empty, "Min(param1, param2)");
+            function.Replace("_Param1", "1", _machine.Simulation);
+            function.Replace("_Param2", "2", _machine.Simulation);
+            Assert.AreEqual(1, function.InitialValue(_machine.Simulation));
         }
 
         [TestMethod]
         public void ReplaceTest2()
         {
-            var function = new BuiltInFunction("Min(abs(param1), param1+param2)");
-            function.Replace("Param1", "1");
-            function.Replace("Param2", "2");
-            Assert.AreEqual(1, function.InitialValue());
+            var function = new BuiltInFunction(string.Empty, "Min(abs(param1), param1+param2)");
+            function.Replace("_Param1", "1", _machine.Simulation);
+            function.Replace("_Param2", "2", _machine.Simulation);
+            Assert.AreEqual(1, function.InitialValue(_machine.Simulation));
         }
 
         #endregion

@@ -17,7 +17,7 @@ using Symu.SysDyn.Parser;
 
 #endregion
 
-namespace Symu.SysDyn.Model
+namespace Symu.SysDyn.Models
 {
     /// <summary>
     ///     Core building block of a model, also called level or state. Stocks accumulate change.
@@ -26,64 +26,76 @@ namespace Symu.SysDyn.Model
     ///     Their value at the start of the simulation must be set as either a constant or with an initial equation.
     ///     The initial equation is evaluated only once, at the beginning of the simulation.
     /// </summary>
-    public class Stock : Variable, IComparable
+    public class Stock : Variable
     {
-        private Stock(string name) : base(name)
+        private Stock(string name, string model) : base(name, model)
         {
         }
-        public static Stock CreateInstance(List<IVariable> variables, string name)
+        //public static Stock CreateInstance(Model model, string name)
+        //{
+        //    if (model == null)
+        //    {
+        //        throw new ArgumentNullException(nameof(model));
+        //    }
+
+        //    var variable = new Stock(name, model.Name);
+        //    model.Variables.Add(variable);
+        //    return variable;
+        //}
+        /// <summary>
+        /// Constructor for root model
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="eqn"></param>
+        /// <param name="inflow"></param>
+        /// <param name="outflow"></param>
+        public Stock(string name, string eqn, List<string> inflow, List<string> outflow) : this(name, string.Empty, eqn, inflow, outflow)
         {
-            if (variables == null)
-            {
-                throw new ArgumentNullException(nameof(variables));
-            }
-
-            var variable = new Stock(name);
-            variables.Add(variable);
-            return variable;
         }
+        public Stock(string name, string model, string eqn, List<string> inflow, List<string> outflow) : base(name, model, eqn)
+        {
 
-        public Stock(string name, string eqn, List<string> inflow, List<string> outflow) : base(name, eqn)
+            Inflow = StringUtils.CleanNames(inflow);
+            Outflow = StringUtils.CleanNames(outflow);
+            SetChildren();
+        }
+        //public static Stock CreateInstance(VariableCollection variables, string name, string eqn, List<string> inflow, List<string> outflow)
+        //{
+        //    if (variables == null)
+        //    {
+        //        throw new ArgumentNullException(nameof(variables));
+        //    }
+
+        //    var variable = new Stock(name, eqn, inflow, outflow);
+        //    variables.Add(variable);
+        //    return variable;
+        //}
+
+        private Stock(string name, string model, string eqn, List<string> inflow, List<string> outflow,
+            GraphicalFunction graph,
+            Range range, Range scale, NonNegative nonNegative, VariableAccess access) : base(name, model, eqn, graph, range, scale, nonNegative, access)
         {
             Inflow = StringUtils.CleanNames(inflow);
             Outflow = StringUtils.CleanNames(outflow);
             SetChildren();
         }
-        public static Stock CreateInstance(Variables variables, string name, string eqn, List<string> inflow, List<string> outflow)
+        public static Stock CreateInstance(string name, Model model, string eqn, List<string> inflow,
+            List<string> outflow, GraphicalFunction graph,
+            Range range, Range scale, NonNegative nonNegative, VariableAccess access)
         {
-            if (variables == null)
+            if (model == null)
             {
-                throw new ArgumentNullException(nameof(variables));
+                throw new ArgumentNullException(nameof(model));
             }
 
-            var variable = new Stock(name, eqn, inflow, outflow);
-            variables.Add(variable);
-            return variable;
-        }
-
-        private Stock(string name, string eqn, List<string> inflow, List<string> outflow, GraphicalFunction graph,
-            Range range, Range scale, NonNegative nonNegative) : base(name, eqn, graph, range, scale, nonNegative)
-        {
-            Inflow = StringUtils.CleanNames(inflow);
-            Outflow = StringUtils.CleanNames(outflow);
-            SetChildren();
-        }
-        public static Stock CreateInstance(Variables variables, string name, string eqn, List<string> inflow, List<string> outflow, GraphicalFunction graph,
-            Range range, Range scale, NonNegative nonNegative)
-        {
-            if (variables == null)
-            {
-                throw new ArgumentNullException(nameof(variables));
-            }
-
-            var variable = new Stock(name, eqn, inflow, outflow, graph, range, scale, nonNegative);
-            variables.Add(variable);
+            var variable = new Stock(name, model.Name, eqn, inflow, outflow, graph, range, scale, nonNegative, access);
+            model.Variables.Add(variable);
             return variable;
         }
 
         public override IVariable Clone()
         {
-            var clone = new Stock(Name);
+            var clone = new Stock(Name, Model);
             CopyTo(clone);
             clone.Inflow = Inflow;
             clone.Outflow = Outflow;
@@ -111,7 +123,7 @@ namespace Symu.SysDyn.Model
                 equation += ")";
             }
 
-            Equation = EquationFactory.CreateInstance(equation, out _);
+            Equation = EquationFactory.CreateInstance(Model, equation, out _);
 
             SetChildren();
         }
@@ -146,29 +158,5 @@ namespace Symu.SysDyn.Model
 
         #endregion
 
-        #region IComparable
-
-        public override bool Equals(object that)
-        {
-            if (that is Variable stock)
-            {
-                return Name.Equals(stock.Name);
-            }
-
-            return ReferenceEquals(this, that);
-        }
-
-        public override int GetHashCode()
-        {
-            return Name != null ? Name.GetHashCode() : 0;
-        }
-
-        public int CompareTo(object obj)
-        {
-            var that = obj as Variable;
-            return string.Compare(Name, that?.Name, StringComparison.Ordinal);
-        }
-
-        #endregion
     }
 }

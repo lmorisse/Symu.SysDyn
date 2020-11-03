@@ -93,7 +93,7 @@ namespace SymuSysDynTests.Functions
         {
             const string test =
                 "Func1((param1),(param2))+DT + TIME + STEP( 1 , 2)-Normal(1,2)*RAMP(2,1)-ExternalUpdate+2";
-            var results = FunctionUtils.ParseFunctions(test).ToList();
+            var results = FunctionUtils.ParseFunctions(string.Empty, test).ToList();
             Assert.AreEqual(7, results.Count);
             Assert.AreEqual("Func1", results[0].Name);
             Assert.IsTrue(results[1] is Dt);
@@ -115,7 +115,7 @@ namespace SymuSysDynTests.Functions
         public void GetFunctionsTest1()
         {
             const string test = "someStuffBeforeFunction + ( param1 ) + ( param2 + param3 ) + xxx";
-            var results = FunctionUtils.ParseFunctions(test).ToList();
+            var results = FunctionUtils.ParseFunctions(string.Empty, test).ToList();
             Assert.AreEqual(0, results.Count);
         }
 
@@ -127,13 +127,13 @@ namespace SymuSysDynTests.Functions
         public void GetFunctionsTest21()
         {
             const string test = "If x1 then x2 else x3";
-            var results = FunctionUtils.ParseFunctions(test).ToList();
+            var results = FunctionUtils.ParseFunctions(string.Empty, test).ToList();
             Assert.AreEqual(1, results.Count);
             Assert.IsTrue(results[0] is IfThenElse);
             Assert.AreEqual(3, results[0].Parameters.Count);
-            Assert.AreEqual("X1", results[0].Parameters[0].ToString());
-            Assert.AreEqual("X2", results[0].Parameters[1].ToString());
-            Assert.AreEqual("X3", results[0].Parameters[2].ToString());
+            Assert.AreEqual("_X1", results[0].Parameters[0].ToString());
+            Assert.AreEqual("_X2", results[0].Parameters[1].ToString());
+            Assert.AreEqual("_X3", results[0].Parameters[2].ToString());
         }
 
         /// <summary>
@@ -144,21 +144,20 @@ namespace SymuSysDynTests.Functions
         public void GetFunctionsTest22()
         {
             const string test = "If(x1) then x2 else x3";
-            var results = FunctionUtils.ParseFunctions(test).ToList();
+            var results = FunctionUtils.ParseFunctions(string.Empty, test).ToList();
             Assert.AreEqual(1, results.Count);
             Assert.IsTrue(results[0] is IfThenElse);
             Assert.AreEqual(3, results[0].Parameters.Count);
-            Assert.AreEqual("(X1)", results[0].Parameters[0].ToString());
-            Assert.AreEqual("X2", results[0].Parameters[1].ToString());
-            Assert.AreEqual("X3", results[0].Parameters[2].ToString());
+            Assert.AreEqual("(_X1)", results[0].Parameters[0].ToString());
+            Assert.AreEqual("_X2", results[0].Parameters[1].ToString());
+            Assert.AreEqual("_X3", results[0].Parameters[2].ToString());
         }
 
         [TestMethod]
         public void GetParametersTest()
         {
             var function = "Func";
-            FunctionUtils.ParseParameters(ref function, out var name, out var parameters, out _);
-            //var parameters = FunctionUtils.ParseParameters(ref function, out var name);
+            FunctionUtils.ParseParameters(string.Empty, ref function, out var name, out var parameters, out _);
             Assert.AreEqual(0, parameters.Count);
             Assert.AreEqual("Func", name);
         }
@@ -168,8 +167,7 @@ namespace SymuSysDynTests.Functions
         {
             var function = "Func()";
 
-            FunctionUtils.ParseParameters(ref function, out var name, out var parameters, out _);
-            //var parameters = FunctionUtils.ParseParameters(ref function, out var name);
+            FunctionUtils.ParseParameters(string.Empty, ref function, out var name, out var parameters, out _);
             Assert.AreEqual(0, parameters.Count);
             Assert.AreEqual("Func", name);
         }
@@ -179,10 +177,9 @@ namespace SymuSysDynTests.Functions
         {
             var function = "Func(param1)";
 
-            FunctionUtils.ParseParameters(ref function, out var name, out var parameters, out _);
-            //var parameters = FunctionUtils.ParseParameters(ref function, out var name);
+            FunctionUtils.ParseParameters(string.Empty, ref function, out var name, out var parameters, out _);
             Assert.AreEqual(1, parameters.Count);
-            Assert.AreEqual("Param1", parameters[0].Variables.First());
+            Assert.AreEqual("_Param1", parameters[0].Variables.First());
             Assert.AreEqual("Func", name);
         }
 
@@ -191,11 +188,10 @@ namespace SymuSysDynTests.Functions
         {
             var function = "Func(param1, param2)";
 
-            FunctionUtils.ParseParameters(ref function, out var name, out var parameters, out _);
-            //var parameters = FunctionUtils.ParseParameters(ref function, out var name);
+            FunctionUtils.ParseParameters(string.Empty, ref function, out var name, out var parameters, out _);
             Assert.AreEqual(2, parameters.Count);
-            Assert.AreEqual("Param1", parameters[0].Variables.First());
-            Assert.AreEqual("Param2", parameters[1].Variables.First());
+            Assert.AreEqual("_Param1", parameters[0].Variables.First());
+            Assert.AreEqual("_Param2", parameters[1].Variables.First());
             Assert.AreEqual("Func", name);
         }
 
@@ -205,8 +201,7 @@ namespace SymuSysDynTests.Functions
             var function =
                 @"someFunc((a),b,func1(a,b+c),func2(a*b,func3(a+b,c)),func4(e)+func5(f),func6(func7(g,h)+func8(i,(a)=>a+2)),g+2)";
 
-            FunctionUtils.ParseParameters(ref function, out var name, out var parameters, out _);
-            //var results = FunctionUtils.ParseParameters(ref function, out var name);
+            FunctionUtils.ParseParameters(string.Empty, ref function, out var name, out var parameters, out _);
             Assert.AreEqual(7, parameters.Count);
             Assert.AreEqual("Somefunc", name);
         }

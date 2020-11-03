@@ -12,7 +12,7 @@
 using System;
 using System.Globalization;
 using System.Linq;
-using Symu.SysDyn.Model;
+using Symu.SysDyn.Models;
 using Symu.SysDyn.Simulation;
 
 #endregion
@@ -34,11 +34,11 @@ namespace Symu.SysDyn.Functions
         private byte _order;
         private float[] _previousValues;
 
-        protected Smth(string function) : base(function)
+        protected Smth(string model, string function) : base(model, function)
         {
         }
 
-        protected Smth(string function, byte order) : base(function)
+        protected Smth(string model, string function, byte order) : base(model, function)
         {
             Order = order;
             InitialIndex = Parameters.Count == 3 ? 2 : 0;
@@ -69,7 +69,7 @@ namespace Symu.SysDyn.Functions
                 : Args[index].ToString(CultureInfo.InvariantCulture);
         }
 
-        public override float Evaluate(IVariable selfVariable, Variables variables, SimSpecs sim)
+        public override float Evaluate(IVariable selfVariable, VariableCollection variables, SimSpecs sim)
         {
             if (sim == null)
             {

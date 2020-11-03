@@ -16,14 +16,15 @@ using Symu.SysDyn.Parser;
 
 #endregion
 
-namespace Symu.SysDyn.Model
+namespace Symu.SysDyn.Models
 {
     /// <summary>
     ///     Groups, aka sectors, collect related model structure together
+    ///     Different from Module
     /// </summary>
     public class Group
     {
-        public Group(string name, IEnumerable<string> entities)
+        public Group(string name, string model, IEnumerable<string> entities)
         {
             if (name == null)
             {
@@ -33,7 +34,7 @@ namespace Symu.SysDyn.Model
             Name = StringUtils.CleanName(name);
             foreach (var entity in entities.ToList())
             {
-                Entities.Add(StringUtils.CleanName(entity));
+                Entities.Add(StringUtils.FullName(model,StringUtils.CleanName(entity)));
             }
         }
 

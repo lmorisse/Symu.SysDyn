@@ -10,7 +10,7 @@
 #region using directives
 
 using System;
-using Symu.SysDyn.Model;
+using Symu.SysDyn.Models;
 using Symu.SysDyn.Simulation;
 
 #endregion
@@ -27,7 +27,7 @@ namespace Symu.SysDyn.Functions
     {
         public const string Value = "Step";
 
-        public Step(string function) : base(function)
+        public Step(string model, string function) : base(model, function)
         {
         }
 
@@ -36,12 +36,12 @@ namespace Symu.SysDyn.Functions
 
         public override IBuiltInFunction Clone()
         {
-            var clone = new Step(OriginalFunction);
+            var clone = new Step(Model, OriginalFunction);
             CopyTo(clone);
             return clone;
         }
 
-        public override float Evaluate(IVariable selfVariable, Variables variables, SimSpecs sim)
+        public override float Evaluate(IVariable selfVariable, VariableCollection variables, SimSpecs sim)
         {
             if (sim == null)
             {

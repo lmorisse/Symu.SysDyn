@@ -15,7 +15,7 @@ using System.Globalization;
 using System.Linq;
 using NCalc2;
 using Symu.SysDyn.Functions;
-using Symu.SysDyn.Model;
+using Symu.SysDyn.Models;
 using Symu.SysDyn.Simulation;
 
 #endregion
@@ -65,7 +65,7 @@ namespace Symu.SysDyn.Equations
         /// <param name="variables"></param>
         /// <param name="sim"></param>
         /// <returns></returns>
-        public override void Prepare(IVariable selfVariable, Variables variables, SimSpecs sim)
+        public override void Prepare(IVariable selfVariable, VariableCollection variables, SimSpecs sim)
         {
             if (variables == null)
             {
@@ -81,12 +81,12 @@ namespace Symu.SysDyn.Equations
             }
         }
 
-        public override void Replace(string child, string value)
+        public override void Replace(string child, string value, SimSpecs sim)
         {
             //Replace functions
             foreach (var function in Functions.ToImmutableList())
             {
-                function.Replace(child, value);
+                function.Replace(child, value, sim);
 
                 if (function.Parameters.Any(x => x != null))
                 {
@@ -98,7 +98,7 @@ namespace Symu.SysDyn.Equations
                     while (Words.FindIndex(ind => ind.Equals(function.IndexName)) >= 0)
                     {
                         Words[Words.FindIndex(ind => ind.Equals(function.IndexName))] =
-                            function.InitialValue().ToString(CultureInfo.InvariantCulture);
+                            function.InitialValue(sim).ToString(CultureInfo.InvariantCulture);
                     }
 
                     Functions.Remove(function);

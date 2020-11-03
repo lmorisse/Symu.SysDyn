@@ -25,9 +25,9 @@ namespace SymuSysDynTests.Functions
         [TestMethod]
         public void DtTest1(float dt)
         {
-            var dtFunction = new Dt("DT");
+            var dtFunction = new Dt(string.Empty, "DT");
             Machine.Simulation.DeltaTime = dt;
-            Assert.AreEqual(dt, dtFunction.Evaluate(null, Machine.Variables, Machine.Simulation));
+            Assert.AreEqual(dt, dtFunction.Evaluate(null, Machine.Models.GetVariables(), Machine.Simulation));
         }
     }
 }

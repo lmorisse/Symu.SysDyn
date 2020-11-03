@@ -11,8 +11,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Linq;
-using Symu.SysDyn.Model;
+using Symu.SysDyn.Models;
 using Symu.SysDyn.Results;
 
 #endregion
@@ -27,12 +28,20 @@ namespace Symu.SysDyn.Simulation
         /// <summary>
         ///     Process compute all iterations from Simulation.Start to Simulation.Stop
         /// </summary>
+        /// <param name="model">The name of the subModel or empty string for a global process</param>
         /// <remarks>true if the process was successful</remarks>
-        public bool Process()
+        public bool Process(string model= "")
         {
-            //Simulation Start or DeltaTime may have change since the intialization
-            Simulation.Clear();
-            OptimizeVariables();
+            if (!Simulation.OnPause)
+            {
+                Simulation.Clear(); // Simulation Start or DeltaTime may have change since the initialization
+
+                if (SetVariables(model))
+                {
+                    OptimizeVariables();
+                }
+            }
+
             while (Simulation.Run())
             {
                 Compute();

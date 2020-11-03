@@ -17,7 +17,7 @@ using static Symu.Common.Constants;
 
 #endregion
 
-namespace Symu.SysDyn.Model
+namespace Symu.SysDyn.Models
 {
     /// <summary>
     ///     Graphical functions are alternately called lookup functions and table functions. They are used to describe

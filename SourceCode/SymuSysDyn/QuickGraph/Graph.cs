@@ -10,9 +10,10 @@
 #region using directives
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using QuickGraph;
-using Symu.SysDyn.Model;
+using Symu.SysDyn.Models;
 
 #endregion
 
@@ -29,7 +30,7 @@ namespace Symu.SysDyn.QuickGraph
         /// </summary>
         /// <param name="variables"></param>
         /// <returns></returns>
-        public static Graph CreateInstance(Variables variables)
+        public static Graph CreateInstance(VariableCollection variables)
         {
             if (variables == null)
             {
@@ -37,7 +38,7 @@ namespace Symu.SysDyn.QuickGraph
             }
 
             var graph = new Graph(true);
-            graph.AddVertexRange(variables.ToList());
+            graph.AddVertexRange(variables);
             foreach (var variable in variables)
             {
                 foreach (var childName in variable.Children)
@@ -68,6 +69,22 @@ namespace Symu.SysDyn.QuickGraph
                     // In case of subGraph
                     if (edge.Source != null && edge.Target != null)
                     {
+                        graph.AddEdge(edge);
+                    }
+                }
+
+                if (variable is Module module)
+                {
+                    foreach (var connect in module.Connects)
+                    {
+                        var from = variables.Get(connect.From);
+                        // In case of subGraph
+                        if (from == null)
+                        {
+                            continue;
+                        }
+
+                        var edge = new InformationFlow(from, variable);
                         graph.AddEdge(edge);
                     }
                 }

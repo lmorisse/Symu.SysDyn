@@ -16,7 +16,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using NCalc2;
 using Symu.SysDyn.Functions;
-using Symu.SysDyn.Model;
+using Symu.SysDyn.Models;
 using Symu.SysDyn.Parser;
 
 #endregion
@@ -25,12 +25,12 @@ namespace Symu.SysDyn.Equations
 {
     public static class EquationFactory
     {
-        public static IEquation CreateInstance(string eqn, out float value)
+        public static IEquation CreateInstance(string model, string eqn, out float value)
         {
-            return CreateInstance(eqn, null, out value);
+            return CreateInstance(model, eqn, null, out value);
         }
 
-        public static IEquation CreateInstance(string eqn, Range range, out float value)
+        public static IEquation CreateInstance(string model, string eqn, Range range, out float value)
         {
             value = 0;
             if (string.IsNullOrEmpty(eqn))
@@ -69,7 +69,8 @@ namespace Symu.SysDyn.Equations
                 // not an constant
             }
 
-            Initialize(eqn, out var functions, out var variables, out var words);
+            Initialize(model, eqn, out var functions, out var variables, out var words);
+
             float sumEval = 0;
 
             for (var i = 0; i < words.Count; i++)
@@ -143,12 +144,13 @@ namespace Symu.SysDyn.Equations
         ///     Clean equation to be able to be computed
         ///     Done once at the creation of the variable
         /// </summary>
+        /// <param name="model">Model's name</param>
         /// <param name="originalEquation"></param>
         /// <param name="functions"></param>
         /// <param name="variables"></param>
         /// <param name="words"></param>
         /// <returns>Initialized equation</returns>
-        public static string Initialize(string originalEquation, out List<IBuiltInFunction> functions,
+        public static string Initialize(string model, string originalEquation, out List<IBuiltInFunction> functions,
             out List<string> variables, out List<string> words)
         {
             if (originalEquation == null)
@@ -156,7 +158,7 @@ namespace Symu.SysDyn.Equations
                 throw new ArgumentNullException(nameof(originalEquation));
             }
 
-            functions = FunctionUtils.ParseFunctions(originalEquation).ToList();
+            functions = FunctionUtils.ParseFunctions(model, originalEquation).ToList();
             for (var i = 0; i < functions.Count; i++)
             {
                 var function = functions[i];
@@ -175,24 +177,20 @@ namespace Symu.SysDyn.Equations
             foreach (var match in matches)
             {
                 var word = StringUtils.CleanName(match.ToString());
-                words.Add(word);
-                variables.AddRange(SetVariables(word, functions));
+                variables.AddRange(SetVariables(model, words, word, functions));
             }
 
             variables = variables.Distinct().ToList();
             return string.Join(string.Empty, words);
         }
 
-        private static IEnumerable<string> SetVariables(string word, List<IBuiltInFunction> functions)
+        private static IEnumerable<string> SetVariables(string model, List<string> words, string word, List<IBuiltInFunction> functions)
         {
             var variables = new List<string>();
-            if (word.Length <= 1)
+            if (word.Length <= 1 || float.TryParse(word, NumberStyles.Number, CultureInfo.InvariantCulture, out _))
             {
-                return variables;
-            }
 
-            if (float.TryParse(word, NumberStyles.Number, CultureInfo.InvariantCulture, out _))
-            {
+                words.Add(word);
                 return variables;
             }
 
@@ -204,10 +202,13 @@ namespace Symu.SysDyn.Equations
                 {
                     variables.AddRange(equation.Variables);
                 }
+                words.Add(word);
             }
             else
             {
-                variables.Add(word);
+                var variable = StringUtils.FullName(model, word);
+                words.Add(variable);
+                variables.Add(variable);
             }
 
             return variables;

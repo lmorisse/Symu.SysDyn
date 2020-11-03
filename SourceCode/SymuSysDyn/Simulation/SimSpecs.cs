@@ -19,14 +19,6 @@ using static Symu.Common.Constants;
 
 namespace Symu.SysDyn.Simulation
 {
-    public enum SimState
-    {
-        NotStarted,
-        Started,
-        Pause,
-        Stopped
-    }
-
     /// <summary>
     ///     SimSpecs is the structure to define and store information about the simulation
     ///     It is based on sim_specs element of the xmile schema (schema.xsd)

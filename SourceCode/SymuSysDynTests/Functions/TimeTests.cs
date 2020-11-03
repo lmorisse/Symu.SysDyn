@@ -25,9 +25,9 @@ namespace SymuSysDynTests.Functions
         [TestMethod]
         public void TimeTest(int time)
         {
-            var timeFunction = new Time("TIME");
+            var timeFunction = new Time(string.Empty, "TIME");
             Machine.Simulation.Time = (ushort) time;
-            Assert.AreEqual(time, timeFunction.Evaluate(null, Machine.Variables, Machine.Simulation));
+            Assert.AreEqual(time, timeFunction.Evaluate(null, Machine.Models.GetVariables(), Machine.Simulation));
         }
     }
 }

@@ -22,7 +22,7 @@ namespace SymuSysDynTests.Functions
         [TestMethod]
         public void StepTest()
         {
-            var function = new Step("STEP(5, 10)");
+            var function = new Step(string.Empty, "STEP(5, 10)");
             Assert.AreEqual("5", function.Height);
             Assert.AreEqual("10", function.StartTime);
         }
@@ -33,46 +33,46 @@ namespace SymuSysDynTests.Functions
         [TestMethod]
         public void EvaluateTest()
         {
-            var function = new Step("STEP(5, 10)");
+            var function = new Step(string.Empty, "STEP(5, 10)");
             Machine.Simulation.Time = 0;
-            function.Prepare(null, Machine.Variables, Machine.Simulation);
-            Assert.AreEqual(0, function.Evaluate(null, Machine.Variables, Machine.Simulation));
+            function.Prepare(null, Machine.Models.GetVariables(), Machine.Simulation);
+            Assert.AreEqual(0, function.Evaluate(null, Machine.Models.GetVariables(), Machine.Simulation));
             Machine.Simulation.Time = 10;
-            function.Prepare(null, Machine.Variables, Machine.Simulation);
-            Assert.AreEqual(5, function.Evaluate(null, Machine.Variables, Machine.Simulation));
+            function.Prepare(null, Machine.Models.GetVariables(), Machine.Simulation);
+            Assert.AreEqual(5, function.Evaluate(null, Machine.Models.GetVariables(), Machine.Simulation));
             Machine.Simulation.Time = 20;
-            function.Prepare(null, Machine.Variables, Machine.Simulation);
-            Assert.AreEqual(5, function.Evaluate(null, Machine.Variables, Machine.Simulation));
+            function.Prepare(null, Machine.Models.GetVariables(), Machine.Simulation);
+            Assert.AreEqual(5, function.Evaluate(null, Machine.Models.GetVariables(), Machine.Simulation));
         }
 
         [TestMethod]
         public void EvaluateTest2()
         {
-            var function = new Step("STEP(aux1, 10)");
+            var function = new Step(string.Empty, "STEP(aux1, 10)");
             Machine.Simulation.Time = 10;
-            function.Prepare(null, Machine.Variables, Machine.Simulation);
-            Assert.AreEqual(1F, function.Expression.Parameters["Aux1"]);
-            Assert.AreEqual(1, function.Evaluate(null, Machine.Variables, Machine.Simulation));
+            function.Prepare(null, Machine.Models.GetVariables(), Machine.Simulation);
+            Assert.AreEqual(1F, function.Expression.Parameters["_Aux1"]);
+            Assert.AreEqual(1, function.Evaluate(null, Machine.Models.GetVariables(), Machine.Simulation));
         }
 
         [TestMethod]
         public void EvaluateTest3()
         {
-            var function = new Step("STEP(5, aux1)");
+            var function = new Step(string.Empty, "STEP(5, aux1)");
             Machine.Simulation.Time = 1;
-            function.Prepare(null, Machine.Variables, Machine.Simulation);
-            Assert.AreEqual(1F, function.Expression.Parameters["Aux1"]);
-            Assert.AreEqual(5, function.Evaluate(null, Machine.Variables, Machine.Simulation));
+            function.Prepare(null, Machine.Models.GetVariables(), Machine.Simulation);
+            Assert.AreEqual(1F, function.Expression.Parameters["_Aux1"]);
+            Assert.AreEqual(5, function.Evaluate(null, Machine.Models.GetVariables(), Machine.Simulation));
         }
 
         [TestMethod]
         public void EvaluateTest4()
         {
-            var function = new Step("STEP(aux1, aux1)");
+            var function = new Step(string.Empty, "STEP(aux1, aux1)");
             Machine.Simulation.Time = 1;
-            function.Prepare(null, Machine.Variables, Machine.Simulation);
-            Assert.AreEqual(1F, function.Expression.Parameters["Aux1"]);
-            Assert.AreEqual(1, function.Evaluate(null, Machine.Variables, Machine.Simulation));
+            function.Prepare(null, Machine.Models.GetVariables(), Machine.Simulation);
+            Assert.AreEqual(1F, function.Expression.Parameters["_Aux1"]);
+            Assert.AreEqual(1, function.Evaluate(null, Machine.Models.GetVariables(), Machine.Simulation));
         }
     }
 }

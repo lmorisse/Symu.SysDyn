@@ -13,7 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using NCalc2;
-using Symu.SysDyn.Model;
+using Symu.SysDyn.Models;
 using Symu.SysDyn.Simulation;
 
 #endregion
@@ -80,7 +80,7 @@ namespace Symu.SysDyn.Equations
         /// <param name="variables"></param>
         /// <param name="sim"></param>
         /// <returns></returns>
-        public float Evaluate(IVariable selfVariable, Variables variables, SimSpecs sim)
+        public float Evaluate(IVariable selfVariable, VariableCollection variables, SimSpecs sim)
         {
             try
             {
@@ -104,7 +104,7 @@ namespace Symu.SysDyn.Equations
         /// <param name="variables"></param>
         /// <param name="sim"></param>
         /// <returns></returns>
-        public virtual void Prepare(IVariable selfVariable, Variables variables, SimSpecs sim)
+        public virtual void Prepare(IVariable selfVariable, VariableCollection variables, SimSpecs sim)
         {
             if (variables == null)
             {
@@ -136,7 +136,7 @@ namespace Symu.SysDyn.Equations
         }
 
 
-        public virtual void Replace(string child, string value)
+        public virtual void Replace(string child, string value, SimSpecs sim)
         {
             while (Words.FindIndex(ind => ind.Equals(child)) >= 0)
             {

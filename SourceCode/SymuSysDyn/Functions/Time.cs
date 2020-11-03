@@ -10,7 +10,7 @@
 #region using directives
 
 using System;
-using Symu.SysDyn.Model;
+using Symu.SysDyn.Models;
 using Symu.SysDyn.Simulation;
 
 #endregion
@@ -24,18 +24,18 @@ namespace Symu.SysDyn.Functions
     {
         public const string Value = "Time";
 
-        public Time(string function) : base(function)
+        public Time(string model, string function) : base(model, function)
         {
         }
 
         public override IBuiltInFunction Clone()
         {
-            var clone = new Time(OriginalFunction);
+            var clone = new Time(Model, OriginalFunction);
             CopyTo(clone);
             return clone;
         }
 
-        public override float Evaluate(IVariable selfVariable, Variables variables, SimSpecs sim)
+        public override float Evaluate(IVariable selfVariable, VariableCollection variables, SimSpecs sim)
         {
             if (sim == null)
             {

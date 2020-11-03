@@ -14,6 +14,10 @@ Some useful links:
 
 ``Symu.SysDyn`` compute models from standard xmile file or code based.
 
+### Open Standards 
+
+``Symu.SysDyn`` is built on [XMILE](https://www.oasis-open.org/committees/tc_home.php?wg_abbrev=xmile), the open standard for representing system dynamics models. When the standard is complete, ``Symu.SysDyn`` will aim for full conformance.
+
 ## What it is
 
 It creates a graph of system dynamics artifacts and graphical to model complex systems to analyze.

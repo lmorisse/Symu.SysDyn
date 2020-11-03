@@ -9,7 +9,7 @@
 
 using System;
 
-namespace Symu.SysDyn.Model
+namespace Symu.SysDyn.Models
 {
     /// <summary>
     ///     Flows represent rates of change of the stocks.
@@ -20,31 +20,31 @@ namespace Symu.SysDyn.Model
     /// </summary>
     public class Flow : Variable
     {
-        private Flow(string name) : base(name)
+        private Flow(string name, string model) : base(name, model)
         {
         }
 
-        public Flow(string name, string eqn, GraphicalFunction graph, Range range, Range scale,
-            NonNegative nonNegative) : base(name, eqn, graph,
-            range, scale, nonNegative)
+        public Flow(string name, string model, string eqn, GraphicalFunction graph, Range range, Range scale,
+            NonNegative nonNegative, VariableAccess access) : base(name, model, eqn, graph, range, scale, nonNegative, access)
         {
         }
-        public static Flow CreateInstance(Variables variables, string name, string eqn, GraphicalFunction graph, Range range, Range scale,
-            NonNegative nonNegative)
+        public static Flow CreateInstance(string name, Model model, string eqn, GraphicalFunction graph, Range range,
+            Range scale,
+            NonNegative nonNegative, VariableAccess access)
         {
-            if (variables == null)
+            if (model == null)
             {
-                throw new ArgumentNullException(nameof(variables));
+                throw new ArgumentNullException(nameof(model));
             }
 
-            var variable = new Flow(name, eqn, graph, range, scale, nonNegative);
-            variables.Add(variable);
+            var variable = new Flow(name, model.Name, eqn, graph, range, scale, nonNegative, access);
+            model.Variables.Add(variable);
             return variable;
         }
 
         public override IVariable Clone()
         {
-            var clone = new Flow(Name);
+            var clone = new Flow(Name, Model);
             CopyTo(clone);
             return clone;
         }

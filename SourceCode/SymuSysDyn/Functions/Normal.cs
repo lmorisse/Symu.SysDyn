@@ -10,7 +10,7 @@
 #region using directives
 
 using System;
-using Symu.SysDyn.Model;
+using Symu.SysDyn.Models;
 using Symu.SysDyn.Simulation;
 
 #endregion
@@ -29,7 +29,7 @@ namespace Symu.SysDyn.Functions
     {
         public const string Value = "Normal";
 
-        public Normal(string function) : base(function)
+        public Normal(string model, string function) : base(model, function)
         {
         }
 
@@ -40,12 +40,12 @@ namespace Symu.SysDyn.Functions
 
         public override IBuiltInFunction Clone()
         {
-            var clone = new Normal(OriginalFunction);
+            var clone = new Normal(Model, OriginalFunction);
             CopyTo(clone);
             return clone;
         }
 
-        public override float Evaluate(IVariable selfVariable, Variables variables, SimSpecs sim)
+        public override float Evaluate(IVariable selfVariable, VariableCollection variables, SimSpecs sim)
         {
             var mean = GetValue(0, selfVariable, variables, sim);
 
@@ -62,7 +62,7 @@ namespace Symu.SysDyn.Functions
             return Common.Math.ProbabilityDistributions.Normal.Sample(mean, standardDeviation, seed);
         }
 
-        public override float InitialValue()
+        public override float InitialValue(SimSpecs sim)
         {
             return Args.Count == 2
                 ? Common.Math.ProbabilityDistributions.Normal.Sample(Args[0], Args[1])

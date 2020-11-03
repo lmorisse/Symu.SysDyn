@@ -26,7 +26,7 @@ namespace Symu.SysDyn.Functions
 {
     public static class FunctionFactory
     {
-        public static BuiltInFunction CreateInstance(string function)
+        public static BuiltInFunction CreateInstance(string model, string function)
         {
             if (function == null)
             {
@@ -42,25 +42,27 @@ namespace Symu.SysDyn.Functions
                 case "Else":
                     break;
                 case Step.Value:
-                    return new Step(function);
+                    return new Step(model, function);
+                case Pulse.Value:
+                    return new Pulse(model, function);
                 case Normal.Value:
-                    return new Normal(function);
+                    return new Normal(model, function);
                 case Ramp.Value:
-                    return new Ramp(function);
+                    return new Ramp(model, function);
                 case Smth1.Value:
-                    return new Smth1(function);
+                    return new Smth1(model, function);
                 case Smth3.Value:
-                    return new Smth3(function);
+                    return new Smth3(model, function);
                 case SmthN.Value:
-                    return new SmthN(function);
+                    return new SmthN(model, function);
                 case Dt.Value:
-                    return new Dt(function);
+                    return new Dt(model, function);
                 case Time.Value:
-                    return new Time(function);
+                    return new Time(model, function);
                 case ExternalUpdate.Value:
-                    return new ExternalUpdate(function);
+                    return new ExternalUpdate(model, function);
                 default:
-                    return new BuiltInFunction(function);
+                    return new BuiltInFunction(model, function);
             }
 
             return null;

@@ -27,11 +27,12 @@ namespace Symu.SysDyn.Functions
     /// </summary>
     public class IfThenElse : BuiltInFunction
     {
-        public IfThenElse(string function)
+        public IfThenElse(string model, string function)
         {
             OriginalFunction = function ?? throw new ArgumentNullException(nameof(function));
             Name = "If";
-            Parse(ref function, out var parameters, out var args);
+            Model = model;
+            Parse(model, ref function, out var parameters, out var args);
             Parameters = parameters;
             Args = args;
             Expression = new Expression(function);
@@ -39,7 +40,7 @@ namespace Symu.SysDyn.Functions
 
         public override IBuiltInFunction Clone()
         {
-            var clone = new IfThenElse(OriginalFunction);
+            var clone = new IfThenElse(Model, OriginalFunction);
             CopyTo(clone);
             return clone;
         }
@@ -47,10 +48,11 @@ namespace Symu.SysDyn.Functions
         /// <summary>
         ///     Parse the string function to extract the if-then-else conditions in the parameters
         /// </summary>
+        /// <param name="model"></param>
         /// <param name="input"></param>
         /// <param name="parameters"></param>
         /// <param name="args"></param>
-        public static void Parse(ref string input, out List<IEquation> parameters, out List<float> args)
+        public static void Parse(string model, ref string input, out List<IEquation> parameters, out List<float> args)
         {
             parameters = new List<IEquation>();
             args = new List<float>();
@@ -62,15 +64,15 @@ namespace Symu.SysDyn.Functions
             }
 
             var equation = "if(";
-            var condition = EquationFactory.CreateInstance(result.Groups[1].Value, out var value);
+            var condition = EquationFactory.CreateInstance(model, result.Groups[1].Value, out var value);
             equation = UpdateEquation(parameters, args, condition, value, equation);
 
             equation += ",";
-            var thenExpression = EquationFactory.CreateInstance(result.Groups[2].Value, out value);
+            var thenExpression = EquationFactory.CreateInstance(model, result.Groups[2].Value, out value);
             equation = UpdateEquation(parameters, args, thenExpression, value, equation);
 
             equation += ",";
-            var elseExpression = EquationFactory.CreateInstance(result.Groups[3].Value, out value);
+            var elseExpression = EquationFactory.CreateInstance(model, result.Groups[3].Value, out value);
             equation = UpdateEquation(parameters, args, elseExpression, value, equation);
             input = equation + ")";
         }

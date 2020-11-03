@@ -51,13 +51,13 @@
         <eqn>1.25 </eqn>
       </aux>
       <aux name="area" access="input">
-        <eqn>{Enter equation for use when not hooked up to other models}</eqn>
+        <eqn>100</eqn>
       </aux>
       <aux name="hare_density" access="output">
         <eqn>hares / area </eqn>
       </aux>
       <stock name="lynxes" access="input">
-        <eqn>{Enter equation for use when not hooked up to other models}</eqn>
+        <eqn>10</eqn>
         <non_negative></non_negative>
       </stock>
       <aux name="hares_killed\nper_lynx">
@@ -88,7 +88,7 @@
         <non_negative></non_negative>
       </flow>
       <aux name="hare_density" access="input">
-        <eqn>{Enter equation for use when not hooked up to other models}</eqn>
+        <eqn>100</eqn>
       </aux>
       <aux name="birth_fraction">
         <eqn>.25 </eqn>
@@ -106,7 +106,7 @@
         <non_negative></non_negative>
       </flow>
       <aux name="size_of_one\ntime_lynx_harvest" access="input">
-        <eqn>{Enter equation for use when not hooked up to other models}</eqn>
+        <eqn>10</eqn>
       </aux>
     </variables>
   </model>

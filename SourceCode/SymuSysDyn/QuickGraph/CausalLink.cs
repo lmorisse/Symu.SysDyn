@@ -9,7 +9,7 @@
 
 #region using directives
 
-using Symu.SysDyn.Model;
+using Symu.SysDyn.Models;
 
 #endregion
 

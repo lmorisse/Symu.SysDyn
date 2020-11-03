@@ -11,7 +11,7 @@
 
 using System;
 using System.Collections;
-using Symu.SysDyn.Model;
+using Symu.SysDyn.Models;
 
 #endregion
 
@@ -21,7 +21,7 @@ namespace Symu.SysDyn.Results
     {
         private readonly Hashtable _result = new Hashtable();
 
-        public Result(Variables variables)
+        public Result(VariableCollection variables)
         {
             if (variables == null)
             {
@@ -30,13 +30,13 @@ namespace Symu.SysDyn.Results
 
             foreach (var variable in variables)
             {
-                Add(variable.Name, variable.Value);
+                Add(variable.FullName, variable.Value);
             }
         }
 
         public int Count => _result.Count;
 
-        public static Result CreateInstance(Variables variables)
+        public static Result CreateInstance(VariableCollection variables)
         {
             return new Result(variables);
         }

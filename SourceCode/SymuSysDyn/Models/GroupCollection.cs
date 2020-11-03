@@ -14,9 +14,12 @@ using System.Collections.Generic;
 
 #endregion
 
-namespace Symu.SysDyn.Model
+namespace Symu.SysDyn.Models
 {
-    public class Groups : IEnumerable<Group>
+    /// <summary>
+    /// List of all the groups of a model
+    /// </summary>
+    public class GroupCollection : IEnumerable<Group>
     {
         private readonly List<Group> _groups = new List<Group>();
 
@@ -62,6 +65,11 @@ namespace Symu.SysDyn.Model
             return _groups.Find(x => x.Name == name);
         }
 
+        public void Clear()
+        {
+            _groups.Clear();
+        }
+
         #region IEnumerator members
 
         /// <summary>Returns an enumerator that iterates through the collection.</summary>
@@ -79,5 +87,6 @@ namespace Symu.SysDyn.Model
         }
 
         #endregion
+
     }
 }

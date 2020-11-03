@@ -31,7 +31,7 @@ namespace SymuSysDynTests.Functions
         [TestMethod]
         public void Smth3Test()
         {
-            var smth = new Smth3("SMTH3(5+Step(10,3),5)");
+            var smth = new Smth3(string.Empty, "SMTH3(5+Step(10,3),5)");
             Assert.AreEqual("5+Step(10,3)", smth.Initial);
             Assert.AreEqual("5+Step(10,3)", smth.Input);
             Assert.AreEqual("5", smth.Averaging);
@@ -40,7 +40,7 @@ namespace SymuSysDynTests.Functions
         [TestMethod]
         public void Smth3Test1()
         {
-            var smth = new Smth3("SMTH3(5+Step(10,3),5,2)");
+            var smth = new Smth3(string.Empty, "SMTH3(5+Step(10,3),5,2)");
             Assert.AreEqual("2", smth.Initial);
             Assert.AreEqual("5+Step(10,3)", smth.Input);
             Assert.AreEqual("5", smth.Averaging);
@@ -49,11 +49,11 @@ namespace SymuSysDynTests.Functions
         [TestMethod]
         public void EvaluateTest()
         {
-            var smth = new Smth3("SMTH3(5+Step(10,3),5)");
+            var smth = new Smth3(string.Empty, "SMTH3(5+Step(10,3),5)");
             _machine.Simulation.Time = 2;
-            Assert.AreEqual(5, smth.Evaluate(null, _machine.Variables, _machine.Simulation));
+            Assert.AreEqual(5, smth.Evaluate(null, _machine.Models.GetVariables(), _machine.Simulation));
             _machine.Simulation.Time = 4;
-            Assert.IsTrue(5 < smth.Evaluate(null, _machine.Variables, _machine.Simulation));
+            Assert.IsTrue(5 < smth.Evaluate(null, _machine.Models.GetVariables(), _machine.Simulation));
         }
     }
 }

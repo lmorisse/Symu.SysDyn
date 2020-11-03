@@ -34,6 +34,13 @@ namespace SymuSysDynTests.Parser
             names = StringUtils.CleanNames(names);
             Assert.AreEqual("Test_avec_plein_de_problemes", names[0]);
         }
+        [TestMethod()]
+        public void CleanFullNameTest()
+        {
+            Assert.AreEqual("_Variable", StringUtils.CleanFullName(".variable"));
+            Assert.AreEqual("Model_Variable", StringUtils.CleanFullName("model.variable"));
+            Assert.AreEqual("Model_Variable", StringUtils.CleanFullName("mOdel.vAriable"));
+        }
 
         /// <summary>
         ///     Non passing tests

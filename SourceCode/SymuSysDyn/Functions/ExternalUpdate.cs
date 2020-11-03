@@ -10,7 +10,7 @@
 #region using directives
 
 using System;
-using Symu.SysDyn.Model;
+using Symu.SysDyn.Models;
 using Symu.SysDyn.Simulation;
 
 #endregion
@@ -28,18 +28,18 @@ namespace Symu.SysDyn.Functions
     {
         public const string Value = "Externalupdate";
 
-        public ExternalUpdate(string function) : base(function)
+        public ExternalUpdate(string model, string function) : base(model, function)
         {
         }
 
         public override IBuiltInFunction Clone()
         {
-            var clone = new ExternalUpdate(OriginalFunction);
+            var clone = new ExternalUpdate(Model, OriginalFunction);
             CopyTo(clone);
             return clone;
         }
 
-        public override float Evaluate(IVariable variable, Variables variables, SimSpecs sim)
+        public override float Evaluate(IVariable variable, VariableCollection variables, SimSpecs sim)
         {
             if (variable == null)
             {

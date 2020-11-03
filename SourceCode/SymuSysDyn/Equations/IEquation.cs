@@ -10,7 +10,7 @@
 #region using directives
 
 using System.Collections.Generic;
-using Symu.SysDyn.Model;
+using Symu.SysDyn.Models;
 using Symu.SysDyn.Simulation;
 
 #endregion
@@ -26,9 +26,9 @@ namespace Symu.SysDyn.Equations
         string InitializedEquation { get; set; }
         List<string> Variables { get; }
         float InitialValue();
-        float Evaluate(IVariable variable, Variables variables, SimSpecs sim);
-        void Prepare(IVariable variable, Variables variables, SimSpecs sim);
-        void Replace(string child, string value);
+        float Evaluate(IVariable variable, VariableCollection variables, SimSpecs sim);
+        void Prepare(IVariable variable, VariableCollection variables, SimSpecs sim);
+        void Replace(string child, string value, SimSpecs sim);
         bool CanBeOptimized(string variableName);
         IEquation Clone();
     }

@@ -25,13 +25,13 @@ namespace Symu.SysDyn.Functions
     {
         public const string Value = "Smth1";
 
-        public Smth1(string function) : base(function, 1)
+        public Smth1(string model, string function) : base(model, function, 1)
         {
         }
 
         public override IBuiltInFunction Clone()
         {
-            var clone = new Smth1(OriginalFunction);
+            var clone = new Smth1(Model, OriginalFunction);
             CopyTo(clone);
             return clone;
         }

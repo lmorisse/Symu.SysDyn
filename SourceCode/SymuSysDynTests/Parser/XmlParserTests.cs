@@ -22,7 +22,7 @@
 
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Symu.SysDyn.Model;
+using Symu.SysDyn.Models;
 
 #endregion
 
@@ -36,8 +36,10 @@ namespace SymuSysDynTests.Parser
         [TestMethod]
         public void ParseVariablesTest()
         {
-            var variables = Parser.ParseVariables();
-            Assert.AreEqual(6, variables.Count());
+            var models = Parser.ParseModels();
+            Assert.AreEqual(2, models.Count());
+            Assert.AreEqual(8, models.RootModel.Variables.Count());
+            Assert.AreEqual(2, models[1].Variables.Count());
         }
 
         [TestMethod]
@@ -54,39 +56,63 @@ namespace SymuSysDynTests.Parser
         [TestMethod]
         public void ParseAuxiliariesTest()
         {
-            Parser.ParseAuxiliaries(XElement, Variables);
-            Assert.AreEqual(2, Variables.Count());
-            Assert.AreEqual("Aux1", Variables[0].Name);
-            Assert.AreEqual(1, Variables[0].Value);
-            Assert.AreEqual("Aux2", Variables[1].Name);
-            Assert.AreEqual(0, Variables[1].Value);
+            Parser.ParseAuxiliaries(XElement, RootModel);
+            var aux = RootModel.Variables.OfType<Auxiliary>().ToList();
+            Assert.AreEqual(3, aux.Count);
+            Assert.AreEqual("_Aux1", aux[0].FullName);
+            Assert.AreEqual(1, aux[0].Value);
+            Assert.AreEqual("_Aux2", aux[1].FullName);
+            Assert.AreEqual(1, aux[1].Value);
+            Assert.AreEqual("_Aux3", aux[2].FullName);
+            Assert.AreEqual(3, aux[2].Value);
         }
 
         [TestMethod]
         public void ParseFlowsTest()
         {
-            Parser.ParseFlows(XElement, Variables);
-            Assert.AreEqual(2, Variables.Count());
-            Assert.IsTrue(Variables.Exists("Inflow1"));
-            Assert.IsTrue(Variables.Exists("Outflow1"));
-            Assert.AreEqual("Stock2/2", Variables[0].Equation.InitializedEquation);
+            Parser.ParseFlows(XElement, RootModel);
+            var flows = RootModel.Variables.OfType<Flow>().ToList();
+            Assert.AreEqual(2, flows.Count);
+            Assert.AreEqual("_Inflow1", flows[0].FullName);
+            Assert.AreEqual("_Stock2/2", flows[0].Equation.InitializedEquation);
+            Assert.AreEqual("_Outflow1", flows[1].FullName);
+            Assert.AreEqual("_Stock2*2+_Aux2", flows[1].Equation.InitializedEquation);
         }
 
         [TestMethod]
         public void ParseStocksTest()
         {
-            Parser.ParseStocks(XElement, Variables);
-            Assert.AreEqual(2, Variables.Count());
-            Assert.IsTrue(Variables.Exists("Stock1"));
-            Assert.IsTrue(Variables.Exists("Stock2"));
-            var stock = (Stock) Variables[0];
-            Assert.AreEqual(1, stock.Value);
-            Assert.AreEqual(1, stock.Inflow.Count);
-            Assert.AreEqual(1, stock.Outflow.Count);
-            var stock2 = (Stock) Variables[1];
-            Assert.AreEqual(2, stock2.Value);
-            Assert.AreEqual(0, stock2.Inflow.Count);
-            Assert.AreEqual(0, stock2.Outflow.Count);
+            Parser.ParseStocks(XElement, RootModel);
+            var stocks = RootModel.Variables.Stocks.ToList();
+            Assert.AreEqual(2, stocks.Count);
+            Assert.AreEqual("_Stock1", stocks[0].FullName);
+            Assert.AreEqual(1, stocks[0].Value);
+            Assert.AreEqual(1, stocks[0].Inflow.Count);
+            Assert.AreEqual(1, stocks[0].Outflow.Count);
+            Assert.AreEqual("_Stock2", stocks[1].FullName);
+            Assert.AreEqual(2, stocks[1].Value);
+            Assert.AreEqual(0, stocks[1].Inflow.Count);
+            Assert.AreEqual(0, stocks[1].Outflow.Count);
+        }
+
+        [TestMethod]
+        public void ParseModulesTest()
+        {
+            Parser.ParseModules(XElement, Model);
+            Assert.AreEqual(1, Model.Variables.Count());
+            Assert.IsTrue(Model.Variables.Exists("1_Hares"));
+        }
+
+        [TestMethod]
+        public void ParseConnectsTest()
+        {
+            XElement = XElement.Descendants(Ns + "module").First();
+            var connects = Parser.ParseConnects(XElement);
+            Assert.AreEqual(2, connects.Count());
+            Assert.AreEqual("Hares_Area", connects[0].To);
+            Assert.AreEqual("_Aux3", connects[0].From);
+            Assert.AreEqual("Hares_Lynxes", connects[1].To);
+            Assert.AreEqual("_Aux2", connects[1].From);
         }
 
         [TestMethod]
@@ -157,16 +183,15 @@ namespace SymuSysDynTests.Parser
         [TestMethod]
         public void ParseGroupsTest()
         {
-            Parser.ParseGroups(XElement, Variables);
-            Assert.AreEqual(2, Variables.Groups.Count());
-            Assert.IsTrue(Variables.Groups.Exists("Group1"));
-            var group1 = Variables.Groups.Get("Group1").Entities;
+            Assert.AreEqual(2, RootModel.Groups.Count());
+            Assert.IsTrue(RootModel.Groups.Exists("Group1"));
+            var group1 = RootModel.Groups.Get("Group1").Entities;
             Assert.AreEqual(2, group1.Count);
-            Assert.AreEqual("Stock1", group1[0]);
-            Assert.AreEqual("Aux1", group1[1]);
-            Assert.IsTrue(Variables.Groups.Exists("Group2"));
-            var group2 = Variables.Groups.Get("Group2").Entities;
-            Assert.AreEqual("Stock2", group2[0]);
+            Assert.AreEqual("_Stock1", group1[0]);
+            Assert.AreEqual("_Aux1", group1[1]);
+            Assert.IsTrue(RootModel.Groups.Exists("Group2"));
+            var group2 = RootModel.Groups.Get("Group2").Entities;
+            Assert.AreEqual("_Stock2", group2[0]);
         }
     }
 }

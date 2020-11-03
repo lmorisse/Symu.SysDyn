@@ -11,7 +11,7 @@
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Symu.SysDyn.Functions;
-using Symu.SysDyn.Model;
+using Symu.SysDyn.Models;
 
 #endregion
 
@@ -23,7 +23,7 @@ namespace SymuSysDynTests.Functions
         [TestMethod]
         public void NormalTest()
         {
-            var function = new Normal("Normal(1, 2)");
+            var function = new Normal(string.Empty, "Normal(1, 2)");
             Assert.AreEqual("1", function.Mean);
             Assert.AreEqual("2", function.StandardDeviation);
             Assert.AreEqual(string.Empty, function.Seed);
@@ -32,7 +32,7 @@ namespace SymuSysDynTests.Functions
         [TestMethod]
         public void NormalTest1()
         {
-            var function = new Normal("Normal(1, 2, 3)");
+            var function = new Normal(string.Empty, "Normal(1, 2, 3)");
             Assert.AreEqual("1", function.Mean);
             Assert.AreEqual("2", function.StandardDeviation);
             Assert.AreEqual("3", function.Seed);
@@ -44,8 +44,8 @@ namespace SymuSysDynTests.Functions
         [TestMethod]
         public void EvaluateTest()
         {
-            var function = new Normal("Normal(0, 0)");
-            Assert.AreEqual(0, function.Evaluate(null, Machine.Variables, Machine.Simulation));
+            var function = new Normal(string.Empty, "Normal(0, 0)");
+            Assert.AreEqual(0, function.Evaluate(null, Machine.Models.GetVariables(), Machine.Simulation));
         }
 
         /// <summary>
@@ -54,8 +54,8 @@ namespace SymuSysDynTests.Functions
         [TestMethod]
         public void EvaluateTest1()
         {
-            var function = new Normal("Normal(0, 0, 1)");
-            Assert.AreEqual(0, function.Evaluate(null, Machine.Variables, Machine.Simulation));
+            var function = new Normal(string.Empty, "Normal(0, 0, 1)");
+            Assert.AreEqual(0, function.Evaluate(null, Machine.Models.GetVariables(), Machine.Simulation));
         }
 
         /// <summary>
@@ -64,10 +64,10 @@ namespace SymuSysDynTests.Functions
         [TestMethod]
         public void EvaluateTest2()
         {
-            var function = new Normal("Normal(variable1+variable2, 0)");
-            Variable.CreateInstance(Machine.Variables, "variable1", "1");
-            Variable.CreateInstance(Machine.Variables, "variable2", "2");
-            Assert.AreEqual(3, function.Evaluate(null, Machine.Variables, Machine.Simulation));
+            var function = new Normal(string.Empty, "Normal(variable1+variable2, 0)");
+            Variable.CreateInstance("variable1", Machine.Models.RootModel, "1");
+            Variable.CreateInstance("variable2", Machine.Models.RootModel, "2");
+            Assert.AreEqual(3, function.Evaluate(null, Machine.Models.GetVariables(), Machine.Simulation));
         }
 
         /// <summary>
@@ -76,10 +76,10 @@ namespace SymuSysDynTests.Functions
         [TestMethod]
         public void EvaluateTest3()
         {
-            var function = new Normal("Normal(variable1, variable2)");
-            Variable.CreateInstance(Machine.Variables, "variable1", "1");
-            Variable.CreateInstance(Machine.Variables, "variable2", "0");
-            Assert.AreEqual(1, function.Evaluate(null, Machine.Variables, Machine.Simulation));
+            var function = new Normal(string.Empty, "Normal(variable1, variable2)");
+            Variable.CreateInstance("variable1", Machine.Models.RootModel, "1");
+            Variable.CreateInstance("variable2", Machine.Models.RootModel, "0");
+            Assert.AreEqual(1, function.Evaluate(null, Machine.Models.GetVariables(), Machine.Simulation));
         }
     }
 }

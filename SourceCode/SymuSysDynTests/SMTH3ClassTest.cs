@@ -12,7 +12,7 @@
 using System.Linq;
 using System.Xml.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Symu.SysDyn.Model;
+using Symu.SysDyn.Models;
 using Symu.SysDyn.Parser;
 using Symu.SysDyn.Simulation;
 
@@ -37,7 +37,7 @@ namespace SymuSysDynTests
         /// <summary>
         ///     It is not the Machine.Variables
         /// </summary>
-        protected Variables Variables { get; } = new Variables();
+        protected Model Variables { get; } = new Model("1");
 
         protected XDocument XDoc { get; }
         protected XNamespace Ns { get; }

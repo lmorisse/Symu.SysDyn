@@ -10,11 +10,11 @@
 #region using directives
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Symu.SysDyn.Model;
+using Symu.SysDyn.Models;
 
 #endregion
 
-namespace SymuSysDynTests.Model
+namespace SymuSysDynTests.Models
 {
     [TestClass]
     public class VariableTests
@@ -32,8 +32,8 @@ namespace SymuSysDynTests.Model
         [TestMethod]
         public void VariableTest()
         {
-            _variable = new Variable("name");
-            Assert.AreEqual("Name", _variable.Name);
+            _variable = new Variable("name", "Model");
+            Assert.AreEqual("Model_Name", _variable.FullName);
             Assert.IsNull(_variable.Equation);
             Assert.IsNull(_variable.Children);
         }
@@ -44,13 +44,13 @@ namespace SymuSysDynTests.Model
         [TestMethod]
         public void VariableTest1()
         {
-            _variable = new Variable("name", Equation1);
-            Assert.AreEqual("Name", _variable.Name);
+            _variable = new Variable("name", string.Empty, Equation1);
+            Assert.AreEqual("_Name", _variable.FullName);
             Assert.AreEqual(0, _variable.Value);
             Assert.IsNotNull(_variable.Equation);
             Assert.AreEqual(2, _variable.Children.Count);
-            Assert.IsTrue(_variable.Children.Contains("Variable1"));
-            Assert.IsTrue(_variable.Children.Contains("Variable2"));
+            Assert.IsTrue(_variable.Children.Contains("_Variable1"));
+            Assert.IsTrue(_variable.Children.Contains("_Variable2"));
             Assert.IsFalse(_variable.Updated);
         }
 
@@ -60,8 +60,8 @@ namespace SymuSysDynTests.Model
         [TestMethod]
         public void VariableTest5()
         {
-            _variable = new Variable("name", Equation5);
-            Assert.AreEqual("Name", _variable.Name);
+            _variable = new Variable("name", string.Empty, Equation5);
+            Assert.AreEqual("_Name", _variable.FullName);
             Assert.AreEqual(10, _variable.Value);
             Assert.IsNull(_variable.Equation);
             Assert.AreEqual(0, _variable.Children.Count);
@@ -74,13 +74,13 @@ namespace SymuSysDynTests.Model
         [TestMethod]
         public void VariableTest2()
         {
-            _variable = new Variable("name", Equation2);
-            Assert.AreEqual("Name", _variable.Name);
+            _variable = new Variable("name", string.Empty, Equation2);
+            Assert.AreEqual("_Name", _variable.FullName);
             Assert.AreEqual(0, _variable.Value);
             Assert.IsNotNull(_variable.Equation);
             Assert.AreEqual(2, _variable.Children.Count);
-            Assert.IsTrue(_variable.Children.Contains("Variable1"));
-            Assert.IsTrue(_variable.Children.Contains("Variable2"));
+            Assert.IsTrue(_variable.Children.Contains("_Variable1"));
+            Assert.IsTrue(_variable.Children.Contains("_Variable2"));
             Assert.IsFalse(_variable.Updated);
         }
 
@@ -90,8 +90,8 @@ namespace SymuSysDynTests.Model
         [TestMethod]
         public void VariableTest3()
         {
-            _variable = new Variable("name", Equation3);
-            Assert.AreEqual("Name", _variable.Name);
+            _variable = new Variable("name", string.Empty, Equation3);
+            Assert.AreEqual("_Name", _variable.FullName);
             Assert.AreEqual(0, _variable.Value);
             Assert.IsNotNull(_variable.Equation);
             Assert.AreEqual(0, _variable.Children.Count);
@@ -104,8 +104,8 @@ namespace SymuSysDynTests.Model
         [TestMethod]
         public void VariableTest4()
         {
-            _variable = new Variable("name", Equation4);
-            Assert.AreEqual("Name", _variable.Name);
+            _variable = new Variable("name", string.Empty, Equation4);
+            Assert.AreEqual("_Name", _variable.FullName);
             Assert.AreEqual(0, _variable.Value);
             Assert.IsNull(_variable.Equation);
             Assert.AreEqual(0, _variable.Children.Count);
@@ -116,7 +116,7 @@ namespace SymuSysDynTests.Model
         public void ToStringTest()
         {
             _variable = new Variable("name");
-            Assert.AreEqual("Name", _variable.ToString());
+            Assert.AreEqual("_Name", _variable.ToString());
         }
     }
 }

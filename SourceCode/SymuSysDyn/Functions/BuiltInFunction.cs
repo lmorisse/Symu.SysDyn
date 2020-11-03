@@ -15,7 +15,7 @@ using System.Globalization;
 using System.Linq;
 using NCalc2;
 using Symu.SysDyn.Equations;
-using Symu.SysDyn.Model;
+using Symu.SysDyn.Models;
 using Symu.SysDyn.Simulation;
 
 #endregion
@@ -30,7 +30,7 @@ namespace Symu.SysDyn.Functions
     /// <remarks>
     ///     When adding a new buildIn function,
     ///     create an inherited class of BuiltInFunction
-    ///     add it in FunctionUtils.ParseStringFunctions
+    ///     add it in FunctionFactory
     ///     add a unit test class for the function
     ///     add a unit test in AllBuiltInFUnctionsTests to have the list of all available functions
     /// </remarks>
@@ -41,11 +41,12 @@ namespace Symu.SysDyn.Functions
         {
         }
 
-        public BuiltInFunction(string function)
+        public BuiltInFunction(string model, string function)
         {
             OriginalFunction = function?.Trim() ?? throw new ArgumentNullException(nameof(function));
-            FunctionUtils.ParseParameters(ref function, out var name, out var parameters, out var args);
+            FunctionUtils.ParseParameters(model, ref function, out var name, out var parameters, out var args);
             Name = name;
+            Model = model ?? throw new ArgumentNullException(nameof(model));
             Parameters = parameters;
             Args = args;
             InitializedFunction = function;
@@ -72,6 +73,11 @@ namespace Symu.SysDyn.Functions
         public string Name { get; set; }
 
         /// <summary>
+        ///     The model name
+        /// </summary>
+        public string Model { get; set; }
+
+        /// <summary>
         ///     The function name indexed
         /// </summary>
         public string IndexName { get; set; }
@@ -90,7 +96,7 @@ namespace Symu.SysDyn.Functions
 
         public virtual IBuiltInFunction Clone()
         {
-            var clone = new BuiltInFunction(OriginalFunction);
+            var clone = new BuiltInFunction(Model, OriginalFunction);
             CopyTo(clone);
             return clone;
         }
@@ -102,7 +108,7 @@ namespace Symu.SysDyn.Functions
         /// <param name="variables"></param>
         /// <param name="sim"></param>
         /// <returns></returns>
-        public float Prepare(IVariable selfVariable, Variables variables, SimSpecs sim)
+        public float Prepare(IVariable selfVariable, VariableCollection variables, SimSpecs sim)
         {
             if (variables == null)
             {
@@ -128,17 +134,17 @@ namespace Symu.SysDyn.Functions
             return Evaluate(selfVariable, variables, sim);
         }
 
-        public virtual float InitialValue()
+        public virtual float InitialValue(SimSpecs sim)
         {
             return Convert.ToSingle(Expression.Evaluate());
         }
 
-        public virtual float Evaluate(IVariable selfVariable, Variables variables, SimSpecs sim)
+        public virtual float Evaluate(IVariable selfVariable, VariableCollection variables, SimSpecs sim)
         {
-            return InitialValue();
+            return InitialValue(sim);
         }
 
-        public bool TryEvaluate(IVariable variable, Variables variables, SimSpecs sim, out float result)
+        public bool TryEvaluate(IVariable variable, VariableCollection variables, SimSpecs sim, out float result)
         {
             try
             {
@@ -152,7 +158,7 @@ namespace Symu.SysDyn.Functions
             }
         }
 
-        public void Replace(string child, string value)
+        public void Replace(string child, string value, SimSpecs sim)
         {
             var replace = false;
 
@@ -164,7 +170,7 @@ namespace Symu.SysDyn.Functions
                     continue;
                 }
 
-                parameter.Replace(child, value);
+                parameter.Replace(child, value, sim);
                 if (!parameter.CanBeOptimized(child))
                 {
                     continue;
@@ -202,7 +208,7 @@ namespace Symu.SysDyn.Functions
             copy.IndexName = IndexName;
         }
 
-        protected float GetValue(int index, IVariable variable, Variables variables, SimSpecs sim)
+        protected float GetValue(int index, IVariable variable, VariableCollection variables, SimSpecs sim)
         {
             return Parameters[index] != null ? Parameters[index].Evaluate(variable, variables, sim) : Args[index];
         }

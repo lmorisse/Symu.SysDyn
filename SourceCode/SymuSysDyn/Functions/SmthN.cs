@@ -27,7 +27,7 @@ namespace Symu.SysDyn.Functions
     {
         public const string Value = "Smthn";
 
-        public SmthN(string function) : base(function)
+        public SmthN(string model, string function) : base(model, function)
         {
             Order = Convert.ToByte(GetParamFromOriginalEquation(2));
             InitialIndex = Parameters.Count == 4 ? 3 : 0;
@@ -35,7 +35,7 @@ namespace Symu.SysDyn.Functions
 
         public override IBuiltInFunction Clone()
         {
-            var clone = new SmthN(OriginalFunction);
+            var clone = new SmthN(Model, OriginalFunction);
             CopyTo(clone);
             return clone;
         }

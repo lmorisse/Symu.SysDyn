@@ -22,7 +22,6 @@ using System.Text.RegularExpressions;
 
 namespace Symu.SysDyn.Parser
 {
-    //todo Maybe try a framework like https://github.com/IronyProject to have a real grammar more than regex
     public static class StringUtils
     {
         #region Names
@@ -76,6 +75,23 @@ namespace Symu.SysDyn.Parser
                 default: return input.First().ToString().ToUpper() + input.Substring(1);
             }
         }
+        /// <summary>
+        /// For Connect, replace a model.variable name into Model_Variable
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static string CleanFullName(string name)
+        {
+            if (name == null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
+            var splits = name.Split('.');
+            var model = FirstCharToUpper(splits[0].ToLowerInvariant());
+            var variable = FirstCharToUpper(splits[1].ToLowerInvariant());
+            return FullName(model, variable);
+        }
 
         /// <summary>
         ///     Get the string in braces
@@ -88,5 +104,10 @@ namespace Symu.SysDyn.Parser
         }
 
         #endregion
+
+        public static string FullName(string model, string name)
+        {
+            return model + "_" + name;
+        }
     }
 }

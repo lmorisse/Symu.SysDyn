@@ -11,11 +11,11 @@
 
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Symu.SysDyn.Model;
+using Symu.SysDyn.Models;
 
 #endregion
 
-namespace SymuSysDynTests.Model
+namespace SymuSysDynTests.Models
 {
     [TestClass]
     public class StockTests
@@ -29,7 +29,7 @@ namespace SymuSysDynTests.Model
         public void StockTest()
         {
             _stock = new Stock("name", Equation1, _inflows, _outflows);
-            Assert.AreEqual("Name", _stock.Name);
+            Assert.AreEqual("_Name", _stock.FullName);
             CollectionAssert.AreEqual(_inflows, _stock.Inflow);
             CollectionAssert.AreEqual(_outflows, _stock.Outflow);
             Assert.IsNull(_stock.Equation);
@@ -43,7 +43,7 @@ namespace SymuSysDynTests.Model
             _stock = new Stock("name", "SET(param1, param2)", _inflows, _outflows);
             var clone = _stock.Clone() as Stock;
             Assert.IsNotNull(clone);
-            Assert.AreEqual(clone.Name, _stock.Name);
+            Assert.AreEqual(clone.FullName, _stock.FullName);
             CollectionAssert.AreEqual(_inflows, clone.Inflow);
             CollectionAssert.AreEqual(_outflows, clone.Outflow);
             Assert.IsNotNull(clone.Equation);
@@ -58,7 +58,7 @@ namespace SymuSysDynTests.Model
         {
             _stock = new Stock("name", Equation1, new List<string>(), new List<string>());
             _stock.SetStockEquation();
-            Assert.AreEqual(_stock.Name, _stock.Equation.InitializedEquation);
+            Assert.AreEqual(_stock.FullName, _stock.Equation.InitializedEquation);
             Assert.AreEqual(0, _stock.Children.Count);
         }
 
@@ -70,7 +70,7 @@ namespace SymuSysDynTests.Model
         {
             _stock = new Stock("name", Equation1, _inflows, new List<string>());
             _stock.SetStockEquation();
-            Assert.AreEqual("Name+Dt0*(Inflow1+Inflow2)", _stock.Equation.InitializedEquation);
+            Assert.AreEqual("_Name+Dt0*(_Inflow1+_Inflow2)", _stock.Equation.InitializedEquation);
             Assert.AreEqual(2, _stock.Children.Count);
         }
 
@@ -82,7 +82,7 @@ namespace SymuSysDynTests.Model
         {
             _stock = new Stock("name", Equation1, new List<string>(), _outflows);
             _stock.SetStockEquation();
-            Assert.AreEqual("Name+Dt0*(-Outflow1-Outflow2)", _stock.Equation.InitializedEquation);
+            Assert.AreEqual("_Name+Dt0*(-_Outflow1-_Outflow2)", _stock.Equation.InitializedEquation);
             Assert.AreEqual(2, _stock.Children.Count);
         }
 
@@ -94,7 +94,7 @@ namespace SymuSysDynTests.Model
         {
             _stock = new Stock("name", Equation1, _inflows, _outflows);
             _stock.SetStockEquation();
-            Assert.AreEqual("Name+Dt0*(Inflow1+Inflow2-Outflow1-Outflow2)", _stock.Equation.InitializedEquation);
+            Assert.AreEqual("_Name+Dt0*(_Inflow1+_Inflow2-_Outflow1-_Outflow2)", _stock.Equation.InitializedEquation);
             Assert.AreEqual(4, _stock.Children.Count);
         }
     }

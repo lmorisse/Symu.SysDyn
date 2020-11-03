@@ -39,9 +39,10 @@ namespace Symu.SysDyn.Functions
         /// <summary>
         ///     Extract functions from a string as a list of BuiltIn functions
         /// </summary>
+        /// <param name="model"></param>
         /// <param name="input"></param>
         /// <returns></returns>
-        public static IEnumerable<IBuiltInFunction> ParseFunctions(string input)
+        public static IEnumerable<IBuiltInFunction> ParseFunctions(string model, string input)
         {
             if (input == null)
             {
@@ -54,12 +55,12 @@ namespace Symu.SysDyn.Functions
 
             if (functions != null)
             {
-                builtInFunctions.AddRange(functions.Select(FunctionFactory.CreateInstance));
+                builtInFunctions.AddRange(functions.Select(function => FunctionFactory.CreateInstance(model, function)));
             }
 
             if (IfThenElse.IsContainedIn(input))
             {
-                builtInFunctions.Add(new IfThenElse(input));
+                builtInFunctions.Add(new IfThenElse(model,input));
             }
 
             return builtInFunctions;
@@ -155,13 +156,14 @@ namespace Symu.SysDyn.Functions
         /// <summary>
         ///     Get the list of parameters/args of a function with nested functions
         /// </summary>
+        /// <param name="model"></param>
         /// <param name="function"></param>
         /// <param name="name"></param>
         /// <param name="parameters"></param>
         /// <param name="args"></param>
         /// <returns>input = "function(func(param1, param2), param3)" - return {func(param1, param2), param3}</returns>
         //public static List<IEquation> ParseParameters(ref string function,  out string name)
-        public static void ParseParameters(ref string function, out string name, out List<IEquation> parameters,
+        public static void ParseParameters(string model, ref string function, out string name, out List<IEquation> parameters,
             out List<float> args)
         {
             if (function == null)
@@ -186,7 +188,7 @@ namespace Symu.SysDyn.Functions
             var matches = Regex.Matches(innerArgs, extractArgsRegex);
             for (var i = 0; i < matches.Count; i++)
             {
-                var equation = EquationFactory.CreateInstance(matches[i].Value, out var value);
+                var equation = EquationFactory.CreateInstance(model, matches[i].Value, out var value);
                 parameters.Add(equation);
                 args.Add(value);
             }

@@ -13,7 +13,9 @@ using System;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
+using System.Resources;
 using System.Windows.Forms;
+using Symu.SysDyn.Models;
 using Symu.SysDyn.QuickGraph;
 using Symu.SysDyn.Simulation;
 using SymuSysDynApp.Graph;
@@ -25,7 +27,8 @@ namespace SymuSysDynApp
 {
     public partial class Home : Form
     {
-        private const string AllGroups = "--All";
+        private const string All = "-All";
+        private const string Root = "--Root";
         private StateMachine _stateMachine;
 
         public Home()
@@ -33,14 +36,35 @@ namespace SymuSysDynApp
             InitializeComponent();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void btnGlobalProcess_Click(object sender, EventArgs e)
+        {
+            Process(string.Empty);
+        }
+
+        private void btnSubModelProcess_Click(object sender, EventArgs e)
+        {
+            var modelName = cbModels.SelectedItem.ToString();
+            switch (modelName)
+            {
+                case All:
+                case Root:
+                    modelName = string.Empty;
+                    break;
+            }
+            Process(modelName);
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model">the name of the subModel or emptyString</param>
+        private void Process(string model)
         {
             _stateMachine.Optimized = cbOptimized.Checked;
-            _stateMachine.Process();
+            _stateMachine.Process(model);
             cbResults.Items.Clear();
-            if (_stateMachine.Variables.Names != null)
+            if (_stateMachine.Variables.FullNames != null)
             {
-                cbResults.Items.AddRange(_stateMachine.Variables.Names.OrderBy(x => x).ToArray());
+                cbResults.Items.AddRange(_stateMachine.Variables.FullNames.OrderBy(x => x).ToArray());
             }
 
             cbResults.Enabled = true;
@@ -60,18 +84,22 @@ namespace SymuSysDynApp
         {
             _stateMachine = new StateMachine(openFileDialog1.FileName, false);
 
-            cbGroups.Items.Clear();
-            if (_stateMachine.ReferenceVariables.Groups.Any())
+            cbModels.Items.Clear();
+            if (_stateMachine.Models.Count()>1)
             {
-                cbGroups.Items.Add(AllGroups);
-                cbGroups.Items.AddRange(_stateMachine.ReferenceVariables.Groups.OrderBy(x => x.Name).ToArray());
+                cbModels.Items.Add(All);
+                cbModels.Items.Add(Root);
+                cbModels.Items.AddRange(_stateMachine.Models.Where(x => !string.IsNullOrEmpty(x.Name)).Select(x => x.Name).OrderBy(x => x).ToArray());
+                cbModels.Enabled = true;
+                btnSubModelProcess.Enabled = true;
+            }
+            else
+            {
+                cbModels.Enabled = false;
+                btnSubModelProcess.Enabled = false;
             }
 
-            cbVariables.Items.Clear();
-            if (_stateMachine.ReferenceVariables.Any())
-            {
-                cbVariables.Items.AddRange(_stateMachine.ReferenceVariables.OrderBy(x => x.Name).ToArray());
-            }
+            SetGlobalModels();
 
             lblTime.Text = "0";
             cbResults.SelectedText = string.Empty;
@@ -81,8 +109,6 @@ namespace SymuSysDynApp
             tbStop.Text = _stateMachine.Simulation.Stop.ToString(CultureInfo.InvariantCulture);
             tbDt.Text = _stateMachine.Simulation.DeltaTime.ToString(CultureInfo.InvariantCulture);
             tbPause.Text = _stateMachine.Simulation.PauseInterval.ToString(CultureInfo.InvariantCulture);
-            var dotString = GraphVizDot.GenerateDotString(_stateMachine.GetGraph());
-            picImage.Image = GraphViz.RenderImage(dotString, "jpg");
         }
 
         private void cbVariables_SelectedIndexChanged(object sender, EventArgs e)
@@ -164,9 +190,20 @@ namespace SymuSysDynApp
         private void cbGroups_SelectedIndexChanged(object sender, EventArgs e)
         {
             var groupName = cbGroups.SelectedItem.ToString();
-            var dotString = GraphVizDot.GenerateDotString(groupName == AllGroups
+            switch (groupName)
+            {
+                case All:
+                    SetGroup(null);
+                    break;
+                default:
+                    var group = _stateMachine.Models.GetGroups().First(x => x.Name == groupName);
+                    SetGroup(group);
+                    break;
+            }
+
+            var dotString = GraphVizDot.GenerateDotString(groupName == All
                 ? _stateMachine.GetGraph()
-                : _stateMachine.GetSubGraph(groupName));
+                : _stateMachine.GetGroupGraph(groupName));
             picImage.Image = GraphViz.RenderImage(dotString, "jpg");
         }
 
@@ -184,6 +221,102 @@ namespace SymuSysDynApp
             lblTime.Text = "0";
             cbResults.SelectedText = string.Empty;
             btnClear.Enabled = false;
+        }
+
+        private void cbModels_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var modelName = cbModels.SelectedItem.ToString();
+            switch (modelName)
+            {
+                case All:
+                    SetGlobalModels();
+                    break;
+                case Root:
+                    SetRootModel();
+                    break;
+                default:
+                    SetSubModel(modelName);
+                    break;
+            }
+        }
+
+        private void SetGlobalModels()
+        {
+            SetModel(null);
+            var dotString = GraphVizDot.GenerateDotString(_stateMachine.GetGraph());
+            picImage.Image = GraphViz.RenderImage(dotString, "jpg");
+        }
+
+        private void SetRootModel()
+        {
+            SetModel(_stateMachine.Models.RootModel);
+            var dotString = GraphVizDot.GenerateDotString(_stateMachine.GetRootModelGraph());
+            picImage.Image = GraphViz.RenderImage(dotString, "jpg");
+        }
+
+        private void SetSubModel(string modelName)
+        {
+            SetModel(_stateMachine.Models.Get(modelName));
+            var dotString = GraphVizDot.GenerateDotString(_stateMachine.GetSubModelGraph(modelName));
+            picImage.Image = GraphViz.RenderImage(dotString, "jpg");
+        }
+
+        private void SetModel(Model model)
+        {
+            cbGroups.Items.Clear();
+            cbVariables.Items.Clear();
+            var groups = model == null ? _stateMachine.Models.GetGroups() : model.Groups;
+            if (groups.Any())
+            {
+                cbGroups.Items.Add(All);
+                cbGroups.Items.AddRange(groups.OrderBy(x => x.Name).ToArray());
+                foreach (var group in groups)
+                {
+                    cbVariables.Items.AddRange(group.Entities.ToArray());
+                }
+
+                cbGroups.Enabled = true;
+            }
+            else
+            {
+                cbGroups.Enabled = false;
+                if (model == null)
+                {
+                    cbVariables.Items.AddRange(_stateMachine.Models.GetVariables().ToArray());
+                }
+                else
+                {
+                    cbVariables.Items.AddRange(model.Variables.ToArray());
+                }
+            }
+
+            btnSubModelProcess.Enabled = model != null;
+        }
+
+        private void SetGroup(Group group)
+        {
+            cbVariables.Items.Clear();
+            if (group != null)
+            {
+                cbVariables.Items.AddRange(group.Entities.ToArray());
+            }
+            else
+            {
+                var modelName = cbModels.SelectedItem?.ToString();
+                switch (modelName)
+                {
+                    case All:
+                        cbVariables.Items.AddRange(_stateMachine.Models.GetVariables().ToArray());
+                        break;
+                    case null:
+                    case Root:
+                        cbVariables.Items.AddRange(_stateMachine.Models.RootModel.Variables.ToArray());
+                        break;
+                    default:
+                        cbVariables.Items.AddRange(_stateMachine.Models[modelName].Variables.ToArray());
+                        break;
+                }
+            }
         }
     }
 }

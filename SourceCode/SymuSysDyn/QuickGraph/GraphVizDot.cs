@@ -12,7 +12,7 @@
 using QuickGraph;
 using QuickGraph.Graphviz;
 using QuickGraph.Graphviz.Dot;
-using Symu.SysDyn.Model;
+using Symu.SysDyn.Models;
 
 #endregion
 
@@ -54,6 +54,9 @@ namespace Symu.SysDyn.QuickGraph
                     break;
                 case Auxiliary _:
                     e.VertexFormatter.Shape = GraphvizVertexShape.Circle;
+                    break;
+                case Module _:
+                    e.VertexFormatter.Shape = GraphvizVertexShape.DoubleCircle;
                     break;
             }
 

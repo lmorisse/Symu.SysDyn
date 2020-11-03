@@ -11,7 +11,7 @@
 
 using System.Collections.Generic;
 using Symu.SysDyn.Equations;
-using Symu.SysDyn.Model;
+using Symu.SysDyn.Models;
 using Symu.SysDyn.Simulation;
 
 #endregion
@@ -54,10 +54,10 @@ namespace Symu.SysDyn.Functions
         /// <param name="variables"></param>
         /// <param name="sim"></param>
         /// <returns></returns>
-        float Prepare(IVariable selfVariable, Variables variables, SimSpecs sim);
+        float Prepare(IVariable selfVariable, VariableCollection variables, SimSpecs sim);
 
-        float InitialValue();
-        bool TryEvaluate(IVariable variable, Variables variables, SimSpecs sim, out float result);
-        void Replace(string child, string value);
+        float InitialValue(SimSpecs sim);
+        bool TryEvaluate(IVariable variable, VariableCollection variables, SimSpecs sim, out float result);
+        void Replace(string child, string value, SimSpecs sim);
     }
 }
