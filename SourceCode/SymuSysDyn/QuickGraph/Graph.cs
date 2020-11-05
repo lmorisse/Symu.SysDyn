@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using QuickGraph;
 using Symu.SysDyn.Models;
+using Symu.SysDyn.Parser;
 
 #endregion
 
@@ -41,31 +42,11 @@ namespace Symu.SysDyn.QuickGraph
             graph.AddVertexRange(variables);
             foreach (var variable in variables)
             {
+                // Children
                 foreach (var childName in variable.Children)
                 {
                     var child = variables.Get(childName);
-                    VariableEdge edge;
-                    // particular case : stock outflow
-                    if (variable is Stock stock)
-                    {
-                        if (stock.Outflow.Contains(childName))
-                        {
-                            edge = new CausalLink(variable, child);
-                        }
-                        else if (stock.Inflow.Contains(childName))
-                        {
-                            edge = new CausalLink(child, variable);
-                        }
-                        else
-                        {
-                            edge = new InformationFlow(child, variable);
-                        }
-                    }
-                    else
-                    {
-                        edge = new InformationFlow(child, variable);
-                    }
-
+                    var edge = new InformationFlow(child, variable);
                     // In case of subGraph
                     if (edge.Source != null && edge.Target != null)
                     {
@@ -73,19 +54,45 @@ namespace Symu.SysDyn.QuickGraph
                     }
                 }
 
-                if (variable is Module module)
+                switch (variable)
                 {
-                    foreach (var connect in module.Connects)
+                    // particular cases
+                    case Stock stock:
                     {
-                        var from = variables.Get(connect.From);
-                        // In case of subGraph
-                        if (from == null)
+                        foreach (var outflow in stock.Outflow)
                         {
-                            continue;
+                            var target = variables.Get(StringUtils.FullName(variable.Model, outflow));
+                            if (target != null)
+                            {
+                                graph.AddEdge(new CausalLink(variable, target));
+                            }
+                        }
+                        foreach (var inflow in stock.Inflow)
+                        {
+                            var source = variables.Get(StringUtils.FullName(variable.Model, inflow));
+                            if (source != null)
+                            {
+                                graph.AddEdge(new CausalLink(source, variable));
+                            }
+                        }
+                            break;
+                    }
+                    case Module module:
+                    {
+                        foreach (var connect in module.Connects)
+                        {
+                            var from = variables.Get(connect.From);
+                            // In case of subGraph
+                            if (from == null)
+                            {
+                                continue;
+                            }
+
+                            var edge = new InformationFlow(from, variable);
+                            graph.AddEdge(edge);
                         }
 
-                        var edge = new InformationFlow(from, variable);
-                        graph.AddEdge(edge);
+                        break;
                     }
                 }
             }

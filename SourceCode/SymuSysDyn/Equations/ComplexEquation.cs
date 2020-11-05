@@ -14,9 +14,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using NCalc2;
+using Symu.SysDyn.Engine;
 using Symu.SysDyn.Functions;
 using Symu.SysDyn.Models;
-using Symu.SysDyn.Simulation;
 
 #endregion
 
@@ -48,7 +48,7 @@ namespace Symu.SysDyn.Equations
 
         public override IEquation Clone()
         {
-            return new ComplexEquation(OriginalEquation, InitializedEquation, Functions.Clone(), Variables, Words,
+            return new ComplexEquation(OriginalEquation, InitializedEquation, Functions.Clone(), Variables.ToList(), Words.ToList(),
                 Range);
         }
 

@@ -40,7 +40,11 @@ namespace Symu.SysDyn.Models
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        public Model this[int index] => _models[index];
+        public Model this[int index]
+        {
+            get => _models[index];
+            set => _models[index] = value;
+        }
 
         /// <summary>
         ///     Gets or sets the node with the specified name

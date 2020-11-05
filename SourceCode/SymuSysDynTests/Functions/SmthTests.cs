@@ -10,9 +10,9 @@
 #region using directives
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Symu.SysDyn.Engine;
 using Symu.SysDyn.Functions;
 using Symu.SysDyn.Models;
-using Symu.SysDyn.Simulation;
 
 #endregion
 
@@ -89,8 +89,7 @@ namespace SymuSysDynTests.Functions
             _machine.Initialize();
             _machine.Simulation.Time = 4;
             _machine.Compute();
-            //At step 4, Aux = 15 => Aux1 = SMTH1(15,5)
-            Assert.AreEqual(7, _machine.Models.RootModel.Variables[1].Value);
+            Assert.AreEqual(15, _machine.Models.RootModel.Variables[1].Value);
         }
     }
 }

@@ -23,7 +23,7 @@ namespace Symu.SysDyn.Models
         {
         }
 
-        private Auxiliary(string name, string model, string eqn) : base(name, model, eqn)
+        public Auxiliary(string name, string model, string eqn) : base(name, model, eqn)
         {
         }
         public new static Auxiliary CreateInstance(string name, Model model, string eqn)

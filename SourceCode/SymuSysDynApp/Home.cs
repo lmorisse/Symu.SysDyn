@@ -15,9 +15,9 @@ using System.Globalization;
 using System.Linq;
 using System.Resources;
 using System.Windows.Forms;
+using Symu.SysDyn.Engine;
 using Symu.SysDyn.Models;
 using Symu.SysDyn.QuickGraph;
-using Symu.SysDyn.Simulation;
 using SymuSysDynApp.Graph;
 using Syncfusion.Windows.Forms.Chart;
 
@@ -59,6 +59,8 @@ namespace SymuSysDynApp
         /// <param name="model">the name of the subModel or emptyString</param>
         private void Process(string model)
         {
+            lblTime.Text = "0";
+            cbResults.SelectedText = string.Empty;
             _stateMachine.Optimized = cbOptimized.Checked;
             _stateMachine.Process(model);
             cbResults.Items.Clear();
@@ -68,7 +70,6 @@ namespace SymuSysDynApp
             }
 
             cbResults.Enabled = true;
-            btnClear.Enabled = true;
             lblTime.Text = _stateMachine.Simulation.Time.ToString(CultureInfo.InvariantCulture);
         }
 
@@ -103,7 +104,6 @@ namespace SymuSysDynApp
 
             lblTime.Text = "0";
             cbResults.SelectedText = string.Empty;
-            btnClear.Enabled = false;
             cbOptimized.Checked = _stateMachine.Optimized;
             tbStart.Text = _stateMachine.Simulation.Start.ToString(CultureInfo.InvariantCulture);
             tbStop.Text = _stateMachine.Simulation.Stop.ToString(CultureInfo.InvariantCulture);
@@ -210,17 +210,10 @@ namespace SymuSysDynApp
         private void cbVariables_SelectedIndexChanged_1(object sender, EventArgs e)
         {
             var variableName = cbVariables.SelectedItem.ToString();
-            var variable = _stateMachine.ReferenceVariables.Get(variableName);
+            var variable = _stateMachine.Models.GetVariables().Get(variableName);
+            //var variable = _stateMachine. Variables[variableName];
             tbEquation.Text = variable.Equation != null ? variable.Equation.ToString() : string.Empty;
-            tbValue.Text = variable.Value.ToString(CultureInfo.InvariantCulture);
-        }
-
-        private void btnClear_Click(object sender, EventArgs e)
-        {
-            _stateMachine.Clear();
-            lblTime.Text = "0";
-            cbResults.SelectedText = string.Empty;
-            btnClear.Enabled = false;
+            //tbValue.Text = variable.Value.ToString(CultureInfo.InvariantCulture);
         }
 
         private void cbModels_SelectedIndexChanged(object sender, EventArgs e)

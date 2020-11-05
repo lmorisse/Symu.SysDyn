@@ -17,7 +17,7 @@ using static Symu.Common.Constants;
 #endregion
 
 
-namespace Symu.SysDyn.Simulation
+namespace Symu.SysDyn.Engine
 {
     /// <summary>
     ///     SimSpecs is the structure to define and store information about the simulation
@@ -74,12 +74,13 @@ namespace Symu.SysDyn.Simulation
         public void Clear()
         {
             Step = (uint) Math.Floor(Start / DeltaTime);
+            Time = Start;
             State = SimState.NotStarted;
         }
 
         public bool Run()
         {
-            TimeManagement();
+            Time = (ushort)Math.Floor(Step * DeltaTime);
             // with pause
             if (Pause && Time > 0)
             {
@@ -87,7 +88,6 @@ namespace Symu.SysDyn.Simulation
                 {
                     Step++;
                     State = SimState.Started;
-                    //OnPause = false;
                 }
 
                 //TODO use Symu.Common.Constants
@@ -108,9 +108,7 @@ namespace Symu.SysDyn.Simulation
                 else
                 {
                     State = SimState.Pause;
-                    //OnPause = true;
                 }
-
                 return run;
             }
 
@@ -120,14 +118,12 @@ namespace Symu.SysDyn.Simulation
                 State = SimState.Stopped;
                 return false;
             }
-
             Step++;
             return true;
         }
 
-        public void TimeManagement()
+        public void OnTimerEvent()
         {
-            Time = (ushort) Math.Floor(Step * DeltaTime);
             if (!OnPause && Step * DeltaTime % 1 < Tolerance)
             {
                 OnTimer?.Invoke(this, new EventArgs());

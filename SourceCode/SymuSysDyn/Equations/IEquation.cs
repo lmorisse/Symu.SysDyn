@@ -10,8 +10,8 @@
 #region using directives
 
 using System.Collections.Generic;
+using Symu.SysDyn.Engine;
 using Symu.SysDyn.Models;
-using Symu.SysDyn.Simulation;
 
 #endregion
 

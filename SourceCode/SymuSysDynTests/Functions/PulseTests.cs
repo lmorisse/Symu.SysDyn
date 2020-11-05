@@ -80,16 +80,15 @@ namespace SymuSysDynTests.Functions
 
             var function = new Pulse(string.Empty, "Pulse(20, 12, 5)");
             Machine.Simulation.Step = 23;
-            Machine.Simulation.TimeManagement();
+            Machine.Simulation.Time = 11;
             Assert.AreEqual(0, function.Evaluate(null, null, Machine.Simulation));
             Machine.Simulation.Step = 24;
-            Machine.Simulation.TimeManagement();
+            Machine.Simulation.Time = 12;
             Assert.AreEqual(10, function.Evaluate(null, null, Machine.Simulation));
             Machine.Simulation.Step = 25;
-            Machine.Simulation.TimeManagement();
             Assert.AreEqual(10, function.Evaluate(null, null, Machine.Simulation));
             Machine.Simulation.Step = 27;
-            Machine.Simulation.TimeManagement();
+            Machine.Simulation.Time = 13;
             Assert.AreEqual(0, function.Evaluate(null, null, Machine.Simulation));
         }
 

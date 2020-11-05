@@ -14,9 +14,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using NCalc2;
+using Symu.SysDyn.Engine;
 using Symu.SysDyn.Equations;
 using Symu.SysDyn.Models;
-using Symu.SysDyn.Simulation;
 
 #endregion
 

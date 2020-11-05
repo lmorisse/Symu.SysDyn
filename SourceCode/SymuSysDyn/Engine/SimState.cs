@@ -7,7 +7,7 @@
 
 #endregion
 
-namespace Symu.SysDyn.Simulation
+namespace Symu.SysDyn.Engine
 {
     /// <summary>
     /// Collection of the states of the simulator

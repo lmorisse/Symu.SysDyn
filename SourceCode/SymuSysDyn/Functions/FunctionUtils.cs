@@ -11,6 +11,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Symu.SysDyn.Equations;
@@ -223,7 +224,7 @@ namespace Symu.SysDyn.Functions
                 }
                 else
                 {
-                    initializedFunction += args[i];
+                    initializedFunction += args[i].ToString(CultureInfo.InvariantCulture);
                 }
 
                 if (i < parameters.Count - 1)

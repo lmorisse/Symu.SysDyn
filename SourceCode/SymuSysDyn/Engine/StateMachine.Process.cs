@@ -11,14 +11,13 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.Design;
 using System.Linq;
 using Symu.SysDyn.Models;
 using Symu.SysDyn.Results;
 
 #endregion
 
-namespace Symu.SysDyn.Simulation
+namespace Symu.SysDyn.Engine
 {
     public partial class StateMachine
     {
@@ -34,17 +33,15 @@ namespace Symu.SysDyn.Simulation
         {
             if (!Simulation.OnPause)
             {
-                Simulation.Clear(); // Simulation Start or DeltaTime may have change since the initialization
-
-                if (SetVariables(model))
-                {
-                    OptimizeVariables();
-                }
+                _processModel = model;
+                Prepare();
+                OptimizeVariables();
             }
-
             while (Simulation.Run())
             {
                 Compute();
+                //Intentionally after Compute
+                Simulation.OnTimerEvent();
             }
 
             return true;

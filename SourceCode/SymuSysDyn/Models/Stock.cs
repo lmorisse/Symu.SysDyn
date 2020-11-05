@@ -59,17 +59,6 @@ namespace Symu.SysDyn.Models
             Outflow = StringUtils.CleanNames(outflow);
             SetChildren();
         }
-        //public static Stock CreateInstance(VariableCollection variables, string name, string eqn, List<string> inflow, List<string> outflow)
-        //{
-        //    if (variables == null)
-        //    {
-        //        throw new ArgumentNullException(nameof(variables));
-        //    }
-
-        //    var variable = new Stock(name, eqn, inflow, outflow);
-        //    variables.Add(variable);
-        //    return variable;
-        //}
 
         private Stock(string name, string model, string eqn, List<string> inflow, List<string> outflow,
             GraphicalFunction graph,

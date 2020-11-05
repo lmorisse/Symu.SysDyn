@@ -16,8 +16,8 @@ using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
+using Symu.SysDyn.Engine;
 using Symu.SysDyn.Models;
-using Symu.SysDyn.Simulation;
 
 #endregion
 
@@ -250,13 +250,7 @@ namespace Symu.SysDyn.Parser
             var connects = new ConnectCollection();
             foreach (var connect in xConnects)
             {
-                var to = connect.connectTo;
-                if (!to.Contains('.'))
-                {
-                    to = moduleName + "." + to;
-                }
-                var from = connect.connectFrom;
-                connects.Add(new Connect(to, from));
+                connects.Add(new Connect(moduleName, connect.connectTo, connect.connectFrom));
             }
 
             return connects;

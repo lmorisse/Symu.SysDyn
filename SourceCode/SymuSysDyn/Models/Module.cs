@@ -13,9 +13,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Symu.SysDyn.Engine;
 using Symu.SysDyn.Equations;
 using Symu.SysDyn.Parser;
-using Symu.SysDyn.Simulation;
 
 #endregion
 
@@ -42,6 +42,17 @@ namespace Symu.SysDyn.Models
         public Module(string name, ConnectCollection connects, string model): this(name, model)
         {
             Connects = connects;
+        }
+        public static Module CreateInstance(Model model, string name)
+        {
+            if (model == null)
+            {
+                throw new ArgumentNullException(nameof(model));
+            }
+
+            var variable = new Module(name, model.Name);
+            model.Variables.Add(variable);
+            return variable;
         }
         public static Module CreateInstance(Model model, string name, ConnectCollection connects)
         {
@@ -74,6 +85,14 @@ namespace Symu.SysDyn.Models
         /// List of all the connections of the module
         /// </summary>
         public ConnectCollection Connects { get; private set; } = new ConnectCollection();
+        /// <summary>
+        /// Add a connect to the module
+        /// </summary>
+        /// <param name="connect"></param>
+        public void Add(Connect connect)
+        {
+            Connects.Add(connect);
+        }
 
         public bool TryOptimize(bool setInitialValue, SimSpecs sim)
         {

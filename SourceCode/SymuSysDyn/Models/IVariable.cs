@@ -11,8 +11,8 @@
 
 using System;
 using System.Collections.Generic;
+using Symu.SysDyn.Engine;
 using Symu.SysDyn.Equations;
-using Symu.SysDyn.Simulation;
 
 #endregion
 

@@ -13,8 +13,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using NCalc2;
+using Symu.SysDyn.Engine;
 using Symu.SysDyn.Models;
-using Symu.SysDyn.Simulation;
 
 #endregion
 
@@ -64,7 +64,7 @@ namespace Symu.SysDyn.Equations
 
         public virtual IEquation Clone()
         {
-            return new SimpleEquation(OriginalEquation, InitializedEquation, Variables, Words, Range);
+            return new SimpleEquation(OriginalEquation, InitializedEquation, Variables.ToList(), Words.ToList(), Range);
         }
 
         public virtual bool CanBeOptimized(string variableName)
@@ -111,16 +111,9 @@ namespace Symu.SysDyn.Equations
                 throw new ArgumentNullException(nameof(variables));
             }
 
-            foreach (var variable in Variables)
+            foreach (var variable in Variables.Where(variables.Exists))
             {
-                if (!variables.Exists(variable))
-                {
-                    //In case of SmthMachine with parameters
-                    continue;
-                }
-
-                var output = variables[variable].Value;
-                Expression.Parameters[variable] = output;
+                Expression.Parameters[variable] = variables[variable].Value;
             }
         }
 

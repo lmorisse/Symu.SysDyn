@@ -23,9 +23,9 @@ using System.ComponentModel;
 using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Linq;
+using Symu.SysDyn.Engine;
 using Symu.SysDyn.Equations;
 using Symu.SysDyn.Parser;
-using Symu.SysDyn.Simulation;
 
 #endregion
 
@@ -52,8 +52,8 @@ namespace Symu.SysDyn.Models
                 throw new ArgumentNullException(nameof(name));
             }
 
-            Name = StringUtils.CleanName(name);
             Model = model;
+            Name = StringUtils.CleanName(name);
             FullName = StringUtils.FullName(Model, Name);
         }
 
@@ -245,7 +245,7 @@ namespace Symu.SysDyn.Models
         /// <summary>
         /// Model name
         /// </summary>
-        public string Model { get; protected set; }
+        public string Model { get; set; }
 
         /// <summary>
         /// Module and Connect are using FullName = ModelName.VariableName

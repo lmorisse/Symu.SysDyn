@@ -39,7 +39,7 @@
             this.tbStart = new System.Windows.Forms.TextBox();
             this.tbDt = new System.Windows.Forms.TextBox();
             this.Simulation = new System.Windows.Forms.GroupBox();
-            this.btnClear = new System.Windows.Forms.Button();
+            this.btnSubModelProcess = new System.Windows.Forms.Button();
             this.cbOptimized = new System.Windows.Forms.CheckBox();
             this.lblTime = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
@@ -52,14 +52,11 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.cbModels = new System.Windows.Forms.ComboBox();
             this.label11 = new System.Windows.Forms.Label();
-            this.tbValue = new System.Windows.Forms.TextBox();
             this.tbEquation = new System.Windows.Forms.TextBox();
-            this.label10 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.cbVariables = new System.Windows.Forms.ComboBox();
             this.label8 = new System.Windows.Forms.Label();
             this.chartControl1 = new Syncfusion.Windows.Forms.Chart.ChartControl();
-            this.btnSubModelProcess = new System.Windows.Forms.Button();
             this.Simulation.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picImage)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -67,7 +64,7 @@
             // 
             // btnGlobalProcess
             // 
-            this.btnGlobalProcess.Location = new System.Drawing.Point(200, 50);
+            this.btnGlobalProcess.Location = new System.Drawing.Point(199, 22);
             this.btnGlobalProcess.Name = "btnGlobalProcess";
             this.btnGlobalProcess.Size = new System.Drawing.Size(130, 45);
             this.btnGlobalProcess.TabIndex = 0;
@@ -89,7 +86,7 @@
             // 
             this.cbResults.Enabled = false;
             this.cbResults.FormattingEnabled = true;
-            this.cbResults.Location = new System.Drawing.Point(124, 187);
+            this.cbResults.Location = new System.Drawing.Point(123, 168);
             this.cbResults.Name = "cbResults";
             this.cbResults.Size = new System.Drawing.Size(206, 24);
             this.cbResults.TabIndex = 4;
@@ -98,7 +95,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(27, 194);
+            this.label1.Location = new System.Drawing.Point(26, 175);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(55, 17);
             this.label1.TabIndex = 5;
@@ -158,7 +155,6 @@
             // Simulation
             // 
             this.Simulation.Controls.Add(this.btnSubModelProcess);
-            this.Simulation.Controls.Add(this.btnClear);
             this.Simulation.Controls.Add(this.cbOptimized);
             this.Simulation.Controls.Add(this.lblTime);
             this.Simulation.Controls.Add(this.label6);
@@ -175,21 +171,20 @@
             this.Simulation.Controls.Add(this.btnGlobalProcess);
             this.Simulation.Location = new System.Drawing.Point(1179, 12);
             this.Simulation.Name = "Simulation";
-            this.Simulation.Size = new System.Drawing.Size(338, 222);
+            this.Simulation.Size = new System.Drawing.Size(338, 200);
             this.Simulation.TabIndex = 13;
             this.Simulation.TabStop = false;
             this.Simulation.Text = "Simulation";
             // 
-            // btnClear
+            // btnSubModelProcess
             // 
-            this.btnClear.Enabled = false;
-            this.btnClear.Location = new System.Drawing.Point(200, 19);
-            this.btnClear.Name = "btnClear";
-            this.btnClear.Size = new System.Drawing.Size(130, 25);
-            this.btnClear.TabIndex = 18;
-            this.btnClear.Text = "Clear";
-            this.btnClear.UseVisualStyleBackColor = true;
-            this.btnClear.Click += new System.EventHandler(this.btnClear_Click);
+            this.btnSubModelProcess.Location = new System.Drawing.Point(199, 72);
+            this.btnSubModelProcess.Name = "btnSubModelProcess";
+            this.btnSubModelProcess.Size = new System.Drawing.Size(130, 45);
+            this.btnSubModelProcess.TabIndex = 19;
+            this.btnSubModelProcess.Text = "Process sub model";
+            this.btnSubModelProcess.UseVisualStyleBackColor = true;
+            this.btnSubModelProcess.Click += new System.EventHandler(this.btnSubModelProcess_Click);
             // 
             // cbOptimized
             // 
@@ -204,7 +199,7 @@
             // lblTime
             // 
             this.lblTime.AutoSize = true;
-            this.lblTime.Location = new System.Drawing.Point(93, 166);
+            this.lblTime.Location = new System.Drawing.Point(286, 133);
             this.lblTime.Name = "lblTime";
             this.lblTime.Size = new System.Drawing.Size(16, 17);
             this.lblTime.TabIndex = 16;
@@ -213,7 +208,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(27, 166);
+            this.label6.Location = new System.Drawing.Point(220, 133);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(39, 17);
             this.label6.TabIndex = 15;
@@ -278,9 +273,7 @@
             // 
             this.groupBox1.Controls.Add(this.cbModels);
             this.groupBox1.Controls.Add(this.label11);
-            this.groupBox1.Controls.Add(this.tbValue);
             this.groupBox1.Controls.Add(this.tbEquation);
-            this.groupBox1.Controls.Add(this.label10);
             this.groupBox1.Controls.Add(this.label9);
             this.groupBox1.Controls.Add(this.cbVariables);
             this.groupBox1.Controls.Add(this.label8);
@@ -289,7 +282,7 @@
             this.groupBox1.Controls.Add(this.label7);
             this.groupBox1.Location = new System.Drawing.Point(846, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(324, 222);
+            this.groupBox1.Size = new System.Drawing.Size(324, 200);
             this.groupBox1.TabIndex = 19;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Model";
@@ -308,16 +301,9 @@
             this.label11.AutoSize = true;
             this.label11.Location = new System.Drawing.Point(29, 51);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(98, 21);
+            this.label11.Size = new System.Drawing.Size(78, 17);
             this.label11.TabIndex = 21;
             this.label11.Text = "SubModels";
-            // 
-            // tbValue
-            // 
-            this.tbValue.Location = new System.Drawing.Point(107, 194);
-            this.tbValue.Name = "tbValue";
-            this.tbValue.Size = new System.Drawing.Size(95, 22);
-            this.tbValue.TabIndex = 18;
             // 
             // tbEquation
             // 
@@ -327,15 +313,6 @@
             this.tbEquation.Name = "tbEquation";
             this.tbEquation.Size = new System.Drawing.Size(195, 62);
             this.tbEquation.TabIndex = 18;
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(29, 197);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(44, 17);
-            this.label10.TabIndex = 17;
-            this.label10.Text = "Value";
             // 
             // label9
             // 
@@ -375,13 +352,13 @@
             // 
             this.chartControl1.Legend.Location = new System.Drawing.Point(539, 81);
             this.chartControl1.Localize = null;
-            this.chartControl1.Location = new System.Drawing.Point(848, 243);
+            this.chartControl1.Location = new System.Drawing.Point(848, 218);
             this.chartControl1.Name = "chartControl1";
             this.chartControl1.PrimaryXAxis.LogLabelsDisplayMode = Syncfusion.Windows.Forms.Chart.LogLabelsDisplayMode.Default;
             this.chartControl1.PrimaryXAxis.Margin = true;
             this.chartControl1.PrimaryYAxis.LogLabelsDisplayMode = Syncfusion.Windows.Forms.Chart.LogLabelsDisplayMode.Default;
             this.chartControl1.PrimaryYAxis.Margin = true;
-            this.chartControl1.Size = new System.Drawing.Size(660, 441);
+            this.chartControl1.Size = new System.Drawing.Size(660, 466);
             this.chartControl1.TabIndex = 20;
             this.chartControl1.Text = "chartControl1";
             // 
@@ -390,16 +367,6 @@
             this.chartControl1.Title.Name = "Default";
             this.chartControl1.Titles.Add(this.chartControl1.Title);
             this.chartControl1.VisualTheme = "";
-            // 
-            // btnSubModelProcess
-            // 
-            this.btnSubModelProcess.Location = new System.Drawing.Point(200, 100);
-            this.btnSubModelProcess.Name = "btnSubModelProcess";
-            this.btnSubModelProcess.Size = new System.Drawing.Size(130, 45);
-            this.btnSubModelProcess.TabIndex = 19;
-            this.btnSubModelProcess.Text = "Process sub model";
-            this.btnSubModelProcess.UseVisualStyleBackColor = true;
-            this.btnSubModelProcess.Click += new System.EventHandler(this.btnSubModelProcess_Click);
             // 
             // Home
             // 
@@ -447,10 +414,7 @@
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.TextBox tbEquation;
         private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.TextBox tbValue;
-        private System.Windows.Forms.Label label10;
         private System.Windows.Forms.CheckBox cbOptimized;
-        private System.Windows.Forms.Button btnClear;
         private System.Windows.Forms.ComboBox cbModels;
         private System.Windows.Forms.Label label11;
         private Syncfusion.Windows.Forms.Chart.ChartControl chartControl1;

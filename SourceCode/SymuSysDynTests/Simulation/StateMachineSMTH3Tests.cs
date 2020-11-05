@@ -25,26 +25,19 @@ namespace SymuSysDynTests.Simulation
             Assert.IsNotNull(Machine.Simulation);
             Assert.IsNotNull(Machine.Results);
             Assert.IsNotNull(Machine.ReferenceVariables);
+            Assert.IsNotNull(Machine.Variables);
             Assert.AreEqual(0, Machine.Results.Count);
-            //Initialize
-            Assert.AreEqual(5, Machine.ReferenceVariables["_Input"].Value);
-            Assert.AreEqual(5, Machine.ReferenceVariables["_Initial"].Value);
-            Assert.AreEqual(5, Machine.ReferenceVariables["_Averaging"].Value);
-            Assert.AreEqual(5, Machine.ReferenceVariables["_Comp1"].Value);
-            Assert.AreEqual(5, Machine.ReferenceVariables["_Comp2"].Value);
-            Assert.AreEqual(5, Machine.ReferenceVariables["_Comp3"].Value);
-            Assert.AreEqual(0, Machine.ReferenceVariables["_Flow1"].Value);
-            Assert.AreEqual(0, Machine.ReferenceVariables["_Flow2"].Value);
-            Assert.AreEqual(0, Machine.ReferenceVariables["_Flow3"].Value);
+            Assert.AreEqual(12, Machine.Variables.Count());
         }
 
         [TestMethod]
         public void OptimizeTest()
         {
             Machine.Optimized = true;
-            Assert.AreEqual(9, Machine.Variables.Count());
+            Machine.Prepare();
+            Assert.AreEqual(12, Machine.Variables.Count());
             Machine.OptimizeVariables();
-            Assert.AreEqual(7, Machine.Variables.Count());
+            Assert.AreEqual(10, Machine.Variables.Count());
             var variable = Machine.Variables.Get("_Input");
             Assert.IsNotNull(variable);
             Assert.AreEqual(5, variable.Value);

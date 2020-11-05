@@ -11,6 +11,15 @@
   </sim_specs>
   <model>
     <variables>
+      <aux name="DirectSMTH1">
+        <eqn>SMTH1(5+Step(10,3),5)</eqn>
+      </aux>
+      <aux name="DirectSMTH2">
+        <eqn>SMTHN(5+Step(10,3),5,2)</eqn>
+      </aux>
+      <aux name="DirectSMTH3">
+        <eqn>SMTH3(5+Step(10,3),5)</eqn>
+      </aux>
       <aux name="Input">
         <eqn>5+Step(10,3)</eqn>
       </aux>

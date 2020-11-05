@@ -30,4 +30,10 @@
     </Reference>
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Templates\schema.xsd">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+
 </Project>

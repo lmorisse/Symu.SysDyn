@@ -16,7 +16,6 @@ using System.Globalization;
 using System.Linq;
 using Symu.SysDyn.Equations;
 using Symu.SysDyn.Parser;
-using Symu.SysDyn.Simulation;
 
 #endregion
 
@@ -32,6 +31,8 @@ namespace Symu.SysDyn.Models
         public IEnumerable<IVariable> GetUpdated => _variables.Where(x => x.Updated);
 
         public IEnumerable<string> FullNames => _variables.Select(x => x.FullName);
+        public IEnumerable<string> Inputs => _variables.Where(x => x.Access == VariableAccess.Input).Select(x => x.FullName);
+        public IEnumerable<string> Outputs => _variables.Where(x => x.Access == VariableAccess.Output).Select(x => x.FullName);
         /// <summary>
         /// Get the list of the stocks
         /// </summary>
@@ -68,6 +69,10 @@ namespace Symu.SysDyn.Models
             if (!Contains(variable))
             {
                 _variables.Add(variable);
+            }
+            else
+            {
+                //todo temp
             }
         }
 

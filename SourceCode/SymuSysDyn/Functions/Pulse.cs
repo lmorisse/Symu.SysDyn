@@ -10,8 +10,8 @@
 #region using directives
 
 using System;
+using Symu.SysDyn.Engine;
 using Symu.SysDyn.Models;
-using Symu.SysDyn.Simulation;
 
 #endregion
 
@@ -37,7 +37,7 @@ namespace Symu.SysDyn.Functions
 
         public override IBuiltInFunction Clone()
         {
-            var clone = new Dt(Model, OriginalFunction);
+            var clone = new Pulse(Model, OriginalFunction);
             CopyTo(clone);
             return clone;
         }
@@ -56,7 +56,7 @@ namespace Symu.SysDyn.Functions
             if (interval == 0)
             {
                 return firstTime == sim.Time
-                    ? magnitude / sim.DeltaTime
+                    ? magnitude * sim.DeltaTime
                     : 0;
             }
 

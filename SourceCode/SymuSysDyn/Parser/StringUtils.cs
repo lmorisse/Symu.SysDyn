@@ -109,5 +109,9 @@ namespace Symu.SysDyn.Parser
         {
             return model + "_" + name;
         }
+        public static string ConnectName(string model, string name)
+        {
+            return model + "." + name;
+        }
     }
 }

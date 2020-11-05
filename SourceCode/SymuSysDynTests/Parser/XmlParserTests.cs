@@ -62,7 +62,7 @@ namespace SymuSysDynTests.Parser
             Assert.AreEqual("_Aux1", aux[0].FullName);
             Assert.AreEqual(1, aux[0].Value);
             Assert.AreEqual("_Aux2", aux[1].FullName);
-            Assert.AreEqual(1, aux[1].Value);
+            Assert.AreEqual(0, aux[1].Value);
             Assert.AreEqual("_Aux3", aux[2].FullName);
             Assert.AreEqual(3, aux[2].Value);
         }

@@ -11,7 +11,7 @@
 
 using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Symu.SysDyn.Simulation;
+using Symu.SysDyn.Engine;
 
 #endregion
 
@@ -172,7 +172,7 @@ namespace SymuSysDynTests.Simulation
         {
             _sim.OnTimer += OnTimer;
             _sim.Step = 5;
-            _sim.TimeManagement();
+            _sim.OnTimerEvent();
             Assert.IsTrue(_triggered);
         }
 
@@ -185,10 +185,10 @@ namespace SymuSysDynTests.Simulation
             _sim.OnTimer += OnTimer;
             _sim.DeltaTime = 0.5F;
             _sim.Step = 5;
-            _sim.TimeManagement();
+            _sim.OnTimerEvent();
             Assert.IsFalse(_triggered);
             _sim.Step = 6;
-            _sim.TimeManagement();
+            _sim.OnTimerEvent();
             Assert.IsTrue(_triggered);
         }
 

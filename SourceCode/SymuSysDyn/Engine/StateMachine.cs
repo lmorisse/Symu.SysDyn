@@ -9,14 +9,13 @@
 
 #region using directives
 
-using System.Linq;
 using Symu.SysDyn.Models;
 using Symu.SysDyn.Parser;
 using Symu.SysDyn.QuickGraph;
 
 #endregion
 
-namespace Symu.SysDyn.Simulation
+namespace Symu.SysDyn.Engine
 {
     public partial class StateMachine
     {
@@ -41,7 +40,6 @@ namespace Symu.SysDyn.Simulation
         public StateMachine(string xmlFile, bool validate = true)
         {
             var xmlParser = new XmlParser(xmlFile, validate);
-            //Variables = xmlParser.ParseModel();
             Models = xmlParser.ParseModels();
             Simulation = xmlParser.ParseSimSpecs();
             Simulation.OnTimer += OnTimer;
@@ -95,18 +93,14 @@ namespace Symu.SysDyn.Simulation
         /// </summary>
         public void Initialize()
         {
-            Simulation.Clear();
-            Variables = Models.GetVariables();
-            Compute(); 
-            SetStocksEquations();
-            StoreReferenceVariables();
+            Variables = Models.GetVariables(); // see full model
         }
-
 
         public void Clear()
         {
             Simulation.Clear();
             Results.Clear();
+            ReferenceVariables.Clear();
         }
 
         #endregion

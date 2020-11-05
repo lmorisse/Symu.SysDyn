@@ -10,6 +10,7 @@
 #region using directives
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Globalization;
@@ -20,33 +21,22 @@ using Symu.SysDyn.Models;
 
 #endregion
 
-namespace Symu.SysDyn.Simulation
+namespace Symu.SysDyn.Engine
 {
     public partial class StateMachine
     {
         public bool Optimized { get; set; }
 
         /// <summary>
-        ///     Store the optimized variables
-        /// </summary>
-        private void StoreOptimizedReferenceVariables()
-        {
-            _referenceOptimizedVariables = Variables.Clone();
-        }
-
-        private void RetrieveFromOptimizedReferenceVariables()
-        {
-            foreach (var variable in _referenceOptimizedVariables)
-            {
-                Variables.Add(variable.Clone());
-            }
-        }
-
-        /// <summary>
         ///     Optimize variables
         /// </summary>
         public void OptimizeVariables()
         {
+            if (!Optimized)
+            {
+                return;
+            }
+
             Variables.Initialize();
             List<IVariable> waitingParents;
             //First remove all constant variables
@@ -65,8 +55,6 @@ namespace Symu.SysDyn.Simulation
                     waitingParents = withChildren.Distinct().ToList(); //no duplicates
                 }
             } while (waitingParents.Any());
-
-            StoreOptimizedReferenceVariables();
         }
 
         /// <summary>
@@ -103,7 +91,8 @@ namespace Symu.SysDyn.Simulation
             // Update other variables
             if (readyToUpdate && TryOptimizeVariable(parent, Simulation))
             {
-                ReferenceVariables.SetValue(parent.FullName, parent.Value);
+                //ReferenceVariables.SetValue(parent.FullName, parent.Value);
+                ReferenceVariables[parent.FullName] = parent.Value;
                 Variables.Remove(parent.FullName);
             }
 
@@ -135,11 +124,17 @@ namespace Symu.SysDyn.Simulation
             }
 
             // Replace variable per its value
-            foreach (var child in variable.Children.Select(childName => ReferenceVariables[childName]).ToImmutableList()
-                .Where(child => !Variables.Exists(child.FullName)))
+            //foreach (var child in variable.Children.Select(childName => ReferenceVariables[childName]).ToImmutableList()
+            //    .Where(child => !Variables.Exists(child.Key)))
+            //{
+            //    variable.Equation.Replace(child.Key.ToString(), child.Value.ToString(), Simulation);
+            //    variable.Children.Remove(child.Key.ToString());
+            //}
+            foreach (var childName in variable.Children.Where(x => !Variables.Exists(x)).ToImmutableList())
             {
-                variable.Equation.Replace(child.FullName, child.Value.ToString(CultureInfo.InvariantCulture), Simulation);
-                variable.Children.Remove(child.FullName);
+                var childValue = ReferenceVariables[childName].ToString(CultureInfo.InvariantCulture);
+                variable.Equation.Replace(childName, childValue, Simulation);
+                variable.Children.Remove(childName);
             }
 
             variable.Updated = true;

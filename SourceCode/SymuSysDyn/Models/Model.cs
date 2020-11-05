@@ -39,15 +39,29 @@ namespace Symu.SysDyn.Models
         /// <summary>
         /// List of all the variables of the model
         /// </summary>
-        public VariableCollection Variables { get; private set; } = new VariableCollection();
+        public VariableCollection Variables { get; } = new VariableCollection();
         /// <summary>
         /// List of all the groups of the model
         /// </summary>
-        public GroupCollection Groups { get; private set; } = new GroupCollection();
+        public GroupCollection Groups { get; } = new GroupCollection();
 
         public void Initialize()
         {
             Variables.Initialize();
+        }
+        /// <summary>
+        /// Add another model artefacts to the actual model
+        /// </summary>
+        /// <param name="model"></param>
+        public void Add(Model model)
+        {
+            if (model == null)
+            {
+                throw new ArgumentNullException(nameof(model));
+            }
+
+            Variables.AddRange(model.Variables);
+            Groups.AddRange(model.Groups);
         }
 
         /// <summary>
@@ -78,23 +92,6 @@ namespace Symu.SysDyn.Models
             }
 
             return variables;
-        }
-
-        public void Clear()
-        {
-            Variables.Clear();
-            Groups.Clear();
-        }
-
-        public Model Clone()
-        {
-            var clone = new Model(Name)
-            {
-                Groups = Groups,
-                Variables = Variables.Clone()
-            };
-
-            return clone;
         }
     }
 }
