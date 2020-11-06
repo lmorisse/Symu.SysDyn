@@ -1,6 +1,6 @@
 ﻿#region Licence
 
-// Description: SymuSysDyn - SymuSysDyn
+// Description: SymuBiz - SymuSysDyn
 // Website: https://symu.org
 // Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
@@ -29,7 +29,7 @@ namespace Symu.SysDyn.Engine
         /// </summary>
         /// <param name="model">The name of the subModel or empty string for a global process</param>
         /// <remarks>true if the process was successful</remarks>
-        public bool Process(string model= "")
+        public bool Process(string model = "")
         {
             if (!Simulation.OnPause)
             {
@@ -37,6 +37,7 @@ namespace Symu.SysDyn.Engine
                 Prepare();
                 OptimizeVariables();
             }
+
             while (Simulation.Run())
             {
                 Compute();

@@ -10,7 +10,7 @@
 namespace Symu.SysDyn.Engine
 {
     /// <summary>
-    /// Collection of the states of the simulator
+    ///     Collection of the states of the simulator
     /// </summary>
     public enum SimState
     {

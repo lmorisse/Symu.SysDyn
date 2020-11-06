@@ -1,6 +1,6 @@
 ﻿#region Licence
 
-// Description: SymuSysDyn - SymuSysDyn
+// Description: SymuBiz - SymuSysDyn
 // Website: https://symu.org
 // Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
@@ -53,13 +53,6 @@ namespace Symu.SysDyn.Functions
             Expression = new Expression(function);
         }
 
-        #region IBuiltInFunction Members
-
-        /// <summary>
-        ///     The entire function included brackets and parameters
-        /// </summary>
-        public string OriginalFunction { get; protected set; }
-
         public string InitializedFunction { get; set; }
 
         /// <summary>
@@ -68,14 +61,27 @@ namespace Symu.SysDyn.Functions
         public Expression Expression { get; set; }
 
         /// <summary>
-        ///     The function name
-        /// </summary>
-        public string Name { get; set; }
-
-        /// <summary>
         ///     The model name
         /// </summary>
         public string Model { get; set; }
+
+        /// <summary>
+        ///     List of arguments that are constants
+        ///     If it is an IEquation, the value is stored in Parameters
+        /// </summary>
+        public List<float> Args { get; protected set; }
+
+        #region IBuiltInFunction Members
+
+        /// <summary>
+        ///     The entire function included brackets and parameters
+        /// </summary>
+        public string OriginalFunction { get; protected set; }
+
+        /// <summary>
+        ///     The function name
+        /// </summary>
+        public string Name { get; set; }
 
         /// <summary>
         ///     The function name indexed
@@ -87,12 +93,6 @@ namespace Symu.SysDyn.Functions
         ///     If it is a constant, the value is stored in Args
         /// </summary>
         public List<IEquation> Parameters { get; protected set; }
-
-        /// <summary>
-        ///     List of arguments that are constants
-        ///     If it is an IEquation, the value is stored in Parameters
-        /// </summary>
-        public List<float> Args { get; protected set; }
 
         public virtual IBuiltInFunction Clone()
         {
@@ -137,11 +137,6 @@ namespace Symu.SysDyn.Functions
         public virtual float InitialValue(SimSpecs sim)
         {
             return Convert.ToSingle(Expression.Evaluate());
-        }
-
-        public virtual float Evaluate(IVariable selfVariable, VariableCollection variables, SimSpecs sim)
-        {
-            return InitialValue(sim);
         }
 
         public bool TryEvaluate(IVariable variable, VariableCollection variables, SimSpecs sim, out float result)
@@ -197,6 +192,11 @@ namespace Symu.SysDyn.Functions
         }
 
         #endregion
+
+        public virtual float Evaluate(IVariable selfVariable, VariableCollection variables, SimSpecs sim)
+        {
+            return InitialValue(sim);
+        }
 
         protected void CopyTo(IBuiltInFunction copy)
         {

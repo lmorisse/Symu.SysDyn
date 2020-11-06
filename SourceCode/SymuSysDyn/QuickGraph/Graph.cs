@@ -1,6 +1,6 @@
 ﻿#region Licence
 
-// Description: SymuSysDyn - SymuSysDyn
+// Description: SymuBiz - SymuSysDyn
 // Website: https://symu.org
 // Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
@@ -10,8 +10,6 @@
 #region using directives
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using QuickGraph;
 using Symu.SysDyn.Models;
 using Symu.SysDyn.Parser;
@@ -67,6 +65,7 @@ namespace Symu.SysDyn.QuickGraph
                                 graph.AddEdge(new CausalLink(variable, target));
                             }
                         }
+
                         foreach (var inflow in stock.Inflow)
                         {
                             var source = variables.Get(StringUtils.FullName(variable.Model, inflow));
@@ -75,7 +74,8 @@ namespace Symu.SysDyn.QuickGraph
                                 graph.AddEdge(new CausalLink(source, variable));
                             }
                         }
-                            break;
+
+                        break;
                     }
                     case Module module:
                     {

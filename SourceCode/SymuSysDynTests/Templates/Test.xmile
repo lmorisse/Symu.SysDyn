@@ -12,8 +12,8 @@
   <model>
     <variables>
       <module name="hares">
-        <connect to="area" from=".aux3"/>
-        <connect to="lynxes" from=".aux2"/>
+        <connect to="area" from=".aux3" />
+        <connect to="lynxes" from=".aux2" />
       </module>
       <stock name="stock1">
         <eqn>1</eqn>
@@ -34,7 +34,7 @@
         <scale min="-1" />
         <non_negative />
       </flow>
-      <stock name="stock2" >
+      <stock name="stock2">
         <eqn>2</eqn>
         <non_negative />
       </stock>

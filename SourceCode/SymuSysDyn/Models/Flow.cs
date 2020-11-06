@@ -1,13 +1,17 @@
 ﻿#region Licence
 
-// Description: SymuSysDyn - SymuSysDyn
+// Description: SymuBiz - SymuSysDyn
 // Website: https://symu.org
 // Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
 
 #endregion
 
+#region using directives
+
 using System;
+
+#endregion
 
 namespace Symu.SysDyn.Models
 {
@@ -25,9 +29,11 @@ namespace Symu.SysDyn.Models
         }
 
         public Flow(string name, string model, string eqn, GraphicalFunction graph, Range range, Range scale,
-            NonNegative nonNegative, VariableAccess access) : base(name, model, eqn, graph, range, scale, nonNegative, access)
+            NonNegative nonNegative, VariableAccess access) : base(name, model, eqn, graph, range, scale, nonNegative,
+            access)
         {
         }
+
         public static Flow CreateInstance(string name, Model model, string eqn, GraphicalFunction graph, Range range,
             Range scale,
             NonNegative nonNegative, VariableAccess access)

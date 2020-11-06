@@ -1,6 +1,6 @@
 ﻿#region Licence
 
-// Description: SymuSysDyn - SymuSysDyn
+// Description: SymuBiz - SymuSysDyn
 // Website: https://symu.org
 // Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
@@ -10,9 +10,6 @@
 #region using directives
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using Symu.SysDyn.Parser;
 
 #endregion
@@ -25,23 +22,26 @@ namespace Symu.SysDyn.Models
     public class Model
     {
         /// <summary>
-        /// Name is mandatory for the subModels
+        ///     Name is mandatory for the subModels
         /// </summary>
         /// <param name="name"></param>
         public Model(string name)
         {
             Name = name != null ? StringUtils.CleanName(name) : string.Empty;
         }
+
         /// <summary>
-        /// The name of the model
+        ///     The name of the model
         /// </summary>
         public string Name { get; set; }
+
         /// <summary>
-        /// List of all the variables of the model
+        ///     List of all the variables of the model
         /// </summary>
         public VariableCollection Variables { get; } = new VariableCollection();
+
         /// <summary>
-        /// List of all the groups of the model
+        ///     List of all the groups of the model
         /// </summary>
         public GroupCollection Groups { get; } = new GroupCollection();
 
@@ -49,8 +49,9 @@ namespace Symu.SysDyn.Models
         {
             Variables.Initialize();
         }
+
         /// <summary>
-        /// Add another model artefacts to the actual model
+        ///     Add another model artefacts to the actual model
         /// </summary>
         /// <param name="model"></param>
         public void Add(Model model)
@@ -85,6 +86,7 @@ namespace Symu.SysDyn.Models
             {
                 throw new ArgumentNullException(nameof(group));
             }
+
             var variables = new VariableCollection();
             foreach (var entity in group.Entities)
             {

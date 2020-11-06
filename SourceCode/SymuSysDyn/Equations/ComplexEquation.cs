@@ -1,6 +1,6 @@
 ﻿#region Licence
 
-// Description: SymuSysDyn - SymuSysDyn
+// Description: SymuBiz - SymuSysDyn
 // Website: https://symu.org
 // Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
@@ -27,7 +27,8 @@ namespace Symu.SysDyn.Equations
     /// </summary>
     public class ComplexEquation : SimpleEquation
     {
-        public ComplexEquation(string originalEquation, string initializedEquation, IEnumerable<IBuiltInFunction> functions,
+        public ComplexEquation(string originalEquation, string initializedEquation,
+            IEnumerable<IBuiltInFunction> functions,
             List<string> variables, List<string> words, Range range) :
             this(originalEquation, initializedEquation, functions, variables, words)
         {
@@ -48,7 +49,8 @@ namespace Symu.SysDyn.Equations
 
         public override IEquation Clone()
         {
-            return new ComplexEquation(OriginalEquation, InitializedEquation, Functions.Clone(), Variables.ToList(), Words.ToList(),
+            return new ComplexEquation(OriginalEquation, InitializedEquation, Functions.Clone(), Variables.ToList(),
+                Words.ToList(),
                 Range);
         }
 

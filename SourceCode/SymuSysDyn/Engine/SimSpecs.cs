@@ -1,6 +1,6 @@
 ﻿#region Licence
 
-// Description: SymuSysDyn - SymuSysDyn
+// Description: SymuBiz - SymuSysDyn
 // Website: https://symu.org
 // Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
@@ -80,7 +80,7 @@ namespace Symu.SysDyn.Engine
 
         public bool Run()
         {
-            Time = (ushort)Math.Floor(Step * DeltaTime);
+            Time = (ushort) Math.Floor(Step * DeltaTime);
             // with pause
             if (Pause && Time > 0)
             {
@@ -109,6 +109,7 @@ namespace Symu.SysDyn.Engine
                 {
                     State = SimState.Pause;
                 }
+
                 return run;
             }
 
@@ -118,6 +119,7 @@ namespace Symu.SysDyn.Engine
                 State = SimState.Stopped;
                 return false;
             }
+
             Step++;
             return true;
         }

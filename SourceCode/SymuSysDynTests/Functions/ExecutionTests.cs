@@ -1,6 +1,6 @@
 ﻿#region Licence
 
-// Description: SymuSysDyn - SymuSysDynTests
+// Description: SymuBiz - SymuSysDynTests
 // Website: https://symu.org
 // Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
@@ -23,8 +23,6 @@ namespace SymuSysDynTests.Functions
     [TestClass]
     public class ExecutionTests
     {
-
-
         [TestMethod]
         public void NestedFunctionTest()
         {

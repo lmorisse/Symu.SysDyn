@@ -1,6 +1,6 @@
 ﻿#region Licence
 
-// Description: SymuSysDyn - SymuSysDynTests
+// Description: SymuBiz - SymuSysDynTests
 // Website: https://symu.org
 // Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
@@ -23,11 +23,11 @@ namespace SymuSysDynTests.Models
     [TestClass]
     public class VariablesTests
     {
-        private readonly Variable _variable = new Variable("0", string.Empty,"STEP(1,5)");
-        private readonly Variable _variable1 = new Variable("1", string.Empty, "STEP(1,5)");
         private readonly Model _model = new Model("1");
-        private VariableCollection Variables => _model.Variables;
+        private readonly Variable _variable = new Variable("0", string.Empty, "STEP(1,5)");
+        private readonly Variable _variable1 = new Variable("1", string.Empty, "STEP(1,5)");
         private List<Variable> _variableList;
+        private VariableCollection Variables => _model.Variables;
 
         [TestInitialize]
         public void Initialize()
@@ -139,7 +139,5 @@ namespace SymuSysDynTests.Models
             Assert.ThrowsException<ArgumentNullException>(() => Variables.SetValue(string.Empty, 0));
             Assert.ThrowsException<NullReferenceException>(() => Variables.SetValue("noVariableName", 0));
         }
-
-
     }
 }

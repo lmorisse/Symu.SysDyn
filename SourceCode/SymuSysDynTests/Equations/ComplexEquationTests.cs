@@ -1,6 +1,6 @@
 ﻿#region Licence
 
-// Description: SymuSysDyn - SymuSysDynTests
+// Description: SymuBiz - SymuSysDynTests
 // Website: https://symu.org
 // Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
@@ -26,9 +26,9 @@ namespace SymuSysDynTests.Equations
         private const string BracketsEquation = "((variable1)/(variable2))";
         private const string SameVariableEquation = "((variable1)+(variable1))";
         private const string SameStartEquation = "((variable1)+(variable1_1))";
+        private readonly StateMachine _machine = new StateMachine();
         private readonly Variable _variable1 = new Variable("Variable1");
         private readonly Variable _variable2 = new Variable("Variable2");
-        private readonly StateMachine _machine = new StateMachine();
         private Model Model => _machine.Models.RootModel;
         private VariableCollection Variables => Model.Variables;
 

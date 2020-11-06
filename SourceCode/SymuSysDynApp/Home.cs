@@ -1,6 +1,6 @@
 ﻿#region Licence
 
-// Description: SymuSysDyn - SymuSysDynApp
+// Description: SymuBiz - SymuSysDynApp
 // Website: https://symu.org
 // Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
@@ -50,10 +50,11 @@ namespace SymuSysDynApp
                     modelName = string.Empty;
                     break;
             }
+
             Process(modelName);
         }
+
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="model">the name of the subModel or emptyString</param>
         private void Process(string model)
@@ -85,11 +86,12 @@ namespace SymuSysDynApp
             _stateMachine = new StateMachine(openFileDialog1.FileName, false);
 
             cbModels.Items.Clear();
-            if (_stateMachine.Models.Count()>1)
+            if (_stateMachine.Models.Count() > 1)
             {
                 cbModels.Items.Add(All);
                 cbModels.Items.Add(Root);
-                cbModels.Items.AddRange(_stateMachine.Models.Where(x => !string.IsNullOrEmpty(x.Name)).Select(x => x.Name).OrderBy(x => x).ToArray());
+                cbModels.Items.AddRange(_stateMachine.Models.Where(x => !string.IsNullOrEmpty(x.Name))
+                    .Select(x => x.Name).OrderBy(x => x).ToArray());
                 cbModels.Enabled = true;
                 btnSubModelProcess.Enabled = true;
             }

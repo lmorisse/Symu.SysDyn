@@ -1,6 +1,6 @@
 ﻿#region Licence
 
-// Description: SymuSysDyn - SymuSysDyn
+// Description: SymuBiz - SymuSysDyn
 // Website: https://symu.org
 // Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
@@ -10,7 +10,6 @@
 #region using directives
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Globalization;
@@ -120,7 +119,8 @@ namespace Symu.SysDyn.Engine
             // Replace function Dt
             if (variable.Equation is ComplexEquation complexEquation)
             {
-                complexEquation.Replace(Dt.Value, Simulation.DeltaTime.ToString(CultureInfo.InvariantCulture), Simulation);
+                complexEquation.Replace(Dt.Value, Simulation.DeltaTime.ToString(CultureInfo.InvariantCulture),
+                    Simulation);
             }
 
             // Replace variable per its value

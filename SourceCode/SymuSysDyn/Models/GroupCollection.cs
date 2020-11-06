@@ -1,6 +1,6 @@
 ﻿#region Licence
 
-// Description: SymuSysDyn - SymuSysDyn
+// Description: SymuBiz - SymuSysDyn
 // Website: https://symu.org
 // Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
@@ -17,7 +17,7 @@ using System.Collections.Generic;
 namespace Symu.SysDyn.Models
 {
     /// <summary>
-    /// List of all the groups of a model
+    ///     List of all the groups of a model
     /// </summary>
     public class GroupCollection : IEnumerable<Group>
     {
@@ -87,6 +87,5 @@ namespace Symu.SysDyn.Models
         }
 
         #endregion
-
     }
 }

@@ -1,6 +1,6 @@
 ﻿#region Licence
 
-// Description: SymuSysDyn - SymuSysDynTests
+// Description: SymuBiz - SymuSysDynTests
 // Website: https://symu.org
 // Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
@@ -34,7 +34,8 @@ namespace SymuSysDynTests.Parser
             names = StringUtils.CleanNames(names);
             Assert.AreEqual("Test_avec_plein_de_problemes", names[0]);
         }
-        [TestMethod()]
+
+        [TestMethod]
         public void CleanFullNameTest()
         {
             Assert.AreEqual("_Variable", StringUtils.CleanFullName(".variable"));

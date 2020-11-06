@@ -1,6 +1,6 @@
 ﻿#region Licence
 
-// Description: SymuSysDyn - SymuSysDyn
+// Description: SymuBiz - SymuSysDyn
 // Website: https://symu.org
 // Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
@@ -10,11 +10,8 @@
 #region using directives
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using Symu.SysDyn.Parser;
-using ArgumentNullException = System.ArgumentNullException;
 
 #endregion
 
@@ -22,24 +19,11 @@ namespace Symu.SysDyn.Models
 {
     /// <summary>
     ///     Define a XMile module.
-    ///     Modules are placeholders in the variables section, and in the stock-flow diagram, for subModels. 
+    ///     Modules are placeholders in the variables section, and in the stock-flow diagram, for subModels.
     /// </summary>
     public class Connect
     {
-        public static Connect CreateInstance(Module module, string to, string from)
-        {
-            if (module == null)
-            {
-                throw new ArgumentNullException(nameof(module));
-            }
-
-            var connect = new Connect(module.Model, to, @from);
-            module.Add(connect);
-            return connect;
-        }
-
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="model"></param>
         /// <param name="to"></param>
@@ -48,17 +32,32 @@ namespace Symu.SysDyn.Models
         {
             if (!to.Contains('.'))
             {
-                to = StringUtils.ConnectName(model,to);
+                to = StringUtils.ConnectName(model, to);
             }
+
             if (!from.Contains('.'))
             {
-                from = StringUtils.ConnectName(model ,from);
+                from = StringUtils.ConnectName(model, from);
             }
+
             To = StringUtils.CleanFullName(to);
             From = StringUtils.CleanFullName(from);
         }
+
         public string To { get; set; }
         public string From { get; set; }
+
+        public static Connect CreateInstance(Module module, string to, string from)
+        {
+            if (module == null)
+            {
+                throw new ArgumentNullException(nameof(module));
+            }
+
+            var connect = new Connect(module.Model, to, from);
+            module.Add(connect);
+            return connect;
+        }
 
         public bool Equals(string to, string from)
         {

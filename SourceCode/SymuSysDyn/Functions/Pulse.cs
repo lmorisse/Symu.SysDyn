@@ -1,6 +1,6 @@
 ﻿#region Licence
 
-// Description: SymuSysDyn - SymuSysDyn
+// Description: SymuBiz - SymuSysDyn
 // Website: https://symu.org
 // Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
@@ -31,6 +31,7 @@ namespace Symu.SysDyn.Functions
         public Pulse(string model, string function) : base(model, function)
         {
         }
+
         public string Magnitude => GetParam(0);
         public string FirstTime => GetParam(1);
         public string Interval => Parameters.Count == 3 ? GetParam(2) : string.Empty;
@@ -48,10 +49,12 @@ namespace Symu.SysDyn.Functions
             {
                 throw new ArgumentNullException(nameof(sim));
             }
+
             var magnitude = GetValue(0, selfVariable, variables, sim);
 
             var firstTime = Convert.ToUInt16(GetValue(1, selfVariable, variables, sim));
-            var interval = string.IsNullOrEmpty(Interval) ? 0 
+            var interval = string.IsNullOrEmpty(Interval)
+                ? 0
                 : Convert.ToInt32(GetValue(2, selfVariable, variables, sim));
             if (interval == 0)
             {
@@ -60,16 +63,18 @@ namespace Symu.SysDyn.Functions
                     : 0;
             }
 
-            return (firstTime -sim.Time) % interval == 0
+            return (firstTime - sim.Time) % interval == 0
                 ? magnitude * sim.DeltaTime
                 : 0;
         }
+
         public override float InitialValue(SimSpecs sim)
         {
             if (sim == null)
             {
                 throw new ArgumentNullException(nameof(sim));
             }
+
             //return Evaluate(null, null, sim);
             return Convert.ToUInt16(Args[1]) == 0
                 ? Args[0] * sim.DeltaTime

@@ -1,6 +1,6 @@
 ﻿#region Licence
 
-// Description: SymuSysDyn - SymuSysDyn
+// Description: SymuBiz - SymuSysDyn
 // Website: https://symu.org
 // Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
@@ -56,12 +56,13 @@ namespace Symu.SysDyn.Functions
 
             if (functions != null)
             {
-                builtInFunctions.AddRange(functions.Select(function => FunctionFactory.CreateInstance(model, function)));
+                builtInFunctions.AddRange(functions.Select(function =>
+                    FunctionFactory.CreateInstance(model, function)));
             }
 
             if (IfThenElse.IsContainedIn(input))
             {
-                builtInFunctions.Add(new IfThenElse(model,input));
+                builtInFunctions.Add(new IfThenElse(model, input));
             }
 
             return builtInFunctions;
@@ -164,7 +165,8 @@ namespace Symu.SysDyn.Functions
         /// <param name="args"></param>
         /// <returns>input = "function(func(param1, param2), param3)" - return {func(param1, param2), param3}</returns>
         //public static List<IEquation> ParseParameters(ref string function,  out string name)
-        public static void ParseParameters(string model, ref string function, out string name, out List<IEquation> parameters,
+        public static void ParseParameters(string model, ref string function, out string name,
+            out List<IEquation> parameters,
             out List<float> args)
         {
             if (function == null)

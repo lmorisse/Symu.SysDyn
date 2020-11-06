@@ -16,12 +16,12 @@
   <model>
     <variables>
       <module name="hares">
-        <connect to="area" from=".area"/>
-        <connect to="lynxes" from="lynxes.lynxes"/>
+        <connect to="area" from=".area" />
+        <connect to="lynxes" from="lynxes.lynxes" />
       </module>
       <module name="lynxes">
-        <connect to="hare_density" from="hares.hare_density"/>
-        <connect to="size_of_one_time_lynx_harvest" from=".size_of_one_time_lynx_harvest"/>
+        <connect to="hare_density" from="hares.hare_density" />
+        <connect to="size_of_one_time_lynx_harvest" from=".size_of_one_time_lynx_harvest" />
       </module>
       <aux name="area" access="output">
         <eqn>1000 </eqn>
@@ -63,7 +63,7 @@
       <aux name="hares_killed\nper_lynx">
         <eqn>hare_density </eqn>
         <gf>
-          <yscale min="0" max="500"/>
+          <yscale min="0" max="500" />
           <xpts>0,50,100,150.00000000000003,200,250,300.00000000000006,350.00000000000006,400,450,500</xpts>
           <ypts>0,50,100,150.00000000000003,200,250,300.00000000000006,350.00000000000006,400,450,500</ypts>
         </gf>
@@ -96,7 +96,7 @@
       <aux name="death_fraction">
         <eqn>hare_density </eqn>
         <gf>
-          <yscale min="0" max="1"/>
+          <yscale min="0" max="1" />
           <xpts>0,10,20,30.000000000000004,40,50,60.000000000000007,70,80,90,100</xpts>
           <ypts>1,0.60653065971263342,0.36787944117144233,0.22313016014842979,0.1353352832366127,0.0820849986238988,0.049787068367863924,0.030197383422318487,0.018315638888734179,0.011108996538242306,0.006737946999085467</ypts>
         </gf>

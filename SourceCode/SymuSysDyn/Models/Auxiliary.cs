@@ -1,14 +1,17 @@
 ﻿#region Licence
 
-// Description: SymuSysDyn - SymuSysDyn
+// Description: SymuBiz - SymuSysDyn
 // Website: https://symu.org
 // Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
 
 #endregion
 
+#region using directives
+
 using System;
-using System.Collections.Generic;
+
+#endregion
 
 namespace Symu.SysDyn.Models
 {
@@ -26,6 +29,13 @@ namespace Symu.SysDyn.Models
         public Auxiliary(string name, string model, string eqn) : base(name, model, eqn)
         {
         }
+
+        private Auxiliary(string name, string model, string eqn, GraphicalFunction graph, Range range, Range scale,
+            NonNegative nonNegative, VariableAccess access) : base(name, model, eqn, graph, range, scale, nonNegative,
+            access)
+        {
+        }
+
         public new static Auxiliary CreateInstance(string name, Model model, string eqn)
         {
             if (model == null)
@@ -36,10 +46,6 @@ namespace Symu.SysDyn.Models
             var variable = new Auxiliary(name, model.Name, eqn);
             model.Variables.Add(variable);
             return variable;
-        }
-        private Auxiliary(string name, string model, string eqn, GraphicalFunction graph, Range range, Range scale,
-            NonNegative nonNegative, VariableAccess access) : base(name, model, eqn, graph, range, scale, nonNegative, access)
-        {
         }
 
         public static Auxiliary CreateInstance(string name, Model model, string eqn, GraphicalFunction graph,

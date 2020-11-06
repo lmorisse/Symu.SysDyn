@@ -1,6 +1,6 @@
 ﻿#region Licence
 
-// Description: SymuSysDyn - SymuSysDyn
+// Description: SymuBiz - SymuSysDyn
 // Website: https://symu.org
 // Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
@@ -24,6 +24,16 @@ namespace Symu.SysDyn.Parser
 {
     public static class StringUtils
     {
+        public static string FullName(string model, string name)
+        {
+            return model + "_" + name;
+        }
+
+        public static string ConnectName(string model, string name)
+        {
+            return model + "." + name;
+        }
+
         #region Names
 
         public static List<string> CleanNames(List<string> names)
@@ -75,8 +85,9 @@ namespace Symu.SysDyn.Parser
                 default: return input.First().ToString().ToUpper() + input.Substring(1);
             }
         }
+
         /// <summary>
-        /// For Connect, replace a model.variable name into Model_Variable
+        ///     For Connect, replace a model.variable name into Model_Variable
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
@@ -104,14 +115,5 @@ namespace Symu.SysDyn.Parser
         }
 
         #endregion
-
-        public static string FullName(string model, string name)
-        {
-            return model + "_" + name;
-        }
-        public static string ConnectName(string model, string name)
-        {
-            return model + "." + name;
-        }
     }
 }

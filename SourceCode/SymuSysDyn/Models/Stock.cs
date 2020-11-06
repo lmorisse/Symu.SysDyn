@@ -1,6 +1,6 @@
 ﻿#region Licence
 
-// Description: SymuSysDyn - SymuSysDyn
+// Description: SymuBiz - SymuSysDyn
 // Website: https://symu.org
 // Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
@@ -43,18 +43,20 @@ namespace Symu.SysDyn.Models
         //    return variable;
         //}
         /// <summary>
-        /// Constructor for root model
+        ///     Constructor for root model
         /// </summary>
         /// <param name="name"></param>
         /// <param name="eqn"></param>
         /// <param name="inflow"></param>
         /// <param name="outflow"></param>
-        public Stock(string name, string eqn, List<string> inflow, List<string> outflow) : this(name, string.Empty, eqn, inflow, outflow)
+        public Stock(string name, string eqn, List<string> inflow, List<string> outflow) : this(name, string.Empty, eqn,
+            inflow, outflow)
         {
         }
-        public Stock(string name, string model, string eqn, List<string> inflow, List<string> outflow) : base(name, model, eqn)
-        {
 
+        public Stock(string name, string model, string eqn, List<string> inflow, List<string> outflow) : base(name,
+            model, eqn)
+        {
             Inflow = StringUtils.CleanNames(inflow);
             Outflow = StringUtils.CleanNames(outflow);
             SetChildren();
@@ -62,12 +64,14 @@ namespace Symu.SysDyn.Models
 
         private Stock(string name, string model, string eqn, List<string> inflow, List<string> outflow,
             GraphicalFunction graph,
-            Range range, Range scale, NonNegative nonNegative, VariableAccess access) : base(name, model, eqn, graph, range, scale, nonNegative, access)
+            Range range, Range scale, NonNegative nonNegative, VariableAccess access) : base(name, model, eqn, graph,
+            range, scale, nonNegative, access)
         {
             Inflow = StringUtils.CleanNames(inflow);
             Outflow = StringUtils.CleanNames(outflow);
             SetChildren();
         }
+
         public static Stock CreateInstance(string name, Model model, string eqn, List<string> inflow,
             List<string> outflow, GraphicalFunction graph,
             Range range, Range scale, NonNegative nonNegative, VariableAccess access)
@@ -124,6 +128,7 @@ namespace Symu.SysDyn.Models
             {
                 return flow;
             }
+
             for (var i = 0; i < list.Count; i++)
             {
                 if (i == 0)
@@ -146,6 +151,5 @@ namespace Symu.SysDyn.Models
         public List<string> Outflow { get; private set; }
 
         #endregion
-
     }
 }

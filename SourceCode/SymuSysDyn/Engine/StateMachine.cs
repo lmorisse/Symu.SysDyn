@@ -1,6 +1,6 @@
 ﻿#region Licence
 
-// Description: SymuSysDyn - SymuSysDyn
+// Description: SymuBiz - SymuSysDyn
 // Website: https://symu.org
 // Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
@@ -54,6 +54,7 @@ namespace Symu.SysDyn.Engine
         public ModelCollection Models { get; }
 
         #region Graph
+
         /// <summary>
         ///     Create Graph of variables using QuickGraph
         /// </summary>
@@ -75,7 +76,6 @@ namespace Symu.SysDyn.Engine
         /// </summary>
         public Graph GetRootModelGraph()
         {
-
             return Graph.CreateInstance(Models.RootModel.Variables);
         }
 
@@ -84,16 +84,17 @@ namespace Symu.SysDyn.Engine
         /// </summary>
         public Graph GetSubModelGraph(string modelName)
         {
-
             return Graph.CreateInstance(Models.Get(modelName).Variables);
         }
+
         #endregion
 
         #region Initialize
+
         /// <summary>
-        /// Initialize the model
-        /// Don't store the result
-        /// Store the reference variables
+        ///     Initialize the model
+        ///     Don't store the result
+        ///     Store the reference variables
         /// </summary>
         public void Initialize()
         {
@@ -106,8 +107,9 @@ namespace Symu.SysDyn.Engine
             Results.Clear();
             ReferenceVariables.Clear();
         }
+
         /// <summary>
-        /// Set the simulation
+        ///     Set the simulation
         /// </summary>
         /// <param name="pauseInterval"></param>
         /// <param name="fidelity"></param>
@@ -128,24 +130,29 @@ namespace Symu.SysDyn.Engine
                 default:
                     throw new ArgumentOutOfRangeException(nameof(fidelity), fidelity, null);
             }
+
             Simulation.PauseInterval = pauseInterval;
             Simulation.TimeUnits = timeUnits;
         }
+
         public void InitializeRootModel(Model model)
         {
             var frequency = Schedule.FrequencyFactor(Simulation.TimeUnits).ToString();
-            Auxiliary.CreateInstance(FrequencyFactor, model, frequency, null, null, null, new NonNegative(true), VariableAccess.Output);
+            Auxiliary.CreateInstance(FrequencyFactor, model, frequency, null, null, null, new NonNegative(true),
+                VariableAccess.Output);
         }
+
         /// <summary>
-        /// Add a model 
+        ///     Add a model
         /// </summary>
         /// <param name="model"></param>
         public void Add(Model model)
         {
             Models.Add(model);
         }
+
         /// <summary>
-        /// Add a model collection
+        ///     Add a model collection
         /// </summary>
         /// <param name="models">List of the variables of the model</param>
         public void Add(ModelCollection models)
@@ -161,12 +168,14 @@ namespace Symu.SysDyn.Engine
             {
                 return;
             }
+
             // SubModels
             for (var i = 1; i < models.Count(); i++)
             {
                 Models.Add(models[i]);
             }
         }
+
         #endregion
     }
 }

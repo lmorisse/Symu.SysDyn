@@ -7,15 +7,17 @@
 
 #endregion
 
-using System;
+#region using directives
+
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
+
+#endregion
 
 namespace Symu.SysDyn.Models
 {
     /// <summary>
-    /// List of all the modules of a Variable
+    ///     List of all the modules of a Variable
     /// </summary>
     public class ConnectCollection : IEnumerable<Connect>
     {
@@ -32,8 +34,9 @@ namespace Symu.SysDyn.Models
         {
             _connects.Add(connect);
         }
+
         /// <summary>
-        /// Get a connect 
+        ///     Get a connect
         /// </summary>
         /// <param name="to"></param>
         /// <param name="from"></param>
@@ -60,6 +63,5 @@ namespace Symu.SysDyn.Models
         }
 
         #endregion
-
     }
 }

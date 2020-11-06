@@ -1,6 +1,6 @@
 ﻿#region Licence
 
-// Description: SymuSysDyn - SymuSysDynTests
+// Description: SymuBiz - SymuSysDynTests
 // Website: https://symu.org
 // Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
@@ -14,7 +14,6 @@ using System.Xml.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Symu.SysDyn.Engine;
 using Symu.SysDyn.Models;
-using Symu.SysDyn.Parser;
 
 #endregion
 

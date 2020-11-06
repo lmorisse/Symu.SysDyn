@@ -1,6 +1,6 @@
 ﻿#region Licence
 
-// Description: SymuSysDyn - SymuSysDyn
+// Description: SymuBiz - SymuSysDyn
 // Website: https://symu.org
 // Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
@@ -10,9 +10,7 @@
 #region using directives
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using Symu.SysDyn.Engine;
 using Symu.SysDyn.Equations;
 using Symu.SysDyn.Parser;
@@ -26,10 +24,10 @@ namespace Symu.SysDyn.Models
     ///     Modules are placeholders in the variables section, and in the stock-flow diagram, for submodels.
     ///     Module are used to support arbitrary re-use of the sub-models
     /// </summary>
-    public class Module: IVariable
+    public class Module : IVariable
     {
         /// <summary>
-        /// Name is mandatory for Module
+        ///     Name is mandatory for Module
         /// </summary>
         /// <param name="name"></param>
         /// <param name="model"></param>
@@ -39,60 +37,33 @@ namespace Symu.SysDyn.Models
             Model = model;
             FullName = StringUtils.FullName(Model, Name);
         }
-        public Module(string name, ConnectCollection connects, string model): this(name, model)
+
+        public Module(string name, ConnectCollection connects, string model) : this(name, model)
         {
             Connects = connects;
         }
-        public static Module CreateInstance(Model model, string name)
-        {
-            if (model == null)
-            {
-                throw new ArgumentNullException(nameof(model));
-            }
-
-            var variable = new Module(name, model.Name);
-            model.Variables.Add(variable);
-            return variable;
-        }
-        public static Module CreateInstance(Model model, string name, ConnectCollection connects)
-        {
-            if (model == null)
-            {
-                throw new ArgumentNullException(nameof(model));
-            }
-
-            var variable = new Module(name, connects, model.Name);
-            model.Variables.Add(variable);
-            return variable;
-        }
 
         /// <summary>
-        /// The name of the subModel called by the module
+        ///     List of all the connections of the module
+        /// </summary>
+        public ConnectCollection Connects { get; private set; } = new ConnectCollection();
+
+        #region IVariable Members
+
+        /// <summary>
+        ///     The name of the subModel called by the module
         /// </summary>
         public string Name { get; }
 
         /// <summary>
-        /// Model name
+        ///     Model name
         /// </summary>
         public string Model { get; }
 
         /// <summary>
-        /// Module and Connect are using FullName = ModelName.VariableName
+        ///     Module and Connect are using FullName = ModelName.VariableName
         /// </summary>
         public string FullName { get; }
-
-        /// <summary>
-        /// List of all the connections of the module
-        /// </summary>
-        public ConnectCollection Connects { get; private set; } = new ConnectCollection();
-        /// <summary>
-        /// Add a connect to the module
-        /// </summary>
-        /// <param name="connect"></param>
-        public void Add(Connect connect)
-        {
-            Connects.Add(connect);
-        }
 
         public bool TryOptimize(bool setInitialValue, SimSpecs sim)
         {
@@ -112,11 +83,52 @@ namespace Symu.SysDyn.Models
             };
             return clone;
         }
+
         /// <summary>Returns a string that represents the current object.</summary>
         /// <returns>A string that represents the current object.</returns>
         public override string ToString()
         {
             return FullName;
+        }
+
+        public bool Equals(string fullName)
+        {
+            return fullName == FullName;
+        }
+
+        #endregion
+
+        public static Module CreateInstance(Model model, string name)
+        {
+            if (model == null)
+            {
+                throw new ArgumentNullException(nameof(model));
+            }
+
+            var variable = new Module(name, model.Name);
+            model.Variables.Add(variable);
+            return variable;
+        }
+
+        public static Module CreateInstance(Model model, string name, ConnectCollection connects)
+        {
+            if (model == null)
+            {
+                throw new ArgumentNullException(nameof(model));
+            }
+
+            var variable = new Module(name, connects, model.Name);
+            model.Variables.Add(variable);
+            return variable;
+        }
+
+        /// <summary>
+        ///     Add a connect to the module
+        /// </summary>
+        /// <param name="connect"></param>
+        public void Add(Connect connect)
+        {
+            Connects.Add(connect);
         }
 
         /// <summary>Determines whether the specified object is equal to the current object.</summary>
@@ -128,11 +140,8 @@ namespace Symu.SysDyn.Models
                    && module.FullName == FullName;
         }
 
-        public bool Equals(string fullName)
-        {
-            return fullName == FullName;
-        }
         #region IVariable members
+
         public float Value { get; set; }
         public IEquation Equation { get; set; }
 
@@ -151,6 +160,7 @@ namespace Symu.SysDyn.Models
         /// </summary>
         /// <remarks>Could be a computed property, but for performance, it is setted once</remarks>
         public List<string> Children { get; set; } = new List<string>();
+
         public GraphicalFunction GraphicalFunction { get; set; }
 
 
@@ -165,15 +175,15 @@ namespace Symu.SysDyn.Models
         ///     Output scale
         /// </summary>
         public Range Scale { get; set; }
+
         public NonNegative NonNegative { get; set; }
         public VariableAccess Access { get; set; }
+
         public void Update(VariableCollection variables, SimSpecs simulation)
         {
             //
         }
 
-
         #endregion
-
     }
 }

@@ -1,11 +1,12 @@
 ﻿#region Licence
 
-// Description: SymuSysDyn - SymuSysDyn
+// Description: SymuBiz - SymuSysDyn
 // Website: https://symu.org
 // Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
 
 #endregion
+
 #region Licence
 
 // Description: SymuSysDyn - SymuSysDyn
@@ -19,8 +20,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics.Contracts;
 using System.Globalization;
 using System.Linq;
 using Symu.SysDyn.Engine;
@@ -37,12 +36,11 @@ namespace Symu.SysDyn.Models
     public class Variable : IVariable
     {
         /// <summary>
-        /// Constructor for root model
+        ///     Constructor for root model
         /// </summary>
         /// <param name="name"></param>
-        public Variable(string name): this(name, string.Empty)
+        public Variable(string name) : this(name, string.Empty)
         {
-
         }
 
         public Variable(string name, string model)
@@ -65,17 +63,6 @@ namespace Symu.SysDyn.Models
             NonNegative = new NonNegative(false);
             Initialize();
             SetChildren();
-        }
-        public static IVariable CreateInstance(string name, Model model, string eqn)
-        {
-            if (model == null)
-            {
-                throw new ArgumentNullException(nameof(model));
-            }
-
-            var variable = new Variable(name, model.Name, eqn);
-            model.Variables.Add(variable);
-            return variable;
         }
 
         public Variable(string name, string model, string eqn, GraphicalFunction graph, Range range, Range scale,
@@ -148,7 +135,65 @@ namespace Symu.SysDyn.Models
             return clone;
         }
 
+        public bool Equals(string fullName)
+        {
+            return fullName == FullName;
+        }
+
+        public bool TryOptimize(bool setInitialValue, SimSpecs sim)
+        {
+            if (Equation == null)
+            {
+                return true;
+            }
+
+            // No variables or itself
+            var canBeOptimized = !Children.Any() && Equation.CanBeOptimized(FullName);
+
+            if (!canBeOptimized)
+            {
+                return Equation == null;
+            }
+
+            if (setInitialValue)
+            {
+                if (Equation.Variables.Count == 1 && Equation.Variables[0] == FullName)
+                {
+                    Equation.Replace(FullName, Value.ToString(CultureInfo.InvariantCulture), sim);
+                }
+
+                var value = Equation.InitialValue();
+                AdjustValue(value);
+            }
+
+            Equation = null;
+
+            return true;
+        }
+
+        /// <summary>
+        ///     Model name
+        /// </summary>
+        public string Model { get; set; }
+
+        /// <summary>
+        ///     Module and Connect are using FullName = ModelName.VariableName
+        /// </summary>
+        public string FullName { get; set; }
+
         #endregion
+
+        public static IVariable CreateInstance(string name, Model model, string eqn)
+        {
+            if (model == null)
+            {
+                throw new ArgumentNullException(nameof(model));
+            }
+
+            var variable = new Variable(name, model.Name, eqn);
+            model.Variables.Add(variable);
+            return variable;
+        }
 
         /// <summary>
         ///     Adjust Value when a graphical function is defined
@@ -205,52 +250,7 @@ namespace Symu.SysDyn.Models
         {
             return obj is Variable variable
                    && variable.FullName == FullName;
-        }        
-        public bool Equals(string fullName)
-        {
-            return fullName == FullName;
         }
-
-        public bool TryOptimize(bool setInitialValue, SimSpecs sim)
-        {
-            if (Equation == null)
-            {
-                return true;
-            }
-
-            // No variables or itself
-            var canBeOptimized = !Children.Any() && Equation.CanBeOptimized(FullName);
-
-            if (!canBeOptimized)
-            {
-                return Equation == null;
-            }
-
-            if (setInitialValue)
-            {
-                if (Equation.Variables.Count == 1 && Equation.Variables[0] == FullName)
-                {
-                    Equation.Replace(FullName, Value.ToString(CultureInfo.InvariantCulture), sim);
-                }
-
-                var value = Equation.InitialValue();
-                AdjustValue(value);
-            }
-
-            Equation = null;
-
-            return true;
-        }
-
-        /// <summary>
-        /// Model name
-        /// </summary>
-        public string Model { get; set; }
-
-        /// <summary>
-        /// Module and Connect are using FullName = ModelName.VariableName
-        /// </summary>
-        public string FullName { get; set; }
 
         #region Xml attributes
 

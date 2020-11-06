@@ -1,6 +1,6 @@
 ﻿#region Licence
 
-// Description: SymuSysDyn - SymuSysDyn
+// Description: SymuBiz - SymuSysDyn
 // Website: https://symu.org
 // Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
@@ -9,7 +9,6 @@
 
 #region using directives
 
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using Symu.SysDyn.Equations;
@@ -22,21 +21,23 @@ namespace Symu.SysDyn.Engine
     public partial class StateMachine
     {
         /// <summary>
-        /// The actual name of the model (Root or subModel) to process
+        ///     The actual name of the model (Root or subModel) to process
         /// </summary>
         private string _processModel;
+
         /// <summary>
         ///     Working list of the variables of the simulation
         ///     Can be all the variables or only a subModel's variables
         /// </summary>
         public VariableCollection Variables { get; private set; }
+
         /// <summary>
         ///     The reference of the variables of the simulation
         /// </summary>
         public Dictionary<string, float> ReferenceVariables { get; } = new Dictionary<string, float>();
 
         /// <summary>
-        /// Prepare to process
+        ///     Prepare to process
         /// </summary>
         /// <returns>True if the variables need to be optimized</returns>
         public void Prepare()
@@ -46,16 +47,17 @@ namespace Symu.SysDyn.Engine
                 ? Models.GetVariables().Clone()
                 : Models.Get(_processModel).Variables.Clone();
 
-            ResolveConnects(); 
+            ResolveConnects();
             foreach (var variable in Variables)
             {
                 ReferenceVariables.Add(variable.FullName, variable.Value);
             }
+
             Compute(); // Initial value
             SetStocksEquations();
             foreach (var variable in Variables)
             {
-                ReferenceVariables[variable.FullName]= variable.Value;
+                ReferenceVariables[variable.FullName] = variable.Value;
             }
         }
 
@@ -96,8 +98,10 @@ namespace Symu.SysDyn.Engine
                         Variables[to.FullName] = new Auxiliary(to.Name, to.Model);
                         to = Variables[to.FullName];
                     }
+
                     // variables and words must be two different lists
-                    to.Equation = new SimpleEquation(from.FullName, from.FullName, new List<string> { from.FullName }, new List<string> { from.FullName }, null);
+                    to.Equation = new SimpleEquation(from.FullName, from.FullName, new List<string> {from.FullName},
+                        new List<string> {from.FullName}, null);
                     to.Value = from.Value;
                     to.Children = new List<string> {from.FullName};
                 }

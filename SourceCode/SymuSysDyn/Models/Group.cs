@@ -1,6 +1,6 @@
 ﻿#region Licence
 
-// Description: SymuSysDyn - SymuSysDyn
+// Description: SymuBiz - SymuSysDyn
 // Website: https://symu.org
 // Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
@@ -34,7 +34,7 @@ namespace Symu.SysDyn.Models
             Name = StringUtils.CleanName(name);
             foreach (var entity in entities.ToList())
             {
-                Entities.Add(StringUtils.FullName(model,StringUtils.CleanName(entity)));
+                Entities.Add(StringUtils.FullName(model, StringUtils.CleanName(entity)));
             }
         }
 

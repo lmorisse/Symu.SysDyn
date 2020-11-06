@@ -7,16 +7,19 @@
 
 #endregion
 
+#region using directives
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
+
+#endregion
 
 namespace Symu.SysDyn.Models
 {
     /// <summary>
-    /// List of all the models of the system : 
-    /// The root model and subModels
+    ///     List of all the models of the system :
+    ///     The root model and subModels
     /// </summary>
     public class ModelCollection : IEnumerable<Model>
     {
@@ -29,8 +32,8 @@ namespace Symu.SysDyn.Models
         }
 
         /// <summary>
-        /// The root model of the system
-        /// Initialized with the modelCollection
+        ///     The root model of the system
+        ///     Initialized with the modelCollection
         /// </summary>
         public Model RootModel => _models[0];
 
@@ -79,12 +82,14 @@ namespace Symu.SysDyn.Models
 
             _models.AddRange(models._models);
         }
+
         public void Remove(string name)
         {
             _models.RemoveAll(x => x.Name == name);
         }
+
         /// <summary>
-        /// Get a model via its name
+        ///     Get a model via its name
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
@@ -100,6 +105,7 @@ namespace Symu.SysDyn.Models
             {
                 list.AddRange(model.Variables);
             }
+
             return list;
         }
 
@@ -110,6 +116,7 @@ namespace Symu.SysDyn.Models
             {
                 list.AddRange(model.Groups);
             }
+
             return list;
         }
 
@@ -130,6 +137,5 @@ namespace Symu.SysDyn.Models
         }
 
         #endregion
-
     }
 }

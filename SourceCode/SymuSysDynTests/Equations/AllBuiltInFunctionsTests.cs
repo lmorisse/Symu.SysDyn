@@ -1,6 +1,6 @@
 ﻿#region Licence
 
-// Description: SymuSysDyn - SymuSysDynTests
+// Description: SymuBiz - SymuSysDynTests
 // Website: https://symu.org
 // Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
@@ -98,7 +98,8 @@ namespace SymuSysDynTests.Equations
         [TestMethod]
         public void IfThenElseTest()
         {
-            var equation = EquationFactory.CreateInstance(string.Empty, "If condition then expression1 else expression2", out _);
+            var equation =
+                EquationFactory.CreateInstance(string.Empty, "If condition then expression1 else expression2", out _);
             Assert.IsInstanceOfType(equation, typeof(ComplexEquation));
             Assert.AreEqual("If0", equation.InitializedEquation);
             Assert.AreEqual(3, equation.Variables.Count);

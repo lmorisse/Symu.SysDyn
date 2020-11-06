@@ -1,6 +1,6 @@
 ﻿#region Licence
 
-// Description: SymuSysDyn - SymuSysDyn
+// Description: SymuBiz - SymuSysDyn
 // Website: https://symu.org
 // Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
@@ -12,10 +12,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using Symu.SysDyn.Equations;
-using Symu.SysDyn.Parser;
 
 #endregion
 
@@ -31,14 +28,20 @@ namespace Symu.SysDyn.Models
         public IEnumerable<IVariable> GetUpdated => _variables.Where(x => x.Updated);
 
         public IEnumerable<string> FullNames => _variables.Select(x => x.FullName);
-        public IEnumerable<string> Inputs => _variables.Where(x => x.Access == VariableAccess.Input).Select(x => x.FullName);
-        public IEnumerable<string> Outputs => _variables.Where(x => x.Access == VariableAccess.Output).Select(x => x.FullName);
+
+        public IEnumerable<string> Inputs =>
+            _variables.Where(x => x.Access == VariableAccess.Input).Select(x => x.FullName);
+
+        public IEnumerable<string> Outputs =>
+            _variables.Where(x => x.Access == VariableAccess.Output).Select(x => x.FullName);
+
         /// <summary>
-        /// Get the list of the stocks
+        ///     Get the list of the stocks
         /// </summary>
         public IEnumerable<Stock> Stocks => _variables.OfType<Stock>();
+
         /// <summary>
-        /// Get the ist of the modules
+        ///     Get the ist of the modules
         /// </summary>
         public IEnumerable<Module> Modules => _variables.OfType<Module>();
 
@@ -69,10 +72,6 @@ namespace Symu.SysDyn.Models
             if (!Contains(variable))
             {
                 _variables.Add(variable);
-            }
-            else
-            {
-                //todo temp
             }
         }
 

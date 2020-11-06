@@ -1,18 +1,30 @@
-﻿using System.Collections.Generic;
+﻿#region Licence
+
+// Description: SymuBiz - SymuSysDynTests
+// Website: https://symu.org
+// Copyright: (c) 2020 laurent Morisseau
+// License : the program is distributed under the terms of the GNU General Public License
+
+#endregion
+
+#region using directives
+
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Symu.SysDyn.Models;
 
+#endregion
+
 namespace SymuSysDynTests.Models
 {
-    [TestClass()]
+    [TestClass]
     public class ModelCollectionTests
     {
-        private readonly Variable _variable = new Variable("0", string.Empty, "STEP(1,5)");
-        private readonly Variable _variable1 = new Variable("1", string.Empty, "STEP(1,5)");
         private readonly Model _model = new Model("1");
         private readonly Model _model1 = new Model("2");
         private readonly ModelCollection _models = new ModelCollection();
+        private readonly Variable _variable = new Variable("0", string.Empty, "STEP(1,5)");
+        private readonly Variable _variable1 = new Variable("1", string.Empty, "STEP(1,5)");
 
         [TestInitialize]
         public void Initialize()
@@ -23,18 +35,17 @@ namespace SymuSysDynTests.Models
             _models.Add(_model1);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void ModelCollectionTest()
         {
             Assert.AreEqual(3, _models.Count());
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void GetVariablesTest()
         {
             var variables = _models.GetVariables();
             Assert.AreEqual(2, variables.Count());
         }
-
     }
 }

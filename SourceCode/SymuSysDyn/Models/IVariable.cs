@@ -1,6 +1,6 @@
 ﻿#region Licence
 
-// Description: SymuSysDyn - SymuSysDyn
+// Description: SymuBiz - SymuSysDyn
 // Website: https://symu.org
 // Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
@@ -9,7 +9,6 @@
 
 #region using directives
 
-using System;
 using System.Collections.Generic;
 using Symu.SysDyn.Engine;
 using Symu.SysDyn.Equations;
@@ -21,7 +20,7 @@ namespace Symu.SysDyn.Models
     /// <summary>
     ///     Interface for the variable of the model
     /// </summary>
-    public interface IVariable 
+    public interface IVariable
     {
         float Value { get; set; }
         IEquation Equation { get; set; }
@@ -59,6 +58,7 @@ namespace Symu.SysDyn.Models
         ///     Output scale
         /// </summary>
         Range Scale { get; set; }
+
         NonNegative NonNegative { get; set; }
 
         VariableAccess Access { get; set; }

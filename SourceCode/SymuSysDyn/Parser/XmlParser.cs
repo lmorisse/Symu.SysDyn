@@ -1,6 +1,6 @@
 ﻿#region Licence
 
-// Description: SymuSysDyn - SymuSysDyn
+// Description: SymuBiz - SymuSysDyn
 // Website: https://symu.org
 // Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
@@ -82,6 +82,7 @@ namespace Symu.SysDyn.Parser
                 });
             }
         }
+
         public ModelCollection ParseModels()
         {
             if (_xDoc.Root == null)
@@ -96,6 +97,7 @@ namespace Symu.SysDyn.Parser
             {
                 modelCollection.Add(ParseModel(model));
             }
+
             return modelCollection;
         }
 
@@ -117,6 +119,7 @@ namespace Symu.SysDyn.Parser
                 ParseGroups(variable, model);
                 ParseModules(variable, model);
             }
+
             return model;
         }
 
@@ -176,6 +179,7 @@ namespace Symu.SysDyn.Parser
             {
                 throw new ArgumentNullException(nameof(model));
             }
+
             foreach (var flow in variables.Descendants(_ns + "flow"))
             {
                 Flow.CreateInstance(flow.FirstAttribute.Value,
@@ -199,6 +203,7 @@ namespace Symu.SysDyn.Parser
             {
                 throw new ArgumentNullException(nameof(model));
             }
+
             foreach (var stock in variables.Descendants(_ns + "stock"))
             {
                 Stock.CreateInstance(stock.FirstAttribute.Value,
@@ -225,6 +230,7 @@ namespace Symu.SysDyn.Parser
             {
                 throw new ArgumentNullException(nameof(model));
             }
+
             foreach (var module in variables.Descendants(_ns + "module"))
             {
                 Module.CreateInstance(model,
@@ -347,6 +353,7 @@ namespace Symu.SysDyn.Parser
             {
                 return VariableAccess.None;
             }
+
             switch (access.Value)
             {
                 case "input":

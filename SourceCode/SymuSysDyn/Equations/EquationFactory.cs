@@ -1,6 +1,6 @@
 ﻿#region Licence
 
-// Description: SymuSysDyn - SymuSysDyn
+// Description: SymuBiz - SymuSysDyn
 // Website: https://symu.org
 // Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
@@ -81,7 +81,7 @@ namespace Symu.SysDyn.Equations
                     continue;
                 }
 
-                float eval ;
+                float eval;
                 var function = functions.Find(x => x.IndexName == word);
                 if (function != null)
                 {
@@ -184,12 +184,12 @@ namespace Symu.SysDyn.Equations
             return string.Join(string.Empty, words);
         }
 
-        private static IEnumerable<string> SetVariables(string model, List<string> words, string word, List<IBuiltInFunction> functions)
+        private static IEnumerable<string> SetVariables(string model, List<string> words, string word,
+            List<IBuiltInFunction> functions)
         {
             var variables = new List<string>();
             if (word.Length <= 1 || float.TryParse(word, NumberStyles.Number, CultureInfo.InvariantCulture, out _))
             {
-
                 words.Add(word);
                 return variables;
             }
@@ -202,6 +202,7 @@ namespace Symu.SysDyn.Equations
                 {
                     variables.AddRange(equation.Variables);
                 }
+
                 words.Add(word);
             }
             else

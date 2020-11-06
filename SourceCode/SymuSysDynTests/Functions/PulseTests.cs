@@ -1,6 +1,6 @@
 ﻿#region Licence
 
-// Description: SymuSysDyn - SymuSysDynTests
+// Description: SymuBiz - SymuSysDynTests
 // Website: https://symu.org
 // Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
@@ -48,7 +48,7 @@ namespace SymuSysDynTests.Functions
             Machine.Simulation.Time = 10;
             Assert.AreEqual(0, function.Evaluate(null, null, Machine.Simulation));
             Machine.Simulation.Time = 12;
-            Assert.AreEqual(20, function.Evaluate(null,null, Machine.Simulation));
+            Assert.AreEqual(20, function.Evaluate(null, null, Machine.Simulation));
             Machine.Simulation.Time = 17;
             Assert.AreEqual(0, function.Evaluate(null, null, Machine.Simulation));
         }
@@ -93,7 +93,6 @@ namespace SymuSysDynTests.Functions
         }
 
 
-
         /// <summary>
         ///     With seed
         /// </summary>
@@ -121,7 +120,7 @@ namespace SymuSysDynTests.Functions
         }
 
         /// <summary>
-        ///    with interval = 0
+        ///     with interval = 0
         /// </summary>
         [TestMethod]
         public void EvaluateTest5()
