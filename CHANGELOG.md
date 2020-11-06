@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+* Improve Symu.SysDyn integration into Symu.org.
 * Symu.SysDyn has support for modules management.
 * Pulse BuiltIn function added.
 

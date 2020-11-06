@@ -9,6 +9,9 @@
 
 #region using directives
 
+using System;
+using System.Linq;
+using Symu.Common.Classes;
 using Symu.SysDyn.Models;
 using Symu.SysDyn.Parser;
 using Symu.SysDyn.QuickGraph;
@@ -19,6 +22,7 @@ namespace Symu.SysDyn.Engine
 {
     public partial class StateMachine
     {
+        public const string FrequencyFactor = "Frequencyfactor";
 
         /// <summary>
         ///     Create an instance of the state machine from an xml File
@@ -102,7 +106,67 @@ namespace Symu.SysDyn.Engine
             Results.Clear();
             ReferenceVariables.Clear();
         }
+        /// <summary>
+        /// Set the simulation
+        /// </summary>
+        /// <param name="pauseInterval"></param>
+        /// <param name="fidelity"></param>
+        /// <param name="timeUnits"></param>
+        public void SetSimulation(Fidelity fidelity, ushort pauseInterval, TimeStepType timeUnits)
+        {
+            switch (fidelity)
+            {
+                case Fidelity.Low:
+                    Simulation.DeltaTime = 0.5F;
+                    break;
+                case Fidelity.Medium:
+                    Simulation.DeltaTime = 0.25F;
+                    break;
+                case Fidelity.High:
+                    Simulation.DeltaTime = 0.125F;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(fidelity), fidelity, null);
+            }
+            Simulation.PauseInterval = pauseInterval;
+            Simulation.TimeUnits = timeUnits;
+        }
+        public void InitializeRootModel(Model model)
+        {
+            var frequency = Schedule.FrequencyFactor(Simulation.TimeUnits).ToString();
+            Auxiliary.CreateInstance(FrequencyFactor, model, frequency, null, null, null, new NonNegative(true), VariableAccess.Output);
+        }
+        /// <summary>
+        /// Add a model 
+        /// </summary>
+        /// <param name="model"></param>
+        public void Add(Model model)
+        {
+            Models.Add(model);
+        }
+        /// <summary>
+        /// Add a model collection
+        /// </summary>
+        /// <param name="models">List of the variables of the model</param>
+        public void Add(ModelCollection models)
+        {
+            if (models == null)
+            {
+                throw new ArgumentNullException(nameof(models));
+            }
 
+            // Root Model
+            Models.RootModel.Add(models.RootModel);
+            if (models.Count() == 1)
+            {
+                return;
+            }
+            // SubModels
+            for (var i = 1; i < models.Count(); i++)
+            {
+                Models.Add(models[i]);
+            }
+        }
         #endregion
     }
 }

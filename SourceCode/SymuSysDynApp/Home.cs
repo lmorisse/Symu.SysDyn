@@ -13,7 +13,6 @@ using System;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
-using System.Resources;
 using System.Windows.Forms;
 using Symu.SysDyn.Engine;
 using Symu.SysDyn.Models;

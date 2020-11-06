@@ -25,7 +25,7 @@ namespace Symu.SysDyn.Engine
 {
     public partial class StateMachine
     {
-        public bool Optimized { get; set; }
+        public bool Optimized { get; set; } = true;
 
         /// <summary>
         ///     Optimize variables

@@ -29,7 +29,9 @@ namespace SymuSysDynTests.Simulation
             Assert.AreEqual(0, Machine.Results.Count);
             Assert.AreEqual(10, Machine.Variables.Count());
         }
-
+        /// <summary>
+        /// Optimized by default
+        /// </summary>
         [TestMethod]
         public void ProcessTest()
         {
@@ -37,7 +39,21 @@ namespace SymuSysDynTests.Simulation
             Assert.AreEqual(10, Machine.Results.Count);
             foreach (var result in Machine.Results)
             {
-                Assert.AreEqual(9, result.Count);// Module is not processed
+                Assert.AreEqual(1, result.Count);
+            }
+        }
+        /// <summary>
+        /// Non optimized
+        /// </summary>
+        [TestMethod]
+        public void ProcessTest1()
+        {
+            Machine.Optimized = false;
+            Machine.Process();
+            Assert.AreEqual(10, Machine.Results.Count);
+            foreach (var result in Machine.Results)
+            {
+                Assert.AreEqual(9, result.Count); // Module is not computes
             }
         }
 
