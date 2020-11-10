@@ -10,8 +10,10 @@
 #region using directives
 
 using System;
+using System.Linq;
 using Symu.SysDyn.Engine;
 using Symu.SysDyn.Models;
+using Symu.SysDyn.Models.XMile;
 
 #endregion
 
@@ -62,11 +64,20 @@ namespace Symu.SysDyn.Functions
             return Common.Math.ProbabilityDistributions.Normal.Sample(mean, standardDeviation, seed);
         }
 
-        public override float InitialValue(SimSpecs sim)
+        public override bool TryReplace(SimSpecs sim, out float result)
         {
-            return Args.Count == 2
-                ? Common.Math.ProbabilityDistributions.Normal.Sample(Args[0], Args[1])
-                : Common.Math.ProbabilityDistributions.Normal.Sample(Args[0], Args[1], Convert.ToInt32(Args[2]));
+            // If standDeviation = 0, result will be constant, so let's replace it
+            if (Parameters.All(x => x == null) && Args[1] == 0)
+            {
+                result = Args[0];
+                return true;
+            }
+
+            //result = Args.Count == 2
+            //    ? Common.Math.ProbabilityDistributions.Normal.Sample(Args[0], Args[1])
+            //    : Common.Math.ProbabilityDistributions.Normal.Sample(Args[0], Args[1], Convert.ToInt32(Args[2]));
+            result = 0;
+            return false;
         }
     }
 }

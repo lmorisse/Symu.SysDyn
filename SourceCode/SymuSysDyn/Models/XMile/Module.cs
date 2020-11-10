@@ -17,7 +17,7 @@ using Symu.SysDyn.Parser;
 
 #endregion
 
-namespace Symu.SysDyn.Models
+namespace Symu.SysDyn.Models.XMile
 {
     /// <summary>
     ///     Define a XMile module.
@@ -98,7 +98,7 @@ namespace Symu.SysDyn.Models
 
         #endregion
 
-        public static Module CreateInstance(Model model, string name)
+        public static Module CreateInstance(XMileModel model, string name)
         {
             if (model == null)
             {
@@ -110,7 +110,7 @@ namespace Symu.SysDyn.Models
             return variable;
         }
 
-        public static Module CreateInstance(Model model, string name, ConnectCollection connects)
+        public static Module CreateInstance(XMileModel model, string name, ConnectCollection connects)
         {
             if (model == null)
             {

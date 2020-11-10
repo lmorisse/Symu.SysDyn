@@ -17,6 +17,7 @@ using System.Linq;
 using Symu.SysDyn.Equations;
 using Symu.SysDyn.Functions;
 using Symu.SysDyn.Models;
+using Symu.SysDyn.Models.XMile;
 
 #endregion
 
@@ -116,19 +117,11 @@ namespace Symu.SysDyn.Engine
                 return true;
             }
 
-            // Replace function Dt
-            if (variable.Equation is ComplexEquation complexEquation)
-            {
-                complexEquation.Replace(Dt.Value, Simulation.DeltaTime.ToString(CultureInfo.InvariantCulture),
-                    Simulation);
-            }
-
-            // Replace variable per its value
-            //foreach (var child in variable.Children.Select(childName => ReferenceVariables[childName]).ToImmutableList()
-            //    .Where(child => !Variables.Exists(child.Key)))
+            // Replace function Dt => done in SetStockEquation
+            //if (variable.Equation is ComplexEquation complexEquation)
             //{
-            //    variable.Equation.Replace(child.Key.ToString(), child.Value.ToString(), Simulation);
-            //    variable.Children.Remove(child.Key.ToString());
+            //    complexEquation.Replace(Dt.Value, Simulation.DeltaTime.ToString(CultureInfo.InvariantCulture),
+            //        Simulation);
             //}
             foreach (var childName in variable.Children.Where(x => !Variables.Exists(x)).ToImmutableList())
             {

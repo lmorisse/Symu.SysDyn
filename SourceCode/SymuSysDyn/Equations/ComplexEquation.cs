@@ -17,6 +17,7 @@ using NCalc2;
 using Symu.SysDyn.Engine;
 using Symu.SysDyn.Functions;
 using Symu.SysDyn.Models;
+using Symu.SysDyn.Models.XMile;
 
 #endregion
 
@@ -90,24 +91,18 @@ namespace Symu.SysDyn.Equations
             {
                 function.Replace(child, value, sim);
 
-                if (function.Parameters.Any(x => x != null))
+                if (function.Parameters.Any(x => x != null) || !function.TryReplace(sim, out var result))
                 {
                     continue;
                 }
 
-                try
+                while (Words.FindIndex(ind => ind.Equals(function.IndexName)) >= 0)
                 {
-                    while (Words.FindIndex(ind => ind.Equals(function.IndexName)) >= 0)
-                    {
-                        Words[Words.FindIndex(ind => ind.Equals(function.IndexName))] =
-                            function.InitialValue(sim).ToString(CultureInfo.InvariantCulture);
-                    }
+                    Words[Words.FindIndex(ind => ind.Equals(function.IndexName))] =
+                        result.ToString(CultureInfo.InvariantCulture);
+                }
 
-                    Functions.Remove(function);
-                }
-                catch
-                {
-                }
+                Functions.Remove(function);
             }
 
             while (Words.FindIndex(ind => ind.Equals(child)) >= 0)

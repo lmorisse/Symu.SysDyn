@@ -12,6 +12,7 @@
 using System;
 using Symu.SysDyn.Engine;
 using Symu.SysDyn.Models;
+using Symu.SysDyn.Models.XMile;
 
 #endregion
 
@@ -54,6 +55,12 @@ namespace Symu.SysDyn.Functions
             var startTime = Convert.ToUInt16(GetValue(1, selfVariable, variables, sim));
 
             return sim.Time >= startTime ? height : 0;
+        }
+
+        public override bool TryReplace(SimSpecs sim, out float result)
+        {
+            result = 0;
+            return false;
         }
     }
 }

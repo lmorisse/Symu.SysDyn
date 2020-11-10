@@ -15,19 +15,19 @@ using System.Collections.Generic;
 
 #endregion
 
-namespace Symu.SysDyn.Models
+namespace Symu.SysDyn.Models.XMile
 {
     /// <summary>
     ///     List of all the models of the system :
     ///     The root model and subModels
     /// </summary>
-    public class ModelCollection : IEnumerable<Model>
+    public class ModelCollection : IEnumerable<XMileModel>
     {
-        private readonly List<Model> _models = new List<Model>();
+        private readonly List<XMileModel> _models = new List<XMileModel>();
 
         public ModelCollection()
         {
-            var rootModel = new Model(null);
+            var rootModel = new XMileModel(null);
             _models.Add(rootModel);
         }
 
@@ -35,7 +35,7 @@ namespace Symu.SysDyn.Models
         ///     The root model of the system
         ///     Initialized with the modelCollection
         /// </summary>
-        public Model RootModel => _models[0];
+        public XMileModel RootModel => _models[0];
 
 
         /// <summary>
@@ -43,7 +43,7 @@ namespace Symu.SysDyn.Models
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        public Model this[int index]
+        public XMileModel this[int index]
         {
             get => _models[index];
             set => _models[index] = value;
@@ -54,9 +54,9 @@ namespace Symu.SysDyn.Models
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        public Model this[string name] => Get(name);
+        public XMileModel this[string name] => Get(name);
 
-        public void Add(Model model)
+        public void Add(XMileModel model)
         {
             if (model == null)
             {
@@ -93,7 +93,7 @@ namespace Symu.SysDyn.Models
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public Model Get(string model)
+        public XMileModel Get(string model)
         {
             return _models.Find(x => x.Name == model);
         }
@@ -124,7 +124,7 @@ namespace Symu.SysDyn.Models
 
         /// <summary>Returns an enumerator that iterates through the collection.</summary>
         /// <returns>An enumerator that can be used to iterate through the collection.</returns>
-        public IEnumerator<Model> GetEnumerator()
+        public IEnumerator<XMileModel> GetEnumerator()
         {
             return _models.GetEnumerator();
         }

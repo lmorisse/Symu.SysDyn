@@ -13,7 +13,7 @@ using System;
 
 #endregion
 
-namespace Symu.SysDyn.Models
+namespace Symu.SysDyn.Models.XMile
 {
     /// <summary>
     ///     Auxiliaries allow the isolation of any algebraic function that is used. They can both clarify a model and
@@ -36,7 +36,7 @@ namespace Symu.SysDyn.Models
         {
         }
 
-        public new static Auxiliary CreateInstance(string name, Model model, string eqn)
+        public new static Auxiliary CreateInstance(string name, XMileModel model, string eqn)
         {
             if (model == null)
             {
@@ -48,7 +48,7 @@ namespace Symu.SysDyn.Models
             return variable;
         }
 
-        public static Auxiliary CreateInstance(string name, Model model, string eqn, GraphicalFunction graph,
+        public static Auxiliary CreateInstance(string name, XMileModel model, string eqn, GraphicalFunction graph,
             Range range, Range scale,
             NonNegative nonNegative, VariableAccess access)
         {

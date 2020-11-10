@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using Symu.SysDyn.Engine;
 using Symu.SysDyn.Equations;
 using Symu.SysDyn.Models;
+using Symu.SysDyn.Models.XMile;
 
 #endregion
 
@@ -56,7 +57,7 @@ namespace Symu.SysDyn.Functions
         /// <returns></returns>
         float Prepare(IVariable selfVariable, VariableCollection variables, SimSpecs sim);
 
-        float InitialValue(SimSpecs sim);
+        bool TryReplace(SimSpecs sim, out float result);
         bool TryEvaluate(IVariable variable, VariableCollection variables, SimSpecs sim, out float result);
         void Replace(string child, string value, SimSpecs sim);
     }

@@ -10,9 +10,11 @@
 #region using directives
 
 using System;
+using System.Globalization;
 using System.Linq;
 using Symu.Common.Classes;
 using Symu.SysDyn.Models;
+using Symu.SysDyn.Models.XMile;
 using Symu.SysDyn.Parser;
 using Symu.SysDyn.QuickGraph;
 
@@ -106,6 +108,7 @@ namespace Symu.SysDyn.Engine
             Simulation.Clear();
             Results.Clear();
             ReferenceVariables.Clear();
+            _isPrepared = false;
         }
 
         /// <summary>
@@ -134,19 +137,16 @@ namespace Symu.SysDyn.Engine
             Simulation.PauseInterval = pauseInterval;
             Simulation.TimeUnits = timeUnits;
         }
-
-        public void InitializeRootModel(Model model)
+        public float GetFrequency()
         {
-            var frequency = Schedule.FrequencyFactor(Simulation.TimeUnits).ToString();
-            Auxiliary.CreateInstance(FrequencyFactor, model, frequency, null, null, null, new NonNegative(true),
-                VariableAccess.Output);
+            return Schedule.FrequencyFactor(Simulation.TimeUnits);
         }
 
         /// <summary>
         ///     Add a model
         /// </summary>
         /// <param name="model"></param>
-        public void Add(Model model)
+        public void Add(XMileModel model)
         {
             Models.Add(model);
         }

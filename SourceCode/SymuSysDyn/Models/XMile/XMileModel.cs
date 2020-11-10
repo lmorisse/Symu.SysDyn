@@ -14,18 +14,19 @@ using Symu.SysDyn.Parser;
 
 #endregion
 
-namespace Symu.SysDyn.Models
+namespace Symu.SysDyn.Models.XMile
 {
     /// <summary>
     ///     Define a XMile model with the list of all its variables, modules and groups
     /// </summary>
-    public class Model
+    public class XMileModel 
     {
+
         /// <summary>
         ///     Name is mandatory for the subModels
         /// </summary>
         /// <param name="name"></param>
-        public Model(string name)
+        public XMileModel(string name)
         {
             Name = name != null ? StringUtils.CleanName(name) : string.Empty;
         }
@@ -54,7 +55,7 @@ namespace Symu.SysDyn.Models
         ///     Add another model artefacts to the actual model
         /// </summary>
         /// <param name="model"></param>
-        public void Add(Model model)
+        public void Add(XMileModel model)
         {
             if (model == null)
             {

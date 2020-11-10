@@ -18,6 +18,7 @@ using System.Xml.Linq;
 using System.Xml.Schema;
 using Symu.SysDyn.Engine;
 using Symu.SysDyn.Models;
+using Symu.SysDyn.Models.XMile;
 
 #endregion
 
@@ -101,7 +102,7 @@ namespace Symu.SysDyn.Parser
             return modelCollection;
         }
 
-        public Model ParseModel(XElement xModel)
+        public XMileModel ParseModel(XElement xModel)
         {
             if (xModel == null)
             {
@@ -110,7 +111,7 @@ namespace Symu.SysDyn.Parser
 
             var variables = xModel.Descendants(_ns + "variables");
 
-            var model = new Model(xModel.FirstAttribute?.Value);
+            var model = new XMileModel(xModel.FirstAttribute?.Value);
             foreach (var variable in variables)
             {
                 ParseStocks(variable, model);
@@ -144,7 +145,7 @@ namespace Symu.SysDyn.Parser
             return new SimSpecs(start, stop, dt, pause, timeUnits);
         }
 
-        public void ParseAuxiliaries(XContainer variables, Model model)
+        public void ParseAuxiliaries(XContainer variables, XMileModel model)
         {
             if (variables == null)
             {
@@ -168,7 +169,7 @@ namespace Symu.SysDyn.Parser
             }
         }
 
-        public void ParseFlows(XContainer variables, Model model)
+        public void ParseFlows(XContainer variables, XMileModel model)
         {
             if (variables == null)
             {
@@ -192,7 +193,7 @@ namespace Symu.SysDyn.Parser
             }
         }
 
-        public void ParseStocks(XContainer variables, Model model)
+        public void ParseStocks(XContainer variables, XMileModel model)
         {
             if (variables == null)
             {
@@ -219,7 +220,7 @@ namespace Symu.SysDyn.Parser
         }
 
 
-        public void ParseModules(XContainer variables, Model model)
+        public void ParseModules(XContainer variables, XMileModel model)
         {
             if (variables == null)
             {
@@ -382,7 +383,7 @@ namespace Symu.SysDyn.Parser
             return getScale;
         }
 
-        public void ParseGroups(XContainer variables, Model model)
+        public void ParseGroups(XContainer variables, XMileModel model)
         {
             if (variables == null)
             {

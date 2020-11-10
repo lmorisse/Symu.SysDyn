@@ -15,7 +15,7 @@ using Symu.SysDyn.Equations;
 
 #endregion
 
-namespace Symu.SysDyn.Models
+namespace Symu.SysDyn.Models.XMile
 {
     /// <summary>
     ///     Interface for the variable of the model

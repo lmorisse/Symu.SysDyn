@@ -16,6 +16,7 @@ using System.Linq;
 using System.Windows.Forms;
 using Symu.SysDyn.Engine;
 using Symu.SysDyn.Models;
+using Symu.SysDyn.Models.XMile;
 using Symu.SysDyn.QuickGraph;
 using SymuSysDynApp.Graph;
 using Syncfusion.Windows.Forms.Chart;
@@ -255,7 +256,7 @@ namespace SymuSysDynApp
             picImage.Image = GraphViz.RenderImage(dotString, "jpg");
         }
 
-        private void SetModel(Model model)
+        private void SetModel(XMileModel model)
         {
             cbGroups.Items.Clear();
             cbVariables.Items.Clear();

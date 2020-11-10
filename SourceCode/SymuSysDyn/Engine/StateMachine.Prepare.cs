@@ -11,8 +11,12 @@
 
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Globalization;
+using System.Linq;
 using Symu.SysDyn.Equations;
 using Symu.SysDyn.Models;
+using Symu.SysDyn.Models.XMile;
+using Symu.SysDyn.Parser;
 
 #endregion
 
@@ -59,6 +63,8 @@ namespace Symu.SysDyn.Engine
             {
                 ReferenceVariables[variable.FullName] = variable.Value;
             }
+            OptimizeVariables();
+            _isPrepared = true;
         }
 
 
@@ -67,12 +73,12 @@ namespace Symu.SysDyn.Engine
         /// </summary>
         private void SetStocksEquations()
         {
+            var dt = Simulation.DeltaTime.ToString(CultureInfo.InvariantCulture);
             foreach (var stock in Variables.Stocks)
             {
-                stock.SetStockEquation();
+                stock.SetStockEquation(dt);
             }
         }
-
         /// <summary>
         ///     Modules connect variables together
         ///     This method make the connection and prepare the connected variables
@@ -91,10 +97,9 @@ namespace Symu.SysDyn.Engine
                         continue;
                     }
 
-
                     if (to is Stock)
                     {
-                        // to prevent the computation of to as a stock, it is cast as an auxiliary
+                        // to prevent the computation of toVariable as a stock, it is cast as an auxiliary
                         Variables[to.FullName] = new Auxiliary(to.Name, to.Model);
                         to = Variables[to.FullName];
                     }

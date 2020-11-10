@@ -15,7 +15,7 @@ using Symu.SysDyn.Parser;
 
 #endregion
 
-namespace Symu.SysDyn.Models
+namespace Symu.SysDyn.Models.XMile
 {
     /// <summary>
     ///     Define a XMile module.

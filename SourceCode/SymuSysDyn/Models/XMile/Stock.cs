@@ -17,7 +17,7 @@ using Symu.SysDyn.Parser;
 
 #endregion
 
-namespace Symu.SysDyn.Models
+namespace Symu.SysDyn.Models.XMile
 {
     /// <summary>
     ///     Core building block of a model, also called level or state. Stocks accumulate change.
@@ -31,17 +31,6 @@ namespace Symu.SysDyn.Models
         private Stock(string name, string model) : base(name, model)
         {
         }
-        //public static Stock CreateInstance(Model model, string name)
-        //{
-        //    if (model == null)
-        //    {
-        //        throw new ArgumentNullException(nameof(model));
-        //    }
-
-        //    var variable = new Stock(name, model.Name);
-        //    model.Variables.Add(variable);
-        //    return variable;
-        //}
         /// <summary>
         ///     Constructor for root model
         /// </summary>
@@ -72,7 +61,7 @@ namespace Symu.SysDyn.Models
             SetChildren();
         }
 
-        public static Stock CreateInstance(string name, Model model, string eqn, List<string> inflow,
+        public static Stock CreateInstance(string name, XMileModel model, string eqn, List<string> inflow,
             List<string> outflow, GraphicalFunction graph,
             Range range, Range scale, NonNegative nonNegative, VariableAccess access)
         {
@@ -99,14 +88,14 @@ namespace Symu.SysDyn.Models
         ///     stock(t) = stock(t - dt) + dt*(inflows(t - dt) – outflows(t - dt))
         ///     Re compute SetChildren with the new equation
         /// </summary>
-        public void SetStockEquation()
+        public void SetStockEquation(string dt)
         {
             var equation = Name;
             var inflows = AggregateFlows(Inflow, "+");
             var outflows = AggregateFlows(Outflow, "-");
             if (inflows.Length > 0 || outflows.Length > 0)
             {
-                equation += "+" + Dt.Value + "*(" +
+                equation += "+" + dt + "*(" +
                             inflows;
                 if (outflows.Length > 0)
                 {

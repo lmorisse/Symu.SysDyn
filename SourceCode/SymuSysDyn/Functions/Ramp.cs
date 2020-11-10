@@ -12,6 +12,7 @@
 using System;
 using Symu.SysDyn.Engine;
 using Symu.SysDyn.Models;
+using Symu.SysDyn.Models.XMile;
 
 #endregion
 
@@ -57,9 +58,11 @@ namespace Symu.SysDyn.Functions
             return sim.Time >= time ? slope * (sim.Time - time) : 0;
         }
 
-        public override float InitialValue(SimSpecs sim)
+        public override bool TryReplace(SimSpecs sim, out float result)
         {
-            return 0;
+            result = 0;
+            return false;
+            //return 0;
         }
     }
 }

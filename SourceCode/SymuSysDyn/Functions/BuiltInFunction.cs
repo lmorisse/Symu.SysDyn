@@ -17,6 +17,7 @@ using NCalc2;
 using Symu.SysDyn.Engine;
 using Symu.SysDyn.Equations;
 using Symu.SysDyn.Models;
+using Symu.SysDyn.Models.XMile;
 
 #endregion
 
@@ -134,9 +135,18 @@ namespace Symu.SysDyn.Functions
             return Evaluate(selfVariable, variables, sim);
         }
 
-        public virtual float InitialValue(SimSpecs sim)
+        public virtual bool TryReplace(SimSpecs sim, out float result)
         {
-            return Convert.ToSingle(Expression.Evaluate());
+            try
+            {
+                result = Convert.ToSingle(Expression.Evaluate());
+                return true;
+            }
+            catch 
+            {
+                result = 0;
+                return false;
+            }
         }
 
         public bool TryEvaluate(IVariable variable, VariableCollection variables, SimSpecs sim, out float result)
@@ -195,7 +205,7 @@ namespace Symu.SysDyn.Functions
 
         public virtual float Evaluate(IVariable selfVariable, VariableCollection variables, SimSpecs sim)
         {
-            return InitialValue(sim);
+            return Convert.ToSingle(Expression.Evaluate());
         }
 
         protected void CopyTo(IBuiltInFunction copy)

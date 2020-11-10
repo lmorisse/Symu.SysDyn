@@ -1,6 +1,6 @@
 ﻿#region Licence
 
-// Description: SymuSysDyn - SymuSysDynTests
+// Description: SymuBiz - SymuSysDynTests
 // Website: https://symu.org
 // Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
@@ -29,8 +29,9 @@ namespace SymuSysDynTests.Simulation
             Assert.AreEqual(0, Machine.Results.Count);
             Assert.AreEqual(10, Machine.Variables.Count());
         }
+
         /// <summary>
-        /// Optimized by default
+        ///     Optimized by default
         /// </summary>
         [TestMethod]
         public void ProcessTest()
@@ -42,8 +43,9 @@ namespace SymuSysDynTests.Simulation
                 Assert.AreEqual(1, result.Count);
             }
         }
+
         /// <summary>
-        /// Non optimized
+        ///     Non optimized
         /// </summary>
         [TestMethod]
         public void ProcessTest1()
@@ -70,20 +72,11 @@ namespace SymuSysDynTests.Simulation
         [TestMethod]
         public void UpdateVariableTest1()
         {
+            Machine.Optimized = false;
             Machine.Prepare();
             var flow = Machine.Variables["_Outflow1"];
             Machine.UpdateVariable(flow);
             Assert.AreEqual(5, flow.Value);
-            Assert.IsTrue(flow.Updated);
-        }
-
-        [TestMethod]
-        public void UpdateVariableTest2()
-        {
-            Machine.Prepare();
-            var flow = Machine.Variables["_Inflow1"];
-            Machine.UpdateVariable(flow);
-            Assert.AreEqual(1, flow.Value);
             Assert.IsTrue(flow.Updated);
         }
 
@@ -114,31 +107,21 @@ namespace SymuSysDynTests.Simulation
         {
             Machine.Optimized = true;
             Machine.Prepare();
-            Machine.OptimizeVariables();
-
             Assert.AreEqual(1, Machine.Variables.Count());
             Assert.AreEqual(1, Machine.Variables[0].Value);
             Assert.AreEqual(1, Machine.Variables[0].Equation.Variables.Count);
             Assert.AreEqual("_Stock1+1*(1-5)", Machine.Variables[0].Equation.InitializedEquation);
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void ResolveConnectsTest()
         {
             Assert.AreEqual(1, Machine.Variables.Get("Hares_Area").Value);
             Assert.AreEqual("TIME", Machine.Variables.Get("Hares_Lynxes").Equation.OriginalEquation);
-            Machine.Prepare(); 
-            Assert.AreEqual("ABS(aux1)", Machine.Variables.Get("_Aux2").Equation.OriginalEquation);
-            Assert.AreEqual(3, Machine.Variables.Get("_Aux3").Value);
-            //Area.Value has been replaced by Aux3.Value
-            Assert.AreEqual(3, Machine.Variables.Get("Hares_Area").Value);
-            //Lynxes.Equation has been replaced by Aux2
-            var lynxes = Machine.Variables.Get("Hares_Lynxes");
-            Assert.AreEqual("_Aux2", lynxes.Equation.OriginalEquation);
-            Assert.AreEqual(1, lynxes.Value);
-            Assert.AreEqual(1, lynxes.Children.Count);
-            Assert.AreEqual("_Aux2", lynxes.Children[0]);
-
+            Machine.Optimized = false;
+            Machine.Prepare();
+            Assert.AreEqual("_Aux3", Machine.Variables.Get("Hares_Area").Equation.OriginalEquation);
+            Assert.AreEqual("_Aux2", Machine.Variables.Get("Hares_Lynxes").Equation.OriginalEquation);
         }
     }
 }

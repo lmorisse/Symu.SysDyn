@@ -10,11 +10,11 @@
 #region using directives
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Symu.SysDyn.Models;
+using Symu.SysDyn.Models.XMile;
 
 #endregion
 
-namespace SymuSysDynTests.Models
+namespace SymuSysDynTests.Models.XMile
 {
     [TestClass]
     public class VariableTests

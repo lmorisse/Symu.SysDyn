@@ -12,6 +12,7 @@
 using System;
 using Symu.SysDyn.Engine;
 using Symu.SysDyn.Models;
+using Symu.SysDyn.Models.XMile;
 
 #endregion
 
@@ -68,17 +69,19 @@ namespace Symu.SysDyn.Functions
                 : 0;
         }
 
-        public override float InitialValue(SimSpecs sim)
+        public override bool TryReplace(SimSpecs sim, out float result)
         {
-            if (sim == null)
-            {
-                throw new ArgumentNullException(nameof(sim));
-            }
+            result = 0;
+            return false;
+            //if (sim == null)
+            //{
+            //    throw new ArgumentNullException(nameof(sim));
+            //}
 
-            //return Evaluate(null, null, sim);
-            return Convert.ToUInt16(Args[1]) == 0
-                ? Args[0] * sim.DeltaTime
-                : 0;
+            ////return Evaluate(null, null, sim);
+            //return Convert.ToUInt16(Args[1]) == 0
+            //    ? Args[0] * sim.DeltaTime
+            //    : 0;
         }
     }
 }

@@ -136,7 +136,7 @@ namespace Symu.SysDyn.Engine
 
         #region XML attributes
 
-        public ushort Stop { get; set; }
+        public ushort Stop { get; set; } = ushort.MaxValue;
 
         public ushort Start { get; set; }
 

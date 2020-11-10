@@ -14,7 +14,7 @@ using System.Collections.Generic;
 
 #endregion
 
-namespace Symu.SysDyn.Models
+namespace Symu.SysDyn.Models.XMile
 {
     /// <summary>
     ///     List of all the modules of a Variable

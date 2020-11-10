@@ -16,7 +16,7 @@ using Symu.SysDyn.Parser;
 
 #endregion
 
-namespace Symu.SysDyn.Models
+namespace Symu.SysDyn.Models.XMile
 {
     /// <summary>
     ///     Groups, aka sectors, collect related model structure together

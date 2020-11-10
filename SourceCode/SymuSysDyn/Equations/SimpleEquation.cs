@@ -15,6 +15,7 @@ using System.Linq;
 using NCalc2;
 using Symu.SysDyn.Engine;
 using Symu.SysDyn.Models;
+using Symu.SysDyn.Models.XMile;
 
 #endregion
 

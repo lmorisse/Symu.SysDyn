@@ -13,6 +13,7 @@ using QuickGraph;
 using QuickGraph.Graphviz;
 using QuickGraph.Graphviz.Dot;
 using Symu.SysDyn.Models;
+using Symu.SysDyn.Models.XMile;
 
 #endregion
 

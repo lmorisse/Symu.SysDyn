@@ -11,6 +11,7 @@
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Symu.SysDyn.Functions;
+using Symu.SysDyn.Models.XMile;
 
 #endregion
 
@@ -68,6 +69,13 @@ namespace SymuSysDynTests.Functions
             function.Prepare(null, Machine.Models.GetVariables(), Machine.Simulation);
             Assert.AreEqual(1F, function.Expression.Parameters["_Aux1"]);
             Assert.AreEqual(9F, function.Evaluate(null, Machine.Models.GetVariables(), Machine.Simulation));
+        }
+
+        [TestMethod]
+        public void Test()
+        {
+            Machine.Models.RootModel.Variables.Add(new Auxiliary("toto", string.Empty, "Ramp(1,2)"));
+            Machine.Prepare();
         }
     }
 }

@@ -12,6 +12,7 @@
 using System;
 using Symu.SysDyn.Engine;
 using Symu.SysDyn.Models;
+using Symu.SysDyn.Models.XMile;
 
 #endregion
 
@@ -43,6 +44,11 @@ namespace Symu.SysDyn.Functions
             }
 
             return sim.Time;
+        }
+        public override bool TryReplace(SimSpecs sim, out float result)
+        {
+            result = 0;
+            return false;
         }
     }
 }

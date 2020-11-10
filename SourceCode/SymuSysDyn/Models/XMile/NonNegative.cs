@@ -13,7 +13,7 @@ using System;
 
 #endregion
 
-namespace Symu.SysDyn.Models
+namespace Symu.SysDyn.Models.XMile
 {
     /// <summary>
     ///     Prevents the stock from going negative

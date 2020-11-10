@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Symu.SysDyn.Models;
+using Symu.SysDyn.Models.XMile;
 using Symu.SysDyn.Results;
 
 #endregion
@@ -21,6 +22,7 @@ namespace Symu.SysDyn.Engine
 {
     public partial class StateMachine
     {
+        private bool _isPrepared;
         public ResultCollection Results { get; } = new ResultCollection();
         public bool StoreResults { get; set; } = true;
 
@@ -31,11 +33,10 @@ namespace Symu.SysDyn.Engine
         /// <remarks>true if the process was successful</remarks>
         public bool Process(string model = "")
         {
-            if (!Simulation.OnPause)
+            if (!_isPrepared || _processModel != model)
             {
                 _processModel = model;
                 Prepare();
-                OptimizeVariables();
             }
 
             while (Simulation.Run())

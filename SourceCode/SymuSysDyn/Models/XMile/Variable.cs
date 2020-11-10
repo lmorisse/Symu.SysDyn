@@ -28,7 +28,7 @@ using Symu.SysDyn.Parser;
 
 #endregion
 
-namespace Symu.SysDyn.Models
+namespace Symu.SysDyn.Models.XMile
 {
     /// <summary>
     ///     Default implementation of IVariable
@@ -183,7 +183,7 @@ namespace Symu.SysDyn.Models
 
         #endregion
 
-        public static IVariable CreateInstance(string name, Model model, string eqn)
+        public static IVariable CreateInstance(string name, XMileModel model, string eqn)
         {
             if (model == null)
             {

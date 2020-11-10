@@ -12,16 +12,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Symu.SysDyn.Models;
+using Symu.SysDyn.Models.XMile;
 
 #endregion
 
-namespace SymuSysDynTests.Models
+namespace SymuSysDynTests.Models.XMile
 {
     [TestClass]
-    public class ModelTests
+    public class XMileModelTests
     {
-        private readonly Model _model = new Model("1");
+        private readonly XMileModel _model = new XMileModel("1");
         private readonly Variable _variable = new Variable("0", string.Empty, "STEP(1,5)");
         private Group _group;
 

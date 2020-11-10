@@ -12,6 +12,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Symu.SysDyn.Engine;
 using Symu.SysDyn.Models;
+using Symu.SysDyn.Models.XMile;
 
 #endregion
 
@@ -30,7 +31,7 @@ namespace SymuSysDynTests.Equations
         private readonly StateMachine _machine = new StateMachine();
         private readonly Variable _variable1 = new Variable("Variable1");
         private readonly Variable _variable2 = new Variable("Variable2");
-        private Model Model => _machine.Models.RootModel;
+        private XMileModel Model => _machine.Models.RootModel;
         private VariableCollection Variables => Model.Variables;
 
         [TestInitialize]

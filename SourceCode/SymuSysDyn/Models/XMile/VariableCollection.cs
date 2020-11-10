@@ -16,7 +16,7 @@ using System.Linq;
 
 #endregion
 
-namespace Symu.SysDyn.Models
+namespace Symu.SysDyn.Models.XMile
 {
     /// <summary>
     ///     List of the variables of the model
@@ -28,6 +28,7 @@ namespace Symu.SysDyn.Models
         public IEnumerable<IVariable> GetUpdated => _variables.Where(x => x.Updated);
 
         public IEnumerable<string> FullNames => _variables.Select(x => x.FullName);
+        public IEnumerable<string> Names => _variables.Select(x => x.Name);
 
         public IEnumerable<string> Inputs =>
             _variables.Where(x => x.Access == VariableAccess.Input).Select(x => x.FullName);
@@ -88,6 +89,15 @@ namespace Symu.SysDyn.Models
         public bool Exists(string fullName)
         {
             return _variables.Exists(x => x.Equals(fullName));
+        }
+
+        public bool ExistInput(string name)
+        {
+            return _variables.Exists(x => x.Name == name && x.Access == VariableAccess.Input);
+        }
+        public IVariable GetInput(string name)
+        {
+            return _variables.Find(x => x.Name == name && x.Access == VariableAccess.Input);
         }
 
         public IVariable Get(string fullName)
@@ -176,5 +186,6 @@ namespace Symu.SysDyn.Models
         }
 
         #endregion
+
     }
 }

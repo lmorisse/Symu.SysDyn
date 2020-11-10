@@ -35,8 +35,6 @@ namespace SymuSysDynTests.Simulation
         {
             Machine.Optimized = true;
             Machine.Prepare();
-            Assert.AreEqual(12, Machine.Variables.Count());
-            Machine.OptimizeVariables();
             Assert.AreEqual(10, Machine.Variables.Count());
             var variable = Machine.Variables.Get("_Input");
             Assert.IsNotNull(variable);

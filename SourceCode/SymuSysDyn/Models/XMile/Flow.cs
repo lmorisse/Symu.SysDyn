@@ -13,7 +13,7 @@ using System;
 
 #endregion
 
-namespace Symu.SysDyn.Models
+namespace Symu.SysDyn.Models.XMile
 {
     /// <summary>
     ///     Flows represent rates of change of the stocks.
@@ -34,7 +34,7 @@ namespace Symu.SysDyn.Models
         {
         }
 
-        public static Flow CreateInstance(string name, Model model, string eqn, GraphicalFunction graph, Range range,
+        public static Flow CreateInstance(string name, XMileModel model, string eqn, GraphicalFunction graph, Range range,
             Range scale,
             NonNegative nonNegative, VariableAccess access)
         {

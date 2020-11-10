@@ -14,6 +14,7 @@ using System.Xml.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Symu.SysDyn.Engine;
 using Symu.SysDyn.Models;
+using Symu.SysDyn.Models.XMile;
 
 #endregion
 
@@ -36,7 +37,7 @@ namespace SymuSysDynTests
         /// <summary>
         ///     It is not the Machine.Variables
         /// </summary>
-        protected Model Variables { get; } = new Model("1");
+        protected XMileModel Variables { get; } = new XMileModel("1");
 
         protected XDocument XDoc { get; }
         protected XNamespace Ns { get; }

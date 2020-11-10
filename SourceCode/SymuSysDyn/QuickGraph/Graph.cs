@@ -12,6 +12,7 @@
 using System;
 using QuickGraph;
 using Symu.SysDyn.Models;
+using Symu.SysDyn.Models.XMile;
 using Symu.SysDyn.Parser;
 
 #endregion

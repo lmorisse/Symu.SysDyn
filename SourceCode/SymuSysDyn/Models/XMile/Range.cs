@@ -16,7 +16,7 @@ using System.Linq;
 
 #endregion
 
-namespace Symu.SysDyn.Models
+namespace Symu.SysDyn.Models.XMile
 {
     /// <summary>
     ///     Class for Range and scale with a min and a max

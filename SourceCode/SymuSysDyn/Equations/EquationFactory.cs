@@ -17,6 +17,7 @@ using System.Text.RegularExpressions;
 using NCalc2;
 using Symu.SysDyn.Functions;
 using Symu.SysDyn.Models;
+using Symu.SysDyn.Models.XMile;
 using Symu.SysDyn.Parser;
 
 #endregion
@@ -85,7 +86,7 @@ namespace Symu.SysDyn.Equations
                 var function = functions.Find(x => x.IndexName == word);
                 if (function != null)
                 {
-                    var success = function.TryEvaluate(null, null, null, out eval);
+                    var success = function.TryReplace(null, out eval);
                     if (!success)
                     {
                         continue;

@@ -12,6 +12,7 @@
 using System;
 using Symu.SysDyn.Engine;
 using Symu.SysDyn.Models;
+using Symu.SysDyn.Models.XMile;
 
 #endregion
 
@@ -22,8 +23,9 @@ namespace Symu.SysDyn.Functions
     ///     Used when a variable is updated at each step via an external device
     ///     The variable has no equation so it could be removed by the optimizer
     ///     Using this function will avoid this pitfall
+    ///     Parameter : InitialValue (Optional)
     /// </summary>
-    /// <example>new Variable("example", "ExternalUpdate")</example>
+    /// <example>new Variable("example", "ExternalUpdate(1)")</example>
     public class ExternalUpdate : BuiltInFunction
     {
         public const string Value = "Externalupdate";
@@ -45,8 +47,22 @@ namespace Symu.SysDyn.Functions
             {
                 throw new ArgumentNullException(nameof(variable));
             }
+            if (sim == null)
+            {
+                throw new ArgumentNullException(nameof(sim));
+            }
 
+            if (sim.Step == 0)
+            {
+                return Args.Count == 1 ? Args[0] : variable.Value;
+            }
             return variable.Value;
+        }
+        public override bool TryReplace(SimSpecs sim, out float result)
+        {
+            result = 0;
+            return false;
+            //return Args.Count == 1 ? Args[0] : 0;
         }
     }
 }

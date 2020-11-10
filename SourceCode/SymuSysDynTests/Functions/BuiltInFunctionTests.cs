@@ -15,6 +15,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Symu.SysDyn.Engine;
 using Symu.SysDyn.Functions;
 using Symu.SysDyn.Models;
+using Symu.SysDyn.Models.XMile;
 
 #endregion
 
@@ -127,7 +128,8 @@ namespace SymuSysDynTests.Functions
         {
             var function = new BuiltInFunction(string.Empty, "abs(param1)");
             function.Replace("_Param1", "1", _machine.Simulation);
-            Assert.AreEqual(1, function.InitialValue(_machine.Simulation));
+            Assert.IsTrue(function.TryReplace(_machine.Simulation, out var result));
+            Assert.AreEqual(1, result);
         }
 
         [TestMethod]
@@ -136,7 +138,8 @@ namespace SymuSysDynTests.Functions
             var function = new BuiltInFunction(string.Empty, "Min(param1, param2)");
             function.Replace("_Param1", "1", _machine.Simulation);
             function.Replace("_Param2", "2", _machine.Simulation);
-            Assert.AreEqual(1, function.InitialValue(_machine.Simulation));
+            Assert.IsTrue(function.TryReplace(_machine.Simulation, out var result));
+            Assert.AreEqual(1, result);
         }
 
         [TestMethod]
@@ -145,7 +148,8 @@ namespace SymuSysDynTests.Functions
             var function = new BuiltInFunction(string.Empty, "Min(abs(param1), param1+param2)");
             function.Replace("_Param1", "1", _machine.Simulation);
             function.Replace("_Param2", "2", _machine.Simulation);
-            Assert.AreEqual(1, function.InitialValue(_machine.Simulation));
+            Assert.IsTrue(function.TryReplace(_machine.Simulation, out var result));
+            Assert.AreEqual(1, result);
         }
 
         #endregion
