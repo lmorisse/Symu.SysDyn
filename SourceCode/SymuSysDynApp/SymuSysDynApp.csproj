@@ -144,12 +144,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SymuSysDyn\SymuSysDyn.csproj">
-      <Project>{ddbc6982-9d12-4726-9b42-a5446aa0dffd}</Project>
-      <Name>SymuSysDyn</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.3.3.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.Analyzers.dll" />
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.3.3.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CSharp.Analyzers.dll" />
     <Analyzer Include="..\packages\Microsoft.CodeQuality.Analyzers.3.3.0\analyzers\dotnet\cs\Humanizer.dll" />
@@ -186,7 +180,12 @@
     <Content Include="external\Source.txt" />
     <Content Include="external\zlib1.dll" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Symu.Biz\Github\SourceCode\SymuSysDyn\SymuSysDyn.csproj">
+      <Project>{641cbfd1-6b1a-4b49-b21e-387dd1777bce}</Project>
+      <Name>SymuSysDyn</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

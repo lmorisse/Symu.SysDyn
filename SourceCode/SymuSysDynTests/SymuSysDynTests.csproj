@@ -23,11 +23,13 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="NCalc2" Version="2.1.0" />
+    <PackageReference Include="QuickGraph" Version="3.6.61119.7" />
     <PackageReference Include="System.Collections.Immutable" Version="1.7.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SymuSysDyn\SymuSysDyn.csproj" />
+    <ProjectReference Include="..\..\..\..\Symu.Biz\Github\SourceCode\SymuSysDyn\SymuSysDyn.csproj" />
   </ItemGroup>
 
 </Project>

@@ -10,10 +10,8 @@
 #region using directives
 
 using System;
-using System.Globalization;
 using System.Linq;
 using Symu.Common.Classes;
-using Symu.SysDyn.Models;
 using Symu.SysDyn.Models.XMile;
 using Symu.SysDyn.Parser;
 using Symu.SysDyn.QuickGraph;

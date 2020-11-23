@@ -210,6 +210,17 @@ namespace SymuSysDynTests.Equations
         }
 
         [TestMethod]
+        public void MaxTest1()
+        {
+            var equation = EquationFactory.CreateInstance(string.Empty, "Max (variable1, variable2)", out _);
+            Assert.IsInstanceOfType(equation, typeof(ComplexEquation));
+            Assert.AreEqual("Max0", equation.InitializedEquation);
+            Assert.AreEqual(2, equation.Variables.Count);
+            Assert.AreEqual("_Variable1", equation.Variables[0]);
+            Assert.AreEqual("_Variable2", equation.Variables[1]);
+        }
+
+        [TestMethod]
         public void PowTest()
         {
             var equation = EquationFactory.CreateInstance(string.Empty, "Pow(variable1, variable2)", out _);
