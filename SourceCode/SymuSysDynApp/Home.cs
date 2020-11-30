@@ -15,10 +15,8 @@ using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
 using Symu.SysDyn.Engine;
-using Symu.SysDyn.Models;
 using Symu.SysDyn.Models.XMile;
 using Symu.SysDyn.QuickGraph;
-using SymuSysDynApp.Graph;
 using Syncfusion.Windows.Forms.Chart;
 
 #endregion
