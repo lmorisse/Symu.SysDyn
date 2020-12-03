@@ -12,6 +12,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Symu.SysDyn.Functions;
 using Symu.SysDyn.Models.XMile;
+using SymuSysDynTests.Classes;
 
 #endregion
 

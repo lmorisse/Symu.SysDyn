@@ -1,0 +1,2 @@
+Optionally copy dot.exe and run dot.exe -c from command line to check and update config6
+The source is graphviz windows package 2.38

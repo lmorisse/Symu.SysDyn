@@ -24,6 +24,7 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Symu.SysDyn.Models;
 using Symu.SysDyn.Models.XMile;
+using SymuSysDynTests.Classes;
 
 #endregion
 

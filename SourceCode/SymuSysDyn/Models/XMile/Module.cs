@@ -29,8 +29,8 @@ namespace Symu.SysDyn.Models.XMile
         /// <summary>
         ///     Name is mandatory for Module
         /// </summary>
-        /// <param name="name"></param>
-        /// <param name="model"></param>
+        /// <param name="name">The name of the subModel called by the module</param>
+        /// <param name="model">Name of the model of the module</param>
         public Module(string name, string model)
         {
             Name = StringUtils.CleanName(name);

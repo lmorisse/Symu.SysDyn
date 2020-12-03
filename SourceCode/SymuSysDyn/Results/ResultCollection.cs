@@ -43,7 +43,11 @@ namespace Symu.SysDyn.Results
         {
             _result.Add(iteration, result);
         }
-
+        /// <summary>
+        /// Get the values for the variable name
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
         public IEnumerable<float> GetResults(string name)
         {
             return _result.Values.ToList().Select(result => result.GetValue(name)).ToList();

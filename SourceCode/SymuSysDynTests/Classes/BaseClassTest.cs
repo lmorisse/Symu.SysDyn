@@ -13,20 +13,20 @@ using System.Linq;
 using System.Xml.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Symu.SysDyn.Engine;
-using Symu.SysDyn.Models;
 using Symu.SysDyn.Models.XMile;
+using Symu.SysDyn.Parser;
 
 #endregion
 
-namespace SymuSysDynTests
+namespace SymuSysDynTests.Classes
 {
     [TestClass]
-    public abstract class Smth3ClassTest
+    public abstract class BaseClassTest
     {
         protected const string TestFile =
-            @"C:\Users\laure\Dropbox\Symu\SourceCode\Symu.SysDyn\Github\SourceCode\SymuSysDynTests\Templates\SMTH3.xmile";
+            @"C:\Users\laure\Dropbox\Symu\SourceCode\Symu.SysDyn\Github\SourceCode\SymuSysDynTests\Templates\Test.xmile";
 
-        protected Smth3ClassTest()
+        protected BaseClassTest()
         {
             Machine = new StateMachine(TestFile);
             XDoc = XDocument.Load(TestFile);
@@ -34,10 +34,17 @@ namespace SymuSysDynTests
             XElement = XDoc.Root?.Descendants(Ns + "variables").First();
         }
 
+        protected XmlParser Parser { get; } = new XmlParser(TestFile);
+
         /// <summary>
-        ///     It is not the Machine.Variables
+        ///     It is not the Machine.Models
         /// </summary>
-        protected XMileModel Variables { get; } = new XMileModel("1");
+        protected XMileModel Model { get; } = new XMileModel("1");
+
+        /// <summary>
+        ///     It is not the Machine.Models
+        /// </summary>
+        protected XMileModel RootModel => Machine.Models.RootModel;
 
         protected XDocument XDoc { get; }
         protected XNamespace Ns { get; }

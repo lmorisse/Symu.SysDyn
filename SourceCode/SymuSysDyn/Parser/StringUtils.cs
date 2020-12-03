@@ -48,6 +48,11 @@ namespace Symu.SysDyn.Parser
 
         public static string CleanName(string name)
         {
+            return CleanName(name, true);
+        }
+
+        public static string CleanName(string name, bool replaceUnderScore )
+        {
             if (name == null)
             {
                 throw new ArgumentNullException(nameof(name));
@@ -58,9 +63,19 @@ namespace Symu.SysDyn.Parser
             name = name.ToLowerInvariant();
 
             // Can have multiple blanks
-            while (name.Contains(' '))
+            if (replaceUnderScore)
             {
-                name = name.Replace(' ', '_');
+                while (name.Contains(' '))
+                {
+                    name = name.Replace(' ', '_');
+                }
+            }
+            else
+            {
+                while (name.Contains("  "))
+                {
+                    name = name.Replace("  ", " ");
+                }
             }
 
             name = name.Replace("\n", "_");

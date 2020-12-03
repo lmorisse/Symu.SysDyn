@@ -96,7 +96,8 @@ namespace Symu.SysDyn.Engine
 
             parent.Updating = true;
             // Update stocks before other variables
-            if (parent is Stock)
+            var stockFirst = _isPrepared && parent is Stock;
+            if (stockFirst)
             {
                 UpdateVariable(parent);
                 parent.Updating = false;
@@ -121,7 +122,7 @@ namespace Symu.SysDyn.Engine
             }
 
             // Update other variables
-            if (readyToUpdate && !(parent is Stock))
+            if (readyToUpdate && !stockFirst)
             {
                 UpdateVariable(parent);
             }

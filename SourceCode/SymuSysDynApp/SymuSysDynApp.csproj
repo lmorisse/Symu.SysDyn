@@ -179,7 +179,7 @@
     <Content Include="external\zlib1.dll" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\Symu.Biz\Github\SourceCode\SymuSysDyn\SymuSysDyn.csproj">
+    <ProjectReference Include="..\SymuSysDyn\SymuSysDyn.csproj">
       <Project>{641cbfd1-6b1a-4b49-b21e-387dd1777bce}</Project>
       <Name>SymuSysDyn</Name>
     </ProjectReference>

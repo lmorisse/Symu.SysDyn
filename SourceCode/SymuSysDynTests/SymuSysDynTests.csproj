@@ -1,35 +1,160 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\Antlr4.CodeGenerator.4.6.4\build\Antlr4.CodeGenerator.props" Condition="Exists('..\packages\Antlr4.CodeGenerator.4.6.4\build\Antlr4.CodeGenerator.props')" />
+  <Import Project="..\packages\MSTest.TestAdapter.2.1.2\build\net45\MSTest.TestAdapter.props" Condition="Exists('..\packages\MSTest.TestAdapter.2.1.2\build\net45\MSTest.TestAdapter.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-
-    <IsPackable>false</IsPackable>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{769AC7C8-09E9-41B3-A701-70607CA8658A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SymuSysDynTests</RootNamespace>
+    <AssemblyName>SymuSysDynTests</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">15.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+    <ReferencePath>$(ProgramFiles)\Common Files\microsoft shared\VSTT\$(VisualStudioVersion)\UITestExtensionPackages</ReferencePath>
+    <IsCodedUITest>False</IsCodedUITest>
+    <TestProjectType>UnitTest</TestProjectType>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
   </PropertyGroup>
-
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="MathNet.Numerics" Version="4.12.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.CodeQuality.Analyzers" Version="3.3.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.7.1" />
-    <PackageReference Include="MSTest.TestAdapter" Version="2.1.2" />
-    <PackageReference Include="MSTest.TestFramework" Version="2.1.2" />
-    <PackageReference Include="coverlet.collector" Version="1.3.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="NCalc2" Version="2.1.0" />
-    <PackageReference Include="QuickGraph" Version="3.6.61119.7" />
-    <PackageReference Include="System.Collections.Immutable" Version="1.7.1" />
+    <Reference Include="Antlr4.Runtime, Version=4.6.0.0, Culture=neutral, PublicKeyToken=09abb75b9ed49849, processorArchitecture=MSIL">
+      <HintPath>..\packages\Antlr4.Runtime.4.6.4\lib\net45\Antlr4.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.VisualStudio.TestPlatform.TestFramework, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\MSTest.TestFramework.2.1.2\lib\net45\Microsoft.VisualStudio.TestPlatform.TestFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\MSTest.TestFramework.2.1.2\lib\net45\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NCalc2, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NCalc2.2.1.0\lib\net46\NCalc2.dll</HintPath>
+    </Reference>
+    <Reference Include="QuickGraph, Version=3.6.61114.0, Culture=neutral, PublicKeyToken=f3fb40175eec2af3, processorArchitecture=MSIL">
+      <HintPath>..\packages\QuickGraph.3.6.61119.7\lib\net4\QuickGraph.dll</HintPath>
+    </Reference>
+    <Reference Include="QuickGraph.Data, Version=3.6.61114.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\QuickGraph.3.6.61119.7\lib\net4\QuickGraph.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="QuickGraph.Graphviz, Version=3.6.61114.0, Culture=neutral, PublicKeyToken=f3fb40175eec2af3, processorArchitecture=MSIL">
+      <HintPath>..\packages\QuickGraph.3.6.61119.7\lib\net4\QuickGraph.Graphviz.dll</HintPath>
+    </Reference>
+    <Reference Include="QuickGraph.Serialization, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\QuickGraph.3.6.61119.7\lib\net4\QuickGraph.Serialization.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq">
+      <HintPath>..\..\..\..\..\..\..\..\..\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.8\System.Xml.Linq.dll</HintPath>
+    </Reference>
   </ItemGroup>
-
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\Symu.Biz\Github\SourceCode\SymuSysDyn\SymuSysDyn.csproj" />
+    <Compile Include="Classes\BaseClassTest.cs" />
+    <Compile Include="Classes\SMTH3ClassTest.cs" />
+    <Compile Include="Equations\AllBuiltInFunctionsTests.cs" />
+    <Compile Include="Equations\ComplexEquationTests.cs" />
+    <Compile Include="Equations\EquationFactoryTests.cs" />
+    <Compile Include="Equations\SimpleEquationTests.cs" />
+    <Compile Include="Functions\BuiltInFunctionTests.cs" />
+    <Compile Include="Functions\DtTests.cs" />
+    <Compile Include="Functions\ExecutionTests.cs" />
+    <Compile Include="Functions\ExternalUpdateTests.cs" />
+    <Compile Include="Functions\FunctionFactoryTests.cs" />
+    <Compile Include="Functions\IfThenElseTests.cs" />
+    <Compile Include="Functions\NormalTests.cs" />
+    <Compile Include="Functions\PulseTests.cs" />
+    <Compile Include="Functions\RampTests.cs" />
+    <Compile Include="Functions\Smth3Tests.cs" />
+    <Compile Include="Functions\SmthNTests.cs" />
+    <Compile Include="Functions\SmthTests.cs" />
+    <Compile Include="Functions\StepTests.cs" />
+    <Compile Include="Functions\TimeTests.cs" />
+    <Compile Include="Models\XMile\GraphicalFunctionTests.cs" />
+    <Compile Include="Models\XMile\GroupTests.cs" />
+    <Compile Include="Models\XMile\ModelCollectionTests.cs" />
+    <Compile Include="Models\XMile\RangeTests.cs" />
+    <Compile Include="Models\XMile\StockTests.cs" />
+    <Compile Include="Models\XMile\UnitsTests.cs" />
+    <Compile Include="Models\XMile\VariablesTests.cs" />
+    <Compile Include="Models\XMile\VariableTests.cs" />
+    <Compile Include="Models\XMile\XMileModelTests.cs" />
+    <Compile Include="Parser\StringUtilsTests.cs" />
+    <Compile Include="Parser\XmlParserTests.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Simulation\SimSpecsTests.cs" />
+    <Compile Include="Simulation\StateMachineSMTH3Tests.cs" />
+    <Compile Include="Simulation\StateMachineTests.cs" />
   </ItemGroup>
-
+  <ItemGroup>
+    <None Include="packages.config" />
+    <None Include="Templates\AC_Durability.xmile" />
+    <None Include="Templates\Bass_Word_Of_Mouth_And_Advertising.xmile" />
+    <None Include="Templates\Crime_And_Drugs.xmile" />
+    <None Include="Templates\Fish_Model.xmile" />
+    <None Include="Templates\Fish_Model_Endogenous_Investment - Copier.xmile" />
+    <None Include="Templates\Fish_Model_Policy_Design.xmile" />
+    <None Include="Templates\Fliers.xmile" />
+    <None Include="Templates\Hares_And_Lynxes.xmile" />
+    <None Include="Templates\Medical_Workforce.xmile" />
+    <None Include="Templates\Oil_world88.xmile" />
+    <None Include="Templates\Oil_world95.xmile" />
+    <None Include="Templates\People_Express.xmile" />
+    <None Include="Templates\Production_And_Workforce.xmile" />
+    <None Include="Templates\Product_Market_Growth_And_Capital_Investment.xmile" />
+    <None Include="Templates\Recruitment.xmile" />
+    <None Include="Templates\schema.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Templates\Shower.xmile" />
+    <None Include="Templates\SMTH3.xmile" />
+    <None Include="Templates\Test.xmile" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SymuSysDyn\SymuSysDyn.csproj">
+      <Project>{641cbfd1-6b1a-4b49-b21e-387dd1777bce}</Project>
+      <Name>SymuSysDyn</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>Ce projet fait référence à des packages NuGet qui sont manquants sur cet ordinateur. Utilisez l'option de restauration des packages NuGet pour les télécharger. Pour plus d'informations, consultez http://go.microsoft.com/fwlink/?LinkID=322105. Le fichier manquant est : {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\MSTest.TestAdapter.2.1.2\build\net45\MSTest.TestAdapter.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\MSTest.TestAdapter.2.1.2\build\net45\MSTest.TestAdapter.props'))" />
+    <Error Condition="!Exists('..\packages\MSTest.TestAdapter.2.1.2\build\net45\MSTest.TestAdapter.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\MSTest.TestAdapter.2.1.2\build\net45\MSTest.TestAdapter.targets'))" />
+    <Error Condition="!Exists('..\packages\Antlr4.CodeGenerator.4.6.4\build\Antlr4.CodeGenerator.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Antlr4.CodeGenerator.4.6.4\build\Antlr4.CodeGenerator.props'))" />
+    <Error Condition="!Exists('..\packages\Antlr4.CodeGenerator.4.6.4\build\Antlr4.CodeGenerator.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Antlr4.CodeGenerator.4.6.4\build\Antlr4.CodeGenerator.targets'))" />
+  </Target>
+  <Import Project="..\packages\MSTest.TestAdapter.2.1.2\build\net45\MSTest.TestAdapter.targets" Condition="Exists('..\packages\MSTest.TestAdapter.2.1.2\build\net45\MSTest.TestAdapter.targets')" />
+  <Import Project="..\packages\Antlr4.CodeGenerator.4.6.4\build\Antlr4.CodeGenerator.targets" Condition="Exists('..\packages\Antlr4.CodeGenerator.4.6.4\build\Antlr4.CodeGenerator.targets')" />
 </Project>
