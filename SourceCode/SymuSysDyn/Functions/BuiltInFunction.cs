@@ -121,6 +121,13 @@ namespace Symu.SysDyn.Functions
             {
                 parameter.Prepare(selfVariable, variables, sim);
                 prepareParams.AddRange(parameter.Variables);
+                // Get Parameters of the functions of the parameter
+                // Example : Time - 5 => Store Time value
+                foreach (var expressionParameter in parameter.Expression.Parameters)
+                {
+
+                    Expression.Parameters[expressionParameter.Key] = expressionParameter.Value;
+                }
             }
 
             foreach (var name in prepareParams.Distinct().ToList())

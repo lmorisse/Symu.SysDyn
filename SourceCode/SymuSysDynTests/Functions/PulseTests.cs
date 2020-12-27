@@ -46,12 +46,12 @@ namespace SymuSysDynTests.Functions
         [TestMethod]
         public void EvaluateTest()
         {
-            var function = new Pulse(string.Empty, "Pulse(20, 12)");
-            Machine.Simulation.Time = 10;
+            var function = new Pulse(string.Empty, "Pulse(20, 1)");
+            Machine.Simulation.Step = 0;
             Assert.AreEqual(0, function.Evaluate(null, null, Machine.Simulation));
-            Machine.Simulation.Time = 12;
+            Machine.Simulation.Step = 1;
             Assert.AreEqual(20, function.Evaluate(null, null, Machine.Simulation));
-            Machine.Simulation.Time = 17;
+            Machine.Simulation.Step = 2;
             Assert.AreEqual(0, function.Evaluate(null, null, Machine.Simulation));
         }
 
@@ -62,15 +62,32 @@ namespace SymuSysDynTests.Functions
         public void EvaluateTest1()
         {
             var function = new Pulse(string.Empty, "Pulse(20, 12, 5)");
-            Machine.Simulation.Time = 10;
+            Machine.Simulation.Step = 10;
             Assert.AreEqual(0, function.Evaluate(null, null, Machine.Simulation));
-            Machine.Simulation.Time = 12;
+            Machine.Simulation.Step = 12;
             Assert.AreEqual(20, function.Evaluate(null, null, Machine.Simulation));
-            Machine.Simulation.Time = 15;
+            Machine.Simulation.Step = 15;
             Assert.AreEqual(0, function.Evaluate(null, null, Machine.Simulation));
-            Machine.Simulation.Time = 17;
+            Machine.Simulation.Step = 17;
             Assert.AreEqual(20, function.Evaluate(null, null, Machine.Simulation));
         }
+
+        /// <summary>
+        ///     with interval = 0
+        /// </summary>
+        [TestMethod]
+        public void EvaluateTest5()
+        {
+            var function = new Pulse(string.Empty, "Pulse(20, 12, 0)");
+            Machine.Simulation.Step = 10;
+            Assert.AreEqual(0, function.Evaluate(null, null, Machine.Simulation));
+            Machine.Simulation.Step = 12;
+            Assert.AreEqual(20, function.Evaluate(null, null, Machine.Simulation));
+            Machine.Simulation.Step = 15;
+            Assert.AreEqual(0, function.Evaluate(null, null, Machine.Simulation));
+            Machine.Simulation.Step = 17;
+            Assert.AreEqual(0, function.Evaluate(null, null, Machine.Simulation));
+        }   
 
         /// <summary>
         ///     DT = 0.5 , with interval
@@ -86,9 +103,9 @@ namespace SymuSysDynTests.Functions
             Assert.AreEqual(0, function.Evaluate(null, null, Machine.Simulation));
             Machine.Simulation.Step = 24;
             Machine.Simulation.Time = 12;
-            Assert.AreEqual(10, function.Evaluate(null, null, Machine.Simulation));
+            Assert.AreEqual(20, function.Evaluate(null, null, Machine.Simulation));
             Machine.Simulation.Step = 25;
-            Assert.AreEqual(10, function.Evaluate(null, null, Machine.Simulation));
+            Assert.AreEqual(0, function.Evaluate(null, null, Machine.Simulation));
             Machine.Simulation.Step = 27;
             Machine.Simulation.Time = 13;
             Assert.AreEqual(0, function.Evaluate(null, null, Machine.Simulation));
@@ -117,25 +134,8 @@ namespace SymuSysDynTests.Functions
             Variable.CreateInstance("variable1", Machine.Models.RootModel, "1");
             Variable.CreateInstance("variable2", Machine.Models.RootModel, "2");
             Variable.CreateInstance("variable3", Machine.Models.RootModel, "3");
-            Machine.Simulation.Time = 2;
+            Machine.Simulation.Step = 2;
             Assert.AreEqual(1, function.Evaluate(null, Machine.Models.GetVariables(), Machine.Simulation));
-        }
-
-        /// <summary>
-        ///     with interval = 0
-        /// </summary>
-        [TestMethod]
-        public void EvaluateTest5()
-        {
-            var function = new Pulse(string.Empty, "Pulse(20, 12, 0)");
-            Machine.Simulation.Time = 10;
-            Assert.AreEqual(0, function.Evaluate(null, null, Machine.Simulation));
-            Machine.Simulation.Time = 12;
-            Assert.AreEqual(20, function.Evaluate(null, null, Machine.Simulation));
-            Machine.Simulation.Time = 15;
-            Assert.AreEqual(0, function.Evaluate(null, null, Machine.Simulation));
-            Machine.Simulation.Time = 17;
-            Assert.AreEqual(0, function.Evaluate(null, null, Machine.Simulation));
         }
     }
 }

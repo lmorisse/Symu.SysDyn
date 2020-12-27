@@ -13,6 +13,7 @@ using System;
 using Symu.SysDyn.Engine;
 using Symu.SysDyn.Models;
 using Symu.SysDyn.Models.XMile;
+using static Symu.Common.Constants;
 
 #endregion
 
@@ -59,13 +60,13 @@ namespace Symu.SysDyn.Functions
                 : Convert.ToInt32(GetValue(2, selfVariable, variables, sim));
             if (interval == 0)
             {
-                return firstTime == sim.Time
-                    ? magnitude * sim.DeltaTime
+                return Math.Abs(firstTime - sim.Step * sim.DeltaTime) < Tolerance//firstTime == sim.Time
+                    ? magnitude //? magnitude * sim.DeltaTime
                     : 0;
             }
 
-            return (firstTime - sim.Time) % interval == 0
-                ? magnitude * sim.DeltaTime
+            return Math.Abs((firstTime - sim.Step * sim.DeltaTime) % interval) < Tolerance//(firstTime - sim.Time) % interval == 0
+                ? magnitude //? magnitude * sim.DeltaTime
                 : 0;
         }
 

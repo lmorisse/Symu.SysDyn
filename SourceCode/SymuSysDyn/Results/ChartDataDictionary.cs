@@ -43,18 +43,17 @@ namespace Symu.SysDyn.Results
         /// <returns></returns>
         public KeyValuePair<string, ChartDataCollection> this[int index] => _dictionary.ElementAt(index);
 
+
         public void PrepareData()
         {
-            var steps = new List<float>();
-            var index = _start;
-            for (var i = 0; i < _results.Count; i++)
-            {
-                steps.Add(index);
-                index++;
-            }
+            var steps = ResultCollection.GetSteps(_start, _results.Count);
             foreach (var output in _outputs)
             {
-                Add(output, new ChartDataCollection(steps, _results.GetResults(output).ToList()));
+                var results = _results.GetResults(output).ToList();
+                if (results.Any())
+                {
+                    Add(output, new ChartDataCollection(steps, results));
+                }
             }
         }
 

@@ -54,7 +54,7 @@ namespace Symu.SysDyn.Equations
         /// </summary>
         protected List<string> Words { get; }
 
-        protected Expression Expression { get; set; }
+        public Expression Expression { get; set; }
 
         #region IEquation Members
 

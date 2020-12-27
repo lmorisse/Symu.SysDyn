@@ -11,6 +11,8 @@
 
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using Symu.SysDyn.Models;
 using Symu.SysDyn.Models.XMile;
 
@@ -18,10 +20,11 @@ using Symu.SysDyn.Models.XMile;
 
 namespace Symu.SysDyn.Results
 {
-    public class Result
+    public class Result 
     {
         private readonly Hashtable _result = new Hashtable();
 
+        public Result(){}
         public Result(VariableCollection variables)
         {
             if (variables == null)
@@ -29,7 +32,7 @@ namespace Symu.SysDyn.Results
                 throw new ArgumentNullException(nameof(variables));
             }
 
-            foreach (var variable in variables)
+            foreach (var variable in variables.Where(x => x.StoreResult))
             {
                 Add(variable.FullName, variable.Value);
             }
@@ -51,5 +54,6 @@ namespace Symu.SysDyn.Results
         {
             return (float) _result[name];
         }
+
     }
 }

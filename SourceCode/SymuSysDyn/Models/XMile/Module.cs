@@ -179,6 +179,11 @@ namespace Symu.SysDyn.Models.XMile
         public NonNegative NonNegative { get; set; }
         public VariableAccess Access { get; set; }
 
+        /// <summary>
+        /// If true store the result in the ResultCollection
+        /// </summary>
+        public bool StoreResult { get; set; } 
+
         public void Update(VariableCollection variables, SimSpecs simulation)
         {
             //

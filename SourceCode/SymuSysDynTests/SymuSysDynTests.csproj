@@ -123,6 +123,7 @@
     <None Include="Templates\Fish_Model_Endogenous_Investment - Copier.xmile" />
     <None Include="Templates\Fish_Model_Policy_Design.xmile" />
     <None Include="Templates\Fliers.xmile" />
+    <None Include="Templates\Cohort.xmile" />
     <None Include="Templates\Hares_And_Lynxes.xmile" />
     <None Include="Templates\Medical_Workforce.xmile" />
     <None Include="Templates\Oil_world88.xmile" />

@@ -9,9 +9,12 @@
 
 #region using directives
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using QuickGraph;
+using Symu.SysDyn.Models.XMile;
 
 #endregion
 
@@ -24,6 +27,11 @@ namespace Symu.SysDyn.Results
         ///     Value => Result
         /// </summary>
         private readonly Dictionary<int, Result> _result = new Dictionary<int, Result>();
+        /// <summary>
+        /// Constant results are variables with store results but with a fixed value
+        /// After optimization, those variables are not stored in _result
+        /// </summary>
+        public Dictionary<string, float> ConstantResults { get; set; }= new Dictionary<string, float>();
 
         /// <summary>
         ///     Gets or sets the node with the specified index
@@ -33,6 +41,20 @@ namespace Symu.SysDyn.Results
         public Result this[int index] => _result[index];
 
         public int Count => _result.Count;
+
+        public void SetConstantResults(VariableCollection optimized, VariableCollection reference)
+        {
+            if (optimized == null || reference == null)
+            {
+                throw new ArgumentNullException();
+            }
+
+            ConstantResults.Clear();
+            foreach (var variable in reference.Where(variable => variable.StoreResult && !optimized.Contains(variable)))
+            {
+                ConstantResults.Add(variable.FullName, variable.Value);
+            }
+        }
 
         public void Add(Result result)
         {
@@ -51,6 +73,19 @@ namespace Symu.SysDyn.Results
         public IEnumerable<float> GetResults(string name)
         {
             return _result.Values.ToList().Select(result => result.GetValue(name)).ToList();
+        }
+
+        public static List<float> GetSteps(int start, int stepCount)
+        {
+            var steps = new List<float>();
+            var index = start;
+            for (var i = 0; i < stepCount; i++)
+            {
+                steps.Add(index);
+                index++;
+            }
+
+            return steps;
         }
 
         public void Clear()

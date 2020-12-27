@@ -185,11 +185,19 @@ namespace Symu.SysDyn.Equations
             return string.Join(string.Empty, words);
         }
 
+        /// <summary>
+        ///     Functions Without Brackets ni lowercase
+        /// </summary>
+        private static readonly List<string> comparatorList =
+            new List<string> { "==", "!=", "<", ">", "<=", ">=", "and", "or", "Greater", "lesser", "lesserorequal", "modulo", "notequal", "times", "bitwiseand", "bitwiseor", "bitwisexor", "leftshift", "rightshift", "not", "negate", "bitwisenot" };
+
         private static IEnumerable<string> SetVariables(string model, List<string> words, string word,
             List<IBuiltInFunction> functions)
         {
             var variables = new List<string>();
-            if (word.Length <= 1 || float.TryParse(word, NumberStyles.Number, CultureInfo.InvariantCulture, out _))
+            if (word.Length <= 1 
+                || float.TryParse(word, NumberStyles.Number, CultureInfo.InvariantCulture, out _)
+                || comparatorList.Contains(word.ToLowerInvariant()))
             {
                 words.Add(word);
                 return variables;

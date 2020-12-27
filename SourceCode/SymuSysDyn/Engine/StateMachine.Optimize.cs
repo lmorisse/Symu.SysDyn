@@ -91,7 +91,6 @@ namespace Symu.SysDyn.Engine
             // Update other variables
             if (readyToUpdate && TryOptimizeVariable(parent, Simulation))
             {
-                //ReferenceVariables.SetValue(parent.FullName, parent.Value);
                 ReferenceVariables[parent.FullName] = parent.Value;
                 Variables.Remove(parent.FullName);
             }
@@ -117,12 +116,6 @@ namespace Symu.SysDyn.Engine
                 return true;
             }
 
-            // Replace function Dt => done in SetStockEquation
-            //if (variable.Equation is ComplexEquation complexEquation)
-            //{
-            //    complexEquation.Replace(Dt.Value, Simulation.DeltaTime.ToString(CultureInfo.InvariantCulture),
-            //        Simulation);
-            //}
             foreach (var childName in variable.Children.Where(x => !Variables.Exists(x)).ToImmutableList())
             {
                 var childValue = ReferenceVariables[childName].ToString(CultureInfo.InvariantCulture);

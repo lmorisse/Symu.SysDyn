@@ -35,6 +35,8 @@ namespace Symu.SysDyn.Models.XMile
 
         public IEnumerable<string> Outputs =>
             _variables.Where(x => x.Access == VariableAccess.Output).Select(x => x.FullName);
+        public IEnumerable<string> StoreResults =>
+            _variables.Where(x => x.StoreResult).Select(x => x.FullName);
 
         /// <summary>
         ///     Get the list of the stocks

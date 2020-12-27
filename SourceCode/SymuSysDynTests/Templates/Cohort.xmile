@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<xmile version="1.0" xmlns="http://docs.oasis-open.org/xmile/ns/XMILE/v1.0">
+  <header>
+    <name>Hares and Lynxes</name>
+    <options>
+      <uses_outputs />
+    </options>
+    <product version="1.0">From https://sdlabs.io/</product>
+  </header>
+  <sim_specs method="Euler" time_units="Months">
+    <start>0</start>
+    <stop>30</stop>
+    <dt>0.5</dt>
+  </sim_specs>
+  <model>
+    <variables>
+      <stock name="cohort">
+        <eqn>0</eqn>
+        <inflow>create_cohort</inflow>
+        <outflow>losing_rate_cohort</outflow>
+        <non_negative></non_negative>
+      </stock>
+      <aux name="create_cohort">
+        <eqn>Pulse(count_cohort, starttime_cohort) / DT</eqn>
+        <non_negative></non_negative>
+      </aux>
+      <aux name="count_cohort">
+        <eqn>1000 </eqn>
+      </aux>
+      <aux name="starttime_cohort">
+        <eqn>10</eqn>
+      </aux>
+      <flow name="losing_rate_cohort">
+        <doc>Losing rate may be a function of age-cohort and cohort</doc>
+        <eqn>If (age_cohort>0) Then (cohort/Pow(age_cohort,2)) Else 0</eqn>
+      </flow>
+      <aux name="age_cohort">
+        <eqn>If (TIME &lt; starttime_cohort) Then (0) Else (TIME-starttime_cohort)</eqn>
+      </aux>
+    </variables>
+  </model>
+</xmile>

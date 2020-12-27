@@ -12,6 +12,7 @@
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Symu.SysDyn.Functions;
+using Symu.SysDyn.Models.XMile;
 
 #endregion
 
@@ -85,6 +86,7 @@ namespace SymuSysDynTests.Functions
             Assert.AreEqual("SET(3,5)", results[2]);
         }
 
+
         /// <summary>
         ///     Passing tests
         /// </summary>
@@ -148,9 +150,26 @@ namespace SymuSysDynTests.Functions
             Assert.AreEqual(1, results.Count);
             Assert.IsTrue(results[0] is IfThenElse);
             Assert.AreEqual(3, results[0].Parameters.Count);
-            Assert.AreEqual("(_X1)", results[0].Parameters[0].ToString());
+            Assert.AreEqual("_X1", results[0].Parameters[0].ToString());
             Assert.AreEqual("_X2", results[0].Parameters[1].ToString());
             Assert.AreEqual("_X3", results[0].Parameters[2].ToString());
+        }
+
+        /// <summary>
+        ///     If then else test with brackets
+        ///     If() may be identified as a function
+        /// </summary>
+        [TestMethod]
+        public void GetFunctionsTest23()
+        {
+            const string test = "If(TIME < 3) then x2 else (TIME-3)";
+            var results = FunctionUtils.ParseFunctions(string.Empty, test).ToList();
+            Assert.AreEqual(1, results.Count);
+            Assert.IsTrue(results[0] is IfThenElse);
+            Assert.AreEqual(3, results[0].Parameters.Count);
+            Assert.AreEqual("Time0<3", results[0].Parameters[0].ToString());
+            Assert.AreEqual("_X2", results[0].Parameters[1].ToString());
+            Assert.AreEqual("Time0-3", results[0].Parameters[2].ToString());
         }
 
         [TestMethod]

@@ -45,7 +45,6 @@ namespace Symu.SysDyn.Engine
                 //Intentionally after Compute
                 Simulation.OnTimerEvent();
             }
-
             return true;
         }
 

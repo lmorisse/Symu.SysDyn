@@ -33,7 +33,7 @@ namespace Symu.SysDyn.Engine
         ///     Working list of the variables of the simulation
         ///     Can be all the variables or only a subModel's variables
         /// </summary>
-        public VariableCollection Variables { get; private set; }
+        public VariableCollection Variables { get; set; }
 
         /// <summary>
         ///     The reference of the variables of the simulation
@@ -63,7 +63,10 @@ namespace Symu.SysDyn.Engine
             {
                 ReferenceVariables[variable.FullName] = variable.Value;
             }
+
+            var allVariables = Variables.Clone();
             OptimizeVariables();
+            Results.SetConstantResults(Variables, allVariables);
             _isPrepared = true;
         }
 

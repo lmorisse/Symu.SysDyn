@@ -10,6 +10,7 @@
 #region using directives
 
 using System;
+using System.Linq;
 using Symu.SysDyn.Parser;
 
 #endregion
@@ -89,9 +90,9 @@ namespace Symu.SysDyn.Models.XMile
             }
 
             var variables = new VariableCollection();
-            foreach (var entity in group.Entities)
+            foreach (var variable in group.Entities.Select(entity => Variables.Get(entity)).Where(variable => variable != null))
             {
-                variables.Add(Variables.Get(entity));
+                variables.Add(variable);
             }
 
             return variables;

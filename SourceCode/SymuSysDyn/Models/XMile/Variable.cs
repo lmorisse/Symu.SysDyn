@@ -239,6 +239,7 @@ namespace Symu.SysDyn.Models.XMile
             copy.Value = Value;
             copy.NonNegative = NonNegative;
             copy.Access = Access;
+            copy.StoreResult = StoreResult;
             copy.Children = new List<string>();
             copy.Children.AddRange(Children);
         }
@@ -271,6 +272,10 @@ namespace Symu.SysDyn.Models.XMile
         public NonNegative NonNegative { get; set; }
 
         public VariableAccess Access { get; set; }
+        /// <summary>
+        /// If true store the result in the ResultCollection
+        /// </summary>
+        public bool StoreResult { get; set; } = true;
 
         #endregion
     }

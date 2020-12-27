@@ -14,13 +14,14 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Symu.SysDyn.Equations;
 using Symu.SysDyn.Functions;
+using SymuSysDynTests.Classes;
 
 #endregion
 
 namespace SymuSysDynTests.Functions
 {
     [TestClass]
-    public class IfThenElseTests
+    public class IfThenElseTests : BaseClassTest
     {
         [TestMethod]
         public void ParseTest()
@@ -105,6 +106,49 @@ namespace SymuSysDynTests.Functions
             var function = "IF (1+1) THEN (2+2) ELSE (3+3)";
             IfThenElse.Parse(string.Empty, ref function, out _, out _);
             Assert.AreEqual("if(2,4,6)", function);
+        }
+        [TestMethod]
+        public void EvaluateTest()
+        {
+            var function = new IfThenElse(string.Empty, "IF (1+1) THEN (2+2) ELSE (3+3)");
+            Assert.AreEqual(4, function.Evaluate(null, Machine.Models.GetVariables(), Machine.Simulation));
+        }
+        [TestMethod]
+        public void EvaluateTest1()
+        {
+            var function = new IfThenElse(string.Empty, "IF (1>2) THEN (2+2) ELSE (3+3)");
+            Assert.AreEqual(6, function.Evaluate(null, Machine.Models.GetVariables(), Machine.Simulation));
+        }
+        /// <summary>
+        /// nested Function with no ()
+        /// </summary>
+        [TestMethod]
+        public void EvaluateTest2()
+        {
+            var function = new IfThenElse(string.Empty, "If(Time < 3) then 0 else (1)");
+            function.Prepare(Machine.Models.GetVariables().First(), Machine.Models.GetVariables(), Machine.Simulation);
+            Assert.AreEqual(0, function.Evaluate(null, Machine.Models.GetVariables(), Machine.Simulation));
+        }
+        /// <summary>
+        /// nested Function with ()
+        /// </summary>
+        [TestMethod]
+        public void EvaluateTest3()
+        {
+            var function = new IfThenElse(string.Empty, "If(1) then (Pow(1,2)) else (1)");
+            function.Prepare(Machine.Models.GetVariables().First(), Machine.Models.GetVariables(), Machine.Simulation);
+            Assert.AreEqual(1, function.Evaluate(null, Machine.Models.GetVariables(), Machine.Simulation));
+        }
+        /// <summary>
+        /// nested Function with ()
+        /// </summary>
+        [TestMethod]
+        public void EvaluateTest4()
+        {
+            var function = new IfThenElse(string.Empty, "If((Time < 3) or (2==2)) then (0) else (1)");
+            //var function = new IfThenElse(string.Empty, "If(1==1 or 2==2) then (0) else (1)");
+            function.Prepare(Machine.Models.GetVariables().First(), Machine.Models.GetVariables(), Machine.Simulation);
+            Assert.AreEqual(0, function.Evaluate(null, Machine.Models.GetVariables(), Machine.Simulation));
         }
     }
 }

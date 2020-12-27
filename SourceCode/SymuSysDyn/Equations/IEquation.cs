@@ -10,6 +10,7 @@
 #region using directives
 
 using System.Collections.Generic;
+using NCalc2;
 using Symu.SysDyn.Engine;
 using Symu.SysDyn.Models;
 using Symu.SysDyn.Models.XMile;
@@ -23,6 +24,7 @@ namespace Symu.SysDyn.Equations
     /// </summary>
     public interface IEquation
     {
+        Expression Expression { get; set; }
         string OriginalEquation { get; }
         string InitializedEquation { get; set; }
         List<string> Variables { get; }

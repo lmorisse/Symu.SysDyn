@@ -64,17 +64,29 @@ namespace Symu.SysDyn.Functions
             }
 
             var equation = "if(";
-            var condition = EquationFactory.CreateInstance(model, result.Groups[1].Value, out var value);
+            var condition = EquationFactory.CreateInstance(model, PrepareExpression(result.Groups[1].Value), out var value);
             equation = UpdateEquation(parameters, args, condition, value, equation);
 
             equation += ",";
-            var thenExpression = EquationFactory.CreateInstance(model, result.Groups[2].Value, out value);
+            var thenExpression = EquationFactory.CreateInstance(model, PrepareExpression(result.Groups[2].Value), out value);
             equation = UpdateEquation(parameters, args, thenExpression, value, equation);
 
             equation += ",";
-            var elseExpression = EquationFactory.CreateInstance(model, result.Groups[3].Value, out value);
+            var elseExpression = EquationFactory.CreateInstance(model, PrepareExpression(result.Groups[3].Value), out value);
             equation = UpdateEquation(parameters, args, elseExpression, value, equation);
             input = equation + ")";
+        }
+
+        private static string PrepareExpression(string value)
+        {
+            value = value.Trim();
+            if (value.StartsWith("(") && value.EndsWith(")"))
+            {
+                value = value.Remove(0, 1);
+                return value.Remove(value.Length - 1, 1);
+            }
+
+            return value;
         }
 
         private static string UpdateEquation(ICollection<IEquation> parameters, ICollection<float> args,

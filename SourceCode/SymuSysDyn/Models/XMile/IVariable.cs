@@ -62,6 +62,10 @@ namespace Symu.SysDyn.Models.XMile
         NonNegative NonNegative { get; set; }
 
         VariableAccess Access { get; set; }
+        /// <summary>
+        /// If true store the result in the ResultCollection
+        /// </summary>
+        bool StoreResult { get; set; }
 
         /// <summary>Returns a string that represents the current object.</summary>
         /// <returns>A string that represents the current object.</returns>
