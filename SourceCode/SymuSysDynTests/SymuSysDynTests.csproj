@@ -97,6 +97,7 @@
     <Compile Include="Functions\SmthNTests.cs" />
     <Compile Include="Functions\SmthTests.cs" />
     <Compile Include="Functions\StepTests.cs" />
+    <Compile Include="Functions\ValueTests.cs" />
     <Compile Include="Functions\TimeTests.cs" />
     <Compile Include="Models\XMile\GraphicalFunctionTests.cs" />
     <Compile Include="Models\XMile\GroupTests.cs" />
@@ -118,6 +119,7 @@
     <None Include="packages.config" />
     <None Include="Templates\AC_Durability.xmile" />
     <None Include="Templates\Bass_Word_Of_Mouth_And_Advertising.xmile" />
+    <None Include="Templates\Cohort2.xmile" />
     <None Include="Templates\Crime_And_Drugs.xmile" />
     <None Include="Templates\Fish_Model.xmile" />
     <None Include="Templates\Fish_Model_Endogenous_Investment - Copier.xmile" />

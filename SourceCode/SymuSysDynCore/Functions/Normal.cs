@@ -28,7 +28,7 @@ namespace Symu.SysDyn.Core.Functions
     /// <example>NORMAL(100, 5) samples from N(100, 5)</example>
     public class Normal : BuiltInFunction
     {
-        public const string Value = "Normal";
+        public const string Label = "Normal";
 
         public Normal(string model, string function) : base(model, function)
         {

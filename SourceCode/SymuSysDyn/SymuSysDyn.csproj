@@ -115,6 +115,7 @@
     <Compile Include="Functions\SmthN.cs" />
     <Compile Include="Functions\Step.cs" />
     <Compile Include="Functions\Time.cs" />
+    <Compile Include="Functions\Value.cs" />
     <Compile Include="Models\Symu\IEntity.cs" />
     <Compile Include="Models\Symu\Model.cs" />
     <Compile Include="Models\Symu\ModelNetwork.cs" />

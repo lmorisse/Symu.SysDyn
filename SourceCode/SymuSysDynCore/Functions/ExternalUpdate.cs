@@ -27,7 +27,7 @@ namespace Symu.SysDyn.Core.Functions
     /// <example>new Variable("example", "ExternalUpdate(1)")</example>
     public class ExternalUpdate : BuiltInFunction
     {
-        public const string Value = "Externalupdate";
+        public const string Label = "Externalupdate";
 
         public ExternalUpdate(string model, string function) : base(model, function)
         {

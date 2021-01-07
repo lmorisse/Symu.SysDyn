@@ -150,5 +150,16 @@ namespace SymuSysDynTests.Functions
             function.Prepare(Machine.Models.GetVariables().First(), Machine.Models.GetVariables(), Machine.Simulation);
             Assert.AreEqual(0, function.Evaluate(null, Machine.Models.GetVariables(), Machine.Simulation));
         }
+        /// <summary>
+        /// nested Function with ()
+        /// </summary>
+        [TestMethod]
+        public void EvaluateTest5()
+        {
+            //var function = new IfThenElse(string.Empty, "If(1==2) then (0) else (10*(TIME+1))");
+            var function = new IfThenElse(string.Empty, "If(1==2) then (0) else (Time*10+10)");
+            function.Prepare(Machine.Models.GetVariables().First(), Machine.Models.GetVariables(), Machine.Simulation);
+            Assert.AreEqual(10, function.Evaluate(null, Machine.Models.GetVariables(), Machine.Simulation));
+        }
     }
 }

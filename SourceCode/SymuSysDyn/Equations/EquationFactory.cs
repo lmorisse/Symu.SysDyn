@@ -14,7 +14,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
+
 using NCalc2;
+
 using Symu.SysDyn.Functions;
 using Symu.SysDyn.Models;
 using Symu.SysDyn.Models.XMile;
@@ -51,7 +53,7 @@ namespace Symu.SysDyn.Equations
             eqn = eqn.Replace("'", "");
 
             if (float.TryParse(eqn, NumberStyles.Number, CultureInfo.InvariantCulture, out var floatEqn))
-                //NumberStyles.Any => doesn't work for (1) => success and floatEqn = -1!
+            //NumberStyles.Any => doesn't work for (1) => success and floatEqn = -1!
             {
                 value = floatEqn;
                 return null;
@@ -195,7 +197,7 @@ namespace Symu.SysDyn.Equations
             List<IBuiltInFunction> functions)
         {
             var variables = new List<string>();
-            if (word.Length <= 1 
+            if (word.Length <= 1
                 || float.TryParse(word, NumberStyles.Number, CultureInfo.InvariantCulture, out _)
                 || comparatorList.Contains(word.ToLowerInvariant()))
             {

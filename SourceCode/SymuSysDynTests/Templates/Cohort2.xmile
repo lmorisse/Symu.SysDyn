@@ -9,6 +9,7 @@
     <product version="1.0">From https://sdlabs.io/</product>
   </header>
   <sim_specs method="Euler" time_units="Months">
+    <!--This model doesn't work because of the create cohort = Pulse(Step(),) - it should work like Cohort.XMile-->
     <start>0</start>
     <stop>30</stop>
     <dt>0.5</dt>
@@ -26,16 +27,13 @@
         <non_negative></non_negative>
       </aux>
       <aux name="count_cohort">
-        <eqn>funnel_conversion*visitors</eqn>
+        <eqn>Step(initial_count_cohort, starttime_cohort)</eqn>
       </aux>
-      <aux name="funnel_conversion">
-        <eqn>0.1</eqn>
-      </aux>
-      <aux name="visitors">
-        <eqn>10000</eqn>
+      <aux name="initial_count_cohort">
+        <eqn>1000</eqn>
       </aux>
       <aux name="starttime_cohort">
-        <eqn>10</eqn>
+        <eqn>0</eqn>
       </aux>
       <flow name="losing_rate_cohort">
         <doc>Losing rate may be a function of age-cohort and cohort</doc>

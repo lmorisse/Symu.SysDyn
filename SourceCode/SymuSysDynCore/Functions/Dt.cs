@@ -22,7 +22,7 @@ namespace Symu.SysDyn.Core.Functions
     /// </summary>
     public class Dt : BuiltInFunction
     {
-        public const string Value = "Dt";
+        public const string Label = "Dt";
 
         public Dt(string model, string function) : base(model, function)
         {

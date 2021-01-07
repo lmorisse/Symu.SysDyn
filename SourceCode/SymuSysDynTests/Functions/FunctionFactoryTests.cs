@@ -40,10 +40,10 @@ namespace SymuSysDynTests.Functions
         public void ParseStringFunctionsTest1()
         {
             const string test =
-                "Func1((param1),(param2))+someStuffAfterFunction + DT + TIME + STEP( 1 , 2)-Normal(1,2)*RAMP(2,1)";
+                "Func1(param1,param2)+someStuffAfterFunction + DT + TIME + STEP( 1 , 2)-Normal(1,2)*RAMP(2,1)";
             var result = FunctionUtils.ParseStringFunctions(test);
             Assert.AreEqual(6, result.Count);
-            Assert.AreEqual("Func1((param1),(param2))", result[0]);
+            Assert.AreEqual("Func1(param1,param2)", result[0]);
             Assert.AreEqual("DT", result[1]);
             Assert.AreEqual("TIME", result[2]);
             Assert.AreEqual("STEP( 1 , 2)", result[3]);
@@ -58,6 +58,15 @@ namespace SymuSysDynTests.Functions
             var result = FunctionUtils.ParseStringFunctions(test);
             Assert.AreEqual(1, result.Count);
             Assert.AreEqual("TIME", result[0]);
+        }
+
+        [TestMethod]
+        public void ParseStringFunctionsTest1Ter()
+        {
+            const string test = "DT";
+            var result = FunctionUtils.ParseStringFunctions(test);
+            Assert.AreEqual(1, result.Count);
+            Assert.AreEqual("DT", result[0]);
         }
 
 
@@ -96,6 +105,8 @@ namespace SymuSysDynTests.Functions
             const string test =
                 "Func1((param1),(param2))+DT + TIME + STEP( 1 , 2)-Normal(1,2)*RAMP(2,1)-ExternalUpdate+2";
             var results = FunctionUtils.ParseFunctions(string.Empty, test).ToList();
+            // Result is 8 because Func1((param1),(param2)) appears twice, once with a false result : Func1((param1))
+            // To correct
             Assert.AreEqual(7, results.Count);
             Assert.AreEqual("Func1", results[0].Name);
             Assert.IsTrue(results[1] is Dt);

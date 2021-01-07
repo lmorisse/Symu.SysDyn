@@ -25,7 +25,7 @@ namespace Symu.SysDyn.Core.Functions
     /// </summary>
     public class SmthN : Smth
     {
-        public const string Value = "Smthn";
+        public const string Label = "Smthn";
 
         public SmthN(string model, string function) : base(model, function)
         {

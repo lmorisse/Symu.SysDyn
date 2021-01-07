@@ -25,12 +25,14 @@ namespace Symu.SysDyn.Core.Functions
     /// <example>STEP(6, 3) steps from 0 to 6 at time 3(and stays there)</example>
     public class Step : BuiltInFunction
     {
-        public const string Value = "Step";
+        public const string Label = "Step";
 
         public Step(string model, string function) : base(model, function)
         {
         }
-
+        /// <summary>
+        /// Height can be either a literal or a numeric
+        /// </summary>
         public string Height => GetParam(0);
         public string StartTime => GetParam(1);
 
@@ -48,12 +50,9 @@ namespace Symu.SysDyn.Core.Functions
                 throw new ArgumentNullException(nameof(sim));
             }
 
-            //Height can be either a literal or a numeric
-            var height = GetValue(0, selfVariable, variables, sim);
-
             var startTime = Convert.ToUInt16(GetValue(1, selfVariable, variables, sim));
 
-            return sim.Time >= startTime ? height : 0;
+            return sim.Time >= startTime ? GetValue(0, selfVariable, variables, sim) : 0;
         }
 
         public override bool TryReplace(SimSpecs sim, out float result)

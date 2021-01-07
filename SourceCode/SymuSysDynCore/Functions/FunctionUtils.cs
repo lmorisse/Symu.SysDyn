@@ -82,8 +82,10 @@ namespace Symu.SysDyn.Core.Functions
             }
 
             var result = new List<string>();
-
-            var name = string.Empty;
+            // replace functions without brackets 
+            //([^a-zA-Z0-9_]*)TIME.*?([^a-zA-Z0-9_] *)
+       
+                   var name = string.Empty;
             var counter = 0;
             var isFunction = true;
             foreach (var split in input.ToCharArray())

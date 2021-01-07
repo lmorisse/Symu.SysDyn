@@ -18,6 +18,7 @@
 #region using directives
 
 using System;
+
 using Symu.SysDyn.Parser;
 
 #endregion
@@ -59,6 +60,8 @@ namespace Symu.SysDyn.Functions
                     return new Dt(model, function);
                 case Time.Value:
                     return new Time(model, function);
+                case Value.Label:
+                    return new Value(model, function);
                 case ExternalUpdate.Value:
                     return new ExternalUpdate(model, function);
                 default:

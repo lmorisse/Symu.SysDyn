@@ -18,19 +18,27 @@ using Symu.SysDyn.Core.Models.XMile;
 namespace Symu.SysDyn.Core.Functions
 {
     /// <summary>
-    ///     TIME built in function
+    ///     Value built in function
+    ///     Set the value of a variable when the function is called. This value won't evolve even if the variable value does.
+    ///     Used with functions that are triggered by a starttime such as Step, Ramp, Pulse, ...
+    ///     value(variableId)
+    ///     Arguments: variableId
     /// </summary>
-    public class Time : BuiltInFunction
+    /// <example>Value(Time) will have a return value of 1 if called at time 1 or after</example>
+    public class Value : BuiltInFunction
     {
-        public const string Label = "Time";
+        public const string Label = "Value";
+        private float? _value;
 
-        public Time(string model, string function) : base(model, function)
+        public Value(string model, string function) : base(model, function)
         {
         }
 
+        public string VariableId => GetParam(0);
+
         public override IBuiltInFunction Clone()
         {
-            var clone = new Time(Model, OriginalFunction);
+            var clone = new Value(Model, OriginalFunction);
             CopyTo(clone);
             return clone;
         }
@@ -42,8 +50,11 @@ namespace Symu.SysDyn.Core.Functions
                 throw new ArgumentNullException(nameof(sim));
             }
 
-            return sim.Time;
+            _value ??= GetValue(0, selfVariable, variables, sim);
+
+            return _value.Value;
         }
+
         public override bool TryReplace(SimSpecs sim, out float result)
         {
             result = 0;

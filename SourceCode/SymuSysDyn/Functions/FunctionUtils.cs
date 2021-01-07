@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
+
 using Symu.SysDyn.Equations;
 using Symu.SysDyn.Parser;
 
@@ -30,12 +31,12 @@ namespace Symu.SysDyn.Functions
         ///     Functions Without Brackets ni lowercase
         /// </summary>
         private static readonly List<string> FunctionsWithoutBrackets =
-            new List<string> {"dt", "time", "externalupdate"};
+            new List<string> { "dt", "time", "externalupdate" };
 
         /// <summary>
         ///     Special names that are not functions as is
         /// </summary>
-        private static readonly List<string> NotFunctions = new List<string> {"if("};
+        private static readonly List<string> NotFunctions = new List<string> { "if(" };
 
         /// <summary>
         ///     Extract functions from a string as a list of BuiltIn functions

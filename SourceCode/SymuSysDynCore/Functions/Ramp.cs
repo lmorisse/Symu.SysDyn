@@ -6,6 +6,14 @@
 // License : the program is distributed under the terms of the GNU General Public License
 
 #endregion
+#region Licence
+
+// Description: SymuBiz - SymuSysDyn
+// Website: https://symu.org
+// Copyright: (c) 2020 laurent Morisseau
+// License : the program is distributed under the terms of the GNU General Public License
+
+#endregion
 
 #region using directives
 
@@ -26,13 +34,19 @@ namespace Symu.SysDyn.Core.Functions
     /// <example>ramp(20,-7) will have a return value of 0 at time 20 and -70 at time 30</example>
     public class Ramp : BuiltInFunction
     {
-        public const string Value = "Ramp";
+        public const string Label = "Ramp";
 
         public Ramp(string model, string function) : base(model, function)
         {
         }
 
+        /// <summary>
+        /// Time can be either a literal or a numeric
+        /// </summary>
         public string Time => GetParam(0);
+        /// <summary>
+        /// Slope can be either a literal or a numeric
+        /// </summary>
         public string Slope => GetParam(1);
 
         public override IBuiltInFunction Clone()
@@ -52,9 +66,7 @@ namespace Symu.SysDyn.Core.Functions
             // can be either a literal or a numeric
             var time = Convert.ToUInt16(GetValue(0, selfVariable, variables, sim));
 
-            var slope = GetValue(1, selfVariable, variables, sim);
-
-            return sim.Time >= time ? slope * (sim.Time - time) : 0;
+            return sim.Time >= time ? GetValue(1, selfVariable, variables, sim) * (sim.Time - time) : 0;
         }
 
         public override bool TryReplace(SimSpecs sim, out float result)

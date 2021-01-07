@@ -192,7 +192,7 @@ namespace Symu.SysDyn.Core.Functions
                 replace = true;
             }
 
-            if (child == Dt.Value && Name == child)
+            if (child == Dt.Label && Name == child)
             {
                 Expression = new Expression(value);
                 return;

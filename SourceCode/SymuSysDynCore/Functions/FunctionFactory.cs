@@ -41,25 +41,27 @@ namespace Symu.SysDyn.Core.Functions
                 case "Then":
                 case "Else":
                     break;
-                case Step.Value:
+                case Step.Label:
                     return new Step(model, function);
-                case Pulse.Value:
+                case Pulse.Label:
                     return new Pulse(model, function);
-                case Normal.Value:
+                case Normal.Label:
                     return new Normal(model, function);
-                case Ramp.Value:
+                case Ramp.Label:
                     return new Ramp(model, function);
-                case Smth1.Value:
+                case Smth1.Label:
                     return new Smth1(model, function);
-                case Smth3.Value:
+                case Smth3.Label:
                     return new Smth3(model, function);
-                case SmthN.Value:
+                case SmthN.Label:
                     return new SmthN(model, function);
-                case Dt.Value:
+                case Dt.Label:
                     return new Dt(model, function);
-                case Time.Value:
+                case Time.Label:
                     return new Time(model, function);
-                case ExternalUpdate.Value:
+                case Value.Label:
+                    return new Value(model, function);
+                case ExternalUpdate.Label:
                     return new ExternalUpdate(model, function);
                 default:
                     return new BuiltInFunction(model, function);
