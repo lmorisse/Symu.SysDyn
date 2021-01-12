@@ -211,7 +211,14 @@ namespace Symu.SysDyn.Core.Functions
 
         public virtual float Evaluate(IVariable selfVariable, VariableCollection variables, SimSpecs sim)
         {
-            return Convert.ToSingle(Expression.Evaluate());
+            try
+            {
+                return Convert.ToSingle(Expression.Evaluate());
+            }
+            catch
+            {
+                throw;
+            } 
         }
 
         protected void CopyTo(IBuiltInFunction copy)

@@ -10,7 +10,7 @@
 #region using directives
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Symu.SysDyn.Functions;
+using Symu.SysDyn.Core.Functions;
 using SymuSysDynTests.Classes;
 
 #endregion

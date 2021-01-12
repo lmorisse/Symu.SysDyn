@@ -64,24 +64,24 @@ namespace Symu.SysDyn.Core.Parser
             }
 
             //todo: check if schema exists
-            using (var reader = new StreamReader(SchemaLocation))
-            using (var xmlReader = XmlReader.Create(reader))
-            {
-                var schemas = new XmlSchemaSet();
-                var schema = XmlSchema.Read(xmlReader, null);
+            //using (var reader = new StreamReader(SchemaLocation))
+            //using (var xmlReader = XmlReader.Create(reader))
+            //{
+            //    var schemas = new XmlSchemaSet();
+            //    var schema = XmlSchema.Read(xmlReader, null);
 
-                schemas.Add(schema);
-                _xDoc.Validate(schemas, (sender, e) =>
-                {
-                    if (e.Exception == null)
-                    {
-                        return;
-                    }
+            //    schemas.Add(schema);
+            //    _xDoc.Validate(schemas, (sender, e) =>
+            //    {
+            //        if (e.Exception == null)
+            //        {
+            //            return;
+            //        }
 
-                    throw new XmlSchemaValidationException("Erreur de validation:\n" + e.Message,
-                        e.Exception);
-                });
-            }
+            //        throw new XmlSchemaValidationException("Erreur de validation:\n" + e.Message,
+            //            e.Exception);
+            //    });
+            //}
         }
 
         public ModelCollection ParseModels()

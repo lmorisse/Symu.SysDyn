@@ -11,7 +11,7 @@
 
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Symu.SysDyn.Parser;
+using Symu.SysDyn.Core.Parser;
 
 #endregion
 

@@ -14,14 +14,13 @@ using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
-using Symu.SysDyn.Engine;
-using Symu.SysDyn.Models.XMile;
-using Symu.SysDyn.QuickGraph;
+using Symu.SysDyn.Core.Engine;
+using Symu.SysDyn.Core.Models.XMile;
 using Syncfusion.Windows.Forms.Chart;
 
 #endregion
 
-namespace SymuSysDynApp
+namespace Symu.SysDyn.App
 {
     public partial class Home : Form
     {
@@ -200,11 +199,6 @@ namespace SymuSysDynApp
                     SetGroup(group);
                     break;
             }
-
-            var dotString = GraphVizDot.GenerateDotString(groupName == All
-                ? _stateMachine.GetGraph()
-                : _stateMachine.GetGroupGraph(groupName));
-            picImage.Image = GraphViz.RenderImage(dotString, "jpg");
         }
 
         private void cbVariables_SelectedIndexChanged_1(object sender, EventArgs e)
@@ -236,22 +230,16 @@ namespace SymuSysDynApp
         private void SetGlobalModels()
         {
             SetModel(null);
-            var dotString = GraphVizDot.GenerateDotString(_stateMachine.GetGraph());
-            picImage.Image = GraphViz.RenderImage(dotString, "jpg");
         }
 
         private void SetRootModel()
         {
             SetModel(_stateMachine.Models.RootModel);
-            var dotString = GraphVizDot.GenerateDotString(_stateMachine.GetRootModelGraph());
-            picImage.Image = GraphViz.RenderImage(dotString, "jpg");
         }
 
         private void SetSubModel(string modelName)
         {
             SetModel(_stateMachine.Models.Get(modelName));
-            var dotString = GraphVizDot.GenerateDotString(_stateMachine.GetSubModelGraph(modelName));
-            picImage.Image = GraphViz.RenderImage(dotString, "jpg");
         }
 
         private void SetModel(XMileModel model)

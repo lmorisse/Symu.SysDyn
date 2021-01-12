@@ -1,0 +1,97 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net5.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <AssemblyName>Symu.SysDyn.App</AssemblyName>
+    <RootNamespace>Symu.SysDyn.App</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="external\cdt.dll" />
+    <None Remove="external\cgraph.dll" />
+    <None Remove="external\dot.exe" />
+    <None Remove="external\freetype6.dll" />
+    <None Remove="external\gvc.dll" />
+    <None Remove="external\gvplugin_core.dll" />
+    <None Remove="external\gvplugin_dot_layout.dll" />
+    <None Remove="external\gvplugin_gd.dll" />
+    <None Remove="external\gvplugin_gdiplus.dll" />
+    <None Remove="external\iconv.dll" />
+    <None Remove="external\intl.dll" />
+    <None Remove="external\jpeg62.dll" />
+    <None Remove="external\libcairo-2.dll" />
+    <None Remove="external\libexpat-1.dll" />
+    <None Remove="external\libexpat.dll" />
+    <None Remove="external\libfontconfig-1.dll" />
+    <None Remove="external\libfreetype-6.dll" />
+    <None Remove="external\libglib-2.0-0.dll" />
+    <None Remove="external\libgmodule-2.0-0.dll" />
+    <None Remove="external\libgobject-2.0-0.dll" />
+    <None Remove="external\libgthread-2.0-0.dll" />
+    <None Remove="external\libpng12.dll" />
+    <None Remove="external\libpng14-14.dll" />
+    <None Remove="external\libxml2.dll" />
+    <None Remove="external\ltdl.dll" />
+    <None Remove="external\Pathplan.dll" />
+    <None Remove="external\Source.txt" />
+    <None Remove="external\zlib1.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="external\cdt.dll" />
+    <Content Include="external\cgraph.dll" />
+    <Content Include="external\dot.exe" />
+    <Content Include="external\freetype6.dll" />
+    <Content Include="external\gvc.dll" />
+    <Content Include="external\gvplugin_core.dll" />
+    <Content Include="external\gvplugin_dot_layout.dll" />
+    <Content Include="external\gvplugin_gd.dll" />
+    <Content Include="external\gvplugin_gdiplus.dll" />
+    <Content Include="external\iconv.dll" />
+    <Content Include="external\intl.dll" />
+    <Content Include="external\jpeg62.dll" />
+    <Content Include="external\libcairo-2.dll" />
+    <Content Include="external\libexpat-1.dll" />
+    <Content Include="external\libexpat.dll" />
+    <Content Include="external\libfontconfig-1.dll" />
+    <Content Include="external\libfreetype-6.dll" />
+    <Content Include="external\libglib-2.0-0.dll" />
+    <Content Include="external\libgmodule-2.0-0.dll" />
+    <Content Include="external\libgobject-2.0-0.dll" />
+    <Content Include="external\libgthread-2.0-0.dll" />
+    <Content Include="external\libpng12.dll" />
+    <Content Include="external\libpng14-14.dll" />
+    <Content Include="external\libxml2.dll" />
+    <Content Include="external\ltdl.dll" />
+    <Content Include="external\Pathplan.dll" />
+    <Content Include="external\Source.txt" />
+    <Content Include="external\zlib1.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="QuickGraph" Version="3.6.61119.7" />
+    <PackageReference Include="Syncfusion.Chart.Windows" Version="18.4.0.33" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SymuSysDynCore\SymuSysDynCore.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Home.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Home.Designer.cs">
+      <DependentUpon>Home.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+    </None>
+  </ItemGroup>
+
+</Project>

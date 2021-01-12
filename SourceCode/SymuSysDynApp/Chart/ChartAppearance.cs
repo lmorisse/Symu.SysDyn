@@ -17,7 +17,7 @@ using Syncfusion.Windows.Forms.Chart;
 
 #endregion
 
-namespace SymuSysDynApp.Graph
+namespace Symu.SysDyn.App.Chart
 {
     public static class ChartAppearance
     {

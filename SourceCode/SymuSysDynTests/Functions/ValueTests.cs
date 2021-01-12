@@ -11,9 +11,7 @@
 
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NCalc2;
-using Symu.SysDyn.Equations;
-using Symu.SysDyn.Functions;
+using Symu.SysDyn.Core.Functions;
 using SymuSysDynTests.Classes;
 
 #endregion

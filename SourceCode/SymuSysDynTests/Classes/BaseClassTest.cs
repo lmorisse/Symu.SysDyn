@@ -12,9 +12,9 @@
 using System.Linq;
 using System.Xml.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Symu.SysDyn.Engine;
-using Symu.SysDyn.Models.XMile;
-using Symu.SysDyn.Parser;
+using Symu.SysDyn.Core.Engine;
+using Symu.SysDyn.Core.Models.XMile;
+using Symu.SysDyn.Core.Parser;
 
 #endregion
 
@@ -25,7 +25,6 @@ namespace SymuSysDynTests.Classes
     {
         protected const string TestFile =
             @"C:\Users\laure\Dropbox\Symu\SourceCode\Symu.SysDyn\Github\SourceCode\SymuSysDynTests\Templates\Test.xmile";
-
         protected BaseClassTest()
         {
             Machine = new StateMachine(TestFile);

@@ -104,7 +104,7 @@ namespace Symu.SysDyn.Core.Equations
         /// <param name="selfVariable">The variable parent of the equation</param>
         /// <param name="variables"></param>
         /// <param name="sim"></param>
-        /// <returns></returns>
+        /// <returns></returns> 
         public virtual void Prepare(IVariable selfVariable, VariableCollection variables, SimSpecs sim)
         {
             if (variables == null)

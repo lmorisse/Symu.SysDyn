@@ -11,7 +11,7 @@
 
 using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Symu.SysDyn.Engine;
+using Symu.SysDyn.Core.Engine;
 
 #endregion
 

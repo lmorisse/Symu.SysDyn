@@ -10,8 +10,9 @@
 #region using directives
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Symu.SysDyn.Functions;
-using Symu.SysDyn.Models.XMile;
+
+using Symu.SysDyn.Core.Functions;
+using Symu.SysDyn.Core.Models.XMile;
 using SymuSysDynTests.Classes;
 
 #endregion

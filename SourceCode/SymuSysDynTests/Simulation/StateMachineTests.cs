@@ -91,14 +91,6 @@ namespace SymuSysDynTests.Simulation
             Assert.AreEqual(0, Machine.Variables.GetNotUpdated.Count());
         }
 
-        [TestMethod]
-        public void GetGraphTest()
-        {
-            var graph = Machine.GetGraph();
-            Assert.AreEqual(10, graph.VertexCount);
-            Assert.AreEqual(8, graph.EdgeCount);
-        }
-
         /// <summary>
         ///     Optimize with constants
         /// </summary>

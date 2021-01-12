@@ -11,8 +11,7 @@
 
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Symu.SysDyn.Functions;
-using Symu.SysDyn.Models.XMile;
+using Symu.SysDyn.Core.Functions;
 
 #endregion
 
@@ -93,6 +92,17 @@ namespace SymuSysDynTests.Functions
             Assert.AreEqual("Dt", results[0]);
             Assert.AreEqual("Time", results[1]);
             Assert.AreEqual("SET(3,5)", results[2]);
+        }
+        /// <summary>
+        ///     passing test : Is variable false then true
+        /// </summary>
+        [TestMethod]
+        public void ParseStringFunctionsTest4()
+        {
+            const string test = "10*(1+Ramp(0,5))";
+            var results = FunctionUtils.ParseStringFunctions(test);
+            Assert.AreEqual(1, results.Count);
+            Assert.AreEqual("Ramp(0,5)", results[0]);
         }
 
 

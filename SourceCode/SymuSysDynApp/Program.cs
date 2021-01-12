@@ -1,34 +1,20 @@
-﻿#region Licence
-
-// Description: SymuBiz - SymuSysDynApp
-// Website: https://symu.org
-// Copyright: (c) 2020 laurent Morisseau
-// License : the program is distributed under the terms of the GNU General Public License
-
-#endregion
-
-#region using directives
-
 using System;
+using System.Configuration;
 using System.Windows.Forms;
-using SymuSysDynApp.Properties;
 using Syncfusion.Licensing;
 
-#endregion
-
-namespace SymuSysDynApp
+namespace Symu.SysDyn.App
 {
-    internal static class Program
+    static class Program
     {
         /// <summary>
-        ///     Point d'entrée principal de l'application.
+        ///  The main entry point for the application.
         /// </summary>
         [STAThread]
-        private static void Main()
+        static void Main()
         {
             // Get you own SyncFusionKey
-            SyncfusionLicenseProvider.RegisterLicense(Settings.Default.SyncFusionKey);
-
+            SyncfusionLicenseProvider.RegisterLicense(ConfigurationManager.AppSettings.Get("SyncFusionKey"));
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Home());
