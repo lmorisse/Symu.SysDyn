@@ -81,6 +81,57 @@ namespace SymuSysDynTests.Equations
 
         #endregion
 
+        #region Evaluate
+
+        [TestMethod]
+        public void EvaluateTest()
+        {
+            var variable = Variable.CreateInstance("X", Model, PlusEquation);
+            Assert.AreEqual(3, variable.Equation.Evaluate(null, Variables, null));
+        }
+
+        [TestMethod]
+        public void EvaluateTest1()
+        {
+            var variable = Variable.CreateInstance("X", Model, MinusEquation);
+            Assert.AreEqual(-1, variable.Equation.Evaluate(null, Variables, null));
+        }
+
+        [TestMethod]
+        public void EvaluateTest2()
+        {
+            var variable = Variable.CreateInstance("X", Model, MultiplicationEquation);
+            Assert.AreEqual(2, variable.Equation.Evaluate(null, Variables, null));
+        }
+
+        [TestMethod]
+        public void EvaluateTest3()
+        {
+            var variable = Variable.CreateInstance("X", Model, DivisionEquation);
+            Assert.AreEqual(0.5F, variable.Equation.Evaluate(null, Variables, null));
+        }
+
+        [TestMethod]
+        public void EvaluateTest4()
+        {
+            var variable = Variable.CreateInstance("X", Model, Equation);
+            Assert.AreEqual(1, variable.Equation.Evaluate(null, Variables, null));
+        }
+
+        [TestMethod]
+        public void EvaluateTest5()
+        {
+            var variable = Variable.CreateInstance("X", Model, MixEquation);
+            Assert.AreEqual(2, variable.Equation.Evaluate(null, Variables, null));
+        }
+
+        [TestMethod]
+        public void EvaluateTest6()
+        {
+            var variable = Variable.CreateInstance("X", Model, NestedEquation);
+            Assert.AreEqual(5, variable.Equation.Evaluate(null, Variables, null));
+        }
+
         #region Replace
 
         [TestMethod]
