@@ -114,6 +114,12 @@ namespace SymuSysDynTests.Equations
             Assert.AreEqual(5, variable.Equation.Evaluate(null, Variables, null));
         }
 
+                public void EvaluateTest10()
+        {
+            var variable = Variable.CreateInstance("X", Model, NestedEquation);
+            Assert.AreEqual(5, variable.Equation.Evaluate(null, Variables, null));
+        }
+
         #endregion
 
         #region Replace
