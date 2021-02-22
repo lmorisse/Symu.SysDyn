@@ -20,6 +20,12 @@
       <aux name="DirectSMTH3">
         <eqn>SMTH3(5+Step(10,3),5)</eqn>
       </aux>
+      <aux name="DirectSMTH3_T1">
+        <eqn>SMTH3(ToSmth,5)</eqn>
+      </aux>
+      <aux name="ToSmth">
+        <eqn>If (TIME > 1) Then (Initial) Else (0)</eqn>
+      </aux>
       <aux name="Input">
         <eqn>5+Step(10,3)</eqn>
       </aux>
