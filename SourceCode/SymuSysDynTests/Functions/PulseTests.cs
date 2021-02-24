@@ -29,6 +29,24 @@ namespace SymuSysDynTests.Functions
             Assert.AreEqual("12", function.FirstTime);
             Assert.AreEqual(string.Empty, function.Interval);
         }
+         [TestMethod]
+        public void PulseTest1()
+        {
+            var function = new Pulse(string.Empty, "Pulse(20, 12,5)");
+            Assert.AreEqual("20", function.Magnitude);
+            Assert.AreEqual("12", function.FirstTime);
+            Assert.AreEqual("5", function.Interval);
+        }
+        [TestMethod]
+        public void CloneTest()
+        {
+            var function = new Pulse(string.Empty, "Pulse(20, 12,5)");
+            var function1 = new Pulse(string.Empty, "Pulse(0,0,0)");
+            function1= (Pulse)function.Clone();
+            Assert.AreEqual("20", function1.Magnitude);
+            Assert.AreEqual("12", function1.FirstTime);
+            Assert.AreEqual("5", function1.Interval);
+        }
 
         [TestMethod]
         public void NormalTest1()
