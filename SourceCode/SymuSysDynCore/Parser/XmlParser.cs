@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Schema;
@@ -84,7 +85,7 @@ namespace Symu.SysDyn.Core.Parser
             //}
         }
 
-        public ModelCollection ParseModels()
+        public async Task<ModelCollection> ParseModels()
         {
             if (_xDoc.Root == null)
             {
@@ -96,13 +97,13 @@ namespace Symu.SysDyn.Core.Parser
             var modelCollection = new ModelCollection();
             foreach (var model in models)
             {
-                modelCollection.Add(ParseModel(model));
+                modelCollection.Add(await ParseModel(model));
             }
 
             return modelCollection;
         }
 
-        public XMileModel ParseModel(XElement xModel)
+        public async Task<XMileModel> ParseModel(XElement xModel)
         {
             if (xModel == null)
             {
@@ -114,9 +115,9 @@ namespace Symu.SysDyn.Core.Parser
             var model = new XMileModel(xModel.FirstAttribute?.Value);
             foreach (var variable in variables)
             {
-                ParseStocks(variable, model);
-                ParseFlows(variable, model);
-                ParseAuxiliaries(variable, model);
+                await ParseStocks(variable, model);
+                await ParseFlows(variable, model);
+                await ParseAuxiliaries(variable, model);
                 ParseGroups(variable, model);
                 ParseModules(variable, model);
             }
@@ -145,7 +146,7 @@ namespace Symu.SysDyn.Core.Parser
             return new SimSpecs(start, stop, dt, pause, timeUnits);
         }
 
-        public void ParseAuxiliaries(XContainer variables, XMileModel model)
+        public async Task ParseAuxiliaries(XContainer variables, XMileModel model)
         {
             if (variables == null)
             {
@@ -159,7 +160,7 @@ namespace Symu.SysDyn.Core.Parser
 
             foreach (var auxiliary in variables.Descendants(_ns + "aux"))
             {
-                Auxiliary.CreateInstance(auxiliary.FirstAttribute.Value,
+                await Auxiliary.CreateInstance(auxiliary.FirstAttribute.Value,
                     model,
                     ParseEquation(auxiliary),
                     ParseGraphicalFunction(auxiliary),
@@ -169,7 +170,7 @@ namespace Symu.SysDyn.Core.Parser
             }
         }
 
-        public void ParseFlows(XContainer variables, XMileModel model)
+        public async Task ParseFlows(XContainer variables, XMileModel model)
         {
             if (variables == null)
             {
@@ -183,7 +184,7 @@ namespace Symu.SysDyn.Core.Parser
 
             foreach (var flow in variables.Descendants(_ns + "flow"))
             {
-                Flow.CreateInstance(flow.FirstAttribute.Value,
+                await Flow.CreateInstance(flow.FirstAttribute.Value,
                     model,
                     ParseEquation(flow),
                     ParseGraphicalFunction(flow),
@@ -193,7 +194,7 @@ namespace Symu.SysDyn.Core.Parser
             }
         }
 
-        public void ParseStocks(XContainer variables, XMileModel model)
+        public async Task ParseStocks(XContainer variables, XMileModel model)
         {
             if (variables == null)
             {
@@ -207,7 +208,7 @@ namespace Symu.SysDyn.Core.Parser
 
             foreach (var stock in variables.Descendants(_ns + "stock"))
             {
-                Stock.CreateInstance(stock.FirstAttribute.Value,
+                await Stock.CreateInstance(stock.FirstAttribute.Value,
                     model,
                     ParseEquation(stock),
                     ParseInflows(stock),

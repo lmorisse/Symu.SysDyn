@@ -10,6 +10,7 @@
 #region using directives
 
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Symu.SysDyn.Core.Models.XMile;
 
@@ -23,12 +24,14 @@ namespace SymuSysDynTests.Models.XMile
         private readonly XMileModel _model = new XMileModel("1");
         private readonly XMileModel _model1 = new XMileModel("2");
         private readonly ModelCollection _models = new ModelCollection();
-        private readonly Variable _variable = new Variable("0", string.Empty, "STEP(1,5)");
-        private readonly Variable _variable1 = new Variable("1", string.Empty, "STEP(1,5)");
+        private Variable _variable ;
+        private Variable _variable1 ;
 
         [TestInitialize]
-        public void Initialize()
+        public async Task Initialize()
         {
+            _variable = await Variable.CreateVariable<Variable>("0", string.Empty, "STEP(1,5)");
+            _variable1 = await Variable.CreateVariable<Variable>("1", string.Empty, "STEP(1,5)");
             _model.Variables.Add(_variable);
             _model1.Variables.Add(_variable1);
             _models.Add(_model);

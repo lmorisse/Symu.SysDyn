@@ -10,6 +10,7 @@
 #region using directives
 
 using System;
+using System.Threading.Tasks;
 using Symu.SysDyn.Core.Engine;
 using Symu.SysDyn.Core.Models.XMile;
 
@@ -30,35 +31,35 @@ namespace Symu.SysDyn.Core.Functions
         public const string Label = "Value";
         private float? _value;
 
-        public Value(string model, string function) : base(model, function)
+        public static async Task<Value> CreateValue(string model, string function) 
         {
+            return await CreateBuiltInFunction<Value>(model, function) ;
         }
 
         public string VariableId => GetParam(0);
 
-        public override IBuiltInFunction Clone()
+        public override async Task<IBuiltInFunction> Clone()
         {
-            var clone = new Value(Model, OriginalFunction);
+            var clone = await CreateValue(Model, OriginalFunction);
             CopyTo(clone);
             return clone;
         }
 
-        public override float Evaluate(IVariable selfVariable, VariableCollection variables, SimSpecs sim)
+        public override async Task<float> Evaluate(IVariable selfVariable, VariableCollection variables, SimSpecs sim)
         {
             if (sim == null)
             {
                 throw new ArgumentNullException(nameof(sim));
             }
 
-            _value ??= GetValue(0, selfVariable, variables, sim);
+            _value ??= await GetValue(0, selfVariable, variables, sim);
 
             return _value.Value;
         }
 
-        public override bool TryReplace(SimSpecs sim, out float result)
+        public override async Task<TryReplaceStruct> TryReplace(SimSpecs sim)
         {
-            result = 0;
-            return false;
+            return new TryReplaceStruct(false,0);
         }
     }
 }

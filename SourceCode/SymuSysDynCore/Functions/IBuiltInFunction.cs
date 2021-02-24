@@ -10,6 +10,8 @@
 #region using directives
 
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using NCalcAsync;
 using Symu.SysDyn.Core.Engine;
 using Symu.SysDyn.Core.Equations;
 using Symu.SysDyn.Core.Models.XMile;
@@ -27,7 +29,7 @@ namespace Symu.SysDyn.Core.Functions
         /// <summary>
         ///     The entire function included brackets and parameters
         /// </summary>
-        string OriginalFunction { get; }
+        string OriginalFunction { get; set; }
 
         /// <summary>
         ///     The function name
@@ -45,7 +47,7 @@ namespace Symu.SysDyn.Core.Functions
         /// </summary>
         List<IEquation> Parameters { get; }
 
-        IBuiltInFunction Clone();
+        Task<IBuiltInFunction> Clone();
 
         /// <summary>
         ///     Prepare the function for the Equation.Prepare()
@@ -54,10 +56,14 @@ namespace Symu.SysDyn.Core.Functions
         /// <param name="variables"></param>
         /// <param name="sim"></param>
         /// <returns></returns>
-        float Prepare(IVariable selfVariable, VariableCollection variables, SimSpecs sim);
+        Task<float> Prepare(IVariable selfVariable, VariableCollection variables, SimSpecs sim);
 
-        bool TryReplace(SimSpecs sim, out float result);
-        bool TryEvaluate(IVariable variable, VariableCollection variables, SimSpecs sim, out float result);
-        void Replace(string child, string value, SimSpecs sim);
+        Task<TryReplaceStruct> TryReplace(SimSpecs sim);
+        Task<TryReplaceStruct> TryEvaluate(IVariable variable, VariableCollection variables, SimSpecs sim);
+        Task Replace(string child, string value, SimSpecs sim);
+        List<float> Args { get; set; }
+        string InitializedFunction { get; set; }
+        Expression Expression { get; set; }
+        string Model { get; set; }
     }
 }

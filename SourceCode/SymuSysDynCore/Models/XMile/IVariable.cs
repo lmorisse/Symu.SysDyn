@@ -10,6 +10,7 @@
 #region using directives
 
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Symu.SysDyn.Core.Engine;
 using Symu.SysDyn.Core.Equations;
 
@@ -44,9 +45,9 @@ namespace Symu.SysDyn.Core.Models.XMile
         GraphicalFunction GraphicalFunction { get; set; }
 
 
-        string Name { get; }
-        string Model { get; }
-        string FullName { get; }
+        string Name { get; set; }
+        string Model { get; set; }
+        string FullName { get; set; }
         Units Units { get; set; }
 
         /// <summary>
@@ -71,10 +72,12 @@ namespace Symu.SysDyn.Core.Models.XMile
         /// <returns>A string that represents the current object.</returns>
         string ToString();
 
-        void Update(VariableCollection variables, SimSpecs simulation);
-        bool TryOptimize(bool setInitialValue, SimSpecs sim);
+        Task Update(VariableCollection variables, SimSpecs simulation);
+        Task<bool> TryOptimize(bool setInitialValue, SimSpecs sim);
         void Initialize();
-        IVariable Clone();
+        Task<IVariable> Clone();
         bool Equals(string fullName);
+        void SetChildren();
+        void AdjustValue(float value);
     }
 }

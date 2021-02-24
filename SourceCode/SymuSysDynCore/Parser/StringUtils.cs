@@ -26,12 +26,12 @@ namespace Symu.SysDyn.Core.Parser
     {
         public static string FullName(string model, string name)
         {
-            return model + "_" + name;
+            return $"{model}_{name}";
         }
 
         public static string ConnectName(string model, string name)
         {
-            return model + "." + name;
+            return $"{model}.{name}";
         }
 
         #region Names
@@ -93,12 +93,12 @@ namespace Symu.SysDyn.Core.Parser
 
         private static string FirstCharToUpper(string input)
         {
-            switch (input)
+            return input switch
             {
-                case null: throw new ArgumentNullException(nameof(input));
-                case "": return string.Empty;
-                default: return input.First().ToString().ToUpper() + input.Substring(1);
-            }
+                null => throw new ArgumentNullException(nameof(input)),
+                "" => string.Empty,
+                _ => input.First().ToString().ToUpper() + input.Substring(1)
+            };
         }
 
         /// <summary>

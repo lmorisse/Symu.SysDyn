@@ -14,7 +14,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
-using NCalc2;
+using System.Threading.Tasks;
+using NCalcAsync;
 using Symu.SysDyn.Core.Functions;
 using Symu.SysDyn.Core.Parser;
 
@@ -22,21 +23,51 @@ using Symu.SysDyn.Core.Parser;
 
 namespace Symu.SysDyn.Core.Equations
 {
+    public struct EquationFactoryStruct
+    {
+        public EquationFactoryStruct(IEquation equation, float value)
+        {
+            Equation = equation;
+            Value = value;
+        }
+        public IEquation Equation { get; set; }
+        public float Value { get; set; }
+    }
+    public struct EquationFactoryInitializeStruct
+    {
+        public EquationFactoryInitializeStruct(List<IBuiltInFunction> functions, List<string> variables, List<string> words, string initializedEquation)
+        {
+            Functions= functions;
+            Variables= variables;
+            Words = words;
+            InitializedEquation = initializedEquation;
+        }
+        public List<IBuiltInFunction> Functions { get; set; }
+        public List<string> Variables { get; set; }
+        public List<string> Words {get; set; }
+        public string InitializedEquation { get; set; }
+}
     public static class EquationFactory
     {
-        public static IEquation CreateInstance(string model, string eqn, out float value)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="eqn"></param>
+        /// <returns>return the Equation and the initial value of this equation</returns>
+        public static async Task<EquationFactoryStruct> CreateInstance(string model, string eqn)
         {
-            return CreateInstance(model, eqn, null, out value);
+            return await CreateInstance(model, eqn, null);
         }
 
-        public static IEquation CreateInstance(string model, string eqn, Models.XMile.Range range, out float value)
+        public static async Task<EquationFactoryStruct> CreateInstance(string model, string eqn, Models.XMile.Range range)
         {
-            value = 0;
             if (string.IsNullOrEmpty(eqn))
             {
-                return null;
+                return new EquationFactoryStruct(null,0);
             }
 
+            var value = 0F;
             //Clean eqn
             // Remove string in Braces which are units, not equation
             var index = eqn.IndexOf('{');
@@ -51,46 +82,55 @@ namespace Symu.SysDyn.Core.Equations
             if (float.TryParse(eqn, NumberStyles.Number, CultureInfo.InvariantCulture, out var floatEqn))
                 //NumberStyles.Any => doesn't work for (1) => success and floatEqn = -1!
             {
-                value = floatEqn;
-                return null;
+                //value = floatEqn;
+                return new EquationFactoryStruct(null, floatEqn); 
             }
 
             try
             {
-                // Test literal such as "1/10"
-                var expression = new Expression(eqn);
-                var eval = expression.Evaluate();
-                value = Convert.ToSingle(eval);
-                return null;
+                var existsFunctionTimeDependent = FunctionUtils.FunctionsTimeDependent.Any(function =>
+                    eqn.ToLowerInvariant().Contains(function));
+   
+
+                if (!existsFunctionTimeDependent)
+                {
+                    // Test literal such as "1/10"
+                    var expression = new Expression(eqn);
+                    var eval = await expression.EvaluateAsync(0,0,1);
+                    value = Convert.ToSingle(eval);
+                    return new EquationFactoryStruct(null, value);
+                }
             }
+        
             catch
             {
                 // not an constant
             }
 
-            Initialize(model, eqn, out var functions, out var variables, out var words);
+            var initialise = await Initialize(model, eqn);
 
             float sumEval = 0;
 
-            for (var i = 0; i < words.Count; i++)
+            for (var i = 0; i < initialise.Words.Count; i++)
             {
-                var word = words[i];
+                var word = initialise.Words[i];
                 if (word.Length <= 1)
                 {
                     continue;
                 }
 
                 float eval;
-                var function = functions.Find(x => x.IndexName == word);
+                var function = initialise.Functions.Find(x => x.IndexName == word);
                 if (function != null)
                 {
-                    var success = function.TryReplace(null, out eval);
-                    if (!success)
+                    var tryReplace = await function.TryReplace(null);
+                    if (!tryReplace.Success)
                     {
                         continue;
                     }
 
-                    functions.Remove(function);
+                    eval = tryReplace.Value;
+                    initialise.Functions.Remove(function);
                 }
                 else
                 {
@@ -98,7 +138,7 @@ namespace Symu.SysDyn.Core.Equations
                     try
                     {
                         // Test literal such as ".01"
-                        eval = Convert.ToSingle(expression.Evaluate());
+                        eval = Convert.ToSingle(await expression.EvaluateAsync(0,0,1));
                     }
                     catch
                     {
@@ -107,36 +147,38 @@ namespace Symu.SysDyn.Core.Equations
                 }
 
                 // Variable can be replaced by a constant
-                words[i] = eval.ToString(CultureInfo.InvariantCulture);
+                initialise.Words[i] = eval.ToString(CultureInfo.InvariantCulture);
                 sumEval += eval;
             }
 
-            var initializedEquation = string.Join(string.Empty, words);
+            var initializedEquation = string.Join(string.Empty, initialise.Words);
 
             // Equation with functions or only variables with brackets
-            if (functions.Any() || words.Contains("("))
+            if (initialise.Functions.Any() || initialise.Words.Contains("("))
             {
-                var complexEquation = new ComplexEquation(eqn, initializedEquation, functions, variables, words, range);
+                var complexEquation = new ComplexEquation(eqn, initializedEquation, initialise.Functions, initialise.Variables, initialise.Words, range);
                 try
                 {
-                    value = complexEquation.InitialValue();
-                    return null;
+                    value = await complexEquation.InitialValue();
+                    return new EquationFactoryStruct(null, value);
                 }
                 catch
                 {
-                    return complexEquation;
+                    //return complexEquation;
+                    return new EquationFactoryStruct(complexEquation, value);
                 }
             }
 
             // Only variables without brackets
-            if (variables.Any())
+            if (initialise.Variables.Any())
             {
-                return new SimpleEquation(eqn, initializedEquation, variables, words, range);
+                var equation =  new SimpleEquation(eqn, initializedEquation, initialise.Variables, initialise.Words, range);
+                return new EquationFactoryStruct(equation, value);
             }
 
             // Only constants
             value = sumEval;
-            return null;
+            return new EquationFactoryStruct(null, value);
         }
 
         /// <summary>
@@ -145,19 +187,15 @@ namespace Symu.SysDyn.Core.Equations
         /// </summary>
         /// <param name="model">Model's name</param>
         /// <param name="originalEquation"></param>
-        /// <param name="functions"></param>
-        /// <param name="variables"></param>
-        /// <param name="words"></param>
         /// <returns>Initialized equation</returns>
-        public static string Initialize(string model, string originalEquation, out List<IBuiltInFunction> functions,
-            out List<string> variables, out List<string> words)
+        public static async Task<EquationFactoryInitializeStruct> Initialize(string model, string originalEquation)
         {
             if (originalEquation == null)
             {
                 throw new ArgumentNullException(nameof(originalEquation));
             }
 
-            functions = FunctionUtils.ParseFunctions(model, originalEquation).ToList();
+            var functions = await FunctionUtils.ParseFunctions(model, originalEquation);
             for (var i = 0; i < functions.Count; i++)
             {
                 var function = functions[i];
@@ -171,8 +209,8 @@ namespace Symu.SysDyn.Core.Equations
                 new Regex(
                     @"[a-zA-Z0-9_]*\.?\,?[a-zA-Z0-9_]+|[-^+*\/()<>=]|\w+"); //@"[0-9]*\.?\,?[0-9]+|[-^+*\/()<>=]|\w+");
             var matches = regexWords.Matches(originalEquation);
-            words = new List<string>();
-            variables = new List<string>();
+            var words = new List<string>();
+            var variables = new List<string>();
             foreach (var match in matches)
             {
                 var word = StringUtils.CleanName(match.ToString());
@@ -180,7 +218,8 @@ namespace Symu.SysDyn.Core.Equations
             }
 
             variables = variables.Distinct().ToList();
-            return string.Join(string.Empty, words);
+            var initializedEquation = string.Join(string.Empty, words);
+            return new EquationFactoryInitializeStruct(functions, variables, words, initializedEquation);
         }
 
         /// <summary>

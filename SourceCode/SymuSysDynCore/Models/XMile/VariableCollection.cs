@@ -13,6 +13,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 #endregion
 
@@ -160,12 +161,12 @@ namespace Symu.SysDyn.Core.Models.XMile
             _variables.Clear();
         }
 
-        public VariableCollection Clone()
+        public async Task<VariableCollection> Clone()
         {
             var clone = new VariableCollection();
             foreach (var variable in _variables)
             {
-                clone.Add(variable.Clone());
+                clone.Add(await variable.Clone());
             }
 
             return clone;

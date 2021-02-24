@@ -9,6 +9,7 @@
 
 #region using directives
 
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Symu.SysDyn.Core.Functions;
 using Symu.SysDyn.Core.Models.XMile;
@@ -21,31 +22,38 @@ namespace SymuSysDynTests.Functions
     [TestClass]
     public class ExternalUpdateTests : BaseClassTest
     {
+        [TestInitialize]
+        public async Task InitializeTest()
+        {
+            await Initialize();
+        }
         /// <summary>
         /// Without initial value
         /// </summary>
         [TestMethod]
-        public void ExternalUpdateTest()
+        public async Task ExternalUpdateTest()
         {
-            var function = new ExternalUpdate(string.Empty, "ExternalUpdate");
-            Assert.IsFalse(function.TryReplace(Machine.Simulation, out var result));
-            var variable = Variable.CreateInstance("variable", Machine.Models.RootModel, "1");
-            Assert.AreEqual(1, function.Evaluate(variable, Machine.Models.GetVariables(), Machine.Simulation));
+            var function = await ExternalUpdate.CreateExternalUpdate(string.Empty, "ExternalUpdate");
+            var tryReplace = await function.TryReplace(Machine.Simulation);
+            Assert.IsFalse(tryReplace.Success);
+            var variable = await Variable.CreateInstance<Variable>("variable", Machine.Models.RootModel, "1");
+            Assert.AreEqual(1, await function.Evaluate(variable, Machine.Models.GetVariables(), Machine.Simulation));
         }
         /// <summary>
         /// With initial value
         /// </summary>
         [TestMethod]
-        public void ExternalUpdateTest1()
+        public async Task ExternalUpdateTest1()
         {
-            var function = new ExternalUpdate(string.Empty, "ExternalUpdate(2)");
-            Assert.IsFalse(function.TryReplace(Machine.Simulation, out var result));
-            var variable = Variable.CreateInstance("variable", Machine.Models.RootModel, "1");
+            var function = await ExternalUpdate.CreateExternalUpdate(string.Empty, "ExternalUpdate(2)");
+            var tryReplace = await function.TryReplace(Machine.Simulation);
+            Assert.IsFalse(tryReplace.Success);
+            var variable = await Variable.CreateInstance<Variable>("variable", Machine.Models.RootModel, "1");
             //Initial value
-            Assert.AreEqual(2, function.Evaluate(variable, Machine.Models.GetVariables(), Machine.Simulation));
+            Assert.AreEqual(2, await function.Evaluate(variable, Machine.Models.GetVariables(), Machine.Simulation));
             Machine.Simulation.Step++;
             //Variable value
-            Assert.AreEqual(1, function.Evaluate(variable, Machine.Models.GetVariables(), Machine.Simulation));
+            Assert.AreEqual(1, await function.Evaluate(variable, Machine.Models.GetVariables(), Machine.Simulation));
         }
     }
 }

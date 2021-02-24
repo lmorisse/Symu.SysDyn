@@ -11,6 +11,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Symu.SysDyn.Core.Engine;
 using Symu.SysDyn.Core.Equations;
 using Symu.SysDyn.Core.Parser;
@@ -53,19 +54,19 @@ namespace Symu.SysDyn.Core.Models.XMile
         /// <summary>
         ///     The name of the subModel called by the module
         /// </summary>
-        public string Name { get; }
+        public string Name { get; set; }
 
         /// <summary>
         ///     Model name
         /// </summary>
-        public string Model { get; }
+        public string Model { get; set; }
 
         /// <summary>
         ///     Module and Connect are using FullName = ModelName.VariableName
         /// </summary>
-        public string FullName { get; }
+        public string FullName { get; set; }
 
-        public bool TryOptimize(bool setInitialValue, SimSpecs sim)
+        public async Task<bool> TryOptimize(bool setInitialValue, SimSpecs sim)
         {
             return true;
         }
@@ -75,7 +76,7 @@ namespace Symu.SysDyn.Core.Models.XMile
             Updated = true;
         }
 
-        public IVariable Clone()
+        public async Task<IVariable> Clone()
         {
             var clone = new Module(Name, Model)
             {
@@ -184,11 +185,20 @@ namespace Symu.SysDyn.Core.Models.XMile
         /// </summary>
         public bool StoreResult { get; set; } 
 
-        public void Update(VariableCollection variables, SimSpecs simulation)
+        public async Task Update(VariableCollection variables, SimSpecs simulation)
         {
             //
         }
 
+        public void SetChildren()
+        {
+            //
+        }
+
+        public void AdjustValue(float value)
+        {
+            //
+        }
         #endregion
     }
 }

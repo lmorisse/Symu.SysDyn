@@ -9,6 +9,7 @@
 
 #region using directives
 
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Symu.SysDyn.Core.Engine;
 using Symu.SysDyn.Core.Models.XMile;
@@ -20,8 +21,13 @@ namespace SymuSysDynTests.Equations
     [TestClass]
     public class ComplexEquationTests
     {
+        private const string Equation = "variable1";
+        private const string MixEquation = "1 + variable1";
+        private const string NestedEquation = "(variable1 + (sqrt(4)*variable2))";
         private const string NormalEquation = "Normal(variable1,0)";
         private const string MinEquation = "Min(variable1,variable2)";
+        private const string MultiplicationEquation = "variable1*variable2";
+        private const string DivisionEquation = "variable1/variable2";
         private const string PlusEquation = "Normal(variable1+variable2,0)";
         private const string BracketsEquation = "((variable1)/(variable2))";
         private const string SameVariableEquation = "((variable1)+(variable1))";
@@ -42,76 +48,76 @@ namespace SymuSysDynTests.Equations
         }
 
         [TestMethod]
-        public void CloneTest()
+        public async Task CloneTest()
         {
-            var variable = Variable.CreateInstance("X", Model, NormalEquation);
-            var cloneEquation = variable.Equation.Clone();
-            Assert.AreEqual(1, cloneEquation.Evaluate(null, Variables, null));
+            var variable = await Variable.CreateInstance<Auxiliary>("X", Model, NormalEquation);
+            var cloneEquation = await variable.Equation.Clone();
+            Assert.AreEqual(1, await cloneEquation.Evaluate(null, Variables, null));
         }
 
         #region Evaluate
 
         [TestMethod]
-        public void EvaluateTest()
+        public async Task EvaluateTest()
         {
-            var variable = Variable.CreateInstance("X", Model, NormalEquation);
-            Assert.AreEqual(1, variable.Equation.Evaluate(null, Variables, null));
+            var variable = await Variable.CreateInstance<Auxiliary>("X", Model, NormalEquation);
+            Assert.AreEqual(1, await variable.Equation.Evaluate(null, Variables, null));
         }
 
         [TestMethod]
-        public void EvaluateTest1()
+        public async Task EvaluateTest1()
         {
-            var variable = Variable.CreateInstance("X", Model, MinEquation);
-            Assert.AreEqual(1, variable.Equation.Evaluate(null, Variables, null));
+            var variable = await Variable.CreateInstance<Auxiliary>("X", Model, MinEquation);
+            Assert.AreEqual(1, await variable.Equation.Evaluate(null, Variables, null));
         }
 
         [TestMethod]
-        public void EvaluateTest3()
+        public async Task EvaluateTest3()
         {
-            var variable = Variable.CreateInstance("X", Model, PlusEquation);
-            Assert.AreEqual(3, variable.Equation.Evaluate(null, Variables, null));
+            var variable = await Variable.CreateInstance<Auxiliary>("X", Model, PlusEquation);
+            Assert.AreEqual(3, await variable.Equation.Evaluate(null, Variables, null));
         }
 
         [TestMethod]
-        public void EvaluateTest4()
+        public async Task EvaluateTest4()
         {
-            var variable = Variable.CreateInstance("X", Model, BracketsEquation);
-            Assert.AreEqual(0.5F, variable.Equation.Evaluate(null, Variables, null));
+            var variable = await Variable.CreateInstance<Auxiliary>("X", Model, BracketsEquation);
+            Assert.AreEqual(0.5F, await variable.Equation.Evaluate(null, Variables, null));
         }
 
         [TestMethod]
-        public void EvaluateTest5()
+        public async Task EvaluateTest5()
         {
-            var variable = Variable.CreateInstance("X", Model, MultiplicationEquation);
-            Assert.AreEqual(2, variable.Equation.Evaluate(null, Variables, null));
+            var variable = await Variable.CreateInstance<Auxiliary>("X", Model, MultiplicationEquation);
+            Assert.AreEqual(2, await variable.Equation.Evaluate(null, Variables, null));
         }
 
         [TestMethod]
-        public void EvaluateTest6()
+        public async Task EvaluateTest6()
         {
-            var variable = Variable.CreateInstance("X", Model, DivisionEquation);
-            Assert.AreEqual(0.5F, variable.Equation.Evaluate(null, Variables, null));
+            var variable = await Variable.CreateInstance<Auxiliary>("X", Model, DivisionEquation);
+            Assert.AreEqual(0.5F, await variable.Equation.Evaluate(null, Variables, null));
         }
 
         [TestMethod]
-        public void EvaluateTest7()
+        public async Task EvaluateTest7()
         {
-            var variable = Variable.CreateInstance("X", Model, Equation);
-            Assert.AreEqual(1, variable.Equation.Evaluate(null, Variables, null));
+            var variable = await Variable.CreateInstance<Auxiliary>("X", Model, Equation);
+            Assert.AreEqual(1, await variable.Equation.Evaluate(null, Variables, null));
         }
 
         [TestMethod]
-        public void EvaluateTest8()
+        public async Task EvaluateTest8()
         {
-            var variable = Variable.CreateInstance("X", Model, MixEquation);
-            Assert.AreEqual(2, variable.Equation.Evaluate(null, Variables, null));
+            var variable = await Variable.CreateInstance<Auxiliary>("X", Model, MixEquation);
+            Assert.AreEqual(2, await variable.Equation.Evaluate(null, Variables, null));
         }
 
         [TestMethod]
-        public void EvaluateTest9()
+        public async Task EvaluateTest9()
         {
-            var variable = Variable.CreateInstance("X", Model, NestedEquation);
-            Assert.AreEqual(5, variable.Equation.Evaluate(null, Variables, null));
+            var variable = await Variable.CreateInstance<Auxiliary>("X", Model, NestedEquation);
+            Assert.AreEqual(5, await variable.Equation.Evaluate(null, Variables, null));
         }
 
         #endregion
@@ -119,53 +125,53 @@ namespace SymuSysDynTests.Equations
         #region Replace
 
         [TestMethod]
-        public void ReplaceTest()
+        public async Task ReplaceTest()
         {
-            var variable = Variable.CreateInstance("X", Model, NormalEquation);
-            variable.Equation.Replace("_Variable1", "1", _machine.Simulation);
-            Assert.AreEqual(1, variable.Equation.InitialValue());
+            var variable = await Variable.CreateInstance<Auxiliary>("X", Model, NormalEquation);
+            await variable.Equation.Replace("_Variable1", "1", _machine.Simulation);
+            Assert.AreEqual(1, await variable.Equation.InitialValue());
         }
 
         [TestMethod]
-        public void ReplaceTest1()
+        public async Task ReplaceTest1()
         {
-            var variable = Variable.CreateInstance("X", Model, MinEquation);
-            variable.Equation.Replace("_Variable1", "1", _machine.Simulation);
-            variable.Equation.Replace("_Variable2", "2", _machine.Simulation);
-            Assert.AreEqual(1, variable.Equation.InitialValue());
+            var variable = await Variable.CreateInstance<Auxiliary>("X", Model, MinEquation);
+            await variable.Equation.Replace("_Variable1", "1", _machine.Simulation);
+            await variable.Equation.Replace("_Variable2", "2", _machine.Simulation);
+            Assert.AreEqual(1, await variable.Equation.InitialValue());
         }
 
         [TestMethod]
-        public void ReplaceTest2()
+        public async Task ReplaceTest2()
         {
-            var variable = Variable.CreateInstance("X", Model, PlusEquation);
-            variable.Equation.Replace("_Variable1", "1", _machine.Simulation);
-            variable.Equation.Replace("_Variable2", "2", _machine.Simulation);
-            Assert.AreEqual(3, variable.Equation.InitialValue());
+            var variable = await Variable.CreateInstance<Auxiliary>("X", Model, PlusEquation);
+            await variable.Equation.Replace("_Variable1", "1", _machine.Simulation);
+            await variable.Equation.Replace("_Variable2", "2", _machine.Simulation);
+            Assert.AreEqual(3, await variable.Equation.InitialValue());
         }
 
         [TestMethod]
-        public void ReplaceTest3()
+        public async Task ReplaceTest3()
         {
-            var variable = Variable.CreateInstance("X", Model, BracketsEquation);
-            variable.Equation.Replace("_Variable1", "1", _machine.Simulation);
-            variable.Equation.Replace("_Variable2", "1", _machine.Simulation);
-            Assert.AreEqual(1, variable.Equation.InitialValue());
+            var variable = await Variable.CreateInstance<Auxiliary>("X", Model, BracketsEquation);
+            await variable.Equation.Replace("_Variable1", "1", _machine.Simulation);
+            await variable.Equation.Replace("_Variable2", "1", _machine.Simulation);
+            Assert.AreEqual(1, await variable.Equation.InitialValue());
         }
 
         [TestMethod]
-        public void ReplaceTest4()
+        public async Task ReplaceTest4()
         {
-            var variable = Variable.CreateInstance("X", Model, SameVariableEquation);
-            variable.Equation.Replace("_Variable1", "1", _machine.Simulation);
-            Assert.AreEqual(2, variable.Equation.InitialValue());
+            var variable = await Variable.CreateInstance<Auxiliary>("X", Model, SameVariableEquation);
+            await variable.Equation.Replace("_Variable1", "1", _machine.Simulation);
+            Assert.AreEqual(2, await variable.Equation.InitialValue());
         }
 
         [TestMethod]
-        public void ReplaceTest5()
+        public async Task ReplaceTest5()
         {
-            var variable = Variable.CreateInstance("X", Model, SameStartEquation);
-            variable.Equation.Replace("_Variable1", "1", _machine.Simulation);
+            var variable = await Variable.CreateInstance<Auxiliary>("X", Model, SameStartEquation);
+            await variable.Equation.Replace("_Variable1", "1", _machine.Simulation);
             Assert.AreEqual("((1)+(_Variable1_1))", variable.Equation.InitializedEquation);
         }
 

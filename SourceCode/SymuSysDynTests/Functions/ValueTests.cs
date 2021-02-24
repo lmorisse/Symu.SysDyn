@@ -10,6 +10,7 @@
 #region using directives
 
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Symu.SysDyn.Core.Functions;
 using SymuSysDynTests.Classes;
@@ -21,10 +22,15 @@ namespace SymuSysDynTests.Functions
     [TestClass]
     public class ValueTests : BaseClassTest
     {
-        [TestMethod]
-        public void ValueTest()
+        [TestInitialize]
+        public async Task InitializeTest()
         {
-            var function = new Value(string.Empty, "Value(Id1)");
+            await Initialize();
+        }
+        [TestMethod]
+        public async Task ValueTest()
+        {
+            var function = await Value.CreateValue(string.Empty, "Value(Id1)");
             Assert.AreEqual("_Id1", function.VariableId);
         }
 
@@ -32,18 +38,18 @@ namespace SymuSysDynTests.Functions
         ///     Non passing test
         /// </summary>
         [TestMethod]
-        public void EvaluateTest()
+        public async Task EvaluateTest()
         {
-            var function = new Value(string.Empty, "Value(Aux1)");
-            function.Prepare(null, Machine.Models.GetVariables(), Machine.Simulation);
+            var function = await Value.CreateValue(string.Empty, "Value(Aux1)");
+            await function.Prepare(null, Machine.Models.GetVariables(), Machine.Simulation);
             Assert.AreEqual(1F, function.Expression.Parameters["_Aux1"]);
-            Assert.AreEqual(1, function.Evaluate(null, Machine.Models.GetVariables(), Machine.Simulation));
+            Assert.AreEqual(1, await function.Evaluate(null, Machine.Models.GetVariables(), Machine.Simulation));
 
             // Change Aux1 value
             var aux = Machine.Models[0].Variables.First(x => x.Name == "Aux1");
             aux.Value = 2;
             //Assert.AreEqual(2F, function.Expression.Parameters["_Aux1"]);
-            Assert.AreEqual(1, function.Evaluate(null, Machine.Models.GetVariables(), Machine.Simulation));
+            Assert.AreEqual(1, await function.Evaluate(null, Machine.Models.GetVariables(), Machine.Simulation));
         }
 
       

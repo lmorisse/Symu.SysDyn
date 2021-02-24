@@ -9,8 +9,10 @@
 
 #region using directives
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Symu.SysDyn.Core.Equations;
 using Symu.SysDyn.Core.Functions;
@@ -23,44 +25,29 @@ namespace SymuSysDynTests.Functions
     [TestClass]
     public class IfThenElseTests : BaseClassTest
     {
-        [TestMethod]
-        public void ParseTest()
+        [TestInitialize]
+        public async Task InitializeTest()
         {
-            var function = "IF x1 THEN x2 ELSE x3";
-            IfThenElse.Parse(string.Empty, ref function, out var parameters, out var args);
-            CheckOkTest(function, parameters, args);
+            await Initialize();
+        }
+        [DataRow("IF x1 THEN x2 ELSE x3")]
+        [DataRow("If x1 Then x2 Else x3")]
+        [TestMethod]
+        public async Task ParseTestOk(string function)
+        {
+            var ifThenElse = await IfThenElse.CreateIfThenElse(string.Empty, function);
+            CheckOkTest(ifThenElse.Expression.OriginalExpression, ifThenElse.Parameters, ifThenElse.Args);
         }
 
+        [DataRow("IF x1 ELSE x3")]
+        [DataRow("IF x1 THEN x2")]
+        [DataRow("")]
         [TestMethod]
-        public void ParseTest1()
+        public async Task ParseTestKo()
         {
-            var function = "If x1 Then x2 Else x3";
-            IfThenElse.Parse(string.Empty, ref function, out var parameters, out var args);
-            CheckOkTest(function, parameters, args);
-        }
-
-        [TestMethod]
-        public void ParseTest2()
-        {
-            var function = "";
-            IfThenElse.Parse(string.Empty, ref function, out var parameters, out var args);
-            CheckKoTest(parameters, args);
-        }
-
-        [TestMethod]
-        public void ParseTest3()
-        {
-            var function = "IF x1 THEN x2";
-            IfThenElse.Parse(string.Empty, ref function, out var parameters, out var args);
-            CheckKoTest(parameters, args);
-        }
-
-        [TestMethod]
-        public void ParseTest4()
-        {
-            var function = "IF x1 ELSE x3";
-            IfThenElse.Parse(string.Empty, ref function, out var parameters, out var args);
-            CheckKoTest(parameters, args);
+            const string function = "";
+            var ifThenElse = await IfThenElse.CreateIfThenElse(string.Empty, function);
+            CheckKoTest(ifThenElse.Parameters, ifThenElse.Args);
         }
 
         private static void CheckOkTest(string function, IReadOnlyList<IEquation> parameters, IReadOnlyList<float> args)
@@ -82,84 +69,38 @@ namespace SymuSysDynTests.Functions
             Assert.AreEqual(0, args.Count);
         }
 
-
+        [DataRow("IF (1) THEN (2) ELSE (3)", "if(1,2,3)")]
+        [DataRow("IF(1)THEN(2)ELSE(3)", "if(1,2,3)")]
+        [DataRow("IF (1+1) THEN (2+2) ELSE (3+3)", "if(2,4,6)")]
         [TestMethod]
-        public void ParseTest5()
+        public async Task ParseTest(string function, string expected)
         {
-            var function = "IF (1) THEN (2) ELSE (3)";
-            IfThenElse.Parse(string.Empty, ref function, out _, out _);
-            Assert.AreEqual("if(1,2,3)", function);
+            var ifThenElse = await IfThenElse.CreateIfThenElse(string.Empty, function);
+            Assert.AreEqual(expected, ifThenElse.Expression.OriginalExpression);
         }
 
-
+        [DataRow("IF (1+1) THEN (2+2) ELSE (3+3)", 4)]
+        [DataRow("IF (1>2) THEN (2+2) ELSE (3+3)", 6)]
         [TestMethod]
-        public void ParseTest6()
+        public async Task EvaluateTest(string function, float expected)
         {
-            var function = "IF(1)THEN(2)ELSE(3)";
-            IfThenElse.Parse(string.Empty, ref function, out _, out _);
-            Assert.AreEqual("if(1,2,3)", function);
+            var ifThenElse = await IfThenElse.CreateIfThenElse(string.Empty, function);
+            Assert.AreEqual(expected, await ifThenElse.Evaluate(null, Machine.Models.GetVariables(), Machine.Simulation));
         }
 
-        [TestMethod]
-        public void ParseTest7()
-        {
-            var function = "IF (1+1) THEN (2+2) ELSE (3+3)";
-            IfThenElse.Parse(string.Empty, ref function, out _, out _);
-            Assert.AreEqual("if(2,4,6)", function);
-        }
-        [TestMethod]
-        public void EvaluateTest()
-        {
-            var function = new IfThenElse(string.Empty, "IF (1+1) THEN (2+2) ELSE (3+3)");
-            Assert.AreEqual(4, function.Evaluate(null, Machine.Models.GetVariables(), Machine.Simulation));
-        }
-        [TestMethod]
-        public void EvaluateTest1()
-        {
-            var function = new IfThenElse(string.Empty, "IF (1>2) THEN (2+2) ELSE (3+3)");
-            Assert.AreEqual(6, function.Evaluate(null, Machine.Models.GetVariables(), Machine.Simulation));
-        }
         /// <summary>
         /// nested Function with no ()
         /// </summary>
+        [DataRow("If(Time < 3) then 0 else (1)", 0)]
+        [DataRow("If(1) then (Pow(1,2)) else (1)", 1)]
+        [DataRow("If((Time < 3) or (2==2)) then (0) else (1)", 0)]
+        [DataRow("If(1==2) then (0) else (Time*10+10)", 10)]
         [TestMethod]
-        public void EvaluateTest2()
+        public async Task EvaluateTest2(string function, float expected)
         {
-            var function = new IfThenElse(string.Empty, "If(Time < 3) then 0 else (1)");
-            function.Prepare(Machine.Models.GetVariables().First(), Machine.Models.GetVariables(), Machine.Simulation);
-            Assert.AreEqual(0, function.Evaluate(null, Machine.Models.GetVariables(), Machine.Simulation));
-        }
-        /// <summary>
-        /// nested Function with ()
-        /// </summary>
-        [TestMethod]
-        public void EvaluateTest3()
-        {
-            var function = new IfThenElse(string.Empty, "If(1) then (Pow(1,2)) else (1)");
-            function.Prepare(Machine.Models.GetVariables().First(), Machine.Models.GetVariables(), Machine.Simulation);
-            Assert.AreEqual(1, function.Evaluate(null, Machine.Models.GetVariables(), Machine.Simulation));
-        }
-        /// <summary>
-        /// nested Function with ()
-        /// </summary>
-        [TestMethod]
-        public void EvaluateTest4()
-        {
-            var function = new IfThenElse(string.Empty, "If((Time < 3) or (2==2)) then (0) else (1)");
-            //var function = new IfThenElse(string.Empty, "If(1==1 or 2==2) then (0) else (1)");
-            function.Prepare(Machine.Models.GetVariables().First(), Machine.Models.GetVariables(), Machine.Simulation);
-            Assert.AreEqual(0, function.Evaluate(null, Machine.Models.GetVariables(), Machine.Simulation));
-        }
-        /// <summary>
-        /// nested Function with ()
-        /// </summary>
-        [TestMethod]
-        public void EvaluateTest5()
-        {
-            //var function = new IfThenElse(string.Empty, "If(1==2) then (0) else (10*(TIME+1))");
-            var function = new IfThenElse(string.Empty, "If(1==2) then (0) else (Time*10+10)");
-            function.Prepare(Machine.Models.GetVariables().First(), Machine.Models.GetVariables(), Machine.Simulation);
-            Assert.AreEqual(10, function.Evaluate(null, Machine.Models.GetVariables(), Machine.Simulation));
+            var ifThenElse = await IfThenElse.CreateIfThenElse(string.Empty, function);
+            await ifThenElse.Prepare(Machine.Models.GetVariables().First(), Machine.Models.GetVariables(), Machine.Simulation);
+            Assert.AreEqual(expected, await ifThenElse.Evaluate(null, Machine.Models.GetVariables(), Machine.Simulation));
         }
     }
 }

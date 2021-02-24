@@ -9,6 +9,7 @@
 
 #region using directives
 
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Symu.SysDyn.Core.Models.XMile;
 
@@ -42,9 +43,9 @@ namespace SymuSysDynTests.Models.XMile
         ///     Equation
         /// </summary>
         [TestMethod]
-        public void VariableTest1()
+        public async Task VariableTest1()
         {
-            _variable = new Variable("name", string.Empty, Equation1);
+            _variable = await Variable.CreateVariable<Variable>("name", string.Empty, Equation1);
             Assert.AreEqual("_Name", _variable.FullName);
             Assert.AreEqual(0, _variable.Value);
             Assert.IsNotNull(_variable.Equation);
@@ -58,9 +59,9 @@ namespace SymuSysDynTests.Models.XMile
         ///     Constant
         /// </summary>
         [TestMethod]
-        public void VariableTest5()
+        public async Task VariableTest5()
         {
-            _variable = new Variable("name", string.Empty, Equation5);
+            _variable = await Variable.CreateVariable<Variable>("name", string.Empty, Equation5);
             Assert.AreEqual("_Name", _variable.FullName);
             Assert.AreEqual(10, _variable.Value);
             Assert.IsNull(_variable.Equation);
@@ -72,9 +73,9 @@ namespace SymuSysDynTests.Models.XMile
         ///     With built in functions
         /// </summary>
         [TestMethod]
-        public void VariableTest2()
+        public async Task VariableTest2()
         {
-            _variable = new Variable("name", string.Empty, Equation2);
+            _variable = await Variable.CreateVariable<Variable>("name", string.Empty, Equation2);
             Assert.AreEqual("_Name", _variable.FullName);
             Assert.AreEqual(0, _variable.Value);
             Assert.IsNotNull(_variable.Equation);
@@ -88,9 +89,9 @@ namespace SymuSysDynTests.Models.XMile
         ///     With built in functions
         /// </summary>
         [TestMethod]
-        public void VariableTest3()
+        public async Task VariableTest3()
         {
-            _variable = new Variable("name", string.Empty, Equation3);
+            _variable = await Variable.CreateVariable<Variable>("name", string.Empty, Equation3);
             Assert.AreEqual("_Name", _variable.FullName);
             Assert.AreEqual(0, _variable.Value);
             Assert.IsNotNull(_variable.Equation);
@@ -102,9 +103,9 @@ namespace SymuSysDynTests.Models.XMile
         ///     No equation
         /// </summary>
         [TestMethod]
-        public void VariableTest4()
+        public async Task VariableTest4()
         {
-            _variable = new Variable("name", string.Empty, Equation4);
+            _variable = await Variable.CreateVariable<Variable>("name", string.Empty, Equation4);
             Assert.AreEqual("_Name", _variable.FullName);
             Assert.AreEqual(0, _variable.Value);
             Assert.IsNull(_variable.Equation);

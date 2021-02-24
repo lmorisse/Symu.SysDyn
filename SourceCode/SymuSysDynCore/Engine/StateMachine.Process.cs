@@ -12,6 +12,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Symu.SysDyn.Core.Models.XMile;
 using Symu.SysDyn.Core.Results;
 
@@ -35,12 +36,34 @@ namespace Symu.SysDyn.Core.Engine
             if (!_isPrepared || _processModel != model)
             {
                 _processModel = model;
-                Prepare();
+                Prepare().Wait();
             }
 
             while (Simulation.Run())
             {
-                Compute();
+                Compute().Wait();
+                //Intentionally after Compute
+                Simulation.OnTimerEvent();
+            }
+            return true;
+        }
+        
+        /// <summary>
+        ///     Process compute all iterations from Simulation.Start to Simulation.Stop
+        /// </summary>
+        /// <param name="model">The name of the subModel or empty string for a global process</param>
+        /// <remarks>true if the process was successful</remarks>
+        public async Task<bool> ProcessAsync(string model = "")
+        {
+            if (!_isPrepared || _processModel != model)
+            {
+                _processModel = model;
+                await Prepare();
+            }
+
+            while (Simulation.Run())
+            {
+                await Compute();
                 //Intentionally after Compute
                 Simulation.OnTimerEvent();
             }
@@ -50,7 +73,7 @@ namespace Symu.SysDyn.Core.Engine
         /// <summary>
         ///     Compute one iteration
         /// </summary>
-        public void Compute()
+        public async Task Compute()
         {
             Variables.Initialize();
 
@@ -61,7 +84,7 @@ namespace Symu.SysDyn.Core.Engine
                 foreach (var variable in Variables.GetNotUpdated)
                 {
                     var withChildren = waitingParents;
-                    withChildren.AddRange(UpdateChildren(variable));
+                    withChildren.AddRange(await UpdateChildren(variable));
                     waitingParents = withChildren.Distinct().ToList(); //no duplicates
                 }
             } while (waitingParents.Any());
@@ -85,7 +108,7 @@ namespace Symu.SysDyn.Core.Engine
         /// </summary>
         /// <param name="parent"></param>
         /// <returns></returns>
-        public List<IVariable> UpdateChildren(IVariable parent)
+        public async Task<List<IVariable>> UpdateChildren(IVariable parent)
         {
             if (parent == null)
             {
@@ -97,7 +120,7 @@ namespace Symu.SysDyn.Core.Engine
             var stockFirst = _isPrepared && parent is Stock;
             if (stockFirst)
             {
-                UpdateVariable(parent);
+                await UpdateVariable(parent);
                 parent.Updating = false;
             }
 
@@ -114,7 +137,7 @@ namespace Symu.SysDyn.Core.Engine
                         readyToUpdate = false;
                         break;
                     case false:
-                        waitingParents.AddRange(UpdateChildren(child));
+                        waitingParents.AddRange(await UpdateChildren(child));
                         break;
                 }
             }
@@ -122,7 +145,7 @@ namespace Symu.SysDyn.Core.Engine
             // Update other variables
             if (readyToUpdate && !stockFirst)
             {
-                UpdateVariable(parent);
+                await UpdateVariable(parent);
             }
 
             parent.Updating = false;
@@ -133,14 +156,14 @@ namespace Symu.SysDyn.Core.Engine
         ///     Take a variable and update the value of that node
         /// </summary>
         /// <param name="variable"></param>
-        public void UpdateVariable(IVariable variable)
+        public async Task UpdateVariable(IVariable variable)
         {
             if (variable == null)
             {
                 throw new ArgumentNullException(nameof(variable));
             }
 
-            variable.Update(Variables, Simulation);
+            await variable.Update(Variables, Simulation);
         }
     }
 }

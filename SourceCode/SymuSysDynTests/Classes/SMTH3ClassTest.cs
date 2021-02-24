@@ -10,6 +10,7 @@
 #region using directives
 
 using System.Linq;
+using System.Threading.Tasks;
 using System.Xml.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Symu.SysDyn.Core.Engine;
@@ -25,9 +26,9 @@ namespace SymuSysDynTests.Classes
         protected const string TestFile =
             @"C:\Users\laure\Dropbox\Symu\SourceCode\Symu.SysDyn\Github\SourceCode\SymuSysDynTests\Templates\SMTH3.xmile";
 
-        protected Smth3ClassTest()
+        protected async Task Initialize()
         {
-            Machine = new StateMachine(TestFile);
+            Machine = await StateMachine.CreateStateMachine(TestFile);
             XDoc = XDocument.Load(TestFile);
             Ns = XDoc.Root?.Attributes("xmlns").First().Value;
             XElement = XDoc.Root?.Descendants(Ns + "variables").First();
@@ -38,9 +39,9 @@ namespace SymuSysDynTests.Classes
         /// </summary>
         protected XMileModel Variables { get; } = new XMileModel("1");
 
-        protected XDocument XDoc { get; }
-        protected XNamespace Ns { get; }
+        protected XDocument XDoc { get; private set; }
+        protected XNamespace Ns { get; private set; }
         protected XElement XElement { get; set; }
-        protected StateMachine Machine { get; }
+        protected StateMachine Machine { get; private set; }
     }
 }

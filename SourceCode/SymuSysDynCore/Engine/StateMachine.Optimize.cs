@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
 using Symu.SysDyn.Core.Models.XMile;
 
 #endregion
@@ -27,7 +28,7 @@ namespace Symu.SysDyn.Core.Engine
         /// <summary>
         ///     Optimize variables
         /// </summary>
-        public void OptimizeVariables()
+        public async Task OptimizeVariables()
         {
             if (!Optimized)
             {
@@ -48,7 +49,7 @@ namespace Symu.SysDyn.Core.Engine
                 foreach (var variable in Variables.GetNotUpdated.ToImmutableList())
                 {
                     var withChildren = waitingParents;
-                    withChildren.AddRange(OptimizeChildren(variable));
+                    withChildren.AddRange(await OptimizeChildren(variable));
                     waitingParents = withChildren.Distinct().ToList(); //no duplicates
                 }
             } while (waitingParents.Any());
@@ -59,7 +60,7 @@ namespace Symu.SysDyn.Core.Engine
         /// </summary>
         /// <param name="parent"></param>
         /// <returns></returns>
-        public List<IVariable> OptimizeChildren(IVariable parent)
+        public async Task<List<IVariable>> OptimizeChildren(IVariable parent)
         {
             if (parent == null)
             {
@@ -80,13 +81,13 @@ namespace Symu.SysDyn.Core.Engine
                         readyToUpdate = false;
                         break;
                     case false:
-                        waitingParents.AddRange(OptimizeChildren(child));
+                        waitingParents.AddRange(await OptimizeChildren(child));
                         break;
                 }
             }
 
             // Update other variables
-            if (readyToUpdate && TryOptimizeVariable(parent, Simulation))
+            if (readyToUpdate && await TryOptimizeVariable(parent, Simulation))
             {
                 ReferenceVariables[parent.FullName] = parent.Value;
                 Variables.Remove(parent.FullName);
@@ -101,14 +102,14 @@ namespace Symu.SysDyn.Core.Engine
         /// </summary>
         /// <param name="variable"></param>
         /// <param name="sim"></param>
-        public bool TryOptimizeVariable(IVariable variable, SimSpecs sim)
+        public async Task<bool> TryOptimizeVariable(IVariable variable, SimSpecs sim)
         {
             if (variable == null)
             {
                 throw new ArgumentNullException(nameof(variable));
             }
 
-            if (variable.TryOptimize(false, sim))
+            if (await variable.TryOptimize(false, sim))
             {
                 return true;
             }
@@ -116,12 +117,12 @@ namespace Symu.SysDyn.Core.Engine
             foreach (var childName in variable.Children.Where(x => !Variables.Exists(x)).ToImmutableList())
             {
                 var childValue = ReferenceVariables[childName].ToString(CultureInfo.InvariantCulture);
-                variable.Equation.Replace(childName, childValue, Simulation);
+                await variable.Equation.Replace(childName, childValue, Simulation);
                 variable.Children.Remove(childName);
             }
 
             variable.Updated = true;
-            return variable.TryOptimize(true, sim);
+            return await variable.TryOptimize(true, sim);
         }
     }
 }

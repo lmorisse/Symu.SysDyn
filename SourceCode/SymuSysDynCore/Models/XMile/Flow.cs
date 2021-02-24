@@ -10,6 +10,8 @@
 #region using directives
 
 using System;
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 
 #endregion
 
@@ -24,17 +26,20 @@ namespace Symu.SysDyn.Core.Models.XMile
     /// </summary>
     public class Flow : Variable
     {
+        public Flow() : base()
+        {
+        }
         private Flow(string name, string model) : base(name, model)
         {
         }
 
-        public Flow(string name, string model, string eqn, GraphicalFunction graph, Range range, Range scale,
-            NonNegative nonNegative, VariableAccess access) : base(name, model, eqn, graph, range, scale, nonNegative,
-            access)
+        public static async Task<Flow> CreateFlow(string name, string model, string eqn, GraphicalFunction graph, Range range, Range scale,
+            NonNegative nonNegative, VariableAccess access) 
         {
+            return await CreateVariable<Flow>(name, model, eqn, graph, range, scale, nonNegative, access) ;
         }
 
-        public static Flow CreateInstance(string name, XMileModel model, string eqn, GraphicalFunction graph, Range range,
+        public static async Task<Flow> CreateInstance(string name, XMileModel model, string eqn, GraphicalFunction graph, Range range,
             Range scale,
             NonNegative nonNegative, VariableAccess access)
         {
@@ -43,15 +48,15 @@ namespace Symu.SysDyn.Core.Models.XMile
                 throw new ArgumentNullException(nameof(model));
             }
 
-            var variable = new Flow(name, model.Name, eqn, graph, range, scale, nonNegative, access);
+            var variable = await CreateFlow(name, model.Name, eqn, graph, range, scale, nonNegative, access);
             model.Variables.Add(variable);
             return variable;
         }
 
-        public override IVariable Clone()
+        public override async Task<IVariable> Clone()
         {
             var clone = new Flow(Name, Model);
-            CopyTo(clone);
+            await CopyTo(clone);
             return clone;
         }
     }

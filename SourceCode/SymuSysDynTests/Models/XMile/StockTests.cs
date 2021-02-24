@@ -10,6 +10,7 @@
 #region using directives
 
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Symu.SysDyn.Core.Models.XMile;
 
@@ -26,9 +27,9 @@ namespace SymuSysDynTests.Models.XMile
         private Stock _stock;
 
         [TestMethod]
-        public void StockTest()
+        public async Task StockTest()
         {
-            _stock = new Stock("name", Equation1, _inflows, _outflows);
+            _stock = await Stock.CreateStock("name", Equation1, _inflows, _outflows);
             Assert.AreEqual("_Name", _stock.FullName);
             CollectionAssert.AreEqual(_inflows, _stock.Inflow);
             CollectionAssert.AreEqual(_outflows, _stock.Outflow);
@@ -38,10 +39,10 @@ namespace SymuSysDynTests.Models.XMile
         }
 
         [TestMethod]
-        public void CloneTest()
+        public async Task CloneTest()
         {
-            _stock = new Stock("name", "SET(param1, param2)", _inflows, _outflows);
-            var clone = _stock.Clone() as Stock;
+            _stock = await Stock.CreateStock("name", "SET(param1, param2)", _inflows, _outflows);
+            var clone = (Stock)await _stock.Clone();
             Assert.IsNotNull(clone);
             Assert.AreEqual(clone.FullName, _stock.FullName);
             CollectionAssert.AreEqual(_inflows, clone.Inflow);
@@ -54,10 +55,10 @@ namespace SymuSysDynTests.Models.XMile
         ///     No inflow nor outflow
         /// </summary>
         [TestMethod]
-        public void SetStockEquationTest()
+        public async Task SetStockEquationTest()
         {
-            _stock = new Stock("name", Equation1, new List<string>(), new List<string>());
-            _stock.SetStockEquation("1");
+            _stock = await Stock.CreateStock("name", Equation1, new List<string>(), new List<string>());
+            await _stock.SetStockEquation("1");
             Assert.AreEqual(_stock.FullName, _stock.Equation.InitializedEquation);
             Assert.AreEqual(0, _stock.Children.Count);
         }
@@ -66,10 +67,10 @@ namespace SymuSysDynTests.Models.XMile
         ///     With inflow and no outflow
         /// </summary>
         [TestMethod]
-        public void SetStockEquationTest1()
+        public async Task SetStockEquationTest1()
         {
-            _stock = new Stock("name", Equation1, _inflows, new List<string>());
-            _stock.SetStockEquation("1");
+            _stock = await Stock.CreateStock("name", Equation1, _inflows, new List<string>());
+            await _stock.SetStockEquation("1");
             Assert.AreEqual("_Name+1*(_Inflow1+_Inflow2)", _stock.Equation.InitializedEquation);
             Assert.AreEqual(2, _stock.Children.Count);
         }
@@ -78,10 +79,10 @@ namespace SymuSysDynTests.Models.XMile
         ///     With no inflow and outflow
         /// </summary>
         [TestMethod]
-        public void SetStockEquationTest2()
+        public async Task SetStockEquationTest2()
         {
-            _stock = new Stock("name", Equation1, new List<string>(), _outflows);
-            _stock.SetStockEquation("1");
+            _stock = await Stock.CreateStock("name", Equation1, new List<string>(), _outflows);
+            await _stock.SetStockEquation("1");
             Assert.AreEqual("_Name+1*(-_Outflow1-_Outflow2)", _stock.Equation.InitializedEquation);
             Assert.AreEqual(2, _stock.Children.Count);
         }
@@ -90,10 +91,10 @@ namespace SymuSysDynTests.Models.XMile
         ///     With inflow and outflow
         /// </summary>
         [TestMethod]
-        public void SetStockEquationTest3()
+        public async Task SetStockEquationTest3()
         {
-            _stock = new Stock("name", Equation1, _inflows, _outflows);
-            _stock.SetStockEquation("1");
+            _stock = await Stock.CreateStock("name", Equation1, _inflows, _outflows);
+            await _stock.SetStockEquation("1");
             Assert.AreEqual("_Name+1*(_Inflow1+_Inflow2-_Outflow1-_Outflow2)", _stock.Equation.InitializedEquation);
             Assert.AreEqual(4, _stock.Children.Count);
         }

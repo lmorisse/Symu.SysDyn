@@ -13,6 +13,7 @@ using System;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Symu.SysDyn.Core.Engine;
 using Symu.SysDyn.Core.Models.XMile;
@@ -35,7 +36,7 @@ namespace Symu.SysDyn.App
 
         private void btnGlobalProcess_Click(object sender, EventArgs e)
         {
-            Process(string.Empty);
+            Process(string.Empty).Wait();
         }
 
         private void btnSubModelProcess_Click(object sender, EventArgs e)
@@ -49,18 +50,18 @@ namespace Symu.SysDyn.App
                     break;
             }
 
-            Process(modelName);
+            Process(modelName).Wait();
         }
 
         /// <summary>
         /// </summary>
         /// <param name="model">the name of the subModel or emptyString</param>
-        private void Process(string model)
+        private async Task Process(string model)
         {
             lblTime.Text = "0";
             cbResults.SelectedText = string.Empty;
             _stateMachine.Optimized = cbOptimized.Checked;
-            _stateMachine.Process(model);
+            await _stateMachine.ProcessAsync(model);
             cbResults.Items.Clear();
             if (_stateMachine.Variables.FullNames != null)
             {
@@ -75,13 +76,13 @@ namespace Symu.SysDyn.App
         {
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                InitializeStateMachine();
+                InitializeStateMachine().Wait();
             }
         }
 
-        private void InitializeStateMachine()
+        private async Task InitializeStateMachine()
         {
-            _stateMachine = new StateMachine(openFileDialog1.FileName, false);
+            _stateMachine = await StateMachine.CreateStateMachine(openFileDialog1.FileName, false);
 
             cbModels.Items.Clear();
             if (_stateMachine.Models.Count() > 1)

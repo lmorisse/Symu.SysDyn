@@ -10,6 +10,7 @@
 #region using directives
 
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SymuSysDynTests.Classes;
 
@@ -20,6 +21,11 @@ namespace SymuSysDynTests.Simulation
     [TestClass]
     public class StateMachineTests : BaseClassTest
     {
+        [TestInitialize]
+        public async Task InitializeTest()
+        {
+            await Initialize();
+        }
         [TestMethod]
         public void StateMachineTest()
         {
@@ -61,32 +67,32 @@ namespace SymuSysDynTests.Simulation
         }
 
         [TestMethod]
-        public void UpdateVariableTest()
+        public async Task UpdateVariableTest()
         {
-            Machine.Prepare();
+            await Machine.Prepare();
             var stock = Machine.Variables["_Stock1"];
-            Machine.UpdateVariable(stock);
+            await Machine.UpdateVariable(stock);
             Assert.AreEqual(1, stock.Value);
             Assert.IsTrue(stock.Updated);
         }
 
         [TestMethod]
-        public void UpdateVariableTest1()
+        public async Task UpdateVariableTest1()
         {
             Machine.Optimized = false;
-            Machine.Prepare();
+            await Machine.Prepare();
             var flow = Machine.Variables["_Outflow1"];
-            Machine.UpdateVariable(flow);
+            await Machine.UpdateVariable(flow);
             Assert.AreEqual(5, flow.Value);
             Assert.IsTrue(flow.Updated);
         }
 
         [TestMethod]
-        public void UpdateChildrenTest()
+        public async Task UpdateChildrenTest()
         {
-            Machine.Prepare();
+            await Machine.Prepare();
             var stock = Machine.Variables["_Stock1"];
-            var waiting = Machine.UpdateChildren(stock);
+            var waiting = await Machine.UpdateChildren(stock);
             Assert.AreEqual(0, waiting.Count);
             Assert.AreEqual(0, Machine.Variables.GetNotUpdated.Count());
         }
@@ -96,10 +102,10 @@ namespace SymuSysDynTests.Simulation
         /// </summary>
         /// <remarks>See StateMachineSMTH3Tests for non constant variables</remarks>
         [TestMethod]
-        public void OptimizeTest()
+        public async Task OptimizeTest()
         {
             Machine.Optimized = true;
-            Machine.Prepare();
+            await Machine.Prepare();
             Assert.AreEqual(1, Machine.Variables.Count());
             Assert.AreEqual(1, Machine.Variables[0].Value);
             Assert.AreEqual(1, Machine.Variables[0].Equation.Variables.Count);
@@ -107,12 +113,12 @@ namespace SymuSysDynTests.Simulation
         }
 
         [TestMethod]
-        public void ResolveConnectsTest()
+        public async Task ResolveConnectsTest()
         {
             Assert.AreEqual(1, Machine.Variables.Get("Hares_Area").Value);
             Assert.AreEqual("TIME", Machine.Variables.Get("Hares_Lynxes").Equation.OriginalEquation);
             Machine.Optimized = false;
-            Machine.Prepare();
+            await Machine.Prepare();
             Assert.AreEqual("_Aux3", Machine.Variables.Get("Hares_Area").Equation.OriginalEquation);
             Assert.AreEqual("_Aux2", Machine.Variables.Get("Hares_Lynxes").Equation.OriginalEquation);
         }

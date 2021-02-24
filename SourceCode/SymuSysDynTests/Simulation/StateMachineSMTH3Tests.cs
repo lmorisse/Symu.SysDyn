@@ -10,6 +10,7 @@
 #region using directives
 
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SymuSysDynTests.Classes;
 
@@ -20,6 +21,11 @@ namespace SymuSysDynTests.Simulation
     [TestClass]
     public class StateMachineSmth3Tests : Smth3ClassTest
     {
+        [TestInitialize]
+        public async Task InitializeTest()
+        {
+            await Initialize();
+        }
         [TestMethod]
         public void StateMachineTest()
         {
@@ -28,15 +34,15 @@ namespace SymuSysDynTests.Simulation
             Assert.IsNotNull(Machine.ReferenceVariables);
             Assert.IsNotNull(Machine.Variables);
             Assert.AreEqual(0, Machine.Results.Count);
-            Assert.AreEqual(12, Machine.Variables.Count());
+            Assert.AreEqual(14, Machine.Variables.Count());
         }
 
         [TestMethod]
-        public void OptimizeTest()
+        public async Task OptimizeTest()
         {
             Machine.Optimized = true;
-            Machine.Prepare();
-            Assert.AreEqual(10, Machine.Variables.Count());
+            await Machine.Prepare();
+            Assert.AreEqual(12, Machine.Variables.Count());
             var variable = Machine.Variables.Get("_Input");
             Assert.IsNotNull(variable);
             Assert.AreEqual(5, variable.Value);

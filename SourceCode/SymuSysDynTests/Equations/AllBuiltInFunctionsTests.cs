@@ -9,6 +9,7 @@
 
 #region using directives
 
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Symu.SysDyn.Core.Equations;
 
@@ -20,204 +21,204 @@ namespace SymuSysDynTests.Equations
     public class AllBuiltInFunctionsTests
     {
         [TestMethod]
-        public void TimeTest()
+        public async Task FactoryTest()
         {
-            var equation = EquationFactory.CreateInstance(string.Empty, "TIME", out _);
-            Assert.IsInstanceOfType(equation, typeof(ComplexEquation));
-            Assert.AreEqual("Time0", equation.InitializedEquation);
-            Assert.AreEqual(0, equation.Variables.Count);
+            var factory = await EquationFactory.CreateInstance(string.Empty, "TIME");
+            Assert.IsInstanceOfType(factory.Equation, typeof(ComplexEquation));
+            Assert.AreEqual("Time0", factory.Equation.InitializedEquation);
+            Assert.AreEqual(0, factory.Equation.Variables.Count);
         }
 
         [TestMethod]
-        public void DtTest()
+        public async Task DtTest()
         {
-            var equation = EquationFactory.CreateInstance(string.Empty, "DT", out _);
-            Assert.IsInstanceOfType(equation, typeof(ComplexEquation));
-            Assert.AreEqual("Dt0", equation.InitializedEquation);
-            Assert.AreEqual(0, equation.Variables.Count);
+            var factory = await EquationFactory.CreateInstance(string.Empty, "DT");
+            Assert.IsInstanceOfType(factory.Equation, typeof(ComplexEquation));
+            Assert.AreEqual("Dt0", factory.Equation.InitializedEquation);
+            Assert.AreEqual(0, factory.Equation.Variables.Count);
         }
 
         [TestMethod]
-        public void StepTest()
+        public async Task StepTest()
         {
-            var equation = EquationFactory.CreateInstance(string.Empty, "STEP(Height,StartTime)", out _);
-            Assert.IsInstanceOfType(equation, typeof(ComplexEquation));
-            Assert.AreEqual("Step0", equation.InitializedEquation);
-            Assert.AreEqual(2, equation.Variables.Count);
-            Assert.AreEqual("_Height", equation.Variables[0]);
-            Assert.AreEqual("_Starttime", equation.Variables[1]);
+            var factory = await EquationFactory.CreateInstance(string.Empty, "STEP(Height,StartTime)");
+            Assert.IsInstanceOfType(factory.Equation, typeof(ComplexEquation));
+            Assert.AreEqual("Step0", factory.Equation.InitializedEquation);
+            Assert.AreEqual(2, factory.Equation.Variables.Count);
+            Assert.AreEqual("_Height", factory.Equation.Variables[0]);
+            Assert.AreEqual("_Starttime", factory.Equation.Variables[1]);
         }
 
         [TestMethod]
-        public void PulseTest()
+        public async Task PulseTest()
         {
-            var equation = EquationFactory.CreateInstance(string.Empty, "PULSE(Magnitude,FirstTime, Interval)", out _);
-            Assert.IsInstanceOfType(equation, typeof(ComplexEquation));
-            Assert.AreEqual("Pulse0", equation.InitializedEquation);
-            Assert.AreEqual(3, equation.Variables.Count);
-            Assert.AreEqual("_Magnitude", equation.Variables[0]);
-            Assert.AreEqual("_Firsttime", equation.Variables[1]);
-            Assert.AreEqual("_Interval", equation.Variables[2]);
+            var factory = await EquationFactory.CreateInstance(string.Empty, "PULSE(Magnitude,FirstTime, Interval)");
+            Assert.IsInstanceOfType(factory.Equation, typeof(ComplexEquation));
+            Assert.AreEqual("Pulse0", factory.Equation.InitializedEquation);
+            Assert.AreEqual(3, factory.Equation.Variables.Count);
+            Assert.AreEqual("_Magnitude", factory.Equation.Variables[0]);
+            Assert.AreEqual("_Firsttime", factory.Equation.Variables[1]);
+            Assert.AreEqual("_Interval", factory.Equation.Variables[2]);
         }
 
         [TestMethod]
-        public void RampTest()
+        public async Task RampTest()
         {
             //Time is a reserved word
-            var equation = EquationFactory.CreateInstance(string.Empty, "RAMP(StartTime,Slope)", out _);
-            Assert.IsInstanceOfType(equation, typeof(ComplexEquation));
-            Assert.AreEqual("Ramp0", equation.InitializedEquation);
-            Assert.AreEqual(2, equation.Variables.Count);
-            Assert.AreEqual("_Starttime", equation.Variables[0]);
-            Assert.AreEqual("_Slope", equation.Variables[1]);
+            var factory = await EquationFactory.CreateInstance(string.Empty, "RAMP(StartTime,Slope)");
+            Assert.IsInstanceOfType(factory.Equation, typeof(ComplexEquation));
+            Assert.AreEqual("Ramp0", factory.Equation.InitializedEquation);
+            Assert.AreEqual(2, factory.Equation.Variables.Count);
+            Assert.AreEqual("_Starttime", factory.Equation.Variables[0]);
+            Assert.AreEqual("_Slope", factory.Equation.Variables[1]);
         }
 
         [TestMethod]
-        public void NormalTest()
+        public async Task NormalTest()
         {
-            var equation = EquationFactory.CreateInstance(string.Empty, "Normal(Mean,StandardDeviation)", out _);
-            Assert.IsInstanceOfType(equation, typeof(ComplexEquation));
-            Assert.AreEqual("Normal0", equation.InitializedEquation);
-            Assert.AreEqual(2, equation.Variables.Count);
-            Assert.AreEqual("_Mean", equation.Variables[0]);
-            Assert.AreEqual("_Standarddeviation", equation.Variables[1]);
+            var factory = await EquationFactory.CreateInstance(string.Empty, "Normal(Mean,StandardDeviation)");
+            Assert.IsInstanceOfType(factory.Equation, typeof(ComplexEquation));
+            Assert.AreEqual("Normal0", factory.Equation.InitializedEquation);
+            Assert.AreEqual(2, factory.Equation.Variables.Count);
+            Assert.AreEqual("_Mean", factory.Equation.Variables[0]);
+            Assert.AreEqual("_Standarddeviation", factory.Equation.Variables[1]);
         }
 
         [TestMethod]
-        public void NormalTest1()
+        public async Task NormalTest1()
         {
-            var equation = EquationFactory.CreateInstance(string.Empty, "Normal(Mean,StandardDeviation,Seed)", out _);
-            Assert.IsInstanceOfType(equation, typeof(ComplexEquation));
-            Assert.AreEqual("Normal0", equation.InitializedEquation);
-            Assert.AreEqual(3, equation.Variables.Count);
-            Assert.AreEqual("_Mean", equation.Variables[0]);
-            Assert.AreEqual("_Standarddeviation", equation.Variables[1]);
-            Assert.AreEqual("_Seed", equation.Variables[2]);
+            var factory = await EquationFactory.CreateInstance(string.Empty, "Normal(Mean,StandardDeviation,Seed)");
+            Assert.IsInstanceOfType(factory.Equation, typeof(ComplexEquation));
+            Assert.AreEqual("Normal0", factory.Equation.InitializedEquation);
+            Assert.AreEqual(3, factory.Equation.Variables.Count);
+            Assert.AreEqual("_Mean", factory.Equation.Variables[0]);
+            Assert.AreEqual("_Standarddeviation", factory.Equation.Variables[1]);
+            Assert.AreEqual("_Seed", factory.Equation.Variables[2]);
         }
 
         [TestMethod]
-        public void IfThenElseTest()
+        public async Task IfThenElseTest()
         {
-            var equation =
-                EquationFactory.CreateInstance(string.Empty, "If condition then expression1 else expression2", out _);
-            Assert.IsInstanceOfType(equation, typeof(ComplexEquation));
-            Assert.AreEqual("If0", equation.InitializedEquation);
-            Assert.AreEqual(3, equation.Variables.Count);
-            Assert.AreEqual("_Condition", equation.Variables[0]);
-            Assert.AreEqual("_Expression1", equation.Variables[1]);
-            Assert.AreEqual("_Expression2", equation.Variables[2]);
+            var factory =
+                await EquationFactory.CreateInstance(string.Empty, "If condition then expression1 else expression2");
+            Assert.IsInstanceOfType(factory.Equation, typeof(ComplexEquation));
+            Assert.AreEqual("If0", factory.Equation.InitializedEquation);
+            Assert.AreEqual(3, factory.Equation.Variables.Count);
+            Assert.AreEqual("_Condition", factory.Equation.Variables[0]);
+            Assert.AreEqual("_Expression1", factory.Equation.Variables[1]);
+            Assert.AreEqual("_Expression2", factory.Equation.Variables[2]);
         }
 
         [TestMethod]
-        public void Smth1Test()
+        public async Task Smth1Test()
         {
-            var equation = EquationFactory.CreateInstance(string.Empty, "SMTH1(Input, Averaging)", out _);
-            Assert.IsInstanceOfType(equation, typeof(ComplexEquation));
-            Assert.AreEqual("Smth10", equation.InitializedEquation);
-            Assert.AreEqual(2, equation.Variables.Count);
-            Assert.AreEqual("_Input", equation.Variables[0]);
-            Assert.AreEqual("_Averaging", equation.Variables[1]);
+            var factory = await EquationFactory.CreateInstance(string.Empty, "SMTH1(Input, Averaging)");
+            Assert.IsInstanceOfType(factory.Equation, typeof(ComplexEquation));
+            Assert.AreEqual("Smth10", factory.Equation.InitializedEquation);
+            Assert.AreEqual(2, factory.Equation.Variables.Count);
+            Assert.AreEqual("_Input", factory.Equation.Variables[0]);
+            Assert.AreEqual("_Averaging", factory.Equation.Variables[1]);
         }
 
         [TestMethod]
-        public void Smth1Test1()
+        public async Task Smth1Test1()
         {
-            var equation = EquationFactory.CreateInstance(string.Empty, "SMTH1(Input, Averaging, Initial)", out _);
-            Assert.IsInstanceOfType(equation, typeof(ComplexEquation));
-            Assert.AreEqual("Smth10", equation.InitializedEquation);
-            Assert.AreEqual(3, equation.Variables.Count);
-            Assert.AreEqual("_Input", equation.Variables[0]);
-            Assert.AreEqual("_Averaging", equation.Variables[1]);
-            Assert.AreEqual("_Initial", equation.Variables[2]);
+            var factory = await EquationFactory.CreateInstance(string.Empty, "SMTH1(Input, Averaging, Initial)");
+            Assert.IsInstanceOfType(factory.Equation, typeof(ComplexEquation));
+            Assert.AreEqual("Smth10", factory.Equation.InitializedEquation);
+            Assert.AreEqual(3, factory.Equation.Variables.Count);
+            Assert.AreEqual("_Input", factory.Equation.Variables[0]);
+            Assert.AreEqual("_Averaging", factory.Equation.Variables[1]);
+            Assert.AreEqual("_Initial", factory.Equation.Variables[2]);
         }
 
         [TestMethod]
-        public void Smth3Test()
+        public async Task Smth3Test()
         {
-            var equation = EquationFactory.CreateInstance(string.Empty, "SMTH3(Input, Averaging)", out _);
-            Assert.IsInstanceOfType(equation, typeof(ComplexEquation));
-            Assert.AreEqual("Smth30", equation.InitializedEquation);
-            Assert.AreEqual(2, equation.Variables.Count);
-            Assert.AreEqual("_Input", equation.Variables[0]);
-            Assert.AreEqual("_Averaging", equation.Variables[1]);
+            var factory = await EquationFactory.CreateInstance(string.Empty, "SMTH3(Input, Averaging)");
+            Assert.IsInstanceOfType(factory.Equation, typeof(ComplexEquation));
+            Assert.AreEqual("Smth30", factory.Equation.InitializedEquation);
+            Assert.AreEqual(2, factory.Equation.Variables.Count);
+            Assert.AreEqual("_Input", factory.Equation.Variables[0]);
+            Assert.AreEqual("_Averaging", factory.Equation.Variables[1]);
         }
 
         [TestMethod]
-        public void Smth3Test1()
+        public async Task Smth3Test1()
         {
-            var equation = EquationFactory.CreateInstance(string.Empty, "SMTH3(Input, Averaging, Initial)", out _);
-            Assert.IsInstanceOfType(equation, typeof(ComplexEquation));
-            Assert.AreEqual("Smth30", equation.InitializedEquation);
-            Assert.AreEqual(3, equation.Variables.Count);
-            Assert.AreEqual("_Input", equation.Variables[0]);
-            Assert.AreEqual("_Averaging", equation.Variables[1]);
-            Assert.AreEqual("_Initial", equation.Variables[2]);
+            var factory = await EquationFactory.CreateInstance(string.Empty, "SMTH3(Input, Averaging, Initial)");
+            Assert.IsInstanceOfType(factory.Equation, typeof(ComplexEquation));
+            Assert.AreEqual("Smth30", factory.Equation.InitializedEquation);
+            Assert.AreEqual(3, factory.Equation.Variables.Count);
+            Assert.AreEqual("_Input", factory.Equation.Variables[0]);
+            Assert.AreEqual("_Averaging", factory.Equation.Variables[1]);
+            Assert.AreEqual("_Initial", factory.Equation.Variables[2]);
         }
 
         [TestMethod]
-        public void SmthNTest()
+        public async Task SmthNTest()
         {
-            var equation = EquationFactory.CreateInstance(string.Empty, "SMTHN(Input, Averaging, 2)", out _);
-            Assert.IsInstanceOfType(equation, typeof(ComplexEquation));
-            Assert.AreEqual("Smthn0", equation.InitializedEquation);
-            Assert.AreEqual(2, equation.Variables.Count);
-            Assert.AreEqual("_Input", equation.Variables[0]);
-            Assert.AreEqual("_Averaging", equation.Variables[1]);
+            var factory = await EquationFactory.CreateInstance(string.Empty, "SMTHN(Input, Averaging, 2)");
+            Assert.IsInstanceOfType(factory.Equation, typeof(ComplexEquation));
+            Assert.AreEqual("Smthn0", factory.Equation.InitializedEquation);
+            Assert.AreEqual(2, factory.Equation.Variables.Count);
+            Assert.AreEqual("_Input", factory.Equation.Variables[0]);
+            Assert.AreEqual("_Averaging", factory.Equation.Variables[1]);
         }
 
         [TestMethod]
-        public void SmthNTest1()
+        public async Task SmthNTest1()
         {
-            var equation = EquationFactory.CreateInstance(string.Empty, "SMTHN(Input, Averaging, 3, Initial)", out _);
-            Assert.IsInstanceOfType(equation, typeof(ComplexEquation));
-            Assert.AreEqual("Smthn0", equation.InitializedEquation);
-            Assert.AreEqual(3, equation.Variables.Count);
-            Assert.AreEqual("_Input", equation.Variables[0]);
-            Assert.AreEqual("_Averaging", equation.Variables[1]);
-            Assert.AreEqual("_Initial", equation.Variables[2]);
+            var factory = await EquationFactory.CreateInstance(string.Empty, "SMTHN(Input, Averaging, 3, Initial)");
+            Assert.IsInstanceOfType(factory.Equation, typeof(ComplexEquation));
+            Assert.AreEqual("Smthn0", factory.Equation.InitializedEquation);
+            Assert.AreEqual(3, factory.Equation.Variables.Count);
+            Assert.AreEqual("_Input", factory.Equation.Variables[0]);
+            Assert.AreEqual("_Averaging", factory.Equation.Variables[1]);
+            Assert.AreEqual("_Initial", factory.Equation.Variables[2]);
         }
 
         [TestMethod]
-        public void AbsTest()
+        public async Task AbsTest()
         {
-            var equation = EquationFactory.CreateInstance(string.Empty, "Abs(variable)", out _);
-            Assert.IsInstanceOfType(equation, typeof(ComplexEquation));
-            Assert.AreEqual("Abs0", equation.InitializedEquation);
-            Assert.AreEqual(1, equation.Variables.Count);
-            Assert.AreEqual("_Variable", equation.Variables[0]);
+            var factory = await EquationFactory.CreateInstance(string.Empty, "Abs(variable)");
+            Assert.IsInstanceOfType(factory.Equation, typeof(ComplexEquation));
+            Assert.AreEqual("Abs0", factory.Equation.InitializedEquation);
+            Assert.AreEqual(1, factory.Equation.Variables.Count);
+            Assert.AreEqual("_Variable", factory.Equation.Variables[0]);
         }
 
         [TestMethod]
-        public void MinTest()
+        public async Task MinTest()
         {
-            var equation = EquationFactory.CreateInstance(string.Empty, "Min(variable1, variable2)", out _);
-            Assert.IsInstanceOfType(equation, typeof(ComplexEquation));
-            Assert.AreEqual("Min0", equation.InitializedEquation);
-            Assert.AreEqual(2, equation.Variables.Count);
-            Assert.AreEqual("_Variable1", equation.Variables[0]);
-            Assert.AreEqual("_Variable2", equation.Variables[1]);
+            var factory = await EquationFactory.CreateInstance(string.Empty, "Min(variable1, variable2)");
+            Assert.IsInstanceOfType(factory.Equation, typeof(ComplexEquation));
+            Assert.AreEqual("Min0", factory.Equation.InitializedEquation);
+            Assert.AreEqual(2, factory.Equation.Variables.Count);
+            Assert.AreEqual("_Variable1", factory.Equation.Variables[0]);
+            Assert.AreEqual("_Variable2", factory.Equation.Variables[1]);
         }
 
         [TestMethod]
-        public void MaxTest()
+        public async Task MaxTest()
         {
-            var equation = EquationFactory.CreateInstance(string.Empty, "Max(variable1, variable2)", out _);
-            Assert.IsInstanceOfType(equation, typeof(ComplexEquation));
-            Assert.AreEqual("Max0", equation.InitializedEquation);
-            Assert.AreEqual(2, equation.Variables.Count);
-            Assert.AreEqual("_Variable1", equation.Variables[0]);
-            Assert.AreEqual("_Variable2", equation.Variables[1]);
+            var factory = await EquationFactory.CreateInstance(string.Empty, "Max(variable1, variable2)");
+            Assert.IsInstanceOfType(factory.Equation, typeof(ComplexEquation));
+            Assert.AreEqual("Max0", factory.Equation.InitializedEquation);
+            Assert.AreEqual(2, factory.Equation.Variables.Count);
+            Assert.AreEqual("_Variable1", factory.Equation.Variables[0]);
+            Assert.AreEqual("_Variable2", factory.Equation.Variables[1]);
         }
 
         [TestMethod]
-        public void PowTest()
+        public async Task PowTest()
         {
-            var equation = EquationFactory.CreateInstance(string.Empty, "Pow(variable1, variable2)", out _);
-            Assert.IsInstanceOfType(equation, typeof(ComplexEquation));
-            Assert.AreEqual("Pow0", equation.InitializedEquation);
-            Assert.AreEqual(2, equation.Variables.Count);
-            Assert.AreEqual("_Variable1", equation.Variables[0]);
-            Assert.AreEqual("_Variable2", equation.Variables[1]);
+            var factory = await EquationFactory.CreateInstance(string.Empty, "Pow(variable1, variable2)");
+            Assert.IsInstanceOfType(factory.Equation, typeof(ComplexEquation));
+            Assert.AreEqual("Pow0", factory.Equation.InitializedEquation);
+            Assert.AreEqual(2, factory.Equation.Variables.Count);
+            Assert.AreEqual("_Variable1", factory.Equation.Variables[0]);
+            Assert.AreEqual("_Variable2", factory.Equation.Variables[1]);
         }
     }
 }

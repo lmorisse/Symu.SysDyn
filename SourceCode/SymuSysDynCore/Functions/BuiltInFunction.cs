@@ -13,7 +13,8 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using NCalc2;
+using System.Threading.Tasks;
+using NCalcAsync;
 using Symu.SysDyn.Core.Engine;
 using Symu.SysDyn.Core.Equations;
 using Symu.SysDyn.Core.Models.XMile;
@@ -41,16 +42,12 @@ namespace Symu.SysDyn.Core.Functions
         {
         }
 
-        public BuiltInFunction(string model, string function)
+        public static async Task<T> CreateBuiltInFunction<T>(string model, string function) where T : IBuiltInFunction, new()
         {
-            OriginalFunction = function?.Trim() ?? throw new ArgumentNullException(nameof(function));
-            FunctionUtils.ParseParameters(model, ref function, out var name, out var parameters, out var args);
-            Name = name;
-            Model = model ?? throw new ArgumentNullException(nameof(model));
-            Parameters = parameters;
-            Args = args;
-            InitializedFunction = function;
-            Expression = new Expression(function);
+            var originalFunction = function?.Trim() ?? throw new ArgumentNullException(nameof(function));
+            var builtInFunction =  await FunctionUtils.ParseParameters<T>(model, function);
+            builtInFunction.OriginalFunction = originalFunction;
+            return builtInFunction;
         }
 
         public string InitializedFunction { get; set; }
@@ -69,14 +66,14 @@ namespace Symu.SysDyn.Core.Functions
         ///     List of arguments that are constants
         ///     If it is an IEquation, the value is stored in Parameters
         /// </summary>
-        public List<float> Args { get; protected set; }
+        public List<float> Args { get; set; } = new List<float>();
 
         #region IBuiltInFunction Members
 
         /// <summary>
         ///     The entire function included brackets and parameters
         /// </summary>
-        public string OriginalFunction { get; protected set; }
+        public string OriginalFunction { get; set; }
 
         /// <summary>
         ///     The function name
@@ -92,11 +89,11 @@ namespace Symu.SysDyn.Core.Functions
         ///     List of arguments that are IEquation or null if it is a constant
         ///     If it is a constant, the value is stored in Args
         /// </summary>
-        public List<IEquation> Parameters { get; protected set; }
+        public List<IEquation> Parameters { get; protected set; } = new List<IEquation>();
 
-        public virtual IBuiltInFunction Clone()
+        public virtual async Task<IBuiltInFunction> Clone() 
         {
-            var clone = new BuiltInFunction(Model, OriginalFunction);
+            var clone = await CreateBuiltInFunction<BuiltInFunction>(Model, OriginalFunction);
             CopyTo(clone);
             return clone;
         }
@@ -108,7 +105,7 @@ namespace Symu.SysDyn.Core.Functions
         /// <param name="variables"></param>
         /// <param name="sim"></param>
         /// <returns></returns>
-        public float Prepare(IVariable selfVariable, VariableCollection variables, SimSpecs sim)
+        public async Task<float> Prepare(IVariable selfVariable, VariableCollection variables, SimSpecs sim)
         {
             if (variables == null)
             {
@@ -118,7 +115,7 @@ namespace Symu.SysDyn.Core.Functions
             var prepareParams = new List<string>();
             foreach (var parameter in Parameters.Where(x => x != null))
             {
-                parameter.Prepare(selfVariable, variables, sim);
+                await parameter.Prepare(selfVariable, variables, sim);
                 prepareParams.AddRange(parameter.Variables);
                 // Get Parameters of the functions of the parameter
                 // Example : Time - 5 => Store Time value
@@ -138,38 +135,36 @@ namespace Symu.SysDyn.Core.Functions
                 }
             }
 
-            return Evaluate(selfVariable, variables, sim);
+            return await Evaluate(selfVariable, variables, sim);
         }
 
-        public virtual bool TryReplace(SimSpecs sim, out float result)
+        public virtual async Task<TryReplaceStruct> TryReplace(SimSpecs sim)
         {
             try
             {
-                result = Convert.ToSingle(Expression.Evaluate());
-                return true;
-            }
-            catch 
-            {
-                result = 0;
-                return false;
-            }
-        }
-
-        public bool TryEvaluate(IVariable variable, VariableCollection variables, SimSpecs sim, out float result)
-        {
-            try
-            {
-                result = Evaluate(variable, variables, sim);
-                return true;
+                var result = Convert.ToSingle(await Expression.EvaluateAsync(sim?.Time, sim?.Step, sim?.DeltaTime));
+                return new TryReplaceStruct(true, result);
             }
             catch
             {
-                result = 0;
-                return false;
+                return new TryReplaceStruct(false, 0);
             }
         }
 
-        public void Replace(string child, string value, SimSpecs sim)
+        public async Task<TryReplaceStruct>  TryEvaluate(IVariable variable, VariableCollection variables, SimSpecs sim)
+        {
+            try
+            {
+                var result = await Evaluate(variable, variables, sim);
+                return new TryReplaceStruct(true, result);
+            }
+            catch
+            {
+                return new TryReplaceStruct(false, 0);
+            }
+        }
+
+        public async Task Replace(string child, string value, SimSpecs sim)
         {
             var replace = false;
 
@@ -181,22 +176,22 @@ namespace Symu.SysDyn.Core.Functions
                     continue;
                 }
 
-                parameter.Replace(child, value, sim);
+                await parameter.Replace(child, value, sim);
                 if (!parameter.CanBeOptimized(child))
                 {
                     continue;
                 }
 
-                Args[index] = parameter.InitialValue();
+                Args[index] = await parameter.InitialValue();
                 Parameters[index] = null;
                 replace = true;
             }
 
-            if (child == Dt.Label && Name == child)
-            {
-                Expression = new Expression(value);
-                return;
-            }
+            //if (child == Dt.Label && Name == child)
+            //{
+            //    Expression = new Expression(value);
+            //    return;
+            //}
 
             if (!replace)
             {
@@ -209,11 +204,11 @@ namespace Symu.SysDyn.Core.Functions
 
         #endregion
 
-        public virtual float Evaluate(IVariable selfVariable, VariableCollection variables, SimSpecs sim)
+        public virtual async Task<float> Evaluate(IVariable selfVariable, VariableCollection variables, SimSpecs sim)
         {
             try
             {
-                return Convert.ToSingle(Expression.Evaluate());
+                return Convert.ToSingle(await Expression.EvaluateAsync(sim?.Time, sim?.Step, sim?.DeltaTime));
             }
             catch
             {
@@ -231,9 +226,9 @@ namespace Symu.SysDyn.Core.Functions
             copy.IndexName = IndexName;
         }
 
-        protected float GetValue(int index, IVariable variable, VariableCollection variables, SimSpecs sim)
+        protected async Task<float> GetValue(int index, IVariable variable, VariableCollection variables, SimSpecs sim)
         {
-            return Parameters[index] != null ? Parameters[index].Evaluate(variable, variables, sim) : Args[index];
+            return Parameters[index] != null ? await Parameters[index].Evaluate(variable, variables, sim) : Args[index];
         }
 
         protected string GetParam(int index)

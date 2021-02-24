@@ -13,7 +13,8 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text.RegularExpressions;
-using NCalc2;
+using System.Threading.Tasks;
+using NCalcAsync;
 using Symu.SysDyn.Core.Equations;
 
 #endregion
@@ -27,20 +28,22 @@ namespace Symu.SysDyn.Core.Functions
     /// </summary>
     public class IfThenElse : BuiltInFunction
     {
-        public IfThenElse(string model, string function)
+        public static async Task<IfThenElse> CreateIfThenElse(string model, string function)
         {
-            OriginalFunction = function ?? throw new ArgumentNullException(nameof(function));
-            Name = "If";
-            Model = model;
-            Parse(model, ref function, out var parameters, out var args);
-            Parameters = parameters;
-            Args = args;
-            Expression = new Expression(function);
+            var ifThenElse = new IfThenElse
+            {
+                OriginalFunction = function ?? throw new ArgumentNullException(nameof(function)),
+                Name = "If",
+                Model = model
+            };
+            function = await ifThenElse.Parse(model, function);
+            ifThenElse.Expression = new Expression(function);
+            return ifThenElse;
         }
 
-        public override IBuiltInFunction Clone()
+        public override async Task<IBuiltInFunction> Clone()
         {
-            var clone = new IfThenElse(Model, OriginalFunction);
+            var clone = await CreateIfThenElse(Model, OriginalFunction);
             CopyTo(clone);
             return clone;
         }
@@ -50,31 +53,29 @@ namespace Symu.SysDyn.Core.Functions
         /// </summary>
         /// <param name="model"></param>
         /// <param name="input"></param>
-        /// <param name="parameters"></param>
-        /// <param name="args"></param>
-        public static void Parse(string model, ref string input, out List<IEquation> parameters, out List<float> args)
+        public async Task<string> Parse(string model, string input)
         {
-            parameters = new List<IEquation>();
-            args = new List<float>();
+            Parameters = new List<IEquation>();
+            Args = new List<float>();
 
             var result = MatchRegex(input);
             if (!result.Success)
             {
-                return;
+                return input;
             }
 
             var equation = "if(";
-            var condition = EquationFactory.CreateInstance(model, PrepareExpression(result.Groups[1].Value), out var value);
-            equation = UpdateEquation(parameters, args, condition, value, equation);
+            var condition = await EquationFactory.CreateInstance(model, PrepareExpression(result.Groups[1].Value));
+            equation = UpdateEquation(Parameters, Args, condition.Equation, condition.Value, equation);
 
             equation += ",";
-            var thenExpression = EquationFactory.CreateInstance(model, PrepareExpression(result.Groups[2].Value), out value);
-            equation = UpdateEquation(parameters, args, thenExpression, value, equation);
+            var thenExpression = await EquationFactory.CreateInstance(model, PrepareExpression(result.Groups[2].Value));
+            equation = UpdateEquation(Parameters, Args, thenExpression.Equation, thenExpression.Value, equation);
 
             equation += ",";
-            var elseExpression = EquationFactory.CreateInstance(model, PrepareExpression(result.Groups[3].Value), out value);
-            equation = UpdateEquation(parameters, args, elseExpression, value, equation);
-            input = equation + ")";
+            var elseExpression = await EquationFactory.CreateInstance(model, PrepareExpression(result.Groups[3].Value));
+            equation = UpdateEquation(Parameters, Args, elseExpression.Equation, elseExpression.Value, equation);
+            return equation + ")";
         }
 
         private static string PrepareExpression(string value)

@@ -14,6 +14,10 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+
+using NCalcAsync;
+
 using Symu.SysDyn.Core.Equations;
 using Symu.SysDyn.Core.Parser;
 
@@ -29,13 +33,18 @@ namespace Symu.SysDyn.Core.Functions
         /// <summary>
         ///     Functions Without Brackets ni lowercase
         /// </summary>
-        private static readonly List<string> FunctionsWithoutBrackets =
+        public static readonly List<string> FunctionsWithoutBrackets =
             new List<string> {"dt", "time", "externalupdate"};
 
         /// <summary>
         ///     Special names that are not functions as is
         /// </summary>
-        private static readonly List<string> NotFunctions = new List<string> {"if("};
+        public static readonly List<string> NotFunctions = new List<string> {"if("};
+        /// <summary>
+        ///     Functions in NCalcAsync but Time dependent
+        /// </summary>
+        public static readonly List<string> FunctionsTimeDependent =
+            new List<string> { "step"};
 
         /// <summary>
         ///     Extract functions from a string as a list of BuiltIn functions
@@ -43,7 +52,7 @@ namespace Symu.SysDyn.Core.Functions
         /// <param name="model"></param>
         /// <param name="input"></param>
         /// <returns></returns>
-        public static IEnumerable<IBuiltInFunction> ParseFunctions(string model, string input)
+        public static async Task<List<IBuiltInFunction>> ParseFunctions(string model, string input)
         {
             if (input == null)
             {
@@ -56,13 +65,19 @@ namespace Symu.SysDyn.Core.Functions
 
             if (functions != null)
             {
-                builtInFunctions.AddRange(functions.Select(function =>
-                    FunctionFactory.CreateInstance(model, function)));
+                foreach (var function in functions)
+                {
+                    var factory = await FunctionFactory.CreateInstance(model, function);
+                    if (factory != null)
+                    {
+                        builtInFunctions.Add(factory);
+                    }
+                }
             }
 
             if (IfThenElse.IsContainedIn(input))
             {
-                builtInFunctions.Add(new IfThenElse(model, input));
+                builtInFunctions.Add(await IfThenElse.CreateIfThenElse(model, input));
             }
 
             return builtInFunctions;
@@ -109,6 +124,10 @@ namespace Symu.SysDyn.Core.Functions
                         else if (isFunction)
                         {
                             name += split;
+                        }
+                        else
+                        {
+                            name = string.Empty;
                         }
 
                         break;
@@ -162,23 +181,15 @@ namespace Symu.SysDyn.Core.Functions
         /// </summary>
         /// <param name="model"></param>
         /// <param name="function"></param>
-        /// <param name="name"></param>
-        /// <param name="parameters"></param>
-        /// <param name="args"></param>
         /// <returns>input = "function(func(param1, param2), param3)" - return {func(param1, param2), param3}</returns>
-        //public static List<IEquation> ParseParameters(ref string function,  out string name)
-        public static void ParseParameters(string model, ref string function, out string name,
-            out List<IEquation> parameters,
-            out List<float> args)
+        public static async Task<T> ParseParameters<T>(string model, string function) where T : IBuiltInFunction, new ()
         {
-            if (function == null)
+            if (string.IsNullOrEmpty(function))
             {
                 throw new ArgumentNullException(nameof(function));
             }
 
-            parameters = new List<IEquation>();
-            args = new List<float>();
-            name = StringUtils.CleanName(function.Split('(')[0]);
+            var builtInFunction = new T {Name = StringUtils.CleanName(function.Split('(')[0])};
             const string extractFuncRegex = @"\b[^()]+\((.*)\)$";
             const string extractArgsRegex = @"(?:[^,()]+((?:\((?>[^()]+|\((?<open>)|\)(?<-open>))*\)))*)+";
 
@@ -186,19 +197,26 @@ namespace Symu.SysDyn.Core.Functions
 
             if (string.IsNullOrEmpty(match.Groups[1].Value))
             {
-                return; // parameters;
+                return builtInFunction; // parameters;
             }
 
             var innerArgs = match.Groups[1].Value;
             var matches = Regex.Matches(innerArgs, extractArgsRegex);
             for (var i = 0; i < matches.Count; i++)
             {
-                var equation = EquationFactory.CreateInstance(model, matches[i].Value, out var value);
-                parameters.Add(equation);
-                args.Add(value);
+                var factory = await EquationFactory.CreateInstance(model, matches[i].Value);
+                builtInFunction.Parameters.Add(factory.Equation);
+                builtInFunction.Args.Add(factory.Value);
             }
 
-            function = GetInitializedFunction(name, parameters, args);
+            function = GetInitializedFunction(builtInFunction.Name, builtInFunction.Parameters, builtInFunction.Args);
+
+
+            builtInFunction.InitializedFunction = function;
+            builtInFunction.Expression = new Expression(function);
+
+            builtInFunction.Model = model ?? throw new ArgumentNullException(nameof(model));
+            return builtInFunction;
         }
 
         public static string GetInitializedFunction(string name, List<IEquation> parameters, List<float> args)

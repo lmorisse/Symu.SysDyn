@@ -12,7 +12,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using NCalc2;
+using System.Threading.Tasks;
+using NCalcAsync;
 using Symu.SysDyn.Core.Engine;
 using Symu.SysDyn.Core.Models.XMile;
 using Range = Symu.SysDyn.Core.Models.XMile.Range;
@@ -63,7 +64,7 @@ namespace Symu.SysDyn.Core.Equations
 
         public List<string> Variables { get; }
 
-        public virtual IEquation Clone()
+        public virtual async Task<IEquation> Clone()
         {
             return new SimpleEquation(OriginalEquation, InitializedEquation, Variables.ToList(), Words.ToList(), Range);
         }
@@ -81,12 +82,12 @@ namespace Symu.SysDyn.Core.Equations
         /// <param name="variables"></param>
         /// <param name="sim"></param>
         /// <returns></returns>
-        public float Evaluate(IVariable selfVariable, VariableCollection variables, SimSpecs sim)
+        public async Task<float> Evaluate(IVariable selfVariable, VariableCollection variables, SimSpecs sim)
         {
             try
             {
-                Prepare(selfVariable, variables, sim);
-                return Convert.ToSingle(Expression.Evaluate());
+                await Prepare(selfVariable, variables, sim);
+                return Convert.ToSingle(await Expression.EvaluateAsync(sim?.Time,sim?.Step, sim?.DeltaTime));
             }
             catch (ArgumentException ex)
             {
@@ -105,7 +106,7 @@ namespace Symu.SysDyn.Core.Equations
         /// <param name="variables"></param>
         /// <param name="sim"></param>
         /// <returns></returns> 
-        public virtual void Prepare(IVariable selfVariable, VariableCollection variables, SimSpecs sim)
+        public virtual async Task Prepare(IVariable selfVariable, VariableCollection variables, SimSpecs sim)
         {
             if (variables == null)
             {
@@ -118,9 +119,9 @@ namespace Symu.SysDyn.Core.Equations
             }
         }
 
-        public float InitialValue()
+        public async Task<float> InitialValue()
         {
-            var value = Convert.ToSingle(Expression.Evaluate());
+            var value = Convert.ToSingle(await Expression.EvaluateAsync(0,0,1));
             if (float.IsNaN(value) || float.IsInfinity(value))
             {
                 value = 0;
@@ -130,7 +131,7 @@ namespace Symu.SysDyn.Core.Equations
         }
 
 
-        public virtual void Replace(string child, string value, SimSpecs sim)
+        public virtual async Task Replace(string child, string value, SimSpecs sim)
         {
             while (Words.FindIndex(ind => ind.Equals(child)) >= 0)
             {

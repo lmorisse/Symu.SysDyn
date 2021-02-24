@@ -12,6 +12,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Globalization;
+using System.Threading.Tasks;
 using Symu.SysDyn.Core.Equations;
 using Symu.SysDyn.Core.Models.XMile;
 
@@ -41,12 +42,12 @@ namespace Symu.SysDyn.Core.Engine
         ///     Prepare to process
         /// </summary>
         /// <returns>True if the variables need to be optimized</returns>
-        public void Prepare()
+        public async Task Prepare()
         {
             Clear(); // Simulation Start or DeltaTime may have change since the initialization
             Variables = string.IsNullOrEmpty(_processModel)
-                ? Models.GetVariables().Clone()
-                : Models.Get(_processModel).Variables.Clone();
+                ? await Models.GetVariables().Clone()
+                : await Models.Get(_processModel).Variables.Clone();
 
             ResolveConnects();
             foreach (var variable in Variables)
@@ -54,15 +55,15 @@ namespace Symu.SysDyn.Core.Engine
                 ReferenceVariables.Add(variable.FullName, variable.Value);
             }
 
-            Compute(); // Initial value
-            SetStocksEquations();
+            await Compute(); // Initial value
+            await SetStocksEquations();
             foreach (var variable in Variables)
             {
                 ReferenceVariables[variable.FullName] = variable.Value;
             }
 
-            var allVariables = Variables.Clone();
-            OptimizeVariables();
+            var allVariables = await Variables.Clone();
+            await OptimizeVariables();
             Results.SetConstantResults(Variables, allVariables);
             _isPrepared = true;
         }
@@ -71,12 +72,12 @@ namespace Symu.SysDyn.Core.Engine
         /// <summary>
         ///     Once stock value is evaluated with initial equation, the real equation based on inflows and outflows is setted
         /// </summary>
-        private void SetStocksEquations()
+        private async Task SetStocksEquations()
         {
             var dt = Simulation.DeltaTime.ToString(CultureInfo.InvariantCulture);
             foreach (var stock in Variables.Stocks)
             {
-                stock.SetStockEquation(dt);
+                await stock.SetStockEquation(dt);
             }
         }
         /// <summary>

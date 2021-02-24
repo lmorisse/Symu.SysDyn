@@ -10,6 +10,7 @@
 #region using directives
 
 using System;
+using System.Threading.Tasks;
 using Symu.SysDyn.Core.Engine;
 using Symu.SysDyn.Core.Models.XMile;
 
@@ -29,18 +30,19 @@ namespace Symu.SysDyn.Core.Functions
     {
         public const string Label = "Externalupdate";
 
-        public ExternalUpdate(string model, string function) : base(model, function)
+        public static async Task<ExternalUpdate> CreateExternalUpdate(string model, string function) 
         {
+            return await CreateBuiltInFunction<ExternalUpdate>(model, function) ;
         }
 
-        public override IBuiltInFunction Clone()
+        public override async Task<IBuiltInFunction> Clone()
         {
-            var clone = new ExternalUpdate(Model, OriginalFunction);
+            var clone = await CreateExternalUpdate(Model, OriginalFunction);
             CopyTo(clone);
             return clone;
         }
 
-        public override float Evaluate(IVariable variable, VariableCollection variables, SimSpecs sim)
+        public override async Task<float> Evaluate(IVariable variable, VariableCollection variables, SimSpecs sim)
         {
             if (variable == null)
             {
@@ -57,11 +59,10 @@ namespace Symu.SysDyn.Core.Functions
             }
             return variable.Value;
         }
-        public override bool TryReplace(SimSpecs sim, out float result)
+
+        public override async Task<TryReplaceStruct> TryReplace(SimSpecs sim)
         {
-            result = 0;
-            return false;
-            //return Args.Count == 1 ? Args[0] : 0;
+            return new TryReplaceStruct(false, 0);
         }
     }
 }

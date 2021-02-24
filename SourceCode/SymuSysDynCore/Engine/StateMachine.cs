@@ -11,6 +11,7 @@
 
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Symu.Common.Core.Classes;
 using Symu.SysDyn.Core.Models.XMile;
 using Symu.SysDyn.Core.Parser;
@@ -22,6 +23,8 @@ namespace Symu.SysDyn.Core.Engine
     public partial class StateMachine
     {
         public const string FrequencyFactor = "Frequencyfactor";
+        private string _xmlFile;
+        private bool _xmlValidate;
 
         /// <summary>
         ///     Create an instance of the state machine from an xml File
@@ -39,18 +42,16 @@ namespace Symu.SysDyn.Core.Engine
         ///     The stateMachine is Initialized
         /// </summary>
         /// <param name="xmlFile"></param>
-        /// <param name="validate"></param>
-        public StateMachine(string xmlFile, bool validate = true)
+        /// <param name="xmlValidate"></param>
+        public static async Task<StateMachine> CreateStateMachine(string xmlFile, bool xmlValidate = true)
         {
-            var xmlParser = new XmlParser(xmlFile, validate);
-            Models = xmlParser.ParseModels();
-            Simulation = xmlParser.ParseSimSpecs();
-            Simulation.OnTimer += OnTimer;
-            Initialize();
+            var stateMachine = new StateMachine {_xmlFile = xmlFile, _xmlValidate = xmlValidate};
+            await stateMachine.Initialize();
+            return stateMachine;
         }
 
-        public SimSpecs Simulation { get; }
-        public ModelCollection Models { get; }
+        public SimSpecs Simulation { get; private set; }
+        public ModelCollection Models { get; private set; }
 
         #region Graph
 
@@ -95,8 +96,16 @@ namespace Symu.SysDyn.Core.Engine
         ///     Don't store the result
         ///     Store the reference variables
         /// </summary>
-        public void Initialize()
+        public async Task Initialize()
         {
+            if (!string.IsNullOrEmpty(_xmlFile))
+            {
+                var xmlParser = new XmlParser(_xmlFile, _xmlValidate);
+                Models = await xmlParser.ParseModels();
+                Simulation = xmlParser.ParseSimSpecs();
+                Simulation.OnTimer += OnTimer;
+            }
+
             Variables = Models.GetVariables(); // see full model
         }
 

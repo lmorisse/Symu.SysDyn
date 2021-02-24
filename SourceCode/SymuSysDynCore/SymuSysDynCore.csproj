@@ -15,11 +15,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="MathNet.Numerics" Version="4.12.0" />
-    <PackageReference Include="NCalc2" Version="2.1.0" />
+    <PackageReference Include="MathNet.Numerics" Version="4.15.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\ncalc-async\src\NCalcAsync\NCalcAsync.csproj" />
     <ProjectReference Include="..\..\..\..\Symu.Common\Github\SourceCode\SymuCommonCore\SymuCommonCore.csproj" />
   </ItemGroup>
 

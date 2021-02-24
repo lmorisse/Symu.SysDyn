@@ -21,6 +21,7 @@
 #region using directives
 
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Symu.SysDyn.Core.Models.XMile;
 using SymuSysDynTests.Classes;
@@ -34,10 +35,15 @@ namespace SymuSysDynTests.Parser
     [TestClass]
     public class XmlParserTests : BaseClassTest
     {
-        [TestMethod]
-        public void ParseVariablesTest()
+        [TestInitialize]
+        public async Task InitializeTest()
         {
-            var models = Parser.ParseModels();
+            await Initialize();
+        }
+        [TestMethod]
+        public async Task ParseVariablesTest()
+        {
+            var models = await Parser.ParseModels();
             Assert.AreEqual(2, models.Count());
             Assert.AreEqual(8, models.RootModel.Variables.Count());
             Assert.AreEqual(2, models[1].Variables.Count());
@@ -55,9 +61,9 @@ namespace SymuSysDynTests.Parser
         }
 
         [TestMethod]
-        public void ParseAuxiliariesTest()
+        public async Task ParseAuxiliariesTest()
         {
-            Parser.ParseAuxiliaries(XElement, RootModel);
+            await Parser.ParseAuxiliaries(XElement, RootModel);
             var aux = RootModel.Variables.OfType<Auxiliary>().ToList();
             Assert.AreEqual(3, aux.Count);
             Assert.AreEqual("_Aux1", aux[0].FullName);
@@ -69,9 +75,9 @@ namespace SymuSysDynTests.Parser
         }
 
         [TestMethod]
-        public void ParseFlowsTest()
+        public async Task ParseFlowsTest()
         {
-            Parser.ParseFlows(XElement, RootModel);
+            await Parser.ParseFlows(XElement, RootModel);
             var flows = RootModel.Variables.OfType<Flow>().ToList();
             Assert.AreEqual(2, flows.Count);
             Assert.AreEqual("_Inflow1", flows[0].FullName);
@@ -81,9 +87,9 @@ namespace SymuSysDynTests.Parser
         }
 
         [TestMethod]
-        public void ParseStocksTest()
+        public async Task ParseStocksTest()
         {
-            Parser.ParseStocks(XElement, RootModel);
+            await Parser.ParseStocks(XElement, RootModel);
             var stocks = RootModel.Variables.Stocks.ToList();
             Assert.AreEqual(2, stocks.Count);
             Assert.AreEqual("_Stock1", stocks[0].FullName);

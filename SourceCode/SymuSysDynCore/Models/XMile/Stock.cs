@@ -11,6 +11,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Symu.SysDyn.Core.Equations;
 using Symu.SysDyn.Core.Parser;
 
@@ -27,6 +28,9 @@ namespace Symu.SysDyn.Core.Models.XMile
     /// </summary>
     public class Stock : Variable
     {
+        public Stock() : base()
+        {
+        }
         private Stock(string name, string model) : base(name, model)
         {
         }
@@ -37,30 +41,33 @@ namespace Symu.SysDyn.Core.Models.XMile
         /// <param name="eqn"></param>
         /// <param name="inflow"></param>
         /// <param name="outflow"></param>
-        public Stock(string name, string eqn, List<string> inflow, List<string> outflow) : this(name, string.Empty, eqn,
-            inflow, outflow)
+        public static async Task<Stock> CreateStock(string name, string eqn, List<string> inflow, List<string> outflow) 
         {
+            return await CreateStock(name, string.Empty, eqn, inflow, outflow) ;
         }
 
-        public Stock(string name, string model, string eqn, List<string> inflow, List<string> outflow) : base(name,
-            model, eqn)
+        public static async Task<Stock> CreateStock(string name, string model, string eqn, List<string> inflow, List<string> outflow) 
         {
-            Inflow = StringUtils.CleanNames(inflow);
-            Outflow = StringUtils.CleanNames(outflow);
-            SetChildren();
+            var stock = await CreateVariable<Stock>(name, model, eqn);
+            stock.Inflow = StringUtils.CleanNames(inflow);
+            stock.Outflow = StringUtils.CleanNames(outflow);
+            stock.SetChildren();
+            return stock;
         }
 
-        private Stock(string name, string model, string eqn, List<string> inflow, List<string> outflow,
+        private static async Task<Stock> CreateStock(string name, string model, string eqn, List<string> inflow, List<string> outflow,
             GraphicalFunction graph,
-            Range range, Range scale, NonNegative nonNegative, VariableAccess access) : base(name, model, eqn, graph,
-            range, scale, nonNegative, access)
+            Range range, Range scale, NonNegative nonNegative, VariableAccess access) 
         {
-            Inflow = StringUtils.CleanNames(inflow);
-            Outflow = StringUtils.CleanNames(outflow);
-            SetChildren();
+
+            var stock = await CreateVariable<Stock>(name, model, eqn, graph, range, scale, nonNegative, access);
+            stock.Inflow = StringUtils.CleanNames(inflow);
+            stock.Outflow = StringUtils.CleanNames(outflow);
+            stock.SetChildren();
+            return stock;
         }
 
-        public static Stock CreateInstance(string name, XMileModel model, string eqn, List<string> inflow,
+        public static async Task<Stock> CreateInstance(string name, XMileModel model, string eqn, List<string> inflow,
             List<string> outflow, GraphicalFunction graph,
             Range range, Range scale, NonNegative nonNegative, VariableAccess access)
         {
@@ -69,15 +76,15 @@ namespace Symu.SysDyn.Core.Models.XMile
                 throw new ArgumentNullException(nameof(model));
             }
 
-            var variable = new Stock(name, model.Name, eqn, inflow, outflow, graph, range, scale, nonNegative, access);
+            var variable = await CreateStock(name, model.Name, eqn, inflow, outflow, graph, range, scale, nonNegative, access);
             model.Variables.Add(variable);
             return variable;
         }
 
-        public override IVariable Clone()
+        public override async Task<IVariable> Clone()
         {
             var clone = new Stock(Name, Model);
-            CopyTo(clone);
+            await CopyTo(clone);
             clone.Inflow = Inflow;
             clone.Outflow = Outflow;
             return clone;
@@ -87,7 +94,7 @@ namespace Symu.SysDyn.Core.Models.XMile
         ///     stock(t) = stock(t - dt) + dt*(inflows(t - dt) – outflows(t - dt))
         ///     Re compute SetChildren with the new equation
         /// </summary>
-        public void SetStockEquation(string dt)
+        public async Task SetStockEquation(string dt)
         {
             var equation = Name;
             var inflows = AggregateFlows(Inflow, "+");
@@ -104,7 +111,7 @@ namespace Symu.SysDyn.Core.Models.XMile
                 equation += ")";
             }
 
-            Equation = EquationFactory.CreateInstance(Model, equation, out _);
+            Equation = (await EquationFactory.CreateInstance(Model, equation)).Equation;
 
             SetChildren();
         }

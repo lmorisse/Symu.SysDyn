@@ -11,6 +11,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Symu.SysDyn.Core.Models.XMile;
 
@@ -22,18 +23,21 @@ namespace SymuSysDynTests.Models.XMile
     public class XMileModelTests
     {
         private readonly XMileModel _model = new XMileModel("1");
-        private readonly Variable _variable = new Variable("0", string.Empty, "STEP(1,5)");
+        private Variable _variable;
         private Group _group;
 
         [TestInitialize]
-        public void Initialize()
+        public async Task Initialize()
         {
+            _variable = await Variable.CreateVariable<Variable>("0", string.Empty, "STEP(1,5)");
+            //_model.Variables.Add(_variable);
             _group = new Group("0", string.Empty, new List<string> {_variable.FullName});
         }
 
         [TestMethod]
         public void GetVariablesTest()
         {
+            //todo
         }
 
         [TestMethod]

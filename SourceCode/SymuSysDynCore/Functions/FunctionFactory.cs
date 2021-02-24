@@ -18,6 +18,7 @@
 #region using directives
 
 using System;
+using System.Threading.Tasks;
 using Symu.SysDyn.Core.Parser;
 
 #endregion
@@ -26,7 +27,7 @@ namespace Symu.SysDyn.Core.Functions
 {
     public static class FunctionFactory
     {
-        public static BuiltInFunction CreateInstance(string model, string function)
+        public static async Task<BuiltInFunction> CreateInstance(string model, string function)
         {
             if (function == null)
             {
@@ -41,30 +42,30 @@ namespace Symu.SysDyn.Core.Functions
                 case "Then":
                 case "Else":
                     break;
-                case Step.Label:
-                    return new Step(model, function);
-                case Pulse.Label:
-                    return new Pulse(model, function);
-                case Normal.Label:
-                    return new Normal(model, function);
-                case Ramp.Label:
-                    return new Ramp(model, function);
-                case Smth1.Label:
-                    return new Smth1(model, function);
-                case Smth3.Label:
-                    return new Smth3(model, function);
-                case SmthN.Label:
-                    return new SmthN(model, function);
-                case Dt.Label:
-                    return new Dt(model, function);
-                case Time.Label:
-                    return new Time(model, function);
+                //case Step.Label:
+                //    return new Step(model, function);
+                //case Pulse.Label:
+                //    return await Pulse.CreatePulse(model, function);
+                //case Normal.Label:
+                //    return await Normal.CreateNormal(model, function);
+                //case Ramp.Label:
+                //    return await Ramp.CreateRamp(model, function);
+                //case Smth1.Label:
+                //    return await Smth1.CreateSmth1(model, function);
+                //case Smth3.Label:
+                //    return await Smth3.CreateSmth3(model, function);
+                //case SmthN.Label:
+                //    return await SmthN.CreateSmthN(model, function);
+                //case Dt.Label:
+                //    return await Dt.CreateDt(model, function);
+                //case Time.Label:
+                //    return await Time.CreateTime(model, function);
                 case Value.Label:
-                    return new Value(model, function);
+                    return await Value.CreateValue(model, function);
                 case ExternalUpdate.Label:
-                    return new ExternalUpdate(model, function);
+                    return await ExternalUpdate.CreateExternalUpdate(model, function);
                 default:
-                    return new BuiltInFunction(model, function);
+                    return await BuiltInFunction.CreateBuiltInFunction<BuiltInFunction>(model, function);
             }
 
             return null;

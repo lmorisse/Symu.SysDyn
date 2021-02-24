@@ -13,7 +13,8 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using NCalc2;
+using System.Threading.Tasks;
+using NCalcAsync;
 using Symu.SysDyn.Core.Engine;
 using Symu.SysDyn.Core.Functions;
 using Symu.SysDyn.Core.Models.XMile;
@@ -48,9 +49,9 @@ namespace Symu.SysDyn.Core.Equations
         /// </summary>
         public BuiltInFunctionCollection Functions { get; }
 
-        public override IEquation Clone()
+        public override async Task<IEquation> Clone()
         {
-            return new ComplexEquation(OriginalEquation, InitializedEquation, Functions.Clone(), Variables.ToList(),
+            return new ComplexEquation(OriginalEquation, InitializedEquation, await Functions.Clone(), Variables.ToList(),
                 Words.ToList(),
                 Range);
         }
@@ -68,30 +69,30 @@ namespace Symu.SysDyn.Core.Equations
         /// <param name="variables"></param>
         /// <param name="sim"></param>
         /// <returns></returns>
-        public override void Prepare(IVariable selfVariable, VariableCollection variables, SimSpecs sim)
+        public override async Task Prepare(IVariable selfVariable, VariableCollection variables, SimSpecs sim)
         {
             if (variables == null)
             {
                 throw new ArgumentNullException(nameof(variables));
             }
 
-            base.Prepare(selfVariable, variables, sim);
+            await base.Prepare(selfVariable, variables, sim);
 
             // Built-in functions
             foreach (var function in Functions)
             {
-                Expression.Parameters[function.IndexName] = function.Prepare(selfVariable, variables, sim);
+                Expression.Parameters[function.IndexName] = await function.Prepare(selfVariable, variables, sim);
             }
         }
 
-        public override void Replace(string child, string value, SimSpecs sim)
+        public override async Task Replace(string child, string value, SimSpecs sim)
         {
             //Replace functions
             foreach (var function in Functions.ToImmutableList())
             {
-                function.Replace(child, value, sim);
-
-                if (function.Parameters.Any(x => x != null) || !function.TryReplace(sim, out var result))
+                await function.Replace(child, value, sim);
+                var tryReplace = await function.TryReplace(sim);
+                if (function.Parameters.Any(x => x != null) || !tryReplace.Success)
                 {
                     continue;
                 }
@@ -99,7 +100,7 @@ namespace Symu.SysDyn.Core.Equations
                 while (Words.FindIndex(ind => ind.Equals(function.IndexName)) >= 0)
                 {
                     Words[Words.FindIndex(ind => ind.Equals(function.IndexName))] =
-                        result.ToString(CultureInfo.InvariantCulture);
+                        tryReplace.Value.ToString(CultureInfo.InvariantCulture);
                 }
 
                 Functions.Remove(function);

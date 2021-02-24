@@ -10,7 +10,8 @@
 #region using directives
 
 using System.Collections.Generic;
-using NCalc2;
+using System.Threading.Tasks;
+using NCalcAsync;
 using Symu.SysDyn.Core.Engine;
 using Symu.SysDyn.Core.Models.XMile;
 
@@ -27,11 +28,11 @@ namespace Symu.SysDyn.Core.Equations
         string OriginalEquation { get; }
         string InitializedEquation { get; set; }
         List<string> Variables { get; }
-        float InitialValue();
-        float Evaluate(IVariable variable, VariableCollection variables, SimSpecs sim);
-        void Prepare(IVariable variable, VariableCollection variables, SimSpecs sim);
-        void Replace(string child, string value, SimSpecs sim);
+        Task<float> InitialValue();
+        Task<float> Evaluate(IVariable variable, VariableCollection variables, SimSpecs sim);
+        Task Prepare(IVariable variable, VariableCollection variables, SimSpecs sim);
+        Task Replace(string child, string value, SimSpecs sim);
         bool CanBeOptimized(string variableName);
-        IEquation Clone();
+        Task<IEquation> Clone();
     }
 }

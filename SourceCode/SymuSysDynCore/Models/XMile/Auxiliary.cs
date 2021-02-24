@@ -10,6 +10,7 @@
 #region using directives
 
 using System;
+using System.Threading.Tasks;
 
 #endregion
 
@@ -22,33 +23,38 @@ namespace Symu.SysDyn.Core.Models.XMile
     /// </summary>
     public class Auxiliary : Variable
     {
+        public Auxiliary() : base()
+        {
+        }
         public Auxiliary(string name, string model) : base(name, model)
         {
         }
 
-        public Auxiliary(string name, string model, string eqn) : base(name, model, eqn)
+        public static async Task<Auxiliary> CreateAuxiliary(string name, string model, string eqn) 
         {
+            return await CreateVariable<Auxiliary>(name, model, eqn) ;
         }
 
-        private Auxiliary(string name, string model, string eqn, GraphicalFunction graph, Range range, Range scale,
-            NonNegative nonNegative, VariableAccess access) : base(name, model, eqn, graph, range, scale, nonNegative,
-            access)
+        private static async Task<Auxiliary> CreateAuxiliary(string name, string model, string eqn, GraphicalFunction graph, Range range, Range scale,
+            NonNegative nonNegative, VariableAccess access) 
         {
+            return await CreateVariable<Auxiliary>(name, model, eqn, graph, range, scale, nonNegative,
+                access);
         }
 
-        public new static Auxiliary CreateInstance(string name, XMileModel model, string eqn)
+        public new static async Task<Auxiliary> CreateInstance(string name, XMileModel model, string eqn)
         {
             if (model == null)
             {
                 throw new ArgumentNullException(nameof(model));
             }
 
-            var variable = new Auxiliary(name, model.Name, eqn);
+            var variable = await CreateAuxiliary(name, model.Name, eqn);
             model.Variables.Add(variable);
             return variable;
         }
 
-        public static Auxiliary CreateInstance(string name, XMileModel model, string eqn, GraphicalFunction graph,
+        public static async Task<Auxiliary> CreateInstance(string name, XMileModel model, string eqn, GraphicalFunction graph,
             Range range, Range scale,
             NonNegative nonNegative, VariableAccess access)
         {
@@ -57,15 +63,15 @@ namespace Symu.SysDyn.Core.Models.XMile
                 throw new ArgumentNullException(nameof(model));
             }
 
-            var variable = new Auxiliary(name, model.Name, eqn, graph, range, scale, nonNegative, access);
+            var variable = await CreateAuxiliary(name, model.Name, eqn, graph, range, scale, nonNegative, access);
             model.Variables.Add(variable);
             return variable;
         }
 
-        public override IVariable Clone()
+        public override async Task<IVariable> Clone()
         {
             var clone = new Auxiliary(Name, Model);
-            CopyTo(clone);
+            await CopyTo(clone);
             return clone;
         }
 

@@ -10,6 +10,7 @@
 #region using directives
 
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Symu.SysDyn.Core.Functions;
 
@@ -18,7 +19,7 @@ using Symu.SysDyn.Core.Functions;
 namespace SymuSysDynTests.Functions
 {
     [TestClass]
-    public class FunctionFactoryTests
+    public class FunctionUtilsTests
     {
         [TestMethod]
         public void ParseStringFunctionsTest()
@@ -93,52 +94,37 @@ namespace SymuSysDynTests.Functions
             Assert.AreEqual("Time", results[1]);
             Assert.AreEqual("SET(3,5)", results[2]);
         }
-        /// <summary>
-        ///     passing test : Is variable false then true
-        /// </summary>
-        [TestMethod]
-        public void ParseStringFunctionsTest4()
-        {
-            const string test = "10*(1+Ramp(0,5))";
-            var results = FunctionUtils.ParseStringFunctions(test);
-            Assert.AreEqual(1, results.Count);
-            Assert.AreEqual("Ramp(0,5)", results[0]);
-        }
+
 
 
         /// <summary>
         ///     Passing tests
         /// </summary>
         [TestMethod]
-        public void GetFunctionsTest()
+        public async Task GetFunctionsTest()
         {
             const string test =
-                "Func1((param1),(param2))+DT + TIME + STEP( 1 , 2)-Normal(1,2)*RAMP(2,1)-ExternalUpdate+2";
-            var results = FunctionUtils.ParseFunctions(string.Empty, test).ToList();
+                "Func1((param1),(param2))+DT + TIME + PULSE( 1 , 2)-Normal(1,2)*Func2(2,1)-ExternalUpdate+2";
+            var results = await FunctionUtils.ParseFunctions(string.Empty, test);
             // Result is 8 because Func1((param1),(param2)) appears twice, once with a false result : Func1((param1))
             // To correct
-            Assert.AreEqual(7, results.Count);
+            Assert.AreEqual(5, results.Count);
             Assert.AreEqual("Func1", results[0].Name);
-            Assert.IsTrue(results[1] is Dt);
-            Assert.IsTrue(results[2] is Time);
-            Assert.AreEqual("Step", results[3].Name);
-            Assert.IsTrue(results[3] is Step);
-            Assert.IsTrue(results[4] is Normal);
-            Assert.AreEqual("Normal", results[4].Name);
-            Assert.IsTrue(results[5] is Ramp);
-            Assert.AreEqual("Ramp", results[5].Name);
-            Assert.IsTrue(results[6] is ExternalUpdate);
-            Assert.AreEqual("Externalupdate", results[6].Name);
+            Assert.AreEqual("Pulse", results[1].Name);
+            Assert.AreEqual("Normal", results[2].Name);
+            Assert.AreEqual("Func2", results[3].Name);
+            Assert.IsTrue(results[4] is ExternalUpdate);
+            Assert.AreEqual("Externalupdate", results[4].Name);
         }
 
         /// <summary>
         ///     Non passing test
         /// </summary>
         [TestMethod]
-        public void GetFunctionsTest1()
+        public async Task GetFunctionsTest1()
         {
             const string test = "someStuffBeforeFunction + ( param1 ) + ( param2 + param3 ) + xxx";
-            var results = FunctionUtils.ParseFunctions(string.Empty, test).ToList();
+            var results = await FunctionUtils.ParseFunctions(string.Empty, test);
             Assert.AreEqual(0, results.Count);
         }
 
@@ -147,10 +133,10 @@ namespace SymuSysDynTests.Functions
         ///     If then else test
         /// </summary>
         [TestMethod]
-        public void GetFunctionsTest21()
+        public async Task GetFunctionsTest21()
         {
             const string test = "If x1 then x2 else x3";
-            var results = FunctionUtils.ParseFunctions(string.Empty, test).ToList();
+            var results = await FunctionUtils.ParseFunctions(string.Empty, test);
             Assert.AreEqual(1, results.Count);
             Assert.IsTrue(results[0] is IfThenElse);
             Assert.AreEqual(3, results[0].Parameters.Count);
@@ -164,10 +150,10 @@ namespace SymuSysDynTests.Functions
         ///     If() may be identified as a function
         /// </summary>
         [TestMethod]
-        public void GetFunctionsTest22()
+        public async Task GetFunctionsTest22()
         {
             const string test = "If(x1) then x2 else x3";
-            var results = FunctionUtils.ParseFunctions(string.Empty, test).ToList();
+            var results = await FunctionUtils.ParseFunctions(string.Empty, test);
             Assert.AreEqual(1, results.Count);
             Assert.IsTrue(results[0] is IfThenElse);
             Assert.AreEqual(3, results[0].Parameters.Count);
@@ -181,10 +167,10 @@ namespace SymuSysDynTests.Functions
         ///     If() may be identified as a function
         /// </summary>
         [TestMethod]
-        public void GetFunctionsTest23()
+        public async Task GetFunctionsTest23()
         {
             const string test = "If(TIME < 3) then x2 else (TIME-3)";
-            var results = FunctionUtils.ParseFunctions(string.Empty, test).ToList();
+            var results = await FunctionUtils.ParseFunctions(string.Empty, test);
             Assert.AreEqual(1, results.Count);
             Assert.IsTrue(results[0] is IfThenElse);
             Assert.AreEqual(3, results[0].Parameters.Count);
@@ -193,57 +179,45 @@ namespace SymuSysDynTests.Functions
             Assert.AreEqual("Time0-3", results[0].Parameters[2].ToString());
         }
 
+        [DataRow("Func", "Func")]
+        [DataRow("Func()", "Func")]
         [TestMethod]
-        public void GetParametersTest()
+        public async Task GetParametersTest(string function, string name)
         {
-            var function = "Func";
-            FunctionUtils.ParseParameters(string.Empty, ref function, out var name, out var parameters, out _);
-            Assert.AreEqual(0, parameters.Count);
-            Assert.AreEqual("Func", name);
+            var builtInFunction = await FunctionUtils.ParseParameters<BuiltInFunction>(string.Empty, function);
+            Assert.AreEqual(0, builtInFunction.Parameters.Count);
+            Assert.AreEqual(name, builtInFunction.Name);
         }
 
         [TestMethod]
-        public void GetParametersTest1()
+        public async Task GetParametersTest2()
         {
-            var function = "Func()";
-
-            FunctionUtils.ParseParameters(string.Empty, ref function, out var name, out var parameters, out _);
-            Assert.AreEqual(0, parameters.Count);
-            Assert.AreEqual("Func", name);
+            const string function = "Func(param1)";
+            var builtInFunction = await FunctionUtils.ParseParameters<BuiltInFunction>(string.Empty, function);
+            Assert.AreEqual(1, builtInFunction.Parameters.Count);
+            Assert.AreEqual("_Param1", builtInFunction.Parameters[0].Variables.First());
+            Assert.AreEqual("Func", builtInFunction.Name);
         }
 
         [TestMethod]
-        public void GetParametersTest2()
+        public async Task GetParametersTest3()
         {
-            var function = "Func(param1)";
-
-            FunctionUtils.ParseParameters(string.Empty, ref function, out var name, out var parameters, out _);
-            Assert.AreEqual(1, parameters.Count);
-            Assert.AreEqual("_Param1", parameters[0].Variables.First());
-            Assert.AreEqual("Func", name);
+            const string function = "Func(param1, param2)";
+            var builtInFunction = await FunctionUtils.ParseParameters<BuiltInFunction>(string.Empty, function);
+            Assert.AreEqual(2, builtInFunction.Parameters.Count);
+            Assert.AreEqual("_Param1", builtInFunction.Parameters[0].Variables.First());
+            Assert.AreEqual("_Param2", builtInFunction.Parameters[1].Variables.First());
+            Assert.AreEqual("Func", builtInFunction.Name);
         }
 
         [TestMethod]
-        public void GetParametersTest3()
+        public async Task GetParametersTest4()
         {
-            var function = "Func(param1, param2)";
+            const string function = @"someFunc((a),b,func1(a,b+c),func2(a*b,func3(a+b,c)),func4(e)+func5(f),func6(func7(g,h)+func8(i,(a)=>a+2)),g+2)";
 
-            FunctionUtils.ParseParameters(string.Empty, ref function, out var name, out var parameters, out _);
-            Assert.AreEqual(2, parameters.Count);
-            Assert.AreEqual("_Param1", parameters[0].Variables.First());
-            Assert.AreEqual("_Param2", parameters[1].Variables.First());
-            Assert.AreEqual("Func", name);
-        }
-
-        [TestMethod]
-        public void GetParametersTest4()
-        {
-            var function =
-                @"someFunc((a),b,func1(a,b+c),func2(a*b,func3(a+b,c)),func4(e)+func5(f),func6(func7(g,h)+func8(i,(a)=>a+2)),g+2)";
-
-            FunctionUtils.ParseParameters(string.Empty, ref function, out var name, out var parameters, out _);
-            Assert.AreEqual(7, parameters.Count);
-            Assert.AreEqual("Somefunc", name);
+            var builtInFunction = await FunctionUtils.ParseParameters<BuiltInFunction>(string.Empty, function);
+            Assert.AreEqual(7, builtInFunction.Parameters.Count);
+            Assert.AreEqual("Somefunc", builtInFunction.Name);
         }
     }
 }

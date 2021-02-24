@@ -13,6 +13,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Threading.Tasks;
 
 #endregion
 
@@ -30,9 +31,14 @@ namespace Symu.SysDyn.Core.Functions
             _functions.AddRange(functions);
         }
 
-        public List<IBuiltInFunction> Clone()
+        public async Task<List<IBuiltInFunction>> Clone()
         {
-            return _functions.Select(function => function.Clone()).ToList();
+            var result = new List<IBuiltInFunction>();
+            foreach (var function in _functions)
+            {
+                result.Add(await function.Clone());
+            }
+            return result;
         }
 
         public bool Any()
