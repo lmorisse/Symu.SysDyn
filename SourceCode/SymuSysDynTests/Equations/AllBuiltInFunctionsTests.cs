@@ -20,23 +20,6 @@ namespace SymuSysDynTests.Equations
     [TestClass]
     public class AllBuiltInFunctionsTests
     {
-        [TestMethod]
-        public async Task FactoryTest()
-        {
-            var factory = await EquationFactory.CreateInstance(string.Empty, "TIME");
-            Assert.IsInstanceOfType(factory.Equation, typeof(ComplexEquation));
-            Assert.AreEqual("Time0", factory.Equation.InitializedEquation);
-            Assert.AreEqual(0, factory.Equation.Variables.Count);
-        }
-
-        [TestMethod]
-        public async Task DtTest()
-        {
-            var factory = await EquationFactory.CreateInstance(string.Empty, "DT");
-            Assert.IsInstanceOfType(factory.Equation, typeof(ComplexEquation));
-            Assert.AreEqual("Dt0", factory.Equation.InitializedEquation);
-            Assert.AreEqual(0, factory.Equation.Variables.Count);
-        }
 
         [TestMethod]
         public async Task StepTest()

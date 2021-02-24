@@ -116,7 +116,7 @@ namespace SymuSysDynTests.Simulation
         public async Task ResolveConnectsTest()
         {
             Assert.AreEqual(1, Machine.Variables.Get("Hares_Area").Value);
-            Assert.AreEqual("TIME", Machine.Variables.Get("Hares_Lynxes").Equation.OriginalEquation);
+            //Assert.AreEqual("TIME", Machine.Variables.Get("Hares_Lynxes").Equation.OriginalEquation);
             Machine.Optimized = false;
             await Machine.Prepare();
             Assert.AreEqual("_Aux3", Machine.Variables.Get("Hares_Area").Equation.OriginalEquation);

@@ -108,13 +108,14 @@ namespace SymuSysDynTests.Functions
             var results = await FunctionUtils.ParseFunctions(string.Empty, test);
             // Result is 8 because Func1((param1),(param2)) appears twice, once with a false result : Func1((param1))
             // To correct
-            Assert.AreEqual(5, results.Count);
+            Assert.AreEqual(7, results.Count);
             Assert.AreEqual("Func1", results[0].Name);
-            Assert.AreEqual("Pulse", results[1].Name);
-            Assert.AreEqual("Normal", results[2].Name);
-            Assert.AreEqual("Func2", results[3].Name);
-            Assert.IsTrue(results[4] is ExternalUpdate);
-            Assert.AreEqual("Externalupdate", results[4].Name);
+            Assert.AreEqual("Dt", results[1].Name);
+            Assert.AreEqual("Time", results[2].Name);
+            Assert.AreEqual("Pulse", results[3].Name);
+            Assert.AreEqual("Normal", results[4].Name);
+            Assert.AreEqual("Func2", results[5].Name);
+            Assert.AreEqual("Externalupdate", results[6].Name);
         }
 
         /// <summary>

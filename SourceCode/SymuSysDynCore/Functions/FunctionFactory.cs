@@ -60,10 +60,10 @@ namespace Symu.SysDyn.Core.Functions
                 //    return await Dt.CreateDt(model, function);
                 //case Time.Label:
                 //    return await Time.CreateTime(model, function);
-                case Value.Label:
-                    return await Value.CreateValue(model, function);
-                case ExternalUpdate.Label:
-                    return await ExternalUpdate.CreateExternalUpdate(model, function);
+                //case Value.Label:
+                //    return await Value.CreateValue(model, function);
+                //case ExternalUpdate.Label:
+                //    return await ExternalUpdate.CreateExternalUpdate(model, function);
                 default:
                     return await BuiltInFunction.CreateBuiltInFunction<BuiltInFunction>(model, function);
             }

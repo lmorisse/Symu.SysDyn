@@ -42,7 +42,7 @@ namespace SymuSysDynTests.Simulation
         {
             Machine.Optimized = true;
             await Machine.Prepare();
-            Assert.AreEqual(12, Machine.Variables.Count());
+            Assert.AreEqual(10, Machine.Variables.Count());
             var variable = Machine.Variables.Get("_Input");
             Assert.IsNotNull(variable);
             Assert.AreEqual(5, variable.Value);

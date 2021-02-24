@@ -55,8 +55,8 @@ namespace Symu.SysDyn.Core.Equations
                     }
                     break;
                 case ValueExpression value:
-                    //compiled.Parameters.Add(value.Value);
-                    throw new NotImplementedException();
+                    // Intentionally blank
+                    break;
                 case Identifier identifier:
                     compiled.Parameters.Add(identifier.Name);
                     break;
