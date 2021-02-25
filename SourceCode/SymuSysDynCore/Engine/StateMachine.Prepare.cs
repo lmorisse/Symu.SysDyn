@@ -1,6 +1,6 @@
 ﻿#region Licence
 
-// Description: SymuBiz - SymuSysDyn
+// Description: SymuSysDyn - SymuSysDynCore
 // Website: https://symu.org
 // Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
@@ -49,13 +49,13 @@ namespace Symu.SysDyn.Core.Engine
                 ? await Models.GetVariables().Clone()
                 : await Models.Get(_processModel).Variables.Clone();
 
-            ResolveConnects();
+            await ResolveConnects();
             foreach (var variable in Variables)
             {
                 ReferenceVariables.Add(variable.FullName, variable.Value);
             }
 
-            await Compute(); // Initial value
+            await Compute();
             await SetStocksEquations();
             foreach (var variable in Variables)
             {
@@ -80,11 +80,12 @@ namespace Symu.SysDyn.Core.Engine
                 await stock.SetStockEquation(dt);
             }
         }
+
         /// <summary>
         ///     Modules connect variables together
         ///     This method make the connection and prepare the connected variables
         /// </summary>
-        public void ResolveConnects()
+        public async Task ResolveConnects()
         {
             foreach (var module in Variables.Modules.ToImmutableList())
             {
@@ -105,10 +106,11 @@ namespace Symu.SysDyn.Core.Engine
                         to = Variables[to.FullName];
                     }
 
-                    // variables and words must be two different lists
-                    to.Equation = new SimpleEquation(from.FullName, from.FullName, new List<string> {from.FullName},
-                        new List<string> {from.FullName}, null);
-                    to.Value = from.Value;
+                    var factory = await EquationFactory.CreateInstance(from.Model, from.Name);
+                    to.Equation = factory.Equation;
+                    to.Value = factory.Value;
+                    //to.Equation = new Equation(from.FullName) {Variables = new List<string> {from.FullName}};
+                    //to.Value = from.Value;
                     to.Children = new List<string> {from.FullName};
                 }
 

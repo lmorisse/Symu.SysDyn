@@ -1,45 +1,86 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿#region Licence
 
+// Description: SymuSysDyn - SymuSysDynTests
+// Website: https://symu.org
+// Copyright: (c) 2021 laurent Morisseau
+// License : the program is distributed under the terms of the GNU General Public License
+
+#endregion
+
+#region using directives
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NCalcAsync;
 using Symu.SysDyn.Core.Equations;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Symu.SysDyn.Core.Equations;
+#endregion
 
-namespace Symu.SysDyn.Core.Equations.Tests
+namespace Symu.SysDyn.Tests.Equations
 {
-    [TestClass()]
+    [TestClass]
     public class CompiledExpressionTests
     {
+        #region Get
+
         /// <summary>
-        /// Nested Functions
+        ///     Nested Functions
         /// </summary>
+        [DataRow("Sqrt(sqrt(4))", true)]
+        [DataRow("STEP(3, 5)", false)]
         [TestMethod]
-        public void GetCompiledExpressionTest()
+        public void GetTest(string function, bool optimized)
         {
-            var compile = CompiledExpression.GetCompiledExpression("Sqrt(sqrt(4))");
+            var compile = CompiledExpression.Get(function, string.Empty);
             Assert.AreEqual(0, compile.Parameters.Count);
-            Assert.AreEqual(2, compile.Functions.Count);
-            Assert.AreEqual("Sqrt", compile.Functions[0]);
-            Assert.AreEqual("sqrt", compile.Functions[1]);
-
+            Assert.AreEqual(optimized, compile.CanBeOptimized);
         }
+
         /// <summary>
-        /// Functions and parameters
+        ///     With parameters
         /// </summary>
         [TestMethod]
-        public void ExploratoryTest()
+        public void GetTest2()
         {
-            var compile = CompiledExpression.GetCompiledExpression("(variable1 + (sqrt(4)*(Variable2+5)))");
+            var compile = CompiledExpression.Get("(variable1 + (sqrt(4)*(Variable2+5)))", string.Empty);
             Assert.AreEqual(2, compile.Parameters.Count);
-            Assert.AreEqual("variable1", compile.Parameters[0]);
-            Assert.AreEqual("Variable2", compile.Parameters[1]);
-            Assert.AreEqual(1, compile.Functions.Count);
-            Assert.AreEqual("sqrt", compile.Functions[0]);
-
+            Assert.AreEqual("_Variable1", compile.Parameters[0]);
+            Assert.AreEqual("_Variable2", compile.Parameters[1]);
+            Assert.IsTrue(compile.CanBeOptimized);
         }
+
+        #endregion
+
+        #region Replace
+
+        [TestMethod]
+        public void ReplaceTest()
+        {
+            var e = new Expression("(variable1 + (variable1_1*(Variable2+5)))");
+            e.HasErrors(); // To set the parsedEquation
+            var replacedEquation =
+                CompiledExpression.ReplaceLogicalExpression(e.ParsedExpression, string.Empty, "variable1", "1");
+            Assert.AreEqual("(1+(variable1_1*(Variable2+5)))", replacedEquation);
+        }
+
+        /// <summary>
+        ///     Using Function
+        /// </summary>
+        /// <returns></returns>
+        [TestMethod]
+        public void ReplaceTest2()
+        {
+            var e = new Expression("Normal(variable1,variable2)");
+            e.HasErrors(); // To set the parsedEquation
+            var replacedEquation =
+                CompiledExpression.ReplaceLogicalExpression(e.ParsedExpression, string.Empty, "variable1", "1");
+            Assert.AreEqual("Normal(1,variable2)", replacedEquation);
+            e = new Expression(replacedEquation);
+            e.HasErrors(); // To set the parsedEquation
+            replacedEquation =
+                CompiledExpression.ReplaceLogicalExpression(e.ParsedExpression, string.Empty, "variable2", "1");
+            Assert.AreEqual("Normal(1,1)", replacedEquation);
+        }
+
+        #endregion
     }
 }

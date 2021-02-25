@@ -1,6 +1,6 @@
 ﻿#region Licence
 
-// Description: SymuBiz - SymuSysDyn
+// Description: SymuSysDyn - SymuSysDynCore
 // Website: https://symu.org
 // Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
@@ -14,9 +14,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Xml;
 using System.Xml.Linq;
-using System.Xml.Schema;
 using Symu.SysDyn.Core.Engine;
 using Symu.SysDyn.Core.Models.XMile;
 using Range = Symu.SysDyn.Core.Models.XMile.Range;
@@ -61,7 +59,6 @@ namespace Symu.SysDyn.Core.Parser
 
             if (!validate)
             {
-                return;
             }
 
             //todo: check if schema exists
@@ -356,15 +353,12 @@ namespace Symu.SysDyn.Core.Parser
                 return VariableAccess.None;
             }
 
-            switch (access.Value)
+            return access.Value switch
             {
-                case "input":
-                    return VariableAccess.Input;
-                case "output":
-                    return VariableAccess.Output;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+                "input" => VariableAccess.Input,
+                "output" => VariableAccess.Output,
+                _ => throw new ArgumentOutOfRangeException()
+            };
         }
 
         private string[] GetScale(XContainer xContainer, string scale)

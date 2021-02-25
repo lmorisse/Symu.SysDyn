@@ -1,8 +1,8 @@
 ﻿#region Licence
 
-// Description: SymuBiz - SymuSysDynTests
+// Description: SymuSysDyn - SymuSysDynTests
 // Website: https://symu.org
-// Copyright: (c) 2020 laurent Morisseau
+// Copyright: (c) 2021 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
 
 #endregion
@@ -24,13 +24,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Symu.SysDyn.Core.Models.XMile;
-using SymuSysDynTests.Classes;
+using Symu.SysDyn.Tests.Classes;
 
 #endregion
 
 #endregion
 
-namespace SymuSysDynTests.Parser
+namespace Symu.SysDyn.Tests.Parser
 {
     [TestClass]
     public class XmlParserTests : BaseClassTest
@@ -40,6 +40,7 @@ namespace SymuSysDynTests.Parser
         {
             await Initialize();
         }
+
         [TestMethod]
         public async Task ParseVariablesTest()
         {
@@ -81,9 +82,9 @@ namespace SymuSysDynTests.Parser
             var flows = RootModel.Variables.OfType<Flow>().ToList();
             Assert.AreEqual(2, flows.Count);
             Assert.AreEqual("_Inflow1", flows[0].FullName);
-            Assert.AreEqual("_Stock2/2", flows[0].Equation.InitializedEquation);
+            Assert.AreEqual("stock2/2", flows[0].Equation.OriginalEquation);
             Assert.AreEqual("_Outflow1", flows[1].FullName);
-            Assert.AreEqual("_Stock2*2+_Aux2", flows[1].Equation.InitializedEquation);
+            Assert.AreEqual("stock2*2+aux2", flows[1].Equation.OriginalEquation);
         }
 
         [TestMethod]

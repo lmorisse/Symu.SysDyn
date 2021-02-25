@@ -1,32 +1,38 @@
 ﻿#region Licence
 
-// Description: SymuBiz - SymuSysDyn
+// Description: SymuSysDyn - SymuSysDynCore
 // Website: https://symu.org
 // Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
 
 #endregion
 
+#region using directives
+
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
+#endregion
+
 namespace Symu.SysDyn.Core.Results
 {
     /// <summary>
-    /// Struct to store a dictionary of CHartDataCollection where the key is the name of the variable
+    ///     Struct to store a dictionary of CHartDataCollection where the key is the name of the variable
     /// </summary>
     public class ChartDataDictionary : IEnumerable<KeyValuePair<string, ChartDataCollection>>
     {
-        private readonly ushort _start;
-        private readonly ResultCollection _results;
+        private readonly Dictionary<string, ChartDataCollection> _dictionary =
+            new Dictionary<string, ChartDataCollection>();
+
         private readonly string[] _outputs;
-        private readonly Dictionary<string, ChartDataCollection> _dictionary = new Dictionary<string, ChartDataCollection>();
+        private readonly ResultCollection _results;
+        private readonly ushort _start;
 
         public ChartDataDictionary()
         {
-
         }
+
         public ChartDataDictionary(ushort start, ResultCollection results, IEnumerable<string> outputs)
         {
             _start = start;
@@ -42,6 +48,8 @@ namespace Symu.SysDyn.Core.Results
         /// <param name="index"></param>
         /// <returns></returns>
         public KeyValuePair<string, ChartDataCollection> this[int index] => _dictionary.ElementAt(index);
+
+        public List<string> Outputs => new List<string>(_dictionary.Keys);
 
 
         public void PrepareData()
@@ -69,7 +77,6 @@ namespace Symu.SysDyn.Core.Results
             }
         }
 
-        public List<string> Outputs => new List<string>(_dictionary.Keys);
         #region IEnumerator members
 
         /// <summary>Returns an enumerator that iterates through the collection.</summary>

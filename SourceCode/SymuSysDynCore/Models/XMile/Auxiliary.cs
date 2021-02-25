@@ -1,6 +1,6 @@
 ﻿#region Licence
 
-// Description: SymuBiz - SymuSysDyn
+// Description: SymuSysDyn - SymuSysDynCore
 // Website: https://symu.org
 // Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
@@ -23,38 +23,41 @@ namespace Symu.SysDyn.Core.Models.XMile
     /// </summary>
     public class Auxiliary : Variable
     {
-        public Auxiliary() : base()
+        public Auxiliary()
         {
         }
+
         public Auxiliary(string name, string model) : base(name, model)
         {
         }
 
-        public static async Task<Auxiliary> CreateAuxiliary(string name, string model, string eqn) 
+        public static async Task<Auxiliary> CreateAuxiliary(string name, string model, string eqn)
         {
-            return await CreateVariable<Auxiliary>(name, model, eqn) ;
+            return await CreateVariable<Auxiliary>(name, model, eqn);
         }
 
-        private static async Task<Auxiliary> CreateAuxiliary(string name, string model, string eqn, GraphicalFunction graph, Range range, Range scale,
-            NonNegative nonNegative, VariableAccess access) 
+        private static async Task<Auxiliary> CreateAuxiliary(string name, string model, string eqn,
+            GraphicalFunction graph, Range range, Range scale,
+            NonNegative nonNegative, VariableAccess access)
         {
             return await CreateVariable<Auxiliary>(name, model, eqn, graph, range, scale, nonNegative,
                 access);
         }
 
-        public new static async Task<Auxiliary> CreateInstance(string name, XMileModel model, string eqn)
-        {
-            if (model == null)
-            {
-                throw new ArgumentNullException(nameof(model));
-            }
+        //public new static async Task<Auxiliary> CreateInstance(string name, XMileModel model, string eqn)
+        //{
+        //    if (model == null)
+        //    {
+        //        throw new ArgumentNullException(nameof(model));
+        //    }
 
-            var variable = await CreateAuxiliary(name, model.Name, eqn);
-            model.Variables.Add(variable);
-            return variable;
-        }
+        //    var variable = await CreateAuxiliary(name, model.Name, eqn);
+        //    model.Variables.Add(variable);
+        //    return variable;
+        //}
 
-        public static async Task<Auxiliary> CreateInstance(string name, XMileModel model, string eqn, GraphicalFunction graph,
+        public static async Task<Auxiliary> CreateInstance(string name, XMileModel model, string eqn,
+            GraphicalFunction graph,
             Range range, Range scale,
             NonNegative nonNegative, VariableAccess access)
         {

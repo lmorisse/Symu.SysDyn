@@ -1,6 +1,6 @@
 ﻿#region Licence
 
-// Description: SymuBiz - SymuSysDyn
+// Description: SymuSysDyn - SymuSysDynCore
 // Website: https://symu.org
 // Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
@@ -45,9 +45,10 @@ namespace Symu.SysDyn.Core.Engine
                 //Intentionally after Compute
                 Simulation.OnTimerEvent();
             }
+
             return true;
         }
-        
+
         /// <summary>
         ///     Process compute all iterations from Simulation.Start to Simulation.Stop
         /// </summary>
@@ -67,6 +68,7 @@ namespace Symu.SysDyn.Core.Engine
                 //Intentionally after Compute
                 Simulation.OnTimerEvent();
             }
+
             return true;
         }
 

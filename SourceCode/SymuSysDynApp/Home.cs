@@ -36,7 +36,18 @@ namespace Symu.SysDyn.App
 
         private void btnGlobalProcess_Click(object sender, EventArgs e)
         {
-            Process(string.Empty).Wait();
+
+            try
+            {
+                Process(string.Empty).Wait();
+            }
+            catch (Exception exception)
+            {
+                MessageBoxButtons buttons = MessageBoxButtons.OK;
+                MessageBox.Show(this, exception.Message, "Error", buttons,
+                    MessageBoxIcon.Error, MessageBoxDefaultButton.Button1,
+                    MessageBoxOptions.RightAlign);
+            }
         }
 
         private void btnSubModelProcess_Click(object sender, EventArgs e)
@@ -76,7 +87,17 @@ namespace Symu.SysDyn.App
         {
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                InitializeStateMachine().Wait();
+                try
+                {
+                    InitializeStateMachine().Wait();
+                }
+                catch (Exception exception)
+                {
+                    MessageBoxButtons buttons = MessageBoxButtons.OK;
+                    MessageBox.Show(this, exception.Message, "Error", buttons,
+                        MessageBoxIcon.Error, MessageBoxDefaultButton.Button1,
+                        MessageBoxOptions.RightAlign);
+                }
             }
         }
 

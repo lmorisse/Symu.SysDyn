@@ -1,46 +1,65 @@
-﻿using System.Collections.Generic;
+﻿#region Licence
+
+// Description: SymuSysDyn - SymuSysDynCore
+// Website: https://symu.org
+// Copyright: (c) 2020 laurent Morisseau
+// License : the program is distributed under the terms of the GNU General Public License
+
+#endregion
+
+#region using directives
+
+using System.Collections.Generic;
 using Symu.SysDyn.Core.Models.XMile;
+
+#endregion
 
 namespace Symu.SysDyn.Core.Models.Symu
 {
     /// <summary>
-    /// Model for system dynamics, to be used to hand code a model
-    /// Inherited from XMileModel (to be used to load an XMile file)
-    /// It is a recursive object as a model can has SubModels and inline models
+    ///     Model for system dynamics, to be used to hand code a model
+    ///     Inherited from XMileModel (to be used to load an XMile file)
+    ///     It is a recursive object as a model can has SubModels and inline models
     /// </summary>
-    /// <seealso cref="XMileModel"/>
+    /// <seealso cref="XMileModel" />
     /// <remarks>Output variables should be a public property, others variables maybe inlined</remarks>
-    public class Model: XMileModel
+    public class Model : XMileModel
     {
+        public Model(string name) : base(name)
+        {
+        }
+
         /// <summary>
-        /// SubModels are treated with Modules
+        ///     SubModels are treated with Modules
         /// </summary>
         public List<Model> SubModels { get; } = new List<Model>();
+
         /// <summary>
-        /// InlineModels are subModels that are inlined in the model parent
-        /// because they don't need visibility as Model
-        /// and don't output variables
+        ///     InlineModels are subModels that are inlined in the model parent
+        ///     because they don't need visibility as Model
+        ///     and don't output variables
         /// </summary>
         public List<Model> InlineModels { get; } = new List<Model>();
 
-        public Model(string name):base(name){}
         /// <summary>
-        /// Add a subModel
+        ///     Add a subModel
         /// </summary>
         /// <param name="model"></param>
         public void AddSubModel(Model model)
         {
             SubModels.Add(model);
         }
+
         /// <summary>
-        /// Add an inlineModel
+        ///     Add an inlineModel
         /// </summary>
         public void AddInlineModel(Model model)
         {
             InlineModels.Add(model);
         }
+
         /// <summary>
-        /// Get the model collection :
+        ///     Get the model collection :
         ///     SubModel are transformed as Module
         ///     InlineModel are transformed as Group
         /// </summary>
@@ -59,6 +78,7 @@ namespace Symu.SysDyn.Core.Models.Symu
                 Module.CreateInstance(this, subModel.Name);
                 models.AddRange(modelCollection);
             }
+
             foreach (var subModel in InlineModels)
             {
                 var modelCollection = subModel.GetModelCollection(this);
@@ -69,9 +89,9 @@ namespace Symu.SysDyn.Core.Models.Symu
                 var group = new Group(subModel.GetType().Name, Name, variables.Names);
                 Groups.Add(group);
             }
+
             models[0] = this;
             return models;
         }
-
     }
 }

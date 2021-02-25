@@ -1,8 +1,8 @@
 ﻿#region Licence
 
-// Description: SymuBiz - SymuSysDynTests
+// Description: SymuSysDyn - SymuSysDynTests
 // Website: https://symu.org
-// Copyright: (c) 2020 laurent Morisseau
+// Copyright: (c) 2021 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
 
 #endregion
@@ -12,11 +12,11 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SymuSysDynTests.Classes;
+using Symu.SysDyn.Tests.Classes;
 
 #endregion
 
-namespace SymuSysDynTests.Simulation
+namespace Symu.SysDyn.Tests.Simulation
 {
     [TestClass]
     public class StateMachineTests : BaseClassTest
@@ -26,6 +26,7 @@ namespace SymuSysDynTests.Simulation
         {
             await Initialize();
         }
+
         [TestMethod]
         public void StateMachineTest()
         {
@@ -109,18 +110,17 @@ namespace SymuSysDynTests.Simulation
             Assert.AreEqual(1, Machine.Variables.Count());
             Assert.AreEqual(1, Machine.Variables[0].Value);
             Assert.AreEqual(1, Machine.Variables[0].Equation.Variables.Count);
-            Assert.AreEqual("_Stock1+1*(1-5)", Machine.Variables[0].Equation.InitializedEquation);
+            Assert.AreEqual("(_Stock1+(1*(1-5)))", Machine.Variables[0].Equation.OriginalEquation);
         }
 
         [TestMethod]
         public async Task ResolveConnectsTest()
         {
             Assert.AreEqual(1, Machine.Variables.Get("Hares_Area").Value);
-            //Assert.AreEqual("TIME", Machine.Variables.Get("Hares_Lynxes").Equation.OriginalEquation);
             Machine.Optimized = false;
             await Machine.Prepare();
-            Assert.AreEqual("_Aux3", Machine.Variables.Get("Hares_Area").Equation.OriginalEquation);
-            Assert.AreEqual("_Aux2", Machine.Variables.Get("Hares_Lynxes").Equation.OriginalEquation);
+            Assert.AreEqual("Aux3", Machine.Variables.Get("Hares_Area").Equation.OriginalEquation);
+            Assert.AreEqual("Aux2", Machine.Variables.Get("Hares_Lynxes").Equation.OriginalEquation);
         }
     }
 }

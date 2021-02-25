@@ -1,8 +1,8 @@
 ﻿#region Licence
 
-// Description: SymuBiz - SymuSysDynTests
+// Description: SymuSysDyn - SymuSysDynTests
 // Website: https://symu.org
-// Copyright: (c) 2020 laurent Morisseau
+// Copyright: (c) 2021 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
 
 #endregion
@@ -16,7 +16,7 @@ using Symu.SysDyn.Core.Models.XMile;
 
 #endregion
 
-namespace SymuSysDynTests.Models.XMile
+namespace Symu.SysDyn.Tests.Models.XMile
 {
     [TestClass]
     public class StockTests
@@ -42,7 +42,7 @@ namespace SymuSysDynTests.Models.XMile
         public async Task CloneTest()
         {
             _stock = await Stock.CreateStock("name", "SET(param1, param2)", _inflows, _outflows);
-            var clone = (Stock)await _stock.Clone();
+            var clone = (Stock) await _stock.Clone();
             Assert.IsNotNull(clone);
             Assert.AreEqual(clone.FullName, _stock.FullName);
             CollectionAssert.AreEqual(_inflows, clone.Inflow);
@@ -59,7 +59,7 @@ namespace SymuSysDynTests.Models.XMile
         {
             _stock = await Stock.CreateStock("name", Equation1, new List<string>(), new List<string>());
             await _stock.SetStockEquation("1");
-            Assert.AreEqual(_stock.FullName, _stock.Equation.InitializedEquation);
+            Assert.AreEqual("Name", _stock.Equation.OriginalEquation);
             Assert.AreEqual(0, _stock.Children.Count);
         }
 
@@ -71,7 +71,7 @@ namespace SymuSysDynTests.Models.XMile
         {
             _stock = await Stock.CreateStock("name", Equation1, _inflows, new List<string>());
             await _stock.SetStockEquation("1");
-            Assert.AreEqual("_Name+1*(_Inflow1+_Inflow2)", _stock.Equation.InitializedEquation);
+            Assert.AreEqual("Name+1*(Inflow1+Inflow2)", _stock.Equation.OriginalEquation);
             Assert.AreEqual(2, _stock.Children.Count);
         }
 
@@ -83,7 +83,7 @@ namespace SymuSysDynTests.Models.XMile
         {
             _stock = await Stock.CreateStock("name", Equation1, new List<string>(), _outflows);
             await _stock.SetStockEquation("1");
-            Assert.AreEqual("_Name+1*(-_Outflow1-_Outflow2)", _stock.Equation.InitializedEquation);
+            Assert.AreEqual("Name+1*(-Outflow1-Outflow2)", _stock.Equation.OriginalEquation);
             Assert.AreEqual(2, _stock.Children.Count);
         }
 
@@ -95,7 +95,7 @@ namespace SymuSysDynTests.Models.XMile
         {
             _stock = await Stock.CreateStock("name", Equation1, _inflows, _outflows);
             await _stock.SetStockEquation("1");
-            Assert.AreEqual("_Name+1*(_Inflow1+_Inflow2-_Outflow1-_Outflow2)", _stock.Equation.InitializedEquation);
+            Assert.AreEqual("Name+1*(Inflow1+Inflow2-Outflow1-Outflow2)", _stock.Equation.OriginalEquation);
             Assert.AreEqual(4, _stock.Children.Count);
         }
     }

@@ -1,6 +1,6 @@
 ﻿#region Licence
 
-// Description: SymuBiz - SymuSysDyn
+// Description: SymuSysDyn - SymuSysDynCore
 // Website: https://symu.org
 // Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
@@ -36,9 +36,10 @@ namespace Symu.SysDyn.Core.Models.XMile
     /// </summary>
     public class Variable : IVariable
     {
-        public Variable() 
+        public Variable()
         {
         }
+
         /// <summary>
         ///     Constructor for root model
         /// </summary>
@@ -59,54 +60,11 @@ namespace Symu.SysDyn.Core.Models.XMile
             FullName = StringUtils.FullName(Model, Name);
         }
 
-        public static async Task<T> CreateVariable<T>(string name, string model, string eqn) where T : IVariable, new()
-        {
-            var variable = new T
-            {
-                Model = model,
-                Name = StringUtils.CleanName(name),
-                Units = Units.CreateInstanceFromEquation(eqn), 
-                NonNegative = new NonNegative(false)
-            };
-            variable.FullName = StringUtils.FullName(variable.Model, variable.Name);
-            var factory = await EquationFactory.CreateInstance(model, eqn);
-            variable.Equation = factory.Equation;
-            variable.Value = factory.Value;
-            variable.Initialize();
-            variable.SetChildren();
-            return variable;
-        }
-
-        public static async Task<T> CreateVariable<T>(string name, string model, string eqn, GraphicalFunction graph, Range range, Range scale,
-            NonNegative nonNegative, VariableAccess access) where T : IVariable, new()
-        {
-            var variable = new T
-            {
-                Model = model,
-                Name = StringUtils.CleanName(name),
-                GraphicalFunction = graph,
-                Range = range,
-                Scale = scale,
-                Units = Units.CreateInstanceFromEquation(eqn),
-                NonNegative = nonNegative,
-                Access = access
-            };
-            variable.FullName = StringUtils.FullName(variable.Model, variable.Name);
-
-            var factory = await EquationFactory.CreateInstance(model, eqn);
-            variable.Equation = factory.Equation;
-            variable.Value = factory.Value;
-            variable.AdjustValue(factory.Value);
-            variable.Initialize();
-            variable.SetChildren();
-            return variable;
-        }
-
         #region IVariable Members
 
         public float Value { get; set; }
 
-        public IEquation Equation { get; set; }
+        public Equation Equation { get; set; }
 
         public GraphicalFunction GraphicalFunction { get; set; }
 
@@ -181,10 +139,10 @@ namespace Symu.SysDyn.Core.Models.XMile
             {
                 if (Equation.Variables.Count == 1 && Equation.Variables[0] == FullName)
                 {
-                    await Equation.Replace(FullName, Value.ToString(CultureInfo.InvariantCulture), sim);
+                    Equation.Replace(FullName, Value.ToString(CultureInfo.InvariantCulture));
                 }
 
-                var value = await Equation.InitialValue();
+                var value = await Equation.InitialValue(Model);
                 AdjustValue(value);
             }
 
@@ -202,20 +160,6 @@ namespace Symu.SysDyn.Core.Models.XMile
         ///     Module and Connect are using FullName = ModelName.VariableName
         /// </summary>
         public string FullName { get; set; }
-
-        #endregion
-
-        public static async Task<T> CreateInstance<T>(string name, XMileModel model, string eqn) where T:IVariable, new()
-        {
-            if (model == null)
-            {
-                throw new ArgumentNullException(nameof(model));
-            }
-
-            var variable = await CreateVariable<T>(name, model.Name, eqn);
-            model.Variables.Add(variable);
-            return variable;
-        }
 
         /// <summary>
         ///     Adjust Value when a graphical function is defined
@@ -246,6 +190,65 @@ namespace Symu.SysDyn.Core.Models.XMile
             Children = Equation?.Variables.Where(x => x != FullName).ToList() ?? new List<string>();
         }
 
+        #endregion
+
+        public static async Task<T> CreateVariable<T>(string name, string model, string eqn) where T : IVariable, new()
+        {
+            var variable = new T
+            {
+                Model = model,
+                Name = StringUtils.CleanName(name),
+                Units = Units.CreateInstanceFromEquation(eqn),
+                NonNegative = new NonNegative(false)
+            };
+            variable.FullName = StringUtils.FullName(variable.Model, variable.Name);
+            var factory = await EquationFactory.CreateInstance(model, eqn);
+            variable.Equation = factory.Equation;
+            variable.Value = factory.Value;
+            variable.Initialize();
+            variable.SetChildren();
+            return variable;
+        }
+
+        public static async Task<T> CreateVariable<T>(string name, string model, string eqn, GraphicalFunction graph,
+            Range range, Range scale,
+            NonNegative nonNegative, VariableAccess access) where T : IVariable, new()
+        {
+            var variable = new T
+            {
+                Model = model,
+                Name = StringUtils.CleanName(name),
+                GraphicalFunction = graph,
+                Range = range,
+                Scale = scale,
+                Units = Units.CreateInstanceFromEquation(eqn),
+                NonNegative = nonNegative,
+                Access = access
+            };
+            variable.FullName = StringUtils.FullName(variable.Model, variable.Name);
+
+            var factory = await EquationFactory.CreateInstance(model, eqn);
+            variable.Equation = factory.Equation;
+            variable.Value = factory.Value;
+            variable.AdjustValue(factory.Value);
+            variable.Initialize();
+            variable.SetChildren();
+            return variable;
+        }
+
+        public static async Task<T> CreateInstance<T>(string name, XMileModel model, string eqn)
+            where T : IVariable, new()
+        {
+            if (model == null)
+            {
+                throw new ArgumentNullException(nameof(model));
+            }
+
+            var variable = await CreateVariable<T>(name, model.Name, eqn);
+            model.Variables.Add(variable);
+            return variable;
+        }
+
         protected async Task CopyTo(IVariable copy)
         {
             if (copy == null)
@@ -259,7 +262,7 @@ namespace Symu.SysDyn.Core.Models.XMile
             copy.Units = Units;
             if (Equation != null)
             {
-                copy.Equation = await Equation.Clone();
+                copy.Equation = await Equation.Clone(Model);
             }
 
             copy.Value = Value;
@@ -298,8 +301,9 @@ namespace Symu.SysDyn.Core.Models.XMile
         public NonNegative NonNegative { get; set; }
 
         public VariableAccess Access { get; set; }
+
         /// <summary>
-        /// If true store the result in the ResultCollection
+        ///     If true store the result in the ResultCollection
         /// </summary>
         public bool StoreResult { get; set; } = true;
 

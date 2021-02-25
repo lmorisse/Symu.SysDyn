@@ -1,19 +1,32 @@
-﻿using System;
+﻿#region Licence
+
+// Description: SymuSysDyn - SymuSysDynCore
+// Website: https://symu.org
+// Copyright: (c) 2020 laurent Morisseau
+// License : the program is distributed under the terms of the GNU General Public License
+
+#endregion
+
+#region using directives
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Symu.SysDyn.Core.Models.XMile;
 using Symu.SysDyn.Core.Parser;
 
+#endregion
+
 namespace Symu.SysDyn.Core.Models.Symu
 {
     /// <summary>
-    /// Graph of all the models and their outcomes of the organization
+    ///     Graph of all the models and their outcomes of the organization
     /// </summary>
     public class ModelNetwork : IEnumerable<IEntity>
     {
         private readonly List<IEntity> _network = new List<IEntity>();
-        public Model RootModel { get; }  = new Model(string.Empty);
+        public Model RootModel { get; } = new Model(string.Empty);
 
         /// <summary>
         ///     Gets or sets the node with the specified fullName
@@ -25,7 +38,7 @@ namespace Symu.SysDyn.Core.Models.Symu
             get => Get(name);
             set
             {
-                var index = _network.FindIndex(x => x.Name==name);
+                var index = _network.FindIndex(x => x.Name == name);
                 _network[index] = value;
             }
         }
@@ -68,8 +81,8 @@ namespace Symu.SysDyn.Core.Models.Symu
         }
 
         /// <summary>
-        /// Aggregate all the _models to process the entire model
-        /// Each entity of the GraphMetaNetwork is a model, with its sub/inline models
+        ///     Aggregate all the _models to process the entire model
+        ///     Each entity of the GraphMetaNetwork is a model, with its sub/inline models
         /// </summary>
         public ModelCollection GlobalModel()
         {
@@ -83,8 +96,9 @@ namespace Symu.SysDyn.Core.Models.Symu
             CreateConnects(models);
             return models;
         }
+
         /// <summary>
-        /// For Model with subModels, we need to create the module and the ConnectCollection before trying to resolveConnects
+        ///     For Model with subModels, we need to create the module and the ConnectCollection before trying to resolveConnects
         /// </summary>
         /// <remarks>XMileModel are not concerned by this method, Module are already created in XML file</remarks>
         public void CreateConnects(ModelCollection models)
@@ -106,15 +120,17 @@ namespace Symu.SysDyn.Core.Models.Symu
                     var variable = model.Variables.GetInput(output);
                     var to = StringUtils.ConnectName(variable.Model, output);
                     var from = StringUtils.ConnectName(RootModel.Name, output);
-                    module.Add(new Connect(model.Name, to, @from));
+                    module.Add(new Connect(model.Name, to, from));
                 }
+
                 // Entities connects
                 CreateConnects(model);
             }
         }
+
         /// <summary>
-        /// For Model with subModels, we need to create the module and the ConnectCollection before trying to resolveConnects
-        /// Only the module are already created
+        ///     For Model with subModels, we need to create the module and the ConnectCollection before trying to resolveConnects
+        ///     Only the module are already created
         /// </summary>
         private static void CreateConnects(XMileModel model)
         {
@@ -128,14 +144,14 @@ namespace Symu.SysDyn.Core.Models.Symu
                     var output = model.Name + "_" + name;
                     if (model.Variables.Outputs.Contains(output))
                     {
-                        module.Add(new Connect(module.Name, name, StringUtils.ConnectName(model.Name,name)));
+                        module.Add(new Connect(module.Name, name, StringUtils.ConnectName(model.Name, name)));
                     }
                 }
             }
         }
 
         /// <summary>
-        /// Process only a subModel
+        ///     Process only a subModel
         /// </summary>
         /// <param name="model">The subModel to process</param>
         public XMileModel LocalModel(Model model)
@@ -147,6 +163,7 @@ namespace Symu.SysDyn.Core.Models.Symu
 
             return model.GetModelCollection(null).First();
         }
+
         #region IEnumerator members
 
         /// <summary>Returns an enumerator that iterates through the collection.</summary>

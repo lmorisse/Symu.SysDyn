@@ -1,6 +1,6 @@
 ﻿#region Licence
 
-// Description: SymuBiz - SymuSysDyn
+// Description: SymuSysDyn - SymuSysDynCore
 // Website: https://symu.org
 // Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
@@ -37,6 +37,9 @@ namespace Symu.SysDyn.Core.Engine
             Simulation.OnTimer += OnTimer;
         }
 
+        public SimSpecs Simulation { get; private set; }
+        public ModelCollection Models { get; private set; }
+
         /// <summary>
         ///     Create an instance of the state machine from an xml File
         ///     The stateMachine is Initialized
@@ -49,45 +52,6 @@ namespace Symu.SysDyn.Core.Engine
             await stateMachine.Initialize();
             return stateMachine;
         }
-
-        public SimSpecs Simulation { get; private set; }
-        public ModelCollection Models { get; private set; }
-
-        #region Graph
-
-        /// <summary>
-        ///     Create Graph of variables using QuickGraph
-        /// </summary>
-        //public Graph GetGraph()
-        //{
-        //    return Graph.CreateInstance(Models.GetVariables());
-        //}
-
-        /// <summary>
-        ///     Create a SubGraph of variables of the root model via a group name using QuickGraph
-        /// </summary>
-        //public Graph GetGroupGraph(string groupName)
-        //{
-        //    return Graph.CreateInstance(Models.RootModel.GetGroupVariables(groupName));
-        //}
-
-        /// <summary>
-        ///     Create a SubGraph of variables of a subModel via a group name using QuickGraph
-        /// </summary>
-        //public Graph GetRootModelGraph()
-        //{
-        //    return Graph.CreateInstance(Models.RootModel.Variables);
-        //}
-
-        /// <summary>
-        ///     Create a SubGraph of variables of a subModel via a group name using QuickGraph
-        /// </summary>
-        //public Graph GetSubModelGraph(string modelName)
-        //{
-        //    return Graph.CreateInstance(Models.Get(modelName).Variables);
-        //}
-
-        #endregion
 
         #region Initialize
 
@@ -125,24 +89,18 @@ namespace Symu.SysDyn.Core.Engine
         /// <param name="timeUnits"></param>
         public void SetSimulation(Fidelity fidelity, ushort pauseInterval, TimeStepType timeUnits)
         {
-            switch (fidelity)
+            Simulation.DeltaTime = fidelity switch
             {
-                case Fidelity.Low:
-                    Simulation.DeltaTime = 0.5F;
-                    break;
-                case Fidelity.Medium:
-                    Simulation.DeltaTime = 0.25F;
-                    break;
-                case Fidelity.High:
-                    Simulation.DeltaTime = 0.125F;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(fidelity), fidelity, null);
-            }
+                Fidelity.Low => 0.5F,
+                Fidelity.Medium => 0.25F,
+                Fidelity.High => 0.125F,
+                _ => throw new ArgumentOutOfRangeException(nameof(fidelity), fidelity, null)
+            };
 
             Simulation.PauseInterval = pauseInterval;
             Simulation.TimeUnits = timeUnits;
         }
+
         public float GetFrequency()
         {
             return Schedule.FrequencyFactor(Simulation.TimeUnits);

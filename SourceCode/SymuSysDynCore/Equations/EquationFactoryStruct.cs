@@ -7,16 +7,17 @@
 
 #endregion
 
-namespace Symu.SysDyn.Core.Functions
+namespace Symu.SysDyn.Core.Equations
 {
-    public struct TryReplaceStruct
+    public struct EquationFactoryStruct
     {
-        public TryReplaceStruct(bool success, float value)
+        public EquationFactoryStruct(Equation equation, float value)
         {
-            Success = success;
+            Equation = equation;
             Value = value;
         }
-        public bool Success { get; set; }
+
+        public Equation Equation { get; set; }
         public float Value { get; set; }
     }
 }

@@ -1,6 +1,6 @@
 ﻿#region Licence
 
-// Description: SymuBiz - SymuSysDyn
+// Description: SymuSysDyn - SymuSysDynCore
 // Website: https://symu.org
 // Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
@@ -144,7 +144,7 @@ namespace Symu.SysDyn.Core.Models.XMile
         #region IVariable members
 
         public float Value { get; set; }
-        public IEquation Equation { get; set; }
+        public Equation Equation { get; set; }
 
         /// <summary>
         ///     The variable has been updated
@@ -181,9 +181,9 @@ namespace Symu.SysDyn.Core.Models.XMile
         public VariableAccess Access { get; set; }
 
         /// <summary>
-        /// If true store the result in the ResultCollection
+        ///     If true store the result in the ResultCollection
         /// </summary>
-        public bool StoreResult { get; set; } 
+        public bool StoreResult { get; set; }
 
         public async Task Update(VariableCollection variables, SimSpecs simulation)
         {
@@ -199,6 +199,7 @@ namespace Symu.SysDyn.Core.Models.XMile
         {
             //
         }
+
         #endregion
     }
 }

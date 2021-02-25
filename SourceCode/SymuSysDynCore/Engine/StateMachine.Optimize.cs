@@ -1,6 +1,6 @@
 ﻿#region Licence
 
-// Description: SymuBiz - SymuSysDyn
+// Description: SymuSysDyn - SymuSysDynCore
 // Website: https://symu.org
 // Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
@@ -109,15 +109,22 @@ namespace Symu.SysDyn.Core.Engine
                 throw new ArgumentNullException(nameof(variable));
             }
 
-            if (await variable.TryOptimize(false, sim))
+
+            if (await variable.TryOptimize(false, sim) || variable.Equation.Expression?.ParsedExpression == null)
             {
                 return true;
             }
 
             foreach (var childName in variable.Children.Where(x => !Variables.Exists(x)).ToImmutableList())
             {
+                if (!ReferenceVariables.ContainsKey(childName))
+                {
+                    // For Time & Dt
+                    continue;
+                }
+
                 var childValue = ReferenceVariables[childName].ToString(CultureInfo.InvariantCulture);
-                await variable.Equation.Replace(childName, childValue, Simulation);
+                variable.Equation.Replace(childName, childValue);
                 variable.Children.Remove(childName);
             }
 

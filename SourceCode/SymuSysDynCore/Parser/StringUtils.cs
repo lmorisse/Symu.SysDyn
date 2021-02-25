@@ -1,6 +1,6 @@
 ﻿#region Licence
 
-// Description: SymuBiz - SymuSysDyn
+// Description: SymuSysDyn - SymuSysDynCore
 // Website: https://symu.org
 // Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
@@ -51,7 +51,7 @@ namespace Symu.SysDyn.Core.Parser
             return CleanName(name, true);
         }
 
-        public static string CleanName(string name, bool replaceUnderScore )
+        public static string CleanName(string name, bool replaceUnderScore)
         {
             if (name == null)
             {
@@ -97,8 +97,13 @@ namespace Symu.SysDyn.Core.Parser
             {
                 null => throw new ArgumentNullException(nameof(input)),
                 "" => string.Empty,
-                _ => input.First().ToString().ToUpper() + input.Substring(1)
+                _ => input.First().ToString().ToUpper() + input[1..]
             };
+        }
+
+        public static string CleanFullName(string model, string name)
+        {
+            return FullName(model, CleanName(name));
         }
 
         /// <summary>

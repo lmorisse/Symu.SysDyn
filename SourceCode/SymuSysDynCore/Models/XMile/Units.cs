@@ -1,6 +1,6 @@
 ﻿#region Licence
 
-// Description: SymuBiz - SymuSysDyn
+// Description: SymuSysDyn - SymuSysDynCore
 // Website: https://symu.org
 // Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
@@ -40,7 +40,7 @@ namespace Symu.SysDyn.Core.Models.XMile
 
         #region Xml attributes
 
-        public string Name { get; }
+        public string Name { get; } //todo implement Units from XMile
 
         public string Eqn { get; set; }
 

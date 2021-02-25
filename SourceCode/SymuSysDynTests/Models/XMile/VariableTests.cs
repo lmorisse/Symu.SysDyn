@@ -1,8 +1,8 @@
 ﻿#region Licence
 
-// Description: SymuBiz - SymuSysDynTests
+// Description: SymuSysDyn - SymuSysDynTests
 // Website: https://symu.org
-// Copyright: (c) 2020 laurent Morisseau
+// Copyright: (c) 2021 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
 
 #endregion
@@ -15,7 +15,7 @@ using Symu.SysDyn.Core.Models.XMile;
 
 #endregion
 
-namespace SymuSysDynTests.Models.XMile
+namespace Symu.SysDyn.Tests.Models.XMile
 {
     [TestClass]
     public class VariableTests
@@ -79,7 +79,8 @@ namespace SymuSysDynTests.Models.XMile
             Assert.AreEqual("_Name", _variable.FullName);
             Assert.AreEqual(0, _variable.Value);
             Assert.IsNotNull(_variable.Equation);
-            Assert.AreEqual(2, _variable.Children.Count);
+            Assert.AreEqual(3, _variable.Children.Count);
+            Assert.IsTrue(_variable.Children.Contains("_Dt"));
             Assert.IsTrue(_variable.Children.Contains("_Variable1"));
             Assert.IsTrue(_variable.Children.Contains("_Variable2"));
             Assert.IsFalse(_variable.Updated);

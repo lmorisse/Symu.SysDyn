@@ -1,6 +1,6 @@
 ﻿#region Licence
 
-// Description: SymuBiz - SymuSysDyn
+// Description: SymuSysDyn - SymuSysDynCore
 // Website: https://symu.org
 // Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
@@ -24,7 +24,7 @@ namespace Symu.SysDyn.Core.Models.XMile
     public interface IVariable
     {
         float Value { get; set; }
-        IEquation Equation { get; set; }
+        Equation Equation { get; set; }
 
         /// <summary>
         ///     The variable has been updated
@@ -63,8 +63,9 @@ namespace Symu.SysDyn.Core.Models.XMile
         NonNegative NonNegative { get; set; }
 
         VariableAccess Access { get; set; }
+
         /// <summary>
-        /// If true store the result in the ResultCollection
+        ///     If true store the result in the ResultCollection
         /// </summary>
         bool StoreResult { get; set; }
 

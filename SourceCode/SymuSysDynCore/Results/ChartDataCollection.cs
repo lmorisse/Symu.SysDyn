@@ -1,20 +1,24 @@
 ﻿#region Licence
 
-// Description: SymuBiz - SymuSysDyn
+// Description: SymuSysDyn - SymuSysDynCore
 // Website: https://symu.org
 // Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
 
 #endregion
 
+#region using directives
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
 
+#endregion
+
 namespace Symu.SysDyn.Core.Results
 {
     /// <summary>
-    /// Store a collection of data for the chart 
+    ///     Store a collection of data for the chart
     /// </summary>
     public class ChartDataCollection : IEnumerable<ChartData>
     {
@@ -37,12 +41,14 @@ namespace Symu.SysDyn.Core.Results
                 _chartData.Add(new ChartData(xValues[i], yValues[i]));
             }
         }
+
         /// <summary>
         ///     Gets or sets the ChartDataCollection with the specified index
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
         public ChartData this[int index] => _chartData[index];
+
         #region IEnumerator members
 
         /// <summary>Returns an enumerator that iterates through the collection.</summary>

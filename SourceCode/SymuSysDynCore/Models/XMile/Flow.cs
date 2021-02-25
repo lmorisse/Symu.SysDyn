@@ -1,6 +1,6 @@
 ﻿#region Licence
 
-// Description: SymuBiz - SymuSysDyn
+// Description: SymuSysDyn - SymuSysDynCore
 // Website: https://symu.org
 // Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
@@ -10,7 +10,6 @@
 #region using directives
 
 using System;
-using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 #endregion
@@ -26,20 +25,23 @@ namespace Symu.SysDyn.Core.Models.XMile
     /// </summary>
     public class Flow : Variable
     {
-        public Flow() : base()
+        public Flow()
         {
         }
+
         private Flow(string name, string model) : base(name, model)
         {
         }
 
-        public static async Task<Flow> CreateFlow(string name, string model, string eqn, GraphicalFunction graph, Range range, Range scale,
-            NonNegative nonNegative, VariableAccess access) 
+        public static async Task<Flow> CreateFlow(string name, string model, string eqn, GraphicalFunction graph,
+            Range range, Range scale,
+            NonNegative nonNegative, VariableAccess access)
         {
-            return await CreateVariable<Flow>(name, model, eqn, graph, range, scale, nonNegative, access) ;
+            return await CreateVariable<Flow>(name, model, eqn, graph, range, scale, nonNegative, access);
         }
 
-        public static async Task<Flow> CreateInstance(string name, XMileModel model, string eqn, GraphicalFunction graph, Range range,
+        public static async Task<Flow> CreateInstance(string name, XMileModel model, string eqn,
+            GraphicalFunction graph, Range range,
             Range scale,
             NonNegative nonNegative, VariableAccess access)
         {

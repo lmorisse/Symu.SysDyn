@@ -1,8 +1,8 @@
 ﻿#region Licence
 
-// Description: SymuBiz - SymuSysDynTests
+// Description: SymuSysDyn - SymuSysDynTests
 // Website: https://symu.org
-// Copyright: (c) 2020 laurent Morisseau
+// Copyright: (c) 2021 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
 
 #endregion
@@ -16,7 +16,7 @@ using Symu.SysDyn.Core.Models.XMile;
 
 #endregion
 
-namespace SymuSysDynTests.Equations
+namespace Symu.SysDyn.Tests.Equations
 {
     [TestClass]
     public class SimpleEquationTests
@@ -47,7 +47,8 @@ namespace SymuSysDynTests.Equations
         public async Task CloneTest()
         {
             var variable = await Variable.CreateInstance<Auxiliary>("X", Model, PlusEquation);
-            var cloneEquation = await variable.Equation.Clone();
+            var cloneEquation = await variable.Equation.Clone(Model.Name);
+            Assert.AreEqual(variable.Equation.Variables.Count, cloneEquation.Variables.Count);
             Assert.AreEqual(3, await cloneEquation.Evaluate(null, Variables, null));
         }
 
@@ -57,6 +58,9 @@ namespace SymuSysDynTests.Equations
         public async Task EvaluateTest()
         {
             var variable = await Variable.CreateInstance<Auxiliary>("X", Model, PlusEquation);
+            Assert.AreEqual(3, await variable.Equation.Evaluate(null, Variables, null));
+            // Cache bug test
+            variable = await Variable.CreateInstance<Auxiliary>("X", Model, PlusEquation);
             Assert.AreEqual(3, await variable.Equation.Evaluate(null, Variables, null));
         }
 
@@ -103,60 +107,70 @@ namespace SymuSysDynTests.Equations
         public async Task ReplaceTest()
         {
             var variable = await Variable.CreateInstance<Auxiliary>("X", Model, PlusEquation);
-            await variable.Equation.Replace("_Variable1", "1", _machine.Simulation);
-            await variable.Equation.Replace("_Variable2", "1", _machine.Simulation);
-            Assert.AreEqual(2, await variable.Equation.InitialValue());
+            variable.Equation.Replace("_Variable1", "1");
+            Assert.AreEqual("(1+_Variable2)", variable.Equation.OriginalEquation);
+            variable.Equation.Replace("_Variable2", "1");
+            Assert.AreEqual("(1+1)", variable.Equation.OriginalEquation);
+            Assert.AreEqual(2, await variable.Equation.InitialValue(Model.Name));
         }
 
         [TestMethod]
         public async Task ReplaceTest1()
         {
             var variable = await Variable.CreateInstance<Auxiliary>("X", Model, MinusEquation);
-            await variable.Equation.Replace("_Variable1", "2", _machine.Simulation);
-            await variable.Equation.Replace("_Variable2", "1", _machine.Simulation);
-            Assert.AreEqual(1, await variable.Equation.InitialValue());
+            variable.Equation.Replace("_Variable1", "2");
+            Assert.AreEqual("(2-_Variable2)", variable.Equation.OriginalEquation);
+            variable.Equation.Replace("_Variable2", "1");
+            Assert.AreEqual("(2-1)", variable.Equation.OriginalEquation);
+            Assert.AreEqual(1, await variable.Equation.InitialValue(Model.Name));
         }
 
         [TestMethod]
         public async Task ReplaceTest2()
         {
             var variable = await Variable.CreateInstance<Auxiliary>("X", Model, MultiplicationEquation);
-            await variable.Equation.Replace("_Variable1", "1", _machine.Simulation);
-            await variable.Equation.Replace("_Variable2", "1", _machine.Simulation);
-            Assert.AreEqual(1, await variable.Equation.InitialValue());
+            variable.Equation.Replace("_Variable1", "1");
+            Assert.AreEqual("(1*_Variable2)", variable.Equation.OriginalEquation);
+            variable.Equation.Replace("_Variable2", "1");
+            Assert.AreEqual("(1*1)", variable.Equation.OriginalEquation);
+            Assert.AreEqual(1, await variable.Equation.InitialValue(Model.Name));
         }
 
         [TestMethod]
         public async Task ReplaceTest3()
         {
             var variable = await Variable.CreateInstance<Auxiliary>("X", Model, DivisionEquation);
-            await variable.Equation.Replace("_Variable1", "1", _machine.Simulation);
-            await variable.Equation.Replace("_Variable2", "1", _machine.Simulation);
-            Assert.AreEqual(1, await variable.Equation.InitialValue());
+            variable.Equation.Replace("_Variable1", "1");
+            Assert.AreEqual("(1/_Variable2)", variable.Equation.OriginalEquation);
+            variable.Equation.Replace("_Variable2", "1");
+            Assert.AreEqual("(1/1)", variable.Equation.OriginalEquation);
+            Assert.AreEqual(1, await variable.Equation.InitialValue(Model.Name));
         }
 
         [TestMethod]
         public async Task ReplaceTest4()
         {
             var variable = await Variable.CreateInstance<Auxiliary>("X", Model, Equation);
-            await variable.Equation.Replace("_Variable1", "1", _machine.Simulation);
-            Assert.AreEqual(1, await variable.Equation.InitialValue());
+            variable.Equation.Replace("_Variable1", "1");
+            Assert.AreEqual("1", variable.Equation.OriginalEquation);
+            Assert.AreEqual(1, await variable.Equation.InitialValue(Model.Name));
         }
 
         [TestMethod]
         public async Task ReplaceTest5()
         {
             var variable = await Variable.CreateInstance<Auxiliary>("X", Model, MixEquation);
-            await variable.Equation.Replace("_Variable1", "1", _machine.Simulation);
-            Assert.AreEqual(2, await variable.Equation.InitialValue());
+            variable.Equation.Replace("_Variable1", "1");
+            Assert.AreEqual("(1+1)", variable.Equation.OriginalEquation);
+            Assert.AreEqual(2, await variable.Equation.InitialValue(Model.Name));
         }
 
         [TestMethod]
         public async Task ReplaceTest6()
         {
             var variable = await Variable.CreateInstance<Auxiliary>("X", Model, SameStartEquation);
-            await variable.Equation.Replace("_Variable1", "1", _machine.Simulation);
-            Assert.AreEqual("1/_Variable1_1", variable.Equation.InitializedEquation);
+            variable.Equation.Replace("_Variable1", "1");
+            Assert.AreEqual("(1/_Variable1_1)", variable.Equation.OriginalEquation);
         }
 
         #endregion

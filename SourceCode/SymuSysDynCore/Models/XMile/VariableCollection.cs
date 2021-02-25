@@ -1,6 +1,6 @@
 ﻿#region Licence
 
-// Description: SymuBiz - SymuSysDyn
+// Description: SymuSysDyn - SymuSysDynCore
 // Website: https://symu.org
 // Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
@@ -36,6 +36,7 @@ namespace Symu.SysDyn.Core.Models.XMile
 
         public IEnumerable<string> Outputs =>
             _variables.Where(x => x.Access == VariableAccess.Output).Select(x => x.FullName);
+
         public IEnumerable<string> StoreResults =>
             _variables.Where(x => x.StoreResult).Select(x => x.FullName);
 
@@ -98,6 +99,7 @@ namespace Symu.SysDyn.Core.Models.XMile
         {
             return _variables.Exists(x => x.Name == name && x.Access == VariableAccess.Input);
         }
+
         public IVariable GetInput(string name)
         {
             return _variables.Find(x => x.Name == name && x.Access == VariableAccess.Input);
@@ -189,6 +191,5 @@ namespace Symu.SysDyn.Core.Models.XMile
         }
 
         #endregion
-
     }
 }

@@ -1,8 +1,8 @@
 ﻿#region Licence
 
-// Description: SymuBiz - SymuSysDynTests
+// Description: SymuSysDyn - SymuSysDynTests
 // Website: https://symu.org
-// Copyright: (c) 2020 laurent Morisseau
+// Copyright: (c) 2021 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
 
 #endregion
@@ -16,7 +16,7 @@ using Symu.SysDyn.Core.Models.XMile;
 
 #endregion
 
-namespace SymuSysDynTests.Models.XMile
+namespace Symu.SysDyn.Tests.Models.XMile
 {
     [TestClass]
     public class ModelCollectionTests
@@ -24,8 +24,8 @@ namespace SymuSysDynTests.Models.XMile
         private readonly XMileModel _model = new XMileModel("1");
         private readonly XMileModel _model1 = new XMileModel("2");
         private readonly ModelCollection _models = new ModelCollection();
-        private Variable _variable ;
-        private Variable _variable1 ;
+        private Variable _variable;
+        private Variable _variable1;
 
         [TestInitialize]
         public async Task Initialize()

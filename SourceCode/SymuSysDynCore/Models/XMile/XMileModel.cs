@@ -1,6 +1,6 @@
 ﻿#region Licence
 
-// Description: SymuBiz - SymuSysDyn
+// Description: SymuSysDyn - SymuSysDynCore
 // Website: https://symu.org
 // Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
@@ -20,9 +20,8 @@ namespace Symu.SysDyn.Core.Models.XMile
     /// <summary>
     ///     Define a XMile model with the list of all its variables, modules and groups
     /// </summary>
-    public class XMileModel 
+    public class XMileModel
     {
-
         /// <summary>
         ///     Name is mandatory for the subModels
         /// </summary>
@@ -90,7 +89,8 @@ namespace Symu.SysDyn.Core.Models.XMile
             }
 
             var variables = new VariableCollection();
-            foreach (var variable in group.Entities.Select(entity => Variables.Get(entity)).Where(variable => variable != null))
+            foreach (var variable in group.Entities.Select(entity => Variables.Get(entity))
+                .Where(variable => variable != null))
             {
                 variables.Add(variable);
             }

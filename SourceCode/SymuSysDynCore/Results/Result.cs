@@ -1,6 +1,6 @@
 ﻿#region Licence
 
-// Description: SymuBiz - SymuSysDyn
+// Description: SymuSysDyn - SymuSysDynCore
 // Website: https://symu.org
 // Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
@@ -18,11 +18,14 @@ using Symu.SysDyn.Core.Models.XMile;
 
 namespace Symu.SysDyn.Core.Results
 {
-    public class Result 
+    public class Result
     {
         private readonly Hashtable _result = new Hashtable();
 
-        public Result(){}
+        public Result()
+        {
+        }
+
         public Result(VariableCollection variables)
         {
             if (variables == null)
@@ -52,6 +55,5 @@ namespace Symu.SysDyn.Core.Results
         {
             return (float) _result[name];
         }
-
     }
 }

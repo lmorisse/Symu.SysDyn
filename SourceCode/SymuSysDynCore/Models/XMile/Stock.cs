@@ -1,6 +1,6 @@
 ﻿#region Licence
 
-// Description: SymuBiz - SymuSysDyn
+// Description: SymuSysDyn - SymuSysDynCore
 // Website: https://symu.org
 // Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
@@ -28,12 +28,14 @@ namespace Symu.SysDyn.Core.Models.XMile
     /// </summary>
     public class Stock : Variable
     {
-        public Stock() : base()
+        public Stock()
         {
         }
+
         private Stock(string name, string model) : base(name, model)
         {
         }
+
         /// <summary>
         ///     Constructor for root model
         /// </summary>
@@ -41,12 +43,13 @@ namespace Symu.SysDyn.Core.Models.XMile
         /// <param name="eqn"></param>
         /// <param name="inflow"></param>
         /// <param name="outflow"></param>
-        public static async Task<Stock> CreateStock(string name, string eqn, List<string> inflow, List<string> outflow) 
+        public static async Task<Stock> CreateStock(string name, string eqn, List<string> inflow, List<string> outflow)
         {
-            return await CreateStock(name, string.Empty, eqn, inflow, outflow) ;
+            return await CreateStock(name, string.Empty, eqn, inflow, outflow);
         }
 
-        public static async Task<Stock> CreateStock(string name, string model, string eqn, List<string> inflow, List<string> outflow) 
+        public static async Task<Stock> CreateStock(string name, string model, string eqn, List<string> inflow,
+            List<string> outflow)
         {
             var stock = await CreateVariable<Stock>(name, model, eqn);
             stock.Inflow = StringUtils.CleanNames(inflow);
@@ -55,11 +58,11 @@ namespace Symu.SysDyn.Core.Models.XMile
             return stock;
         }
 
-        private static async Task<Stock> CreateStock(string name, string model, string eqn, List<string> inflow, List<string> outflow,
+        private static async Task<Stock> CreateStock(string name, string model, string eqn, List<string> inflow,
+            List<string> outflow,
             GraphicalFunction graph,
-            Range range, Range scale, NonNegative nonNegative, VariableAccess access) 
+            Range range, Range scale, NonNegative nonNegative, VariableAccess access)
         {
-
             var stock = await CreateVariable<Stock>(name, model, eqn, graph, range, scale, nonNegative, access);
             stock.Inflow = StringUtils.CleanNames(inflow);
             stock.Outflow = StringUtils.CleanNames(outflow);
@@ -76,7 +79,8 @@ namespace Symu.SysDyn.Core.Models.XMile
                 throw new ArgumentNullException(nameof(model));
             }
 
-            var variable = await CreateStock(name, model.Name, eqn, inflow, outflow, graph, range, scale, nonNegative, access);
+            var variable = await CreateStock(name, model.Name, eqn, inflow, outflow, graph, range, scale, nonNegative,
+                access);
             model.Variables.Add(variable);
             return variable;
         }

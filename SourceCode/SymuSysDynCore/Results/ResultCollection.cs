@@ -1,6 +1,6 @@
 ﻿#region Licence
 
-// Description: SymuBiz - SymuSysDyn
+// Description: SymuSysDyn - SymuSysDynCore
 // Website: https://symu.org
 // Copyright: (c) 2020 laurent Morisseau
 // License : the program is distributed under the terms of the GNU General Public License
@@ -26,11 +26,12 @@ namespace Symu.SysDyn.Core.Results
         ///     Value => Result
         /// </summary>
         private readonly Dictionary<int, Result> _result = new Dictionary<int, Result>();
+
         /// <summary>
-        /// Constant results are variables with store results but with a fixed value
-        /// After optimization, those variables are not stored in _result
+        ///     Constant results are variables with store results but with a fixed value
+        ///     After optimization, those variables are not stored in _result
         /// </summary>
-        public Dictionary<string, float> ConstantResults { get; set; }= new Dictionary<string, float>();
+        public Dictionary<string, float> ConstantResults { get; set; } = new Dictionary<string, float>();
 
         /// <summary>
         ///     Gets or sets the node with the specified index
@@ -64,8 +65,9 @@ namespace Symu.SysDyn.Core.Results
         {
             _result.Add(iteration, result);
         }
+
         /// <summary>
-        /// Get the values for the variable name
+        ///     Get the values for the variable name
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
