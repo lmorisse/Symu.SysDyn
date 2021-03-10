@@ -25,7 +25,7 @@ namespace Symu.SysDyn.Tests.Classes
     public abstract class BaseClassTest
     {
         protected const string TestFile =
-            @"C:\Users\cleme\source\repos\clementdepond\Symu.SysDyn\SourceCode\SymuSysDynTests\Templates\Test.xmile";
+            @"C:\Users\laure\Dropbox\Symu\SourceCode\Symu.SysDyn\Github\SourceCode\SymuSysDynTests\Templates\Test.xmile";
 
         protected XmlParser Parser { get; } = new XmlParser(TestFile);
 
