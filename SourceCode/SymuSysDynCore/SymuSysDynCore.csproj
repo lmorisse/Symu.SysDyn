@@ -15,8 +15,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\ncalc-async\src\NCalcAsync\NCalcAsync.csproj" />
-    <ProjectReference Include="..\..\..\..\Symu.Common\Github\SourceCode\SymuCommonCore\SymuCommonCore.csproj" />
+    <ProjectReference Include="..\..\..\..\..\ncalc-async\src\NCalcAsync\NCalcAsync.csproj" />
+    <ProjectReference Include="..\..\..\..\Symu.Common\SourceCode\SymuCommonCore\SymuCommonCore.csproj" />
   </ItemGroup>
 
   <ItemGroup>

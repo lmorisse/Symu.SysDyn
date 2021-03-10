@@ -28,9 +28,9 @@
 				<eqn>20</eqn>
 				<units>Month</units>
 			</aux>
-			<aux name="test all lower abs">
+			<aux name="test1">
 				<doc>	Note that I modified this in a text editor to get around vensim forcing capitalization.</doc>
-				<eqn>ABS(StockA)</eqn>
+				<eqn>abs(5)</eqn>
 			</aux>
 			<flow name="FlowA">
 				<eqn>1</eqn>
@@ -39,17 +39,17 @@
 				<eqn>-10</eqn>
 				<inflow>FlowA</inflow>
 			</stock>
-			<aux name="test mixed case Abs">
+			<aux name="test2">
 				<doc>	Note that I modified this in a text editor to get around vensim forcing capitalization.</doc>
-				<eqn>ABS(StockA)</eqn>
+				<eqn>Abs(5)</eqn>
 			</aux>
 			<aux name="SAVEPER">
 				<doc>	The frequency with which output is stored.</doc>
 				<eqn>TIME_STEP</eqn>
 				<units>Month</units>
 			</aux>
-			<aux name="test allcaps ABS">
-				<eqn>ABS(StockA)</eqn>
+			<aux name="test3">
+				<eqn>ABS(5)</eqn>
 			</aux>
 		</variables>
 		<views>

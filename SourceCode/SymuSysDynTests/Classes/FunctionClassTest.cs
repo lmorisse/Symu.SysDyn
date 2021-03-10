@@ -1,15 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Symu.SysDyn.Core.Engine;
+using Symu.SysDyn.Core.Models.XMile;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace Symu.SysDyn.Tests.Classes
 {
-    class FunctionClassTest
+    public class FunctionClassTest
     {
         protected const string TestFile =
-            @"C:\Users\laure\Dropbox\Symu\SourceCode\Symu.SysDyn\Github\SourceCode\SymuSysDynTests\Templates\Function_capitalization.xmile";
+            @"C:\Users\cleme\source\repos\clementdepond\Symu.SysDyn\SourceCode\SymuSysDynTests\Templates\Function_capitalization.xmile";
 
         /// <summary>
         ///     It is not the Machine.Variables

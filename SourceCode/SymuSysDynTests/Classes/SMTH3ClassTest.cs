@@ -24,7 +24,7 @@ namespace Symu.SysDyn.Tests.Classes
     public abstract class Smth3ClassTest
     {
         protected const string TestFile =
-            @"C:\Users\laure\Dropbox\Symu\SourceCode\Symu.SysDyn\Github\SourceCode\SymuSysDynTests\Templates\SMTH3.xmile";
+            @"C:\Users\cleme\source\repos\clementdepond\Symu.SysDyn\SourceCode\SymuSysDynTests\Templates\SMTH3.xmile";
 
         /// <summary>
         ///     It is not the Machine.Variables
