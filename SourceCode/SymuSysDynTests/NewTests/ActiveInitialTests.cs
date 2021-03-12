@@ -11,7 +11,10 @@
 
 using System.Linq;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Symu.SysDyn.Core.Engine;
+using Symu.SysDyn.Core.Models.XMile;
 using Symu.SysDyn.Tests.Classes;
 
 #endregion
@@ -19,12 +22,27 @@ using Symu.SysDyn.Tests.Classes;
 namespace Symu.SysDyn.Tests.Simulation
 {
     [TestClass]
-    public class ActiveInitialTest : ActiveInitialClass
+    public class ActiveInitialTest
     {
+        protected const string TestFile = ClassPath.classpath + "Active_initial.xmile";
+
+        /// <summary>
+        ///     It is not the Machine.Variables
+        /// </summary>
+        protected XMileModel Variables { get; } = new XMileModel("1");
+
+        protected XDocument XDoc { get; private set; }
+        protected XNamespace Ns { get; private set; }
+        protected XElement XElement { get; set; }
+        protected StateMachine Machine { get; private set; }
+
         [TestInitialize]
         public async Task InitializeTest()
         {
-            await Initialize();
+            Machine = await StateMachine.CreateStateMachine(TestFile);
+            XDoc = XDocument.Load(TestFile);
+            Ns = XDoc.Root?.Attributes("xmlns").First().Value;
+            XElement = XDoc.Root?.Descendants(Ns + "variables").First();
         }
 
         [TestMethod]
@@ -48,19 +66,19 @@ namespace Symu.SysDyn.Tests.Simulation
             await Machine.Prepare();
             Assert.AreEqual(7, Machine.Variables.Count());
             Assert.IsNotNull(Machine.Variables);
+            var initialValue = Machine.Variables.Get("_Value_a");
+            Assert.IsNotNull(initialValue);
+            Assert.AreEqual(0, initialValue.Value);
+            var initialStock = Machine.Variables.Get("_Stock_a");
+            Assert.IsNotNull(initialStock);
+            Assert.AreEqual(0, initialStock.Value);
+            Machine.Process();
             var variable = Machine.Variables.Get("_Value_a");
             Assert.IsNotNull(variable);
-            Assert.AreEqual(0, variable.Value);
+            Assert.AreNotEqual(initialValue, variable.Value);
             variable = Machine.Variables.Get("_Stock_a");
             Assert.IsNotNull(variable);
-            Assert.AreEqual(0, variable.Value);
-            Machine.Process();
-            variable = Machine.Variables.Get("_Value_a");
-            Assert.IsNotNull(variable);
-            Assert.AreEqual(9, variable.Value);
-            variable = Machine.Variables.Get("_Stock_a");
-            Assert.IsNotNull(variable);
-            Assert.AreEqual(10, variable.Value);
+            Assert.AreNotEqual(initialStock, variable.Value);
         }
     }
 }
