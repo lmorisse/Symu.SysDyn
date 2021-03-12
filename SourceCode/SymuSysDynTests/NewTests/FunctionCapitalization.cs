@@ -37,7 +37,10 @@ namespace Symu.SysDyn.Tests.Simulation
             Assert.AreEqual(9, Machine.Variables.Count());
         }
 
-        //Check if non-dynamic variable consider capitalization on the xmile file
+        /// <summary>
+        /// Check if non-dynamic variable consider capitalization on the xmile file and test the abs(int) function
+        /// </summary>
+        /// <returns></returns>
         [TestMethod]
         public async Task OptimizeTest()
         {

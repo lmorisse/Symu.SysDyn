@@ -16,6 +16,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Symu.SysDyn.Core.Engine;
 using Symu.SysDyn.Core.Models.XMile;
 using Symu.SysDyn.Core.Parser;
+using Symu.SysDyn.Tests.Classes;
 
 #endregion
 
@@ -25,7 +26,7 @@ namespace Symu.SysDyn.Tests.Classes
     public abstract class BaseClassTest
     {
         protected const string TestFile =
-            @"C:\Users\laure\Dropbox\Symu\SourceCode\Symu.SysDyn\Github\SourceCode\SymuSysDynTests\Templates\Test.xmile";
+            ClassPath.classpath + "Test.xmile";
 
         protected XmlParser Parser { get; } = new XmlParser(TestFile);
 

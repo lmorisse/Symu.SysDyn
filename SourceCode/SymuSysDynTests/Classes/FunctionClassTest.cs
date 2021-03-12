@@ -9,7 +9,7 @@ namespace Symu.SysDyn.Tests.Classes
     public class FunctionClassTest
     {
         protected const string TestFile =
-            @"C:\Users\laure\Dropbox\Symu\SourceCode\Symu.SysDyn\Github\SourceCode\SymuSysDynTests\Templates\Function_capitalization.xmile";
+            ClassPath.classpath + "Function_capitalization.xmile";
 
         /// <summary>
         ///     It is not the Machine.Variables
