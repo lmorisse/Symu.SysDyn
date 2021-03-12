@@ -1,30 +1,15 @@
-﻿#region Licence
-
-// Description: SymuSysDyn - SymuSysDynTests
-// Website: https://symu.org
-// Copyright: (c) 2021 laurent Morisseau
-// License : the program is distributed under the terms of the GNU General Public License
-
-#endregion
-
-#region using directives
-
+﻿using Symu.SysDyn.Core.Engine;
+using Symu.SysDyn.Core.Models.XMile;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Symu.SysDyn.Core.Engine;
-using Symu.SysDyn.Core.Models.XMile;
-
-#endregion
 
 namespace Symu.SysDyn.Tests.Classes
 {
-    [TestClass]
-    public abstract class Smth3ClassTest
+    public class FunctionClassTest
     {
         protected const string TestFile =
-           ClassPath.classpath + "SMTH3.xmile";
+            ClassPath.classpath + "Function_capitalization.xmile";
 
         /// <summary>
         ///     It is not the Machine.Variables
