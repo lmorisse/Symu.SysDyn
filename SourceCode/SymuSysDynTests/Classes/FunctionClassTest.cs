@@ -11,7 +11,7 @@ namespace Symu.SysDyn.Tests.Classes
     public class FunctionClassTest
     {
         protected const string TestFile =
-            ClassPath.classpath + "Function_capitalization.xmile";
+            ClassPath.classpath;
 
         /// <summary>
         ///     It is not the Machine.Variables
@@ -23,10 +23,11 @@ namespace Symu.SysDyn.Tests.Classes
         protected XElement XElement { get; set; }
         protected StateMachine Machine { get; private set; }
 
-        protected async Task Initialize()
+        protected async Task Initialize(string path)
         {
-            Machine = await StateMachine.CreateStateMachine(TestFile);
-            XDoc = XDocument.Load(TestFile);
+            var testFile2 = TestFile + path;
+            Machine = await StateMachine.CreateStateMachine(testFile2);
+            XDoc = XDocument.Load(testFile2);
             Ns = XDoc.Root?.Attributes("xmlns").First().Value;
             XElement = XDoc.Root?.Descendants(Ns + "variables").First();
         }
