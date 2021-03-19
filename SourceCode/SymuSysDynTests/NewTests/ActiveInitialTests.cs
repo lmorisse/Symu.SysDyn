@@ -19,7 +19,7 @@ using Symu.SysDyn.Tests.Classes;
 
 #endregion
 
-namespace Symu.SysDyn.Tests.Simulation
+namespace Symu.SysDyn.Tests.NewTests
 {
     [TestClass]
     public class ActiveInitialTest
