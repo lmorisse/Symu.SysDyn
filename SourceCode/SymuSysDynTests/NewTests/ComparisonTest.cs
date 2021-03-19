@@ -21,8 +21,10 @@ using Symu.SysDyn.Tests.Classes;
 
 namespace Symu.SysDyn.Tests.NewTests
 {
+    [TestClass]
     public class ComparisonTest : FunctionClassTest
     {
+        
         protected const string TestFile = ClassPath.classpath + "Comparison.xmile";
 
         /// <summary>
@@ -38,7 +40,7 @@ namespace Symu.SysDyn.Tests.NewTests
         [TestInitialize]
         public async Task InitializeTest()
         {
-            await Initialize();
+            await Initialize("Comparison.xmile");
         }
 
         [TestMethod]

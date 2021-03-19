@@ -13,28 +13,29 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Symu.SysDyn.Tests.Classes;
+using System.Xml.Linq;
+using Symu.SysDyn.Core.Engine;
+using Symu.SysDyn.Core.Models.XMile;
 
 #endregion
 
-namespace Symu.SysDyn.Tests.Simulation
+namespace Symu.SysDyn.Tests.NewTests
 {
     [TestClass]
-    public class Function_capitalization : FunctionClassTest
+    public class ReferenceCapitalization : FunctionClassTest
     {
+        
         [TestInitialize]
         public async Task InitializeTest()
         {
-            await Initialize("Function_capitalization.xmile");
+            await Initialize("ReferenceCapitalization.xmile");
         }
 
         [TestMethod]
-        public void StateMachineTest()
+        public override void StateMachineTest()
         {
-            Assert.IsNotNull(Machine.Simulation);
-            Assert.IsNotNull(Machine.Results);
-            Assert.IsNotNull(Machine.ReferenceVariables);
-            Assert.IsNotNull(Machine.Variables);
-            Assert.AreEqual(9, Machine.Variables.Count());
+            base.StateMachineTest();
+            Assert.AreEqual(8, Machine.Variables.Count());
         }
 
         /// <summary>
@@ -51,9 +52,6 @@ namespace Symu.SysDyn.Tests.Simulation
             Assert.IsNotNull(variable);
             Assert.AreEqual(5, variable.Value);
             variable = Machine.Variables.Get("_Test2");
-            Assert.IsNotNull(variable);
-            Assert.AreEqual(5, variable.Value);
-            variable = Machine.Variables.Get("_Test3");
             Assert.IsNotNull(variable);
             Assert.AreEqual(5, variable.Value);
         }
