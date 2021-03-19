@@ -24,7 +24,7 @@ namespace Symu.SysDyn.Tests.Simulation
         [TestInitialize]
         public async Task InitializeTest()
         {
-            await Initialize();
+            await Initialize("Function_capitalization.xmile");
         }
 
         [TestMethod]
