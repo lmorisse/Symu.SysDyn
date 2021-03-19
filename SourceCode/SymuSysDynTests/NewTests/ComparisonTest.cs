@@ -19,10 +19,9 @@ using Symu.SysDyn.Tests.Classes;
 
 #endregion
 
-namespace Symu.SysDyn.Tests.Simulation
+namespace Symu.SysDyn.Tests.NewTests
 {
-    [TestClass]
-    public class ComparisonTest
+    public class ComparisonTest : FunctionClassTest
     {
         protected const string TestFile = ClassPath.classpath + "Comparison.xmile";
 
@@ -39,24 +38,18 @@ namespace Symu.SysDyn.Tests.Simulation
         [TestInitialize]
         public async Task InitializeTest()
         {
-            Machine = await StateMachine.CreateStateMachine(TestFile);
-            XDoc = XDocument.Load(TestFile);
-            Ns = XDoc.Root?.Attributes("xmlns").First().Value;
-            XElement = XDoc.Root?.Descendants(Ns + "variables").First();
+            await Initialize();
         }
 
         [TestMethod]
-        public void StateMachineTest()
+        public override void StateMachineTest()
         {
-            Assert.IsNotNull(Machine.Simulation);
-            Assert.IsNotNull(Machine.Results);
-            Assert.IsNotNull(Machine.ReferenceVariables);
-            Assert.IsNotNull(Machine.Variables);
-            Assert.AreEqual(11, Machine.Variables.Count());
+            base.StateMachineTest();
+            Assert.AreEqual(6, Machine.Variables.Count());
         }
 
         /// <summary>
-        /// Check if dynamic variables are in initial position
+        /// Check the good functionnement on elements of comparison
         /// </summary>
         /// <returns></returns>
         [TestMethod]
@@ -64,7 +57,7 @@ namespace Symu.SysDyn.Tests.Simulation
         {
             Machine.Optimized = false;
             await Machine.Prepare();
-            Assert.AreEqual(11, Machine.Variables.Count());
+            Assert.AreEqual(6, Machine.Variables.Count());
             Assert.IsNotNull(Machine.Variables);
             var variable = Machine.Variables.Get("_Lt");
             Assert.IsNotNull(variable);

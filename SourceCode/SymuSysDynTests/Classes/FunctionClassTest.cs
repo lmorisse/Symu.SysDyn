@@ -1,4 +1,5 @@
-﻿using Symu.SysDyn.Core.Engine;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Symu.SysDyn.Core.Engine;
 using Symu.SysDyn.Core.Models.XMile;
 using System.Linq;
 using System.Threading.Tasks;
@@ -6,6 +7,7 @@ using System.Xml.Linq;
 
 namespace Symu.SysDyn.Tests.Classes
 {
+    [TestClass]
     public class FunctionClassTest
     {
         protected const string TestFile =
@@ -27,6 +29,15 @@ namespace Symu.SysDyn.Tests.Classes
             XDoc = XDocument.Load(TestFile);
             Ns = XDoc.Root?.Attributes("xmlns").First().Value;
             XElement = XDoc.Root?.Descendants(Ns + "variables").First();
+        }
+
+        [TestMethod]
+        public virtual void StateMachineTest()
+        {
+            Assert.IsNotNull(Machine.Simulation);
+            Assert.IsNotNull(Machine.Results);
+            Assert.IsNotNull(Machine.ReferenceVariables);
+            Assert.IsNotNull(Machine.Variables);
         }
     }
 }
