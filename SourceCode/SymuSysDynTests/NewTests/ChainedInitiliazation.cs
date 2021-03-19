@@ -21,6 +21,9 @@ using Symu.SysDyn.Tests.Classes;
 
 namespace Symu.SysDyn.Tests.NewTests
 {
+    /// <summary>
+    /// Check if stock B need stock C and D, if C and D are initialized after B, its supported by application
+    /// </summary>
     [TestClass]
     public class ChainedInitialization : FunctionClassTest
     {
@@ -37,10 +40,6 @@ namespace Symu.SysDyn.Tests.NewTests
             Assert.AreEqual(12, Machine.Variables.Count());
         }
 
-        /// <summary>
-        /// Check if stock B need stock C and D, if C and D are initialized after B, its supported by application
-        /// </summary>
-        /// <returns></returns>
         [TestMethod]
         public async Task OptimizeTest()
         {

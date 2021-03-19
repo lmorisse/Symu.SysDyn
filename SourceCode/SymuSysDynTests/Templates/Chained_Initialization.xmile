@@ -62,45 +62,5 @@
 				<eqn>1</eqn>
 			</flow>
 		</variables>
-		<views>
-			<view>
-				<stock name="Stock_A" x="363" y="125"/>
-				<stock name="Stock_B" x="378" y="254"/>
-				<stock name="Stock_C" x="218" y="183"/>
-				<stock name="Stock_D" x="515" y="181"/>
-				<flow name="Flow_C" x="144" y="186">
-					<pts>
-						<pt x="100" y="186"/>
-						<pt x="218" y="183"/>
-					</pts>
-				</flow>
-				<flow name="Flow_A" x="294" y="121">
-					<pts>
-						<pt x="256" y="121"/>
-						<pt x="363" y="125"/>
-					</pts>
-				</flow>
-				<flow name="Flow_D" x="433" y="183">
-					<pts>
-						<pt x="402" y="183"/>
-						<pt x="515" y="181"/>
-					</pts>
-				</flow>
-				<flow name="Flow_B" x="304" y="254">
-					<pts>
-						<pt x="261" y="254"/>
-						<pt x="378" y="254"/>
-					</pts>
-				</flow>
-				<connector uid="48" angle="90">
-					<from>TIME_STEP</from>
-					<to>SAVEPER</to>
-				</connector>
-				<aux name="SAVEPER" x="114" y="100"/>
-				<aux name="FINAL_TIME" x="114" y="100"/>
-				<aux name="INITIAL_TIME" x="114" y="100"/>
-				<aux name="TIME_STEP" x="114" y="100"/>
-			</view>
-		</views>
 	</model>
 </xmile>
