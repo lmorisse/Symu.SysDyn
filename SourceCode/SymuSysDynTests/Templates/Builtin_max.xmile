@@ -37,22 +37,5 @@
         <units>Month</units>
       </aux>
     </variables>
-    <views>
-      <view>
-        <aux name="output" x="118" y="100"/>
-        <connector uid="3" angle="90">
-          <from>Time</from>
-          <to>output</to>
-        </connector>
-        <connector uid="24" angle="90">
-          <from>TIME_STEP</from>
-          <to>SAVEPER</to>
-        </connector>
-        <aux name="SAVEPER" x="100" y="144"/>
-        <aux name="FINAL_TIME" x="100" y="144"/>
-        <aux name="INITIAL_TIME" x="100" y="144"/>
-        <aux name="TIME_STEP" x="100" y="144"/>
-      </view>
-    </views>
   </model>
 </xmile>

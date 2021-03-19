@@ -22,34 +22,19 @@ namespace Symu.SysDyn.Tests.NewTests
     [TestClass]
     public class Builtin_max : FunctionClassTest
     {
-        protected const string TestFile = ClassPath.classpath + "Builtin_max.xmile";
 
-        /// <summary>
-        ///     It is not the Machine.Variables
-        /// </summary>
-        protected XMileModel Variables { get; } = new XMileModel("1");
-
-        protected XDocument XDoc { get; private set; }
-        protected XNamespace Ns { get; private set; }
-        protected XElement XElement { get; set; }
-        protected StateMachine Machine { get; private set; }
+ 
 
         [TestInitialize]
         public async Task InitializeTest()
         {
-            Machine = await StateMachine.CreateStateMachine(TestFile);
-            XDoc = XDocument.Load(TestFile);
-            Ns = XDoc.Root?.Attributes("xmlns").First().Value;
-            XElement = XDoc.Root?.Descendants(Ns + "variables").First();
+            await Initialize("Builtin_max.xmile");
         }
 
         [TestMethod]
-        public void StateMachineTest()
+        public override void StateMachineTest()
         {
-            Assert.IsNotNull(Machine.Simulation);
-            Assert.IsNotNull(Machine.Results);
-            Assert.IsNotNull(Machine.ReferenceVariables);
-            Assert.IsNotNull(Machine.Variables);
+            base.StateMachineTest();
             Assert.AreEqual(5, Machine.Variables.Count());
         }
 
