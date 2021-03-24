@@ -34,7 +34,7 @@ namespace Symu.SysDyn.Tests.NewTests
         }
 
         [TestMethod]
-        public void StateMachineTest()
+        public override void StateMachineTest()
         {
             base.StateMachineTest();
             Assert.AreEqual(12, Machine.Variables.Count());
