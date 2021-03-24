@@ -24,19 +24,6 @@ namespace Symu.SysDyn.Tests.NewTests
     [TestClass]
     public class ComparisonTest : FunctionClassTest
     {
-        
-        protected const string TestFile = ClassPath.classpath + "Comparison.xmile";
-
-        /// <summary>
-        ///     It is not the Machine.Variables
-        /// </summary>
-        protected XMileModel Variables { get; } = new XMileModel("1");
-
-        protected XDocument XDoc { get; private set; }
-        protected XNamespace Ns { get; private set; }
-        protected XElement XElement { get; set; }
-        protected StateMachine Machine { get; private set; }
-
         [TestInitialize]
         public async Task InitializeTest()
         {
@@ -47,7 +34,7 @@ namespace Symu.SysDyn.Tests.NewTests
         public override void StateMachineTest()
         {
             base.StateMachineTest();
-            Assert.AreEqual(6, Machine.Variables.Count());
+            Assert.AreEqual(11, Machine.Variables.Count());
         }
 
         /// <summary>
@@ -59,7 +46,7 @@ namespace Symu.SysDyn.Tests.NewTests
         {
             Machine.Optimized = false;
             await Machine.Prepare();
-            Assert.AreEqual(6, Machine.Variables.Count());
+            Assert.AreEqual(11, Machine.Variables.Count());
             Assert.IsNotNull(Machine.Variables);
             var variable = Machine.Variables.Get("_Lt");
             Assert.IsNotNull(variable);

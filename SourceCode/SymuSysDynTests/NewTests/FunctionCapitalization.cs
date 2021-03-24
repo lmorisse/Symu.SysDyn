@@ -16,7 +16,7 @@ using Symu.SysDyn.Tests.Classes;
 
 #endregion
 
-namespace Symu.SysDyn.Tests.Simulation
+namespace Symu.SysDyn.Tests.NewTests
 {
     [TestClass]
     public class Function_capitalization : FunctionClassTest
@@ -28,12 +28,9 @@ namespace Symu.SysDyn.Tests.Simulation
         }
 
         [TestMethod]
-        public void StateMachineTest()
+        public override void StateMachineTest()
         {
-            Assert.IsNotNull(Machine.Simulation);
-            Assert.IsNotNull(Machine.Results);
-            Assert.IsNotNull(Machine.ReferenceVariables);
-            Assert.IsNotNull(Machine.Variables);
+            base.StateMachineTest();
             Assert.AreEqual(9, Machine.Variables.Count());
         }
 
