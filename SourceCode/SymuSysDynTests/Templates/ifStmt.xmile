@@ -29,7 +29,7 @@
         <units>Month</units>
       </aux>
       <aux name="output">
-        <eqn>IF Time &gt; 5 THEN 1 ELSE 0</eqn>
+        <eqn>( IF Time &gt; 5 THEN 1 ELSE 0 )</eqn>
       </aux>
       <aux name="SAVEPER">
         <doc>	The frequency with which output is stored.</doc>
