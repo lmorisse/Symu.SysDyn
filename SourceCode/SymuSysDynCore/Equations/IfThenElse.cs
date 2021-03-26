@@ -24,12 +24,12 @@ namespace Symu.SysDyn.Core.Equations
     {
         public static string Parse(string input)
         {
-            if (!input.StartsWith("if", true, null))
+            if (!(input.StartsWith("( if", true, null) || input.StartsWith("if", true, null) || input.StartsWith(" if", true, null)))
             {
                 return input;
             }
-
-            var regex = new Regex(@"IF\s*(.*)\s*THEN\s*(.*)\s*ELSE\s*(.*)", RegexOptions.IgnoreCase);
+            
+            var regex = new Regex(@"IF\s*(.*)\s*THEN\s*(.*)\s*ELSE\s*(.*)[)]", RegexOptions.IgnoreCase);
             var result = regex.Match(input);
             if (result.Groups.Count < 3)
             {

@@ -39,7 +39,7 @@ namespace Symu.SysDyn.Tests.NewTests
         }
 
         /// <summary>
-        /// Check if the condition "if"
+        /// Check if the condition "if" works good
         /// </summary>
         /// <returns></returns>
         [TestMethod]
