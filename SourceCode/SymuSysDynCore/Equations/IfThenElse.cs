@@ -22,14 +22,19 @@ namespace Symu.SysDyn.Core.Equations
     /// </summary>
     public static class IfThenElse
     {
+
         public static string Parse(string input)
         {
-            if (!(input.StartsWith("( if", true, null) || input.StartsWith("if", true, null) || input.StartsWith(" if", true, null)))
+         
+            if (!(input.StartsWith("( if", true, null) || input.StartsWith("if", true, null) || input.StartsWith(" if", true, null) || input.StartsWith("(if", true, null) || input.StartsWith(" (if", true, null)))
             {
                 return input;
             }
-            
-            var regex = new Regex(@"IF\s*(.*)\s*THEN\s*(.*)\s*ELSE\s*(.*)[)]", RegexOptions.IgnoreCase);
+            var regex = new Regex(@"IF\s*(.*)\s*THEN\s*(.*)\s*ELSE\s*(.*)", RegexOptions.IgnoreCase);
+
+            if (input.EndsWith(" )")) { 
+                regex = new Regex(@"IF\s*(.*)\s*THEN\s*(.*)\s*ELSE\s*(.*)([)])", RegexOptions.IgnoreCase);
+            }
             var result = regex.Match(input);
             if (result.Groups.Count < 3)
             {
