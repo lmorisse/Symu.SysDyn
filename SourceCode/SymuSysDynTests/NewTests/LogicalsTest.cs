@@ -20,7 +20,7 @@ using Symu.SysDyn.Tests.Classes;
 namespace Symu.SysDyn.Tests.NewTests
 {
     [TestClass]
-    public class IfStmtTest : FunctionClassTest
+    public class LogicalsTest : FunctionClassTest
     {
 
 
@@ -28,18 +28,18 @@ namespace Symu.SysDyn.Tests.NewTests
         [TestInitialize]
         public async Task InitializeTest()
         {
-            await Initialize("ifStmt.xmile");
+            await Initialize("Logicals.xmile");
         }
 
         [TestMethod]
         public override void StateMachineTest()
         {
             base.StateMachineTest();
-            Assert.AreEqual(5, Machine.Variables.Count());
+            Assert.AreEqual(9, Machine.Variables.Count());
         }
 
         /// <summary>
-        /// Check if the condition "if" works good
+        /// Tests the AND, OR and NOT logicals
         /// </summary>
         /// <returns></returns>
         [TestMethod]
@@ -47,16 +47,27 @@ namespace Symu.SysDyn.Tests.NewTests
         {
             Machine.Optimized = false;
             await Machine.Prepare();
-            Assert.AreEqual(5, Machine.Variables.Count());
+            Assert.AreEqual(9, Machine.Variables.Count());
             Assert.IsNotNull(Machine.Variables);
-            var variable = Machine.Variables.Get("_Output");
+            var variable = Machine.Variables.Get("_False_input");
             Assert.IsNotNull(variable);
             Assert.AreEqual(0, variable.Value);
             Machine.Process();
-            variable = Machine.Variables.Get("_Output");
+            variable = Machine.Variables.Get("_True_input");
             Assert.IsNotNull(variable);
             Assert.AreEqual(1, variable.Value);
-
+            Machine.Process();
+            variable = Machine.Variables.Get("_Not_output");
+            Assert.IsNotNull(variable);
+            Assert.AreEqual(1, variable.Value);
+            Machine.Process();
+            variable = Machine.Variables.Get("_And_output");
+            Assert.IsNotNull(variable);
+            Assert.AreEqual(0, variable.Value);
+            Machine.Process();
+            variable = Machine.Variables.Get("_Or_output");
+            Assert.IsNotNull(variable);
+            Assert.AreEqual(1, variable.Value);
         }
     }
 
