@@ -35,7 +35,7 @@ namespace Symu.SysDyn.Tests.NewTests
         }
 
         /// <summary>
-        /// Check if the variable is the max
+        /// Test the logarithm function 
         /// </summary>
         /// <returns></returns>
         [TestMethod]
