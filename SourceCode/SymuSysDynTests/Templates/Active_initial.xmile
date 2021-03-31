@@ -45,29 +45,5 @@
 				<units>Month</units>
 			</aux>
 		</variables>
-		<views>
-			<view>
-				<aux name="Value_A" x="311" y="150"/>
-				<connector uid="3" angle="-85.426078740099229">
-					<from>Time</from>
-					<to>Value_A</to>
-				</connector>
-				<stock name="Stock_A" x="290" y="217"/>
-				<flow name="Flow_A" x="214" y="217">
-					<pts>
-						<pt x="168" y="217"/>
-						<pt x="290" y="217"/>
-					</pts>
-				</flow>
-				<connector uid="32" angle="90">
-					<from>TIME_STEP</from>
-					<to>SAVEPER</to>
-				</connector>
-				<aux name="SAVEPER" x="100" y="168"/>
-				<aux name="FINAL_TIME" x="100" y="168"/>
-				<aux name="INITIAL_TIME" x="100" y="168"/>
-				<aux name="TIME_STEP" x="100" y="168"/>
-			</view>
-		</views>
 	</model>
 </xmile>
