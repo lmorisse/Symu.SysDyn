@@ -15,11 +15,56 @@ using Symu.SysDyn.Core.Parser;
 
 #endregion
 
+namespace Symu.SysDyn.Core.Parser.Tests
+{
+    [TestClass()]
+    public class StringUtilsTests
+    {
+        //Test of the classic special characters
+        [TestMethod()]
+        public void CleanSpecialCharsTest()
+        {
+            Assert.AreEqual("Ceciestuntest", StringUtils.CleanSpecialChars("Ceci es/t un/ t()e=s+t&"));
+
+        }
+
+        // Test to see if the result is null if there is only special characters
+        [TestMethod()]
+        public void CleanSpecialCharsTest2()
+        {
+            Assert.AreEqual("", StringUtils.CleanSpecialChars("$$$$$$$$$"));
+
+        }
+        //Test to see if it's null if the input is null
+        [TestMethod()]
+        public void CleanSpecialCharsTest3()
+        {
+            Assert.AreEqual("", StringUtils.CleanSpecialChars(""));
+
+        }
+        //Test to see if it doesn't remove the underscore
+        [TestMethod()]
+        public void CleanSpecialCharsTest4()
+        {
+            Assert.AreEqual("Ceci_est_un_test", StringUtils.CleanSpecialChars("Ceci_es/t_un/_te=s+t&"));
+
+        }
+        //Test to see all special characters
+        [TestMethod()]
+        public void CleanSpecialCharsTest5()
+        {
+            Assert.AreEqual("TestavecPleindeChpar", StringUtils.CleanSpecialChars("Test@av-+e/cPle^in/deC..h$par^^"));
+
+        }
+    }
+}
+
 namespace Symu.SysDyn.Tests.Parser
 {
     [TestClass]
     public class StringUtilsTests
     {
+        //Test to see if it remove the \r \n \\n 
         [TestMethod]
         public void CleanNameTest()
         {
@@ -27,6 +72,7 @@ namespace Symu.SysDyn.Tests.Parser
                 StringUtils.CleanName("\rtest  Avec_____plein\nde\\nProbleme's\r"));
         }
 
+        //Test to see if the UpperCase are well processed
         [TestMethod]
         public void CleanNamesTest()
         {
@@ -42,6 +88,8 @@ namespace Symu.SysDyn.Tests.Parser
             Assert.AreEqual("Model_Variable", StringUtils.CleanFullName("model.variable"));
             Assert.AreEqual("Model_Variable", StringUtils.CleanFullName("mOdel.vAriable"));
         }
+
+
 
         /// <summary>
         ///     Non passing tests
