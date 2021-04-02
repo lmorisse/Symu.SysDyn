@@ -7,7 +7,7 @@
 	</header>
 	<sim_specs simulation_delay="0" method="Euler" time_units="Months">
 		<start>0</start>
-		<stop>10</stop>
+		<stop>1</stop>
 		<dt>1</dt>
 	</sim_specs>
 	<dimensions/>
@@ -25,20 +25,18 @@
 			</aux>
 			<aux name="FINAL TIME">
 				<doc>	The final time for the simulation.</doc>
-				<eqn>10</eqn>
+				<eqn>1</eqn>
 				<units>Month</units>
 			</aux>
-			<aux name="Value A">
-				<doc>	This is sortof a silly way to test active initial, as you'd never use it this way in an actual model. It is, however, very simple.</doc>
-				<eqn>Time</eqn>
+			<aux name="log test">
+				<eqn>(LN(X) / LN(base))</eqn>
 			</aux>
-			<stock name="Stock A">
-				<eqn>Value_A</eqn>
-				<inflow>Flow_A</inflow>
-			</stock>
-			<flow name="Flow A">
-				<eqn>1</eqn>
-			</flow>
+			<aux name="base">
+				<eqn>3</eqn>
+			</aux>
+			<aux name="X">
+				<eqn>71</eqn>
+			</aux>
 			<aux name="SAVEPER">
 				<doc>	The frequency with which output is stored.</doc>
 				<eqn>TIME_STEP</eqn>

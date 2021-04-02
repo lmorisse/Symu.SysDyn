@@ -51,6 +51,21 @@ namespace Symu.SysDyn.Core.Parser
             return CleanName(name, true);
         }
 
+        public static string CleanSpecialChars(string strIn)
+        {
+            // Replace invalid characters with empty strings.
+            try
+            {
+                return Regex.Replace(strIn, @"[^\w]", "");
+            }
+            // If we timeout when replacing invalid characters,
+            // we should return Empty.
+            catch (RegexMatchTimeoutException)
+            {
+                return String.Empty;
+            }
+        }
+
         public static string CleanName(string name, bool replaceUnderScore)
         {
             if (name == null)
@@ -87,7 +102,7 @@ namespace Symu.SysDyn.Core.Parser
             {
                 name = name.Replace("__", "_");
             }
-
+            name = CleanSpecialChars(name);
             return FirstCharToUpper(name);
         }
 
