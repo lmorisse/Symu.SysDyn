@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <AssemblyName>Symu.SysDyn.Core</AssemblyName>
+    <RootNamespace>Symu.SysDyn.Core</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="Equations\ListOfBuiltInFunctions.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MathNet.Numerics" Version="4.15.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="C:\Users\admin\source\Repos\ncalc-async\src\NCalcAsync\NCalcAsync.csproj" />
+    <ProjectReference Include="C:\Users\admin\source\Repos\Symu.Common\SourceCode\SymuCommonCore\SymuCommonCore.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Templates\schema.xsd">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+
+</Project>
