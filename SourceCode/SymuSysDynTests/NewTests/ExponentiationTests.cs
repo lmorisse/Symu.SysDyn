@@ -38,7 +38,7 @@ namespace Symu.SysDyn.Tests.NewTests
         }
 
         /// <summary>
-        /// Check the good functionnement on elements of comparison
+        /// Test exponentiation, the right-associativity of it, and precedence
         /// </summary>
         /// <returns></returns>
         [TestMethod]
