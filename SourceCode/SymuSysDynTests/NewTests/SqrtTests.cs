@@ -18,6 +18,9 @@ using Symu.SysDyn.Tests.Classes;
 
 namespace Symu.SysDyn.Tests.NewTests
 {
+    /// <summary>
+    /// Implementation of https://github.com/SDXorg/test-models/blob/master/tests/sqrt
+    /// </summary>
     [TestClass]
     public class SqrtTests : FunctionClassTest
     {
@@ -41,17 +44,20 @@ namespace Symu.SysDyn.Tests.NewTests
         [TestMethod]
         public async Task OptimizeTest()
         {
+            //Arrange
             Machine.Optimized = false;
             await Machine.Prepare();
             Assert.AreEqual(7, Machine.Variables.Count());
             Assert.IsNotNull(Machine.Variables);
-            var variable = Machine.Variables.Get("_Test_sqrt");
-            Assert.IsNotNull(variable);
-            Assert.AreEqual(0.03F, (float)Math.Round(variable.Value, 2));
+
+            //Assert
+            TestVariableFloat("_Test_sqrt", 0.03F, 2);
+
+            //Act
             Machine.Process();
-            variable = Machine.Variables.Get("_Test_sqrt");
-            Assert.IsNotNull(variable);
-            Assert.AreEqual(32.38F, (float)Math.Round(variable.Value, 2));
+
+            //Assert
+            TestVariableFloat("_Test_sqrt", 32.38F, 2);
         }
     }
 }
