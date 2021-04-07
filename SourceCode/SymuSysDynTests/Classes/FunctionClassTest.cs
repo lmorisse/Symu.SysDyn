@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Symu.SysDyn.Core.Engine;
 using Symu.SysDyn.Core.Models.XMile;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -39,6 +40,23 @@ namespace Symu.SysDyn.Tests.Classes
             Assert.IsNotNull(Machine.Results);
             Assert.IsNotNull(Machine.ReferenceVariables);
             Assert.IsNotNull(Machine.Variables);
+        }
+
+
+        [TestMethod]
+        protected void TestVariable(string name, float value)
+        {
+            var variable = Machine.Variables.Get(name);
+            Assert.IsNotNull(variable);
+            Assert.AreEqual(value, variable.Value);
+        }
+
+        [TestMethod]
+        protected void TestVariableFloat(string name, float value, int comma)
+        {
+            var variable = Machine.Variables.Get(name);
+            Assert.IsNotNull(variable);
+            Assert.AreEqual(value, (float)Math.Round(variable.Value, comma));
         }
     }
 }
