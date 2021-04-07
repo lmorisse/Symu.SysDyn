@@ -18,6 +18,9 @@ using Symu.SysDyn.Tests.Classes;
 
 namespace Symu.SysDyn.Tests.NewTests
 {
+    /// <summary>
+    /// Implementation of https://github.com/SDXorg/test-models/tree/master/tests/ln
+    /// </summary>
     [TestClass]
     public class LnTests : FunctionClassTest
     {
@@ -41,17 +44,20 @@ namespace Symu.SysDyn.Tests.NewTests
         [TestMethod]
         public async Task OptimizeTest()
         {
+            //Arrange
             Machine.Optimized = false;
             await Machine.Prepare();
             Assert.AreEqual(7, Machine.Variables.Count());
             Assert.IsNotNull(Machine.Variables);
-            var variable = Machine.Variables.Get("_Test_ln");
-            Assert.IsNotNull(variable);
-            Assert.AreEqual(-9.21F, (float)Math.Round(variable.Value, 2));
+
+            //Assert
+            TestVariableFloat("_Test_ln", -9.21F, 2);
+
+            //Act
             Machine.Process();
-            variable = Machine.Variables.Get("_Test_ln");
-            Assert.IsNotNull(variable);
-            Assert.AreEqual(4.65F, (float)Math.Round(variable.Value, 2));
+
+            //Assert
+            TestVariableFloat("_Test_ln", 4.65F, 2);
         }
     }
 }
