@@ -18,6 +18,10 @@ using Symu.SysDyn.Tests.Classes;
 
 namespace Symu.SysDyn.Tests.NewTests
 {
+    /// <summary>
+    /// Implementation of https://github.com/SDXorg/test-models/tree/master/tests/number_handling
+    /// </summary>
+
     [TestClass]
     public class NumberHandling : FunctionClassTest
     {
@@ -41,36 +45,30 @@ namespace Symu.SysDyn.Tests.NewTests
         [TestMethod]
         public async Task OptimizeTest()
         {
+            //Arrange
             Machine.Optimized = false;
             await Machine.Prepare();
             Assert.AreEqual(9, Machine.Variables.Count());
             Assert.IsNotNull(Machine.Variables);
-            var quotientTarget = Machine.Variables.Get("_Quotient_target");
-            Assert.IsNotNull(quotientTarget);
-            Assert.AreEqual(0.75, quotientTarget.Value);
-            var numerator = Machine.Variables.Get("_Numerator");
-            Assert.IsNotNull(numerator);
-            Assert.AreEqual(3, numerator.Value);
-            var denominator = Machine.Variables.Get("_Denominator");
-            Assert.IsNotNull(denominator);
-            Assert.AreEqual(4, denominator.Value);
-            var quotient = Machine.Variables.Get("_Quotient");
-            Assert.IsNotNull(quotient);
-            Assert.AreEqual(0.75, quotient.Value);
-            var equality = Machine.Variables.Get("_Equality");
-            Assert.IsNotNull(equality);
-            Assert.AreEqual(1, equality.Value);
+
+            //Assert
+            TestVariableFloat("_Quotient_target", 0.75F, 2);
+            TestVariable("_Numerator", 3);
+            TestVariable("_Denominator", 4);
+            TestVariableFloat("_Quotient", 0.75F, 2);
+            TestVariable("_Equality", 1);
+
+            //Act
             Machine.Process();
-            numerator = Machine.Variables.Get("_Numerator");
-            Assert.AreEqual(3, numerator.Value);
-            denominator = Machine.Variables.Get("_Denominator");
-            Assert.AreEqual(4, denominator.Value);
-            equality = Machine.Variables.Get("_Equality");
-            Assert.AreEqual(1, equality.Value);
-            quotientTarget = Machine.Variables.Get("_Quotient_target");
-            Assert.AreEqual(0.75, quotientTarget.Value);
-            quotient = Machine.Variables.Get("_Quotient");
-            Assert.AreEqual(0.75, quotient.Value);
+
+            //Assert
+            TestVariableFloat("_Quotient_target", 0.75F, 2);
+            TestVariable("_Numerator", 3);
+            TestVariable("_Denominator", 4);
+            TestVariableFloat("_Quotient", 0.75F, 2);
+            TestVariable("_Equality", 1);
+
+
 
         }
     }

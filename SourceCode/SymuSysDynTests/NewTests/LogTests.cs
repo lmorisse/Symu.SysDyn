@@ -18,6 +18,9 @@ using Symu.SysDyn.Tests.Classes;
 
 namespace Symu.SysDyn.Tests.NewTests
 {
+    /// <summary>
+    /// Implementation of https://github.com/SDXorg/test-models/tree/master/tests/log
+    /// </summary>
     [TestClass]
     public class LogTests : FunctionClassTest
     {
@@ -41,13 +44,15 @@ namespace Symu.SysDyn.Tests.NewTests
         [TestMethod]
         public async Task OptimizeTest()
         {
+            //Arrange
             Machine.Optimized = false;
             await Machine.Prepare();
             Assert.AreEqual(7, Machine.Variables.Count());
             Assert.IsNotNull(Machine.Variables);
-            var variable = Machine.Variables.Get("_Log_test");
-            Assert.IsNotNull(variable);
-            Assert.AreEqual(3.88F, (float)Math.Round(variable.Value, 2));
+
+            //Assert
+            TestVariableFloat("_Log_test", 3.88F, 2);
+
         }
     }
 }
