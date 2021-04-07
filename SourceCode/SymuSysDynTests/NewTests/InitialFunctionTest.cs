@@ -21,6 +21,9 @@ using Symu.SysDyn.Tests.Classes;
 
 namespace Symu.SysDyn.Tests.NewTests
 {
+    /// <summary>
+    /// Implementation of https://github.com/SDXorg/test-models/tree/master/tests/initial_function
+    /// </summary>
     [TestClass]
     public class InitialFunctionTest : FunctionClassTest
     {
@@ -44,30 +47,26 @@ namespace Symu.SysDyn.Tests.NewTests
         [TestMethod]
         public async Task OptimizeTest()
         {
+            //Arrange
             Machine.Optimized = false;
             await Machine.Prepare();
             Assert.AreEqual(7, Machine.Variables.Count());
             Assert.IsNotNull(Machine.Variables);
-            var stockA = Machine.Variables.Get("_Stocka");
-            Assert.IsNotNull(stockA);
-            Assert.AreEqual(10, stockA.Value);
-            var inflowA = Machine.Variables.Get("_Inflowa");
-            Assert.IsNotNull(inflowA);
-            Assert.AreEqual(stockA.Value, inflowA.Value);
-            var StockAInitialValue = Machine.Variables.Get("_Stocka_initial_value");
-            Assert.IsNotNull(StockAInitialValue);
-            Assert.AreEqual(inflowA.Value, StockAInitialValue.Value);
-            Assert.AreEqual(10, StockAInitialValue.Value);
+
+            //Assert
+            TestVariable("_Stocka", 10);
+            TestVariable("_Stocka_initial_value", 10);
+            TestTwoVariables("_Stocka", "_Inflowa");
+            TestTwoVariables("_Inflowa", "_Stocka_initial_value");
+
+            //Act
             Machine.Process();
-            stockA = Machine.Variables.Get("_Stocka");
-            Assert.AreEqual(10240, stockA.Value);
-            inflowA = Machine.Variables.Get("_Inflowa");
-            Assert.AreEqual(10240, inflowA.Value);
-            Assert.AreEqual(stockA.Value, inflowA.Value);
-            StockAInitialValue = Machine.Variables.Get("_Stocka_initial_value");
-            Assert.AreEqual(10, StockAInitialValue.Value);
 
-
+            //Assert
+            TestVariable("_Stocka", 10240);
+            TestVariable("_Inflowa", 10240);
+            TestTwoVariables("_Stocka", "_Inflowa");
+            TestVariable("_Stocka_initial_value", 10);
         }
     }
 }

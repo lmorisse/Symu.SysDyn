@@ -16,8 +16,11 @@ using Symu.SysDyn.Tests.Classes;
 
 #endregion
 
-namespace Symu.SysDyn.Tests.Simulation
+namespace Symu.SysDyn.Tests.NewTests
 {
+    /// <summary>
+    /// Implementation of https://github.com/SDXorg/test-models/tree/master/tests/line_continuation
+    /// </summary>
     [TestClass]
     public class LineContinuation : FunctionClassTest
     {
@@ -41,18 +44,21 @@ namespace Symu.SysDyn.Tests.Simulation
         [TestMethod]
         public async Task OptimizeTest()
         {
+            //Arrange
             Machine.Optimized = false;
             await Machine.Prepare();
             Assert.AreEqual(8, Machine.Variables.Count());
             Assert.IsNotNull(Machine.Variables);
-            var longue_Variable = Machine.Variables.Get("_Target_for_goal_seeking_loop_and_convenient_object_for_testing_user_broken_lines");
-            Assert.AreEqual(100, longue_Variable.Value);
-            var variable = Machine.Variables.Get("_Flow_descriptor_that_is_somewhat_awkward_in_implementation_and_definitely_unhelpful_in_description");
-            Assert.IsNotNull(variable);
-            Assert.AreEqual(50, variable.Value);
-            Machine.Process();
-            Assert.AreEqual(50, variable.Value);
 
+            //Assert
+            TestVariable("_Target_for_goal_seeking_loop_and_convenient_object_for_testing_user_broken_lines", 100);
+            TestVariable("_Flow_descriptor_that_is_somewhat_awkward_in_implementation_and_definitely_unhelpful_in_description", 50);
+
+            //Act
+            Machine.Process();
+
+            //Assert
+            TestVariable("_Flow_descriptor_that_is_somewhat_awkward_in_implementation_and_definitely_unhelpful_in_description", 25);
         }
     }
 }
