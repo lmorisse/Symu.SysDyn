@@ -21,6 +21,10 @@ using Symu.SysDyn.Tests.Classes;
 
 namespace Symu.SysDyn.Tests.NewTests
 {
+    /// <summary>
+    /// Implementation of https://github.com/SDXorg/test-models/tree/master/tests/active_initial
+    /// </summary>
+
     [TestClass]
     public class ActiveInitialTest : FunctionClassTest
     {
@@ -44,23 +48,22 @@ namespace Symu.SysDyn.Tests.NewTests
         [TestMethod]
         public async Task OptimizeTest()
         {
+            //Arrange
             Machine.Optimized = false;
             await Machine.Prepare();
             Assert.AreEqual(7, Machine.Variables.Count());
             Assert.IsNotNull(Machine.Variables);
-            var initialValue = Machine.Variables.Get("_Value_a");
-            Assert.IsNotNull(initialValue);
-            Assert.AreEqual(0, initialValue.Value);
-            var initialStock = Machine.Variables.Get("_Stock_a");
-            Assert.IsNotNull(initialStock);
-            Assert.AreEqual(0, initialStock.Value);
+
+            //Assert
+            TestVariable("_Value_a", 0);
+            TestVariable("_Stock_a", 0);
+
+            //Act
             Machine.Process();
-            var variable = Machine.Variables.Get("_Value_a");
-            Assert.IsNotNull(variable);
-            Assert.AreNotEqual(initialValue, variable.Value);
-            variable = Machine.Variables.Get("_Stock_a");
-            Assert.IsNotNull(variable);
-            Assert.AreNotEqual(initialStock, variable.Value);
+
+            //Assert
+            TestVariable("_Value_a", 9);
+            TestVariable("_Stock_a", 10);
         }
     }
 }

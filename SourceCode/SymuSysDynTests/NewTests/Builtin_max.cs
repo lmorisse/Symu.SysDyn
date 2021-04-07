@@ -19,6 +19,10 @@ using Symu.SysDyn.Tests.Classes;
 
 namespace Symu.SysDyn.Tests.NewTests
 {
+    /// <summary>
+    /// Implementation of https://github.com/SDXorg/test-models/tree/master/tests/builtin_max
+    /// </summary>
+
     [TestClass]
     public class Builtin_max : FunctionClassTest
     {
@@ -45,18 +49,21 @@ namespace Symu.SysDyn.Tests.NewTests
         [TestMethod]
         public async Task OptimizeTest()
         {
+            //Arrange
             Machine.Optimized = false;
             await Machine.Prepare();
             Assert.AreEqual(5, Machine.Variables.Count());
             Assert.IsNotNull(Machine.Variables);
-            var maxValue = Machine.Variables.Get("_Output");
-            Assert.IsNotNull(maxValue);
-            Assert.AreEqual(5, maxValue.Value);
+
+            //Assert
+            TestVariable("_Output", 5);
+
+            //Act
             Machine.Process();
-            var variable = Machine.Variables.Get("_Output");
-            Assert.IsNotNull(variable);
-            Assert.AreNotEqual(maxValue, variable.Value);
-           
+
+            //Assert
+            TestVariable("_Output", 9);
+
         }
     }
     
