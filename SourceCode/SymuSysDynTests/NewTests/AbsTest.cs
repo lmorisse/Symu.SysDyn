@@ -21,6 +21,9 @@ using Symu.SysDyn.Tests.Classes;
 
 namespace Symu.SysDyn.Tests.NewTests
 {
+    /// <summary>
+    /// Implementation of https://github.com/SDXorg/test-models/blob/master/tests/abs
+    /// </summary>
     [TestClass]
     public class AbsTest : FunctionClassTest
     {
@@ -44,26 +47,24 @@ namespace Symu.SysDyn.Tests.NewTests
         [TestMethod]
         public async Task OptimizeTest()
         {
+            //Arrange
             Machine.Optimized = false;
             await Machine.Prepare();
             Assert.AreEqual(7, Machine.Variables.Count());
             Assert.IsNotNull(Machine.Variables);
-            var stockA = Machine.Variables.Get("_Stocka");
-            Assert.IsNotNull(stockA);
-            Assert.AreEqual(-10, stockA.Value);
-            var testAbs = Machine.Variables.Get("_Test_abs");
-            Assert.IsNotNull(testAbs);
-            Assert.AreEqual(10, testAbs.Value);
-            var flowA = Machine.Variables.Get("_Flowa");
-            Assert.IsNotNull(flowA);
-            Assert.AreEqual(1, flowA.Value);
+
+            //Assert
+            TestVariable("_Stocka", -10);
+            TestVariable("_Test_abs", 10);
+            TestVariable("_Flowa", 1);
+
+            //Act
             Machine.Process();
-            flowA = Machine.Variables.Get("_Flowa");
-            Assert.AreEqual(1, flowA.Value);
-            stockA = Machine.Variables.Get("_Stocka");
-            Assert.AreEqual(10, stockA.Value);
-            testAbs = Machine.Variables.Get("_Test_abs");
-            Assert.AreEqual(10, testAbs.Value);
+
+            //Assert
+            TestVariable("_Stocka", 10);
+            TestVariable("_Test_abs", 10);
+            TestVariable("_Flowa", 1);
         }
     }
 }
