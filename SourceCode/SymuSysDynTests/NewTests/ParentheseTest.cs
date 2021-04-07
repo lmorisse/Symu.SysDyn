@@ -18,6 +18,9 @@ using Symu.SysDyn.Tests.Classes;
 
 namespace Symu.SysDyn.Tests.NewTests
 {
+    /// <summary>
+    /// Implementation of https://github.com/SDXorg/test-models/blob/master/tests/parentheses
+    /// </summary>
     [TestClass]
     public class ParentheseTest : FunctionClassTest
     {
@@ -41,16 +44,20 @@ namespace Symu.SysDyn.Tests.NewTests
         [TestMethod]
         public async Task OptimizeTest()
         {
+            //Arrange
             Machine.Optimized = false;
             await Machine.Prepare();
             Assert.AreEqual(8, Machine.Variables.Count());
             Assert.IsNotNull(Machine.Variables);
-            var variable = Machine.Variables.Get("_Equation");
-            Assert.IsNotNull(variable);
-            Assert.AreEqual(144, variable.Value);
+
+            //Assert
+            TestVariable("_Equation", 144);
+
+            //Act
             Machine.Process();
-            Assert.IsNotNull(variable);
-            Assert.AreEqual(144, variable.Value);
+
+            //Assert
+            TestVariable("_Equation", 144);
         }
     }
 }

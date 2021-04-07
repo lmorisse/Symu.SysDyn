@@ -21,6 +21,9 @@ using Symu.SysDyn.Core.Models.XMile;
 
 namespace Symu.SysDyn.Tests.NewTests
 {
+    /// <summary>
+    /// Implementation of https://github.com/SDXorg/test-models/tree/master/tests/reference_capitalization
+    /// </summary>
     [TestClass]
     public class ReferenceCapitalization : FunctionClassTest
     {
@@ -45,15 +48,14 @@ namespace Symu.SysDyn.Tests.NewTests
         [TestMethod]
         public async Task OptimizeTest()
         {
+            //Arrange
             Machine.Optimized = false;
             await Machine.Prepare();
             Assert.IsNotNull(Machine.Variables);
-            var variable = Machine.Variables.Get("_Test1");
-            Assert.IsNotNull(variable);
-            Assert.AreEqual(5, variable.Value);
-            variable = Machine.Variables.Get("_Test2");
-            Assert.IsNotNull(variable);
-            Assert.AreEqual(5, variable.Value);
+
+            //Assert
+            TestVariable("_Test1", 5);
+            TestVariable("_Test2", 5);
         }
     }
 }
