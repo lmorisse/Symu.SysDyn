@@ -16,11 +16,14 @@ using Symu.SysDyn.Tests.Classes;
 
 #endregion
 
-namespace Symu.SysDyn.Tests.Simulation
+namespace Symu.SysDyn.Tests.NewTests
 {
     [TestClass]
     public class LineBreaks : FunctionClassTest
     {
+        /// <summary>
+        /// Implementation of https://github.com/SDXorg/test-models/tree/master/tests/line_breaks
+        /// </summary>
         [TestInitialize]
         public async Task InitializeTest()
         {
@@ -41,16 +44,20 @@ namespace Symu.SysDyn.Tests.Simulation
         [TestMethod]
         public async Task OptimizeTest()
         {
+            //Arrange
             Machine.Optimized = false;
             await Machine.Prepare();
             Assert.AreEqual(7, Machine.Variables.Count());
             Assert.IsNotNull(Machine.Variables);
-            var variable = Machine.Variables.Get("_Downstream");
-            Assert.IsNotNull(variable);
-            Assert.AreEqual(7, variable.Value);
-            Machine.Process();
-            Assert.AreEqual(7, variable.Value);
 
+            //Assert
+            TestVariable("_Downstream", 7);
+
+            //Act
+            Machine.Process();
+
+            //Assert
+            TestVariable("_Downstream", 7);
         }
     }
 }
