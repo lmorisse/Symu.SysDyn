@@ -19,6 +19,9 @@ using Symu.SysDyn.Tests.Classes;
 
 namespace Symu.SysDyn.Tests.NewTests
 {
+    /// <summary>
+    /// Implementation of https://github.com/SDXorg/test-models/tree/master/tests/logicals
+    /// </summary>
     [TestClass]
     public class LogicalsTest : FunctionClassTest
     {
@@ -45,29 +48,28 @@ namespace Symu.SysDyn.Tests.NewTests
         [TestMethod]
         public async Task OptimizeTest()
         {
+            //Arrange
             Machine.Optimized = false;
             await Machine.Prepare();
             Assert.AreEqual(9, Machine.Variables.Count());
             Assert.IsNotNull(Machine.Variables);
-            var variable = Machine.Variables.Get("_False_input");
-            Assert.IsNotNull(variable);
-            Assert.AreEqual(0, variable.Value);
+
+            //Assert
+            TestVariable("_False_input", 0);
+            TestVariable("_True_input", 1);
+            TestVariable("_Not_output", 1);
+            TestVariable("_And_output", 0);
+            TestVariable("_Or_output", 1);
+
+            //Act
             Machine.Process();
-            variable = Machine.Variables.Get("_True_input");
-            Assert.IsNotNull(variable);
-            Assert.AreEqual(1, variable.Value);
-            Machine.Process();
-            variable = Machine.Variables.Get("_Not_output");
-            Assert.IsNotNull(variable);
-            Assert.AreEqual(1, variable.Value);
-            Machine.Process();
-            variable = Machine.Variables.Get("_And_output");
-            Assert.IsNotNull(variable);
-            Assert.AreEqual(0, variable.Value);
-            Machine.Process();
-            variable = Machine.Variables.Get("_Or_output");
-            Assert.IsNotNull(variable);
-            Assert.AreEqual(1, variable.Value);
+
+            //Assert
+            TestVariable("_False_input", 0);
+            TestVariable("_True_input", 1);
+            TestVariable("_Not_output", 1);
+            TestVariable("_And_output", 0);
+            TestVariable("_Or_output", 1);
         }
     }
 
