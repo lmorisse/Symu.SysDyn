@@ -20,6 +20,9 @@ using Symu.SysDyn.Tests.Classes;
 
 namespace Symu.SysDyn.Tests.NewTests
 {
+    /// <summary>
+    /// Implementation of https://github.com/SDXorg/test-models/blob/master/tests/trig
+    /// </summary>
     [TestClass]
     public class TrigTests : FunctionClassTest
     {
@@ -38,15 +41,17 @@ namespace Symu.SysDyn.Tests.NewTests
         }
 
         /// <summary>
-        /// Tests the AND, OR and NOT logicals
+        /// Test basic trig functions like sin, cos, tan, arcsin...
         /// </summary>
         /// <returns></returns>
         [TestMethod]
         public async Task OptimizeTest()
         {
+            //Arrange
             Machine.Optimized = false;
             await Machine.Prepare();
 
+            //Assert
             Assert.AreEqual(12, Machine.Variables.Count());
             Assert.IsNotNull(Machine.Variables);
             TestVariable("_Stocka", -10);
@@ -57,8 +62,10 @@ namespace Symu.SysDyn.Tests.NewTests
             TestVariableFloat("_Test_sin", 0.54F, 2);
             TestVariableFloat("_Test_tan", -0.65F, 2);
 
+            //Act
             Machine.Process();
 
+            //Assert
             TestVariable("_Stocka", -5);
             TestVariableFloat("_Test_arccos", 1.28F, 2);
             TestVariableFloat("_Test_arcsin", 1.28F, 2);
