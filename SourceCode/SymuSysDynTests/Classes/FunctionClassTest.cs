@@ -50,6 +50,13 @@ namespace Symu.SysDyn.Tests.Classes
             Assert.IsNotNull(variable);
             Assert.AreEqual(value, variable.Value);
         }
+        [TestMethod]
+        protected void TestVariableNotEqual(string name, float value)
+        {
+            var variable = Machine.Variables.Get(name);
+            Assert.IsNotNull(variable);
+            Assert.AreNotEqual(value, variable.Value);
+        }
 
         [TestMethod]
         protected void TestVariableFloat(string name, float value, int comma)
@@ -66,6 +73,8 @@ namespace Symu.SysDyn.Tests.Classes
             Assert.IsNotNull(variable2);
             Assert.AreEqual(variable1.Value, variable2.Value);
         }
+    
 
+        
     }
 }
