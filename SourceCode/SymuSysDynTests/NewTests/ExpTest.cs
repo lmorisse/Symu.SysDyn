@@ -17,6 +17,10 @@ using Symu.SysDyn.Tests.Classes;
 
 namespace Symu.SysDyn.Tests.NewTests
 {
+    /// <summary>
+    /// Implementation of https://github.com/SDXorg/test-models/tree/master/tests/exp
+    /// </summary>
+
     [TestClass]
     public class ExpTest : FunctionClassTest
     {
@@ -36,21 +40,24 @@ namespace Symu.SysDyn.Tests.NewTests
         /// <summary>
         /// Check the exponential function
         /// </summary>
-        /// <returns></returns>
         [TestMethod]
         public async Task OptimizeTest()
         {
+            //Arrange
             Machine.Optimized = false;
             await Machine.Prepare();
             Assert.AreEqual(7, Machine.Variables.Count());
             Assert.IsNotNull(Machine.Variables);
-            var variable = Machine.Variables.Get("_Test_exp");
-            Assert.IsNotNull(variable);
-            Assert.AreEqual(0.0067F, (float)Math.Round(variable.Value, 4));
+
+            //Assert
+            TestVariableFloat("_Test_exp", 0.0067F, 4);
+
+            //Act
             Machine.Process();
-            variable = Machine.Variables.Get("_Test_exp");
-            Assert.IsNotNull(variable);
-            Assert.AreEqual(148.41F, (float)Math.Round(variable.Value, 2));
+
+            //Assert
+            TestVariableFloat("_Test_exp", 148.41F, 2);
+            
         }
     }
 

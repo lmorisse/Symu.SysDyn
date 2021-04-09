@@ -16,6 +16,9 @@ using Symu.SysDyn.Tests.Classes;
 
 namespace Symu.SysDyn.Tests.NewTests
 {
+    /// <summary>
+    /// Implementation of https://github.com/SDXorg/test-models/tree/master/tests/game
+    /// </summary>
     [TestClass]
     public class GameTests : FunctionClassTest
     {
@@ -35,30 +38,25 @@ namespace Symu.SysDyn.Tests.NewTests
         /// <summary>
         /// Test the parser ability to handle the GAME function
         /// </summary>
-        /// <returns></returns>
         [TestMethod]
         public async Task OptimizeTest()
         {
+            //Arrange
             Machine.Optimized = false;
             await Machine.Prepare();
             Assert.AreEqual(8, Machine.Variables.Count());
             Assert.IsNotNull(Machine.Variables);
-            var variable = Machine.Variables.Get("_Gamed_equation");
-            Assert.IsNotNull(variable);
-            Assert.AreEqual(3, variable.Value);
-            variable = Machine.Variables.Get("_Stock");
-            Assert.IsNotNull(variable);
-            Assert.AreEqual(0, variable.Value);
 
+            //Assert
+            TestVariable("_Gamed_equation", 3);
+            TestVariable("_Stock", 0);
+            
+            //Act
             Machine.Process();
 
-            variable = Machine.Variables.Get("_Gamed_equation");
-            Assert.IsNotNull(variable);
-            Assert.AreEqual(1203, variable.Value);
-            variable = Machine.Variables.Get("_Stock");
-            Assert.IsNotNull(variable);
-            Assert.AreEqual(1200, variable.Value);
-
+            //Assert
+            TestVariable("_Gamed_equation", 1203);
+            TestVariable("_Stock", 1200);
         }
     }
 
