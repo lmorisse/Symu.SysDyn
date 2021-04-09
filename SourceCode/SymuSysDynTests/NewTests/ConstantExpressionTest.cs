@@ -11,6 +11,10 @@ using System.Xml.Linq;
 
 namespace Symu.SysDyn.Tests.NewTests
 {
+    /// <summary>
+    /// Implementation of https://github.com/SDXorg/test-models/tree/master/tests/constant_expressions
+    /// </summary>
+
     [TestClass]
     public class ConstantExpressionTest :FunctionClassTest
     {
@@ -34,13 +38,15 @@ namespace Symu.SysDyn.Tests.NewTests
         [TestMethod]
         public async Task OptimizeTest()
         {
+            //Arrange
             Machine.Optimized = false;
             await Machine.Prepare();
             Assert.AreEqual(5, Machine.Variables.Count());
             Assert.IsNotNull(Machine.Variables);
-            var variable = Machine.Variables.Get("_My_variable");
-            Assert.IsNotNull(variable);
-            Assert.AreEqual(3.33F, (float)Math.Round(variable.Value,2));
+
+            //Assert
+            TestVariableFloat("_My_variable", 3.33F, 2);
+           
         }
     }
 }

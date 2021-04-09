@@ -8,6 +8,10 @@ using System.Threading.Tasks;
 
 namespace Symu.SysDyn.Tests.NewTests
 {
+    /// <summary>
+    /// Implementation of https://github.com/SDXorg/test-models/tree/master/tests/eval_order
+    /// </summary>
+
     [TestClass]
     public class EvalOrderTest : FunctionClassTest
     {
@@ -31,13 +35,14 @@ namespace Symu.SysDyn.Tests.NewTests
         [TestMethod]
         public async Task OptimizeTest()
         {
+            //Arrange
             Machine.Optimized = false;
             await Machine.Prepare();
             Assert.AreEqual(1, Machine.Variables.Count());
             Assert.IsNotNull(Machine.Variables);
-            var variable = Machine.Variables.Get("_Auxiliary");
-            Assert.IsNotNull(variable);
-            Assert.AreEqual(5, variable.Value);
+
+            //Assert
+            TestVariable("_Auxiliary", 5);
         }
     }
 }
