@@ -21,6 +21,10 @@ using Symu.SysDyn.Tests.Classes;
 
 namespace Symu.SysDyn.Tests.NewTests
 {
+    /// <summary>
+    /// Implementation of https://github.com/SDXorg/test-models/tree/master/tests/exponentiation
+    /// </summary>
+
     [TestClass]
     public class ExponentiationTests : FunctionClassTest
     {
@@ -44,23 +48,23 @@ namespace Symu.SysDyn.Tests.NewTests
         [TestMethod]
         public async Task OptimizeTest()
         {
+            //Arrange
             Machine.Optimized = false;
             await Machine.Prepare();
             Assert.AreEqual(7, Machine.Variables.Count());
             Assert.IsNotNull(Machine.Variables);
-            var variable = Machine.Variables.Get("_Output");
-            Assert.IsNotNull(variable);
-            Assert.AreEqual(0, variable.Value);
-            variable = Machine.Variables.Get("_Test");
-            Assert.IsNotNull(variable);
-            Assert.AreEqual(1, variable.Value);
+
+            //Assert
+            TestVariable("_Output", 0);
+            TestVariable("_Test", 1);
+            
+            //Act
             Machine.Process();
-            variable = Machine.Variables.Get("_Output");
-            Assert.IsNotNull(variable);
-            Assert.AreEqual(9, variable.Value);
-            variable = Machine.Variables.Get("_Test");
-            Assert.IsNotNull(variable);
-            Assert.AreEqual(1, variable.Value);
+
+            //Assert
+            TestVariable("_Output", 16);
+            TestVariable("_Test", 1);
+            
         }
     }
 }

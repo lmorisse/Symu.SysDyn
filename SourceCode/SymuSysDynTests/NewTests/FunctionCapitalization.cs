@@ -18,6 +18,9 @@ using Symu.SysDyn.Tests.Classes;
 
 namespace Symu.SysDyn.Tests.NewTests
 {
+    /// <summary>
+    /// Implementation of https://github.com/SDXorg/test-models/tree/master/tests/function_capitalization
+    /// </summary>
     [TestClass]
     public class Function_capitalization : FunctionClassTest
     {
@@ -37,22 +40,18 @@ namespace Symu.SysDyn.Tests.NewTests
         /// <summary>
         /// Check if non-dynamic variable consider capitalization on the xmile file and test the abs(int) function
         /// </summary>
-        /// <returns></returns>
         [TestMethod]
         public async Task OptimizeTest()
         {
+            //Arrange
             Machine.Optimized = false;
             await Machine.Prepare();
             Assert.IsNotNull(Machine.Variables);
-            var variable = Machine.Variables.Get("_Test1");
-            Assert.IsNotNull(variable);
-            Assert.AreEqual(5, variable.Value);
-            variable = Machine.Variables.Get("_Test2");
-            Assert.IsNotNull(variable);
-            Assert.AreEqual(5, variable.Value);
-            variable = Machine.Variables.Get("_Test3");
-            Assert.IsNotNull(variable);
-            Assert.AreEqual(5, variable.Value);
+
+            //Assert
+            TestVariable("_Test1", 5);
+            TestVariable("_Test2", 5);
+            TestVariable("_Test3", 5);
         }
     }
 }
