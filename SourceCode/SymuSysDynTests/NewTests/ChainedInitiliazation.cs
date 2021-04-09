@@ -22,8 +22,9 @@ using Symu.SysDyn.Tests.Classes;
 namespace Symu.SysDyn.Tests.NewTests
 {
     /// <summary>
-    /// Check if stock B need stock C and D, if C and D are initialized after B, its supported by application
+    /// Implementation of https://github.com/SDXorg/test-models/tree/master/tests/chained_initialization
     /// </summary>
+
     [TestClass]
     public class ChainedInitialization : FunctionClassTest
     {
@@ -40,14 +41,19 @@ namespace Symu.SysDyn.Tests.NewTests
             Assert.AreEqual(12, Machine.Variables.Count());
         }
 
+        /// <summary>
+        /// Check if stock B need stock C and D, if C and D are initialized after B, its supported by application
+        /// </summary>
+        
         [TestMethod]
         public async Task OptimizeTest()
         {
+            //Arrange
             Machine.Optimized = false;
             await Machine.Prepare();
-            var variable = Machine.Variables.Get("_Stock_b");
-            Assert.IsNotNull(variable);
-            Assert.AreEqual(15, variable.Value);
+
+            //Assert
+            TestVariable("_Stock_b", 15);
         }
     }
 }

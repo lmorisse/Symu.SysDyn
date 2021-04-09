@@ -21,6 +21,10 @@ using Symu.SysDyn.Tests.Classes;
 
 namespace Symu.SysDyn.Tests.NewTests
 {
+    /// <summary>
+    /// Implementation of https://github.com/SDXorg/test-models/tree/master/tests/comparisons
+    /// </summary>
+
     [TestClass]
     public class ComparisonTest : FunctionClassTest
     {
@@ -40,51 +44,35 @@ namespace Symu.SysDyn.Tests.NewTests
         /// <summary>
         /// Check the good functionnement on elements of comparison
         /// </summary>
-        /// <returns></returns>
+
         [TestMethod]
         public async Task OptimizeTest()
         {
+            //Arrange
             Machine.Optimized = false;
             await Machine.Prepare();
             Assert.AreEqual(11, Machine.Variables.Count());
             Assert.IsNotNull(Machine.Variables);
-            var variable = Machine.Variables.Get("_Lt");
-            Assert.IsNotNull(variable);
-            Assert.AreEqual(1, variable.Value);
-            variable = Machine.Variables.Get("_Lte");
-            Assert.IsNotNull(variable);
-            Assert.AreEqual(1, variable.Value);
-            variable = Machine.Variables.Get("_Gt");
-            Assert.IsNotNull(variable);
-            Assert.AreEqual(0, variable.Value);
-            variable = Machine.Variables.Get("_Gte");
-            Assert.IsNotNull(variable);
-            Assert.AreEqual(0, variable.Value);
-            variable = Machine.Variables.Get("_Eq");
-            Assert.IsNotNull(variable);
-            Assert.AreEqual(0, variable.Value);
-            variable = Machine.Variables.Get("_Neq");
-            Assert.IsNotNull(variable);
-            Assert.AreEqual(1, variable.Value);
+
+            //Assert
+            TestVariable("_Lt", 1);
+            TestVariable("_Lte", 1);
+            TestVariable("_Gt", 0);
+            TestVariable("_Gte", 0);
+            TestVariable("_Eq", 0);
+            TestVariable("_Neq", 1);
+
+            //Act
             Machine.Process();
-            variable = Machine.Variables.Get("_Lt");
-            Assert.IsNotNull(variable);
-            Assert.AreEqual(0, variable.Value);
-            variable = Machine.Variables.Get("_Lte");
-            Assert.IsNotNull(variable);
-            Assert.AreEqual(1, variable.Value);
-            variable = Machine.Variables.Get("_Gt");
-            Assert.IsNotNull(variable);
-            Assert.AreEqual(0, variable.Value);
-            variable = Machine.Variables.Get("_Gte");
-            Assert.IsNotNull(variable);
-            Assert.AreEqual(1, variable.Value);
-            variable = Machine.Variables.Get("_Eq");
-            Assert.IsNotNull(variable);
-            Assert.AreEqual(1, variable.Value);
-            variable = Machine.Variables.Get("_Neq");
-            Assert.IsNotNull(variable);
-            Assert.AreEqual(0, variable.Value);
+
+            //Assert
+            TestVariable("_Lt", 0);
+            TestVariable("_Lte", 1);
+            TestVariable("_Gt", 0);
+            TestVariable("_Gte", 1);
+            TestVariable("_Eq", 1);
+            TestVariable("_Neq", 0);
+           
         }
     }
 }
