@@ -50,6 +50,7 @@ namespace Symu.SysDyn.Core.Equations
             eqn = eqn.Replace("'", "");
             // IfThenElse
             eqn = IfThenElse.Parse(eqn);
+            eqn = Power.Parse(eqn);
             if (string.IsNullOrEmpty(eqn))
             {
                 return new EquationFactoryStruct(null, 0);
