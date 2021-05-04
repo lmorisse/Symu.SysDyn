@@ -10,17 +10,14 @@
 #region using directives
 using System.Linq;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Symu.SysDyn.Core.Engine;
-using Symu.SysDyn.Core.Models.XMile;
 using Symu.SysDyn.Tests.Classes;
 #endregion
 
 namespace Symu.SysDyn.Tests.NewTests
 {
     /// <summary>
-    /// Implementation of https://github.com/SDXorg/test-models/tree/master/tests/builtin_max
+    /// Implementation of https://github.com/SDXorg/test-models/tree/master/tests/xidz_zidz
     /// </summary>
 
     [TestClass]
@@ -43,7 +40,7 @@ namespace Symu.SysDyn.Tests.NewTests
         }
 
         /// <summary>
-        /// Check if the variable is the max
+        /// This model tests functions for dealing with divide by zero
         /// </summary>
         /// <returns></returns>
         [TestMethod]
