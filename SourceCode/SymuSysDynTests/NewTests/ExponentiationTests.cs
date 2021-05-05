@@ -62,7 +62,7 @@ namespace Symu.SysDyn.Tests.NewTests
             Machine.Process();
 
             //Assert
-            TestVariable("_Output", 16);
+            TestVariable("_Output", 9);
             TestVariable("_Test", 1);
             
         }
