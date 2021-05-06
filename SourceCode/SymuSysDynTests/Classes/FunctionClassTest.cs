@@ -73,8 +73,13 @@ namespace Symu.SysDyn.Tests.Classes
             Assert.IsNotNull(variable2);
             Assert.AreEqual(variable1.Value, variable2.Value);
         }
-    
 
-        
+        protected void TestVariableDouble(string name, double value)
+        {
+            var variable = Machine.Variables.Get(name);
+            Assert.IsNotNull(variable);
+            Assert.AreEqual(value, variable.Value);
+        }
+
     }
 }
